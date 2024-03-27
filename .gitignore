@@ -230,7 +230,7 @@ _pkginfo.txt
 !?*.[Cc]ache/
 
 # Others
-# ClientBin/
+ClientBin/
 ~$*
 *~
 *.dbmdl
@@ -396,3 +396,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Custom
+!Bin/*
