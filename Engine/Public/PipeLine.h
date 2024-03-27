@@ -1,0 +1,42 @@
+#pragma once
+#include "Base.h"
+
+BEGIN(Engine)
+class CPipeLine final:
+    public CBase
+{
+public:
+    enum D3DTRANSFORMSTATE { D3DTS_VIEW, D3DTS_PROJ, D3DTS_END };
+
+private:
+    CPipeLine();
+    virtual ~CPipeLine() = default;
+
+public:
+    const _float4x4* Get_Transform_Float4x4(D3DTRANSFORMSTATE eState);
+    _matrix Get_Transform_Matrix(D3DTRANSFORMSTATE eState);
+    const _float4x4* Get_Transform_Inverse_Float4x4(D3DTRANSFORMSTATE eState);
+    _matrix Get_Transform_Inverse_Matrix(D3DTRANSFORMSTATE eState);
+    const _float4* Get_CamPosition_Float4();
+    _vector Get_CamPosition();
+
+public:
+    void Set_Transform(D3DTRANSFORMSTATE eState, _fmatrix matTransform) {
+        XMStoreFloat4x4(&m_TransformStateMatrix[eState], matTransform);
+    }
+
+public:
+    HRESULT Initialize();
+    void Tick();
+
+private:
+    _float4x4 m_TransformStateMatrix[D3DTS_END];
+    _float4x4 m_TransformStateInverseMatrix[D3DTS_END];
+    _float4 m_vCamPosition;
+
+public:
+    static CPipeLine* Create();
+    virtual void Free();
+};
+
+END

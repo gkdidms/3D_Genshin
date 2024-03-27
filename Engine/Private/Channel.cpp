@@ -1,0 +1,103 @@
+#include "Channel.h"
+
+#include "Bone.h"
+
+CChannel::CChannel()
+{
+}
+
+HRESULT CChannel::Initialize(aiNodeAnim* pChannel, const vector<CBone*> Bones)
+{
+	strcpy_s(m_szName, pChannel->mNodeName.data);
+
+	_uint iBoneIndex = { 0 };
+	auto iter = find_if(Bones.begin(), Bones.end(), [&](CBone* pBone)->_bool {
+		if (pBone->Compare_NodeName(m_szName))
+			return true;
+
+		++iBoneIndex;
+
+		return false;
+	});
+
+	m_iBoneIndex = iBoneIndex;
+
+	m_iNumKeyFrames = max(pChannel->mNumScalingKeys, pChannel->mNumRotationKeys);
+	m_iNumKeyFrames = max(m_iNumKeyFrames, pChannel->mNumPositionKeys);
+
+	KEYFRAME KeyFrame{};
+
+	for (size_t i = 0; i < m_iNumKeyFrames; ++i)
+	{
+		if (pChannel->mNumScalingKeys > i)
+		{
+			memcpy(&KeyFrame.vScale, &pChannel->mScalingKeys[i].mValue, sizeof(_float3));
+			KeyFrame.Time = pChannel->mScalingKeys[i].mTime;
+		}
+		if (pChannel->mNumRotationKeys > i)
+		{
+			//쿼터니언은 w,x,y,z 순으로 저장이 되어있어서 메모리 복사를 하면 안되고 값을 대입해주어야 한다.
+			KeyFrame.vRotate.x = pChannel->mRotationKeys[i].mValue.x;
+			KeyFrame.vRotate.y = pChannel->mRotationKeys[i].mValue.y;
+			KeyFrame.vRotate.z = pChannel->mRotationKeys[i].mValue.z;
+			KeyFrame.vRotate.w = pChannel->mRotationKeys[i].mValue.w;
+
+			KeyFrame.Time = pChannel->mRotationKeys[i].mTime;
+		}
+		if (pChannel->mNumPositionKeys > i)
+		{
+			memcpy(&KeyFrame.vPosition, &pChannel->mPositionKeys[i].mValue, sizeof(_float3));
+			KeyFrame.Time = pChannel->mPositionKeys[i].mTime;
+		}
+
+		m_KeyFrames.emplace_back(KeyFrame);
+	}
+
+	return S_OK;
+}
+
+void CChannel::Update_TransformationMatrix(double CurrentPosition, const vector<CBone*> Bones)
+{
+	if (CurrentPosition == 0.0)
+		m_iCurrentKeyFrameIndex = 0;
+
+	KEYFRAME LastKeyFrame = m_KeyFrames.back();
+
+	_vector vScale, vRotation, vTranslation;
+	if (CurrentPosition >= LastKeyFrame.Time)
+	{
+		vScale = XMLoadFloat3(&LastKeyFrame.vScale);
+		vRotation = XMLoadFloat4(&LastKeyFrame.vRotate);
+		vTranslation = XMVectorSetW(XMLoadFloat3(&LastKeyFrame.vPosition), 1.f);
+	}
+	else
+	{
+		if (CurrentPosition >= m_KeyFrames[m_iCurrentKeyFrameIndex + 1].Time)
+			++m_iCurrentKeyFrameIndex;
+
+		_float fRatio = (CurrentPosition - m_KeyFrames[m_iCurrentKeyFrameIndex].Time) / (m_KeyFrames[m_iCurrentKeyFrameIndex + 1].Time - m_KeyFrames[m_iCurrentKeyFrameIndex].Time);
+
+		vScale = XMVectorLerp(XMLoadFloat3(&m_KeyFrames[m_iCurrentKeyFrameIndex].vScale), XMLoadFloat3(&m_KeyFrames[m_iCurrentKeyFrameIndex + 1].vScale), fRatio);
+		vRotation = XMQuaternionSlerp(XMLoadFloat4(&m_KeyFrames[m_iCurrentKeyFrameIndex].vRotate), XMLoadFloat4(&m_KeyFrames[m_iCurrentKeyFrameIndex + 1].vRotate), fRatio);
+		vTranslation = XMVectorSetW(XMVectorLerp(XMLoadFloat3(&m_KeyFrames[m_iCurrentKeyFrameIndex].vPosition), XMLoadFloat3(&m_KeyFrames[m_iCurrentKeyFrameIndex + 1].vPosition), fRatio), 1.f);
+	}
+
+	_matrix TransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vTranslation);
+
+	Bones[m_iBoneIndex]->Set_TranformationMatrix(TransformationMatrix);
+}
+
+CChannel* CChannel::Create(aiNodeAnim* pChannel, const vector<class CBone*> Bones)
+{
+	CChannel* pInstance = new CChannel();
+
+	if (FAILED(pInstance->Initialize(pChannel, Bones)))
+		Safe_Release(pInstance);
+
+	return pInstance;
+}
+
+void CChannel::Free()
+{
+	m_KeyFrames.clear();
+}
