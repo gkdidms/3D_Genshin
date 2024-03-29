@@ -17,9 +17,11 @@ public:
     void Render();
 
 private:
+    class CTool_Object_Manager* m_pObjectManager = { nullptr };
+
+private:
     HRESULT Ready_Layer_Camera(const wstring strName);
     HRESULT Ready_Layer_Terrain(const wstring strName);
-    HRESULT Ready_Layer_Object(const wstring strName);
 
 public:
     static CMain_Level* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

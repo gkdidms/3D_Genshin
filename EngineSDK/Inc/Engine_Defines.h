@@ -11,6 +11,8 @@
 #include "DirectXTK/WICTextureLoader.h"
 #include "DirectXTK/Keyboard.h"
 #include "DirectXTK/Mouse.h"
+#include "fmode/inc/fmod.h"
+#pragma comment(lib, "fmod_vc.lib")
 
 #include "assimp/scene.h"
 #include "assimp/Importer.hpp"
@@ -23,6 +25,8 @@ using namespace TriangleTests;
 #include <list>
 #include <map>
 #include <algorithm>
+#include <iostream>
+#include <io.h>
 
 #include "Engine_Typedef.h"
 #include "Engine_Function.h"
@@ -53,3 +57,9 @@ namespace Engine
 using namespace Engine;
 using namespace std;
 
+
+enum CHANNELID {
+	SOUND_EFFECT,
+	SOUND_BGM,
+	SOUND_END
+};

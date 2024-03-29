@@ -12,7 +12,7 @@ CVIBuffer::CVIBuffer(const CVIBuffer& rhs)
 	m_Buffer_Desc {rhs.m_Buffer_Desc},
 	m_ResourceData { rhs.m_ResourceData},
 	m_iNumVertices {rhs.m_iNumVertices},
-	m_iVertextStride { rhs.m_iVertextStride},
+	m_iVertexStride { rhs.m_iVertexStride},
 	m_iNumIndices { rhs.m_iNumIndices},
 	m_iIndexStride { rhs.m_iIndexStride},
 	m_GIFormat { rhs.m_GIFormat},
@@ -39,7 +39,7 @@ void CVIBuffer::Render()
 	};
 
 	_uint pStrideVertices[] = {
-		m_iVertextStride,
+		m_iVertexStride,
 	};
 
 	_uint pStartVertices[] = {

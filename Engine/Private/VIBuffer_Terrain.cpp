@@ -36,7 +36,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const wstring strTerrainFilePath
 
 	m_Primitive_Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	m_GIFormat = DXGI_FORMAT_R32_UINT;
-	m_iVertextStride = sizeof(VTXNORTEX);
+	m_iVertexStride = sizeof(VTXNORTEX);
 	m_iNumVertices = ih.biWidth * ih.biHeight;
 	m_iNumVerticesX = ih.biWidth;
 	m_iNumVerticesZ = ih.biHeight;
@@ -112,12 +112,12 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const wstring strTerrainFilePath
 	for (size_t i = 0; i < m_iNumVertices; ++i)
 		XMStoreFloat3(&pVertices[i].vNormal, XMVector3Normalize(XMLoadFloat3(&pVertices[i].vNormal)));
 
-	m_Buffer_Desc.ByteWidth = m_iVertextStride * m_iNumVertices;
+	m_Buffer_Desc.ByteWidth = m_iVertexStride * m_iNumVertices;
 	m_Buffer_Desc.Usage = D3D11_USAGE_DEFAULT;
 	m_Buffer_Desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	m_Buffer_Desc.CPUAccessFlags = 0;
 	m_Buffer_Desc.MiscFlags = 0;
-	m_Buffer_Desc.StructureByteStride = m_iVertextStride;
+	m_Buffer_Desc.StructureByteStride = m_iVertexStride;
 
 	m_ResourceData.pSysMem = pVertices;
 	if (FAILED(__super::Create_Buffer(&m_pVB)))

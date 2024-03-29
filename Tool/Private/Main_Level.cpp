@@ -3,21 +3,23 @@
 #include "GameInstance.h"
 #include "Tool_Camera.h"
 #include "Tool_Object.h"
+#include "Tool_Object_Manager.h"
 
 CMain_Level::CMain_Level(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CLevel{ pDevice, pContext }
+	: CLevel{ pDevice, pContext },
+	m_pObjectManager { CTool_Object_Manager::GetInstance() }
 {
+	Safe_AddRef(m_pObjectManager);
 }
 
 HRESULT CMain_Level::Initialize()
 {
+	m_pObjectManager->Initialize();
+
 	if (FAILED(Ready_Layer_Camera(L"GameObject_Camera")))
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Terrain(L"GameObject_Terrain")))
-		return E_FAIL;
-
-	if (FAILED(Ready_Layer_Object(L"GameObject_Object")))
 		return E_FAIL;
 
 	return S_OK;
@@ -59,18 +61,6 @@ HRESULT CMain_Level::Ready_Layer_Terrain(const wstring strName)
 	return S_OK;
 }
 
-HRESULT CMain_Level::Ready_Layer_Object(const wstring strName)
-{
-	CTool_Object::OBJECT_DESC tDesc{};
-	strcpy_s(tDesc.pObjectName, "Fiona");
-	tDesc.vPosition = _float4(0.f, 0.f, 0.f, 1.f);
-
-	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_MAIN, L"Prototype_GameObject_Object", strName, &tDesc)))
-		return E_FAIL;
-
-	return S_OK;
-}
-
 CMain_Level* CMain_Level::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CMain_Level* pInstance = new CMain_Level(pDevice, pContext);
@@ -84,4 +74,5 @@ CMain_Level* CMain_Level::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 void CMain_Level::Free()
 {
 	__super::Free();
+	Safe_Release(m_pObjectManager);
 }

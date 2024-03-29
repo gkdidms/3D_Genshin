@@ -43,6 +43,9 @@
     <Filter Include="94. Tool_Object_Manager">
       <UniqueIdentifier>{e5633be0-59f9-4587-b93d-748242f630e8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\Terrain\Dungeon">
+      <UniqueIdentifier>{6d3bcd10-aafa-44f9-9e92-7f6d18676774}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -105,6 +108,9 @@
     <ClInclude Include="..\public\Tool_Object_Manager.h">
       <Filter>94. Tool_Object_Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Tool_Dungeon.h">
+      <Filter>02. GameObject\Terrain\Dungeon</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -164,6 +170,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Tool_Object_Manager.cpp">
       <Filter>94. Tool_Object_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Tool_Dungeon.cpp">
+      <Filter>02. GameObject\Terrain\Dungeon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

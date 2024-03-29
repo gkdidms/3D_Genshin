@@ -15,8 +15,12 @@ class CTool_Object:
 public:
     typedef struct tToolObjectDesc : public CGameObject::GAMEOBJECT_DESC
     {
-        _char pObjectName[MAX_PATH];
+        char pObjectName[MAX_PATH];
         _float4 vPosition;
+
+        wstring strPrototypeVIBufferCom = L"";
+        wstring strComVIBufferCOm = L"";
+
     }OBJECT_DESC;
 
 private:
@@ -25,7 +29,7 @@ private:
     virtual ~CTool_Object() = default;
 
 public:
-    char* Get_ObjectName() { return m_strObjectName; }
+    string Get_ObjectName() { return m_strObjectName; }
 
 public:
     HRESULT Initialize_Prototype();
@@ -39,7 +43,10 @@ private:
     CModel* m_pVIBufferCom = { nullptr };
     CShader* m_pShaderCom = { nullptr };
 
-    char m_strObjectName[MAX_PATH] = {""};
+    string m_strObjectName = {""};
+
+    wstring m_strPrototypeVIBufferName = { L"" };
+    wstring m_strComVIBufferName = { L"" };
 
 private:
     HRESULT Add_Components();

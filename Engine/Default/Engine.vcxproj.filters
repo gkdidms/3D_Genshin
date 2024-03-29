@@ -100,6 +100,9 @@
     <Filter Include="01. Utility\03. Component\Model\Animation\Channel">
       <UniqueIdentifier>{0b802e77-04cb-4784-8594-02a6525e2d60}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00. System\00. Device\Sound">
+      <UniqueIdentifier>{5cdb1f34-f54d-4110-88c3-10648c370a64}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -191,6 +194,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Channel.cpp">
       <Filter>01. Utility\03. Component\Model\Animation\Channel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SoundMgr.cpp">
+      <Filter>00. System\00. Device\Sound</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -295,6 +301,9 @@
     </ClInclude>
     <ClInclude Include="..\public\Channel.h">
       <Filter>01. Utility\03. Component\Model\Animation\Channel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SoundMgr.h">
+      <Filter>00. System\00. Device\Sound</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

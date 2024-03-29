@@ -26,7 +26,7 @@ protected:
     D3D11_BUFFER_DESC m_Buffer_Desc = {};
     D3D11_SUBRESOURCE_DATA m_ResourceData = {};
 
-    _uint m_iVertextStride = { 0 };
+    _uint m_iVertexStride = { 0 };
     _uint m_iNumVertices = { 0 };
 
     _uint m_iIndexStride = { 0 };

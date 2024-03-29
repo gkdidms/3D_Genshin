@@ -51,6 +51,7 @@ public:
     void Go_Right(const _float& fTimeDelta);
     void LookAt(_fvector vTargetPosition);
     void Turn(_fvector vAxis, _float fTimeDelta);
+    void Rotation(_fvector vAxis, _float fRadian);
 
 private:
     _float4x4 m_matWorld;

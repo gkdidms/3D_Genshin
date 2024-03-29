@@ -14,7 +14,7 @@ public:
 
 public:
     const _float4x4* Get_CombinedTransformMatrix() const { return &m_CombinedTransformMatrix; }
-    void Set_TranformationMatrix(_fmatrix TransformationMatrix) { XMStoreFloat4x4(&m_TransformMatrix, TransformationMatrix); }
+    void Set_TranformationMatrix(_fmatrix TransformationMatrix) { XMStoreFloat4x4(&m_TransformationMatrix, TransformationMatrix); }
 
 public:
     HRESULT Initialize(const aiNode* pNode, _int iParentIndex);
@@ -24,11 +24,14 @@ private:
     char m_szNodeName[MAX_PATH] = "";
 
     _int m_iParentIndex = { 0 };
-    _float4x4 m_TransformMatrix;
+    _float4x4 m_TransformationMatrix;
     _float4x4 m_CombinedTransformMatrix;
+
+
 
 public:
     static CBone* Create(const aiNode* pNode, _int iParentIndex);
+    CBone* Clone();
     virtual void Free();
 };
 END

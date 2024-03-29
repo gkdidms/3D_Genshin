@@ -28,7 +28,11 @@ HRESULT CTool_Object::Initialize(void* pArg)
 		OBJECT_DESC* pDesc = (OBJECT_DESC*)pArg;
 
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&pDesc->vPosition));
-		strcpy_s(m_strObjectName, pDesc->pObjectName);
+		string ObjectName(pDesc->pObjectName);
+		m_strObjectName = ObjectName;
+
+		m_strPrototypeVIBufferName = pDesc->strPrototypeVIBufferCom;
+		m_strComVIBufferName = pDesc->strComVIBufferCOm;
 	}
 
 	if (FAILED(Add_Components()))
@@ -74,10 +78,10 @@ HRESULT CTool_Object::Render()
 
 HRESULT CTool_Object::Add_Components()
 {
-	if (FAILED(Add_Component(LEVEL_MAIN, L"Prototype_Component_Shader_VtxMesh", L"Component_Shader_VtxMesh", reinterpret_cast<CComponent**>(&m_pShaderCom))))
+	if (FAILED(Add_Component(LEVEL_MAIN, L"Prototype_Component_Shader_VtxMesh", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
-	if (FAILED(Add_Component(LEVEL_MAIN, L"Prototype_Component_Model_Dungeon_1", L"Component_Model_Dungeon_1", reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
+	if (FAILED(Add_Component(LEVEL_MAIN, m_strPrototypeVIBufferName, m_strComVIBufferName, reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
 		return E_FAIL;
 
 	return S_OK;

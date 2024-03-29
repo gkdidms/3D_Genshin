@@ -8,6 +8,9 @@ namespace Tool
 	const unsigned int g_iWinSizeY = 720;
 }
 
+#include <iostream>
+#include <io.h>
+
 extern HWND g_hWnd;
 extern HINSTANCE g_hInst;
 

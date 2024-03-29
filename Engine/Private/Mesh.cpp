@@ -43,15 +43,22 @@ HRESULT CMesh::Initialize_Prototype(MESHTYPE eMeshType, aiMesh* pAiMesh, _fmatri
 	m_Buffer_Desc.MiscFlags = 0;
 	m_Buffer_Desc.StructureByteStride = 0;
 
+	m_pVtxIndices = new _uint[m_iNumIndices];
+	ZeroMemory(m_pVtxIndices, sizeof(_uint) * m_iNumIndices);
+
 	_uint* pIndices = new _uint[m_iNumIndices];
 	ZeroMemory(pIndices, sizeof(_uint) * m_iNumIndices);
 
 	_uint iCountIndices = { 0 };
 
-	for (int i = 0; i < pAiMesh->mNumFaces; ++i)
+	m_iNumFaces = pAiMesh->mNumFaces;
+	for (size_t i = 0; i < m_iNumFaces; ++i)
 	{
+		m_pVtxIndices[iCountIndices] = pAiMesh->mFaces[i].mIndices[0];
 		pIndices[iCountIndices++] = pAiMesh->mFaces[i].mIndices[0];
+		m_pVtxIndices[iCountIndices] = pAiMesh->mFaces[i].mIndices[1];
 		pIndices[iCountIndices++] = pAiMesh->mFaces[i].mIndices[1];
+		m_pVtxIndices[iCountIndices] = pAiMesh->mFaces[i].mIndices[2];
 		pIndices[iCountIndices++] = pAiMesh->mFaces[i].mIndices[2];
 	}
 
@@ -66,19 +73,22 @@ HRESULT CMesh::Initialize_Prototype(MESHTYPE eMeshType, aiMesh* pAiMesh, _fmatri
 
 HRESULT CMesh::Ready_Vertices_For_NonAnim(aiMesh* pAiMesh, _fmatrix PreTransformMatrix)
 {
-	m_iVertextStride = sizeof(VTXMESH);
+	m_iVertexStride = sizeof(VTXMESH);
 
-	m_Buffer_Desc.ByteWidth = m_iVertextStride * m_iNumVertices;
+	m_Buffer_Desc.ByteWidth = m_iVertexStride * m_iNumVertices;
 	m_Buffer_Desc.Usage = D3D11_USAGE_DEFAULT;
 	m_Buffer_Desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	m_Buffer_Desc.CPUAccessFlags = 0;
 	m_Buffer_Desc.MiscFlags = 0;
-	m_Buffer_Desc.StructureByteStride = m_iVertextStride;
+	m_Buffer_Desc.StructureByteStride = m_iVertexStride;
+
+	m_pVtxPos = new _float3[m_iNumVertices];
+	ZeroMemory(m_pVtxPos, sizeof(_float3) * m_iNumVertices);
 
 	VTXMESH* pVertexts = new VTXMESH[m_iNumVertices];
 	ZeroMemory(pVertexts, sizeof(VTXMESH) * m_iNumVertices);
 
-	for (int i = 0; i < m_iNumVertices; ++i)
+	for (size_t i = 0; i < m_iNumVertices; ++i)
 	{
 		memcpy(&pVertexts[i].vPosition, &pAiMesh->mVertices[i], sizeof(_float3));
 		XMStoreFloat3(&pVertexts[i].vPosition, XMVector3TransformCoord(XMLoadFloat3(&pVertexts[i].vPosition), PreTransformMatrix));
@@ -88,6 +98,8 @@ HRESULT CMesh::Ready_Vertices_For_NonAnim(aiMesh* pAiMesh, _fmatrix PreTransform
 
 		memcpy(&pVertexts[i].vTexcoord, &pAiMesh->mTextureCoords[0][i], sizeof(_float2));
 		memcpy(&pVertexts[i].vTangent, &pAiMesh->mTangents[i], sizeof(_float3));
+
+		m_pVtxPos[i] = pVertexts[i].vPosition;
 	}
 
 	m_ResourceData.pSysMem = pVertexts;
@@ -102,19 +114,19 @@ HRESULT CMesh::Ready_Vertices_For_NonAnim(aiMesh* pAiMesh, _fmatrix PreTransform
 
 HRESULT CMesh::Ready_Vertices_For_Anim(aiMesh* pAiMesh, vector<CBone*> Bones)
 {
-	m_iVertextStride = sizeof(VTXANIMMESH);
+	m_iVertexStride = sizeof(VTXANIMMESH);
 
-	m_Buffer_Desc.ByteWidth = m_iVertextStride * m_iNumVertices;
+	m_Buffer_Desc.ByteWidth = m_iVertexStride * m_iNumVertices;
 	m_Buffer_Desc.Usage = D3D11_USAGE_DEFAULT;
 	m_Buffer_Desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	m_Buffer_Desc.CPUAccessFlags = 0;
 	m_Buffer_Desc.MiscFlags = 0;
-	m_Buffer_Desc.StructureByteStride = m_iVertextStride;
+	m_Buffer_Desc.StructureByteStride = m_iVertexStride;
 
 	VTXANIMMESH* pVertices = new VTXANIMMESH[m_iNumVertices];
 	ZeroMemory(pVertices, sizeof(VTXANIMMESH) * m_iNumVertices);
 
-	for (size_t i = 0; i < m_iNumVertices; ++i)
+	for (size_t i = 0; i < m_iNumVertices; i++)
 	{
 		memcpy(&pVertices[i].vPosition, &pAiMesh->mVertices[i], sizeof(_float3));
 		memcpy(&pVertices[i].vNormal, &pAiMesh->mNormals[i], sizeof(_float3));
@@ -127,11 +139,11 @@ HRESULT CMesh::Ready_Vertices_For_Anim(aiMesh* pAiMesh, vector<CBone*> Bones)
 	for (size_t i = 0; i < m_iNumBones; ++i)
 	{
 		// 메시에 포함된 뼈
-		aiBone* pMeshBone = pAiMesh->mBones[i];
+		aiBone* pAiBone = pAiMesh->mBones[i];
 
 		// 오프셋 : 보정행렬 (뼈대를 공유해서 다른 모델에도 사용할때 모델의 크기를 고려해서 컴바인 행렬과 곱하기 위한 용도로 사용한다.)
 		_float4x4 mOffsetMatrix;
-		memcpy(&mOffsetMatrix, &pMeshBone->mOffsetMatrix, sizeof(_float4x4));
+		memcpy(&mOffsetMatrix, &pAiBone->mOffsetMatrix, sizeof(_float4x4));
 		XMStoreFloat4x4(&mOffsetMatrix, XMMatrixTranspose(XMLoadFloat4x4(&mOffsetMatrix)));
 		m_OffsetMatrices.emplace_back(mOffsetMatrix);
 
@@ -139,7 +151,7 @@ HRESULT CMesh::Ready_Vertices_For_Anim(aiMesh* pAiMesh, vector<CBone*> Bones)
 
 		auto	iter = find_if(Bones.begin(), Bones.end(), [&](CBone* pBone)->_bool
 			{
-				if (true == pBone->Compare_NodeName(pMeshBone->mName.data))
+				if (true == pBone->Compare_NodeName(pAiBone->mName.data))
 					return true;
 
 				++iBoneIndex;
@@ -149,9 +161,9 @@ HRESULT CMesh::Ready_Vertices_For_Anim(aiMesh* pAiMesh, vector<CBone*> Bones)
 
 		m_BoneIndices.emplace_back(iBoneIndex);
 
-		for (size_t j = 0; j < pMeshBone->mNumWeights; j++)
+		for (size_t j = 0; j < pAiBone->mNumWeights; j++)
 		{
-			aiVertexWeight		VertexWeight = pMeshBone->mWeights[j];
+			aiVertexWeight		VertexWeight = pAiBone->mWeights[j];
 
 			/* VertexWeight.mVertexId : 이 뼈가 영향을 주는 정점들 중, j번째 정점의 인덱스 */
 			/* pVertices[VertexWeight.mVertexId].vBlendIndices: 이 정점에게 영햐응ㄹ 주는 뼈의 인덱스를 최대 네개 저장한다. */

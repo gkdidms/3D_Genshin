@@ -14,6 +14,11 @@ private:
     virtual ~CMesh() = default;
 
 public:
+    _float3* Get_VtxPos() { return m_pVtxPos; }
+    _uint* Get_VtxIndices() { return m_pVtxIndices; }
+    _uint Get_NumFaces() { return m_iNumFaces; }
+
+public:
     _uint Get_MaterialIndex() { return m_iMaterialIndex; }
     void Fill_Matrices(const vector<class CBone*>& Bones, _float4x4* BoneTransformMatrix);
 
@@ -24,10 +29,15 @@ private:
     _uint m_iMaterialIndex = { 0 };
 
     _uint m_iNumBones = { 0 };
+    _uint m_iNumFaces = { 0 };
+
     vector<_uint> m_BoneIndices;
     vector<_float4x4> m_OffsetMatrices;
 
     char m_szName[MAX_PATH] = "";
+
+    _float3* m_pVtxPos;
+    _uint* m_pVtxIndices;
 
 private:
     HRESULT Ready_Vertices_For_NonAnim(aiMesh* pAiMesh, _fmatrix PreTransformMatrix);

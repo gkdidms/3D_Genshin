@@ -7,16 +7,20 @@
 
 CTool_Terrain::CTool_Terrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject{ pDevice, pContext },
-	m_pObject_Manager{ CTool_Object_Manager::GetInstance() }
+	m_pObject_Manager{ CTool_Object_Manager::GetInstance() },
+	m_pTool_Manager { CTool_Manager::GetInstance() }
 {
 	Safe_AddRef(m_pObject_Manager);
+	Safe_AddRef(m_pTool_Manager);
 }
 
 CTool_Terrain::CTool_Terrain(const CTool_Terrain& rhs)
 	: CGameObject{ rhs },
-	m_pObject_Manager{ rhs.m_pObject_Manager }
+	m_pObject_Manager{ rhs.m_pObject_Manager },
+	m_pTool_Manager{rhs.m_pTool_Manager}
 {
 	Safe_AddRef(m_pObject_Manager);
+	Safe_AddRef(m_pTool_Manager);
 }
 
 HRESULT CTool_Terrain::Initialize_Prototype()
@@ -55,6 +59,9 @@ void CTool_Terrain::Late_Tick(const _float& fTimeDelta)
 
 HRESULT CTool_Terrain::Render()
 {
+	if (m_pTool_Manager->Is_ShowTerrain())
+		return S_OK;
+
 	if (FAILED(Bind_ResouceData()))
 		return E_FAIL;
 
@@ -112,7 +119,12 @@ void CTool_Terrain::Get_MousePos_On_Terrain()
 	{
 		CTool_Manager::vWorldMousePos = vWorldMouse;
 
-		if (FAILED(m_pObject_Manager->Add_CloneObject("Fiona", L"Prototype_GameObject_Object", L"GameObject_Object", XMVectorSet(vWorldMouse.x, vWorldMouse.y, vWorldMouse.z, 1.f))))
+		if (FAILED(m_pObject_Manager->Add_CloneObject("Fiona", 
+			CTool_Object_Manager::OBJECT_MONSTER,
+			L"Prototype_GameObject_Object",
+			L"GameObject_Object",
+			XMVectorSet(vWorldMouse.x, vWorldMouse.y, vWorldMouse.z, 1.f),
+			m_pTool_Manager->Get_CreateObjectIndex())))
 			return;
 	}
 }
@@ -146,4 +158,5 @@ void CTool_Terrain::Free()
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pCalculatorCom);
 	Safe_Release(m_pObject_Manager);
+	Safe_Release(m_pTool_Manager);
 }

@@ -63,8 +63,11 @@ HRESULT CGamePlay_Level::Ready_Layer_BackGround(const wstring& strLayerTag)
 
 HRESULT CGamePlay_Level::Ready_Layer_Monster(const wstring& strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Fiona", strLayerTag)))
-		return E_FAIL;
+	for (int i = 0; i < 10; ++i)
+	{
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Fiona", strLayerTag)))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }

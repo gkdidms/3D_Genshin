@@ -5,6 +5,7 @@
 #include "Tool_Terrain.h"
 #include "Tool_Camera.h"
 #include "Tool_Object.h"
+#include "Tool_Dungeon.h"
 
 CMainTool::CMainTool()
     :m_pGameInstance { CGameInstance::GetInstance() },
@@ -79,6 +80,9 @@ HRESULT CMainTool::Ready_Level_For_Main()
     if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Dungeon_1", CModel::Create(m_pDevice, m_pContext, CMesh::TYPE_NONANIM, "../../Client/Bin/Resources/Models/map/Dungeon_1/Dungeon_1.fbx", PreTransformMatrix))))
         return E_FAIL;
 
+    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Dungeon_2", CModel::Create(m_pDevice, m_pContext, CMesh::TYPE_NONANIM, "../../Client/Bin/Resources/Models/map/Dungeon_2/Dungeon_2.fbx", PreTransformMatrix))))
+        return E_FAIL;
+
     //buffer
     if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_VIBuffer_Terrain", CVIBuffer_Terrain::Create(m_pDevice, m_pContext, L"../../Client/Bin/Resources/Textures/Terrain/Height1.bmp"))))
         return E_FAIL;
@@ -106,6 +110,9 @@ HRESULT CMainTool::Ready_Level_For_Main()
         return E_FAIL;
 
     if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Object", CTool_Object::Create(m_pDevice, m_pContext))))
+        return E_FAIL;
+
+    if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Dungeon", CTool_Dungeon::Create(m_pDevice, m_pContext))))
         return E_FAIL;
 
 

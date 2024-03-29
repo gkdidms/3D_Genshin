@@ -12,7 +12,7 @@ private:
 public:
     HRESULT Initialize(aiNodeAnim* pChannel, const vector<class CBone*> Bones);
 
-    void Update_TransformationMatrix(double CurrentPosition, const vector<class CBone*> Bones);
+    void Update_TransformationMatrix(double CurrentPosition, const vector<class CBone*> Bones, _uint* iCurrentKeyFrameIndex);
 
 private:
     char m_szName[MAX_PATH] = "";
@@ -20,7 +20,7 @@ private:
     _uint m_iNumKeyFrames = { 0 };
 
     vector<KEYFRAME> m_KeyFrames;
-    _uint m_iCurrentKeyFrameIndex = { 0 };
+
 
 public:
     static CChannel* Create(aiNodeAnim* pChannel, const vector<class CBone*> Bones);

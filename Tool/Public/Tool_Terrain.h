@@ -34,6 +34,7 @@ private:
     CCalculator* m_pCalculatorCom = { nullptr };
 
     class CTool_Object_Manager* m_pObject_Manager = { nullptr };
+    class CTool_Manager* m_pTool_Manager = { nullptr };
 
 private:
     HRESULT Add_Components();

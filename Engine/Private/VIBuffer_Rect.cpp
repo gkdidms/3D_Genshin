@@ -24,14 +24,14 @@ HRESULT CVIBuffer_Rect::Initialize_Prototype()
 	m_Primitive_Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
 	m_iNumVertices = 4;
-	m_iVertextStride = sizeof(VXTPOSTEX);
+	m_iVertexStride = sizeof(VXTPOSTEX);
 
-	m_Buffer_Desc.ByteWidth = m_iVertextStride * m_iNumVertices;
+	m_Buffer_Desc.ByteWidth = m_iVertexStride * m_iNumVertices;
 	m_Buffer_Desc.Usage = D3D11_USAGE_DEFAULT;
 	m_Buffer_Desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	m_Buffer_Desc.CPUAccessFlags = 0;
 	m_Buffer_Desc.MiscFlags = 0;
-	m_Buffer_Desc.StructureByteStride = m_iVertextStride;
+	m_Buffer_Desc.StructureByteStride = m_iVertexStride;
 
 	VXTPOSTEX* pVertexts = new VXTPOSTEX[m_iNumVertices];
 
