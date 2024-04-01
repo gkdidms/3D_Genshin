@@ -56,6 +56,19 @@ HRESULT CChannel::Initialize(aiNodeAnim* pChannel, const vector<CBone*> Bones)
 	return S_OK;
 }
 
+HRESULT CChannel::Initialize(const char* pName, _int iBoneIndex, _uint iNumKeyFrames, vector<KEYFRAME> KeyFrames)
+{
+	strcpy_s(m_szName, pName);
+
+	m_iBoneIndex = iBoneIndex;
+
+	m_iNumKeyFrames = iNumKeyFrames;
+
+	m_KeyFrames = KeyFrames;
+		
+	return S_OK;
+}
+
 void CChannel::Update_TransformationMatrix(double CurrentPosition, const vector<CBone*> Bones, _uint* iCurrentKeyFrameIndex)
 {
 	if (CurrentPosition == 0.0)
@@ -92,6 +105,16 @@ CChannel* CChannel::Create(aiNodeAnim* pChannel, const vector<class CBone*> Bone
 	CChannel* pInstance = new CChannel();
 
 	if (FAILED(pInstance->Initialize(pChannel, Bones)))
+		Safe_Release(pInstance);
+
+	return pInstance;
+}
+
+CChannel* CChannel::Create(const char* pName, _int iBoneIndex, _uint iNumKeyFrames, vector<KEYFRAME> KeyFrames)
+{
+	CChannel* pInstance = new CChannel();
+
+	if (FAILED(pInstance->Initialize(pName, iBoneIndex, iNumKeyFrames, KeyFrames)))
 		Safe_Release(pInstance);
 
 	return pInstance;

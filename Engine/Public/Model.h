@@ -16,6 +16,8 @@ public:
         _bool isLoop = { false };
     }ANIM_DESC;
 
+    enum CREATETYPE { CREATE_READ, CREATE_AI };
+
 private:
     CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
     CModel(const CModel& rhs);
@@ -26,7 +28,7 @@ public:
     _uint Get_NumMaterials() { return m_iNumMaterials; }
 
 public:
-    HRESULT Initialize_Prototype(CMesh::MESHTYPE eMeshType, const _char* szModelFilePath, _fmatrix PreTransformMatrix);
+    HRESULT Initialize_Prototype(CMesh::MESHTYPE eMeshType, const _char* szModelFilePath, _fmatrix PreTransformMatrix, const _char* szBinaryFilePath, CREATETYPE eCreateType);
     HRESULT Initialize(void* pArv) override;
     void Render(_uint iMeshIndex);
 
@@ -69,11 +71,14 @@ private:
 private:
     HRESULT Ready_Meshes();
     HRESULT Ready_Materials(const char* pModelFilePath);
+    CTexture* Ready_Materials(const char* pModelFilePath, const char* pFilePath);
     HRESULT Ready_Bones(const aiNode* pAINode, _int iCountBoneIndex);
     HRESULT Ready_Animation();
 
+    HRESULT Ready_Model(const _char* szModelFilePath, const _char* szBinaryFilePath);
+
 public:
-    static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CMesh::MESHTYPE eMeshType, const _char* szModelFilePath, _fmatrix PreTransformMatrix);
+    static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CMesh::MESHTYPE eMeshType, const _char* szModelFilePath, _fmatrix PreTransformMatrix, const _char* szBinaryFilePath = nullptr,CREATETYPE eCreateType = CREATE_AI);
     virtual CComponent* Clone(void* vArg) override;
     virtual void Free() override;
 };

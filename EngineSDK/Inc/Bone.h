@@ -18,6 +18,7 @@ public:
 
 public:
     HRESULT Initialize(const aiNode* pNode, _int iParentIndex);
+    HRESULT Initialize(const char* pName, _int iParentIndex, _fmatrix TransformationMatrix);
     void Update_CombinedTransformMatrix(const vector<CBone*>& Bones, _fmatrix PreTransformMatrix);
 
 private:
@@ -27,10 +28,9 @@ private:
     _float4x4 m_TransformationMatrix;
     _float4x4 m_CombinedTransformMatrix;
 
-
-
 public:
     static CBone* Create(const aiNode* pNode, _int iParentIndex);
+    static CBone* Create(const char* pName, _int iParentIndex, _fmatrix TransformationMatrix);
     CBone* Clone();
     virtual void Free();
 };

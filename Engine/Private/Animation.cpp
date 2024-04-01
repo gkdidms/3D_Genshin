@@ -41,6 +41,24 @@ HRESULT CAnimation::Initialize(aiAnimation* pAiAnimation, const vector<class CBo
     return S_OK;
 }
 
+HRESULT CAnimation::Initialize(const char* pName, _double Duration, _double TickPerSecond, _uint iNumChannels, vector<class CChannel*> Channels)
+{
+    strcpy_s(m_szName, pName);
+
+    m_Duration = Duration;
+    m_TickPerSecond = TickPerSecond;
+    m_iNumChannels = iNumChannels;
+
+    m_CurrentKeyFrameIndex.resize(m_iNumChannels);
+
+    for (size_t i = 0; i < m_iNumChannels; ++i)
+    {
+        m_Channels.emplace_back(Channels[i]);
+    }
+
+    return S_OK;
+}
+
 void CAnimation::Update_TransformationMatrix(const _float& fTimeDelta, const vector<CBone*> Bones, _bool isLoop)
 {
     m_iCurrentPosition += m_TickPerSecond * fTimeDelta;
@@ -81,6 +99,16 @@ CAnimation* CAnimation::Create(aiAnimation* pAiAnimation, const vector<class CBo
 CAnimation* CAnimation::Clone()
 {
     return new CAnimation(*this);
+}
+
+CAnimation* CAnimation::Create(const char* pName, _double Duration, _double TickPerSecond, _uint iNumChannels, vector<class CChannel*> Channels)
+{
+    CAnimation* pInstance = new CAnimation();
+
+    if (FAILED(pInstance->Initialize(pName, Duration, TickPerSecond, iNumChannels, Channels)))
+        Safe_Release(pInstance);
+
+    return pInstance;
 }
 
 void CAnimation::Free()

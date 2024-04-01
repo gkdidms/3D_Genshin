@@ -12,6 +12,7 @@ private:
 
 public:
     HRESULT Initialize(aiAnimation* pAiAnimation, const vector<class CBone*> Bones);
+    HRESULT Initialize(const char* pName, _double Duration, _double TickPerSecond, _uint iNumChannels, vector<class CChannel*> Channels);
 
 public:
     void Update_TransformationMatrix(const _float& fTimeDelta, const vector<CBone*> Bones, _bool isLoop);
@@ -31,6 +32,7 @@ private:
 
 public:
     static CAnimation* Create(aiAnimation* pAiAnimation, const vector<class CBone*> Bones);
+    static CAnimation* Create(const char* pName, _double Duration, _double TickPerSecond, _uint iNumChannels, vector<class CChannel*> Channels);
     CAnimation* Clone();
     virtual void Free() override;
 };

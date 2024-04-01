@@ -25,8 +25,11 @@ using namespace TriangleTests;
 #include <list>
 #include <map>
 #include <algorithm>
+
 #include <iostream>
 #include <io.h>
+#include <fstream>
+#include <sstream>
 
 #include "Engine_Typedef.h"
 #include "Engine_Function.h"

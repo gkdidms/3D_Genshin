@@ -11,6 +11,7 @@ private:
 
 public:
     HRESULT Initialize(aiNodeAnim* pChannel, const vector<class CBone*> Bones);
+    HRESULT Initialize(const char* pName, _int iBoneIndex, _uint iNumKeyFrames, vector<KEYFRAME> KeyFrames);
 
     void Update_TransformationMatrix(double CurrentPosition, const vector<class CBone*> Bones, _uint* iCurrentKeyFrameIndex);
 
@@ -21,9 +22,9 @@ private:
 
     vector<KEYFRAME> m_KeyFrames;
 
-
 public:
     static CChannel* Create(aiNodeAnim* pChannel, const vector<class CBone*> Bones);
+    static CChannel* Create(const char* pName, _int iBoneIndex, _uint iNumKeyFrames, vector<KEYFRAME> KeyFrames);
     virtual void Free() override;
 };
 END
