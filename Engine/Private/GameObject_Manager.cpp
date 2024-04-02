@@ -102,6 +102,19 @@ void CGameObject_Manager::Clear(_uint iLevelIndex)
 	m_pLayers[iLevelIndex].clear();
 }
 
+vector<CGameObject*> CGameObject_Manager::Find_GameObjects_Clone(_uint iLevelIndex, const wstring strLayerTag)
+{
+	vector<CGameObject*> Objectes;
+	auto pLayer = m_pLayers[iLevelIndex].find(strLayerTag);
+
+	if (m_pLayers[iLevelIndex].end() == pLayer)
+		return Objectes;
+
+	pLayer->second->Find_Objectes(Objectes);
+
+	return Objectes;
+}
+
 CGameObject* CGameObject_Manager::Find_GameObject_Prototype(const wstring strGameObjectTag)
 {
 	auto pPrototype = m_pPrototypes.find(strGameObjectTag);

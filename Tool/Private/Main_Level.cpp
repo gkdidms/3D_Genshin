@@ -74,5 +74,7 @@ CMain_Level* CMain_Level::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 void CMain_Level::Free()
 {
 	__super::Free();
+	m_pObjectManager->Release_Object();
 	Safe_Release(m_pObjectManager);
+	
 }

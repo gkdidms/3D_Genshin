@@ -159,12 +159,46 @@ void CTool_Manager::Window_Object()
             if (ImGui::Selectable(dynamic_cast<CTool_Object*>(Objects[n])->Get_ObjectName().c_str(), is_selected))
             {
                 m_iCurrentPickingObjectIndex = n;
+
+                vector<CGameObject*> Objects = m_pObject_Manager->Get_Objects();
+                _matrix ObjectMatrix = Objects[m_iCurrentPickingObjectIndex]->m_pTransformCom->Get_WorldMatrix();
+                
+                memcpy(&m_pObjectMatrix, &ObjectMatrix, sizeof(_matrix));   
             }
 
             if (is_selected)
                 ImGui::SetItemDefaultFocus();
         }
         ImGui::EndListBox();
+    }
+
+    ImGui::Text(ImGuizmo::IsOver(ImGuizmo::TRANSLATE) ? "Over translate gizmo" : "");
+
+    if (ImGui::RadioButton("Translate", mCurrentGizmoOperation == ImGuizmo::TRANSLATE))
+        mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
+    ImGui::SameLine();
+    if (ImGui::RadioButton("Rotate", mCurrentGizmoOperation == ImGuizmo::ROTATE))
+        mCurrentGizmoOperation = ImGuizmo::ROTATE;
+    ImGui::SameLine();
+    if (ImGui::RadioButton("Scale", mCurrentGizmoOperation == ImGuizmo::SCALE))
+        mCurrentGizmoOperation = ImGuizmo::SCALE;
+
+    float matrixTranslation[3], matrixRotation[3], matrixScale[3];
+    ImGuizmo::DecomposeMatrixToComponents(m_pObjectMatrix, matrixTranslation, matrixRotation, matrixScale);
+    ImGui::InputFloat3("Tr", matrixTranslation);
+    ImGui::InputFloat3("Rt", matrixRotation);
+    ImGui::InputFloat3("Sc", matrixScale);
+    ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, m_pObjectMatrix);
+
+    if (ImGuizmo::IsUsing())
+    {
+        vector<CGameObject*> Objects = m_pObject_Manager->Get_Objects();
+        _matrix ObjectMatrix = Objects[m_iCurrentPickingObjectIndex]->m_pTransformCom->Get_WorldMatrix();
+        memcpy(&ObjectMatrix, &m_pObjectMatrix, sizeof(_float) * 16);
+        Objects[m_iCurrentPickingObjectIndex]->m_pTransformCom->Set_State(CTransform::STATE_RIGHT, ObjectMatrix.r[0]);
+        Objects[m_iCurrentPickingObjectIndex]->m_pTransformCom->Set_State(CTransform::STATE_UP, ObjectMatrix.r[1]);
+        Objects[m_iCurrentPickingObjectIndex]->m_pTransformCom->Set_State(CTransform::STATE_LOOK, ObjectMatrix.r[2]);
+        Objects[m_iCurrentPickingObjectIndex]->m_pTransformCom->Set_State(CTransform::STATE_POSITION, ObjectMatrix.r[3]);
     }
 
     ImGui::End();
@@ -323,21 +357,10 @@ void CTool_Manager::Guizmo_Test()
     static bool boundSizingSnap = false;
 
     
-    float viewManipulateRight = 1280.f;
+    float viewManipulateRight = g_iWinSizeX;
     float viewManipulateTop = 0;
 
-    //ImGui::SetNextWindowSize(ImVec2(1280, 720));
-    //ImGui::SetNextWindowPos(ImVec2(0, 0));
-
-    //ImGui::Begin("Guizmo");
-    //ImGuizmo::SetDrawlist();
-    //float windowWidth = (float)ImGui::GetWindowWidth();
-    //float windowHeight = (float)ImGui::GetWindowHeight();
-    //ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
-    ImGuizmo::SetRect(0, 0, 1280.f, 720.f);
-
-    //float viewManipulateRight = ImGui::GetWindowPos().x + windowWidth;
-    //float viewManipulateTop = ImGui::GetWindowPos().y;
+    ImGuizmo::SetRect(0, 0, g_iWinSizeX, g_iWinSizeY);
 
     _matrix cameraView = m_pGameInstance->Get_Transform_Matrix(CPipeLine::D3DTS_VIEW);
     _matrix cameraProjection = m_pGameInstance->Get_Transform_Matrix(CPipeLine::D3DTS_PROJ);
@@ -346,13 +369,12 @@ void CTool_Manager::Guizmo_Test()
     memcpy(&viewMatrix, &cameraView, sizeof(_matrix));
     memcpy(&projMatrix, &cameraProjection, sizeof(_matrix));
 
-    ImGuizmo::DrawGrid(viewMatrix, projMatrix, identityMatrix, 100.f);
-    ImGuizmo::DrawCubes(viewMatrix, projMatrix, &objectMatrix[0][0], gizmoCount);
-    ImGuizmo::Manipulate(viewMatrix, projMatrix, mCurrentGizmoOperation, mCurrentGizmoMode, objectMatrix[0], NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);
+    //ImGuizmo::DrawGrid(viewMatrix, projMatrix, identityMatrix, 100.f);
 
+    if (m_iCurrentPickingObjectIndex != -1)
+        ImGuizmo::Manipulate(viewMatrix, projMatrix, mCurrentGizmoOperation, mCurrentGizmoMode, m_pObjectMatrix, NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);
+   
     ImGuizmo::ViewManipulate(viewMatrix, camDistance, ImVec2(viewManipulateRight - 128, viewManipulateTop), ImVec2(128, 128), 0x10101010);
-
-    //ImGui::End();
 }
 
 void CTool_Manager::Free()

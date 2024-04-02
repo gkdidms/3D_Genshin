@@ -35,6 +35,7 @@ public: // 게임오브젝트 매니저
     HRESULT Add_GameObject_Prototype(const wstring strGameObjectTag, class CGameObject* pGameObject);
     HRESULT Add_GameObject(_uint iLevelIndex, const wstring strGameObjectTag, const wstring strLayerTag, void* pArg = nullptr);
     void Clear_Object(_uint iLevelIndex);
+    vector<class CGameObject*> Find_GameObjects_Clone(_uint iLevelIndex, const wstring strLayerTag);
 
 public: // 렌더러
     void Add_Renderer(CRenderer::RENDERER_STATE eRenderState, class CGameObject* pGameObject);

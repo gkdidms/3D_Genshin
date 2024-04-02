@@ -44,7 +44,6 @@ HRESULT CTool_Object::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_pObjectManager->Set_Object(this);
-
 	return S_OK;
 }
 

@@ -29,7 +29,7 @@ private:
 public:
     const vector<CLONE_DESC> Get_CloneDescs(OBJECTTYPE eType) const { return m_CloneDesc[eType]; }
     vector<CGameObject*> Get_Objects() { return m_Objects; }
-    
+
 public:
     void Set_Object(CGameObject* pObject) { m_Objects.emplace_back(pObject); Safe_AddRef(pObject); }
 
@@ -43,6 +43,7 @@ private:
     vector<CLONE_DESC> m_CloneDesc[OBJECT_END];
     
 public:
+    void Release_Object();
     virtual void Free();
 };
 END

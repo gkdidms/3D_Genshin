@@ -21,6 +21,9 @@ public:
     HRESULT Add_GameObject(_uint iLevelIndex, const wstring strGameObjectTag, const wstring strLayerTag, void* pArg);
     void Clear(_uint iLevelIndex);
 
+public:
+    vector<class CGameObject*> Find_GameObjects_Clone(_uint iLevelIndex, const wstring strLayerTag);
+
 private:
     map<const wstring, class CGameObject*> m_pPrototypes;
     map<const wstring, class CLayer*>* m_pLayers;

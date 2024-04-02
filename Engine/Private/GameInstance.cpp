@@ -123,6 +123,11 @@ void CGameInstance::Clear_Object(_uint iLevelIndex)
 	m_pComponent_Manager->Clear(iLevelIndex);
 }
 
+vector<class CGameObject*> CGameInstance::Find_GameObjects_Clone(_uint iLevelIndex, const wstring strLayerTag)
+{
+	return m_pGameObject_Manager->Find_GameObjects_Clone(iLevelIndex, strLayerTag);
+}
+
 void CGameInstance::Add_Renderer(CRenderer::RENDERER_STATE eRenderState, CGameObject* pGameObject)
 {
 	m_pRenderer->Add_Renderer(eRenderState, pGameObject);

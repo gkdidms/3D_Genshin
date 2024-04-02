@@ -45,6 +45,11 @@ HRESULT CLayer::Add_GameObject(CGameObject* pObject)
 	return S_OK;
 }
 
+void CLayer::Find_Objectes(vector<class CGameObject*> Objectes)
+{
+	Objectes = m_vecObjects;
+}
+
 CLayer* CLayer::Create()
 {
 	CLayer* pInstance = new CLayer();

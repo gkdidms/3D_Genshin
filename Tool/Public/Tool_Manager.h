@@ -78,7 +78,7 @@ private:
     _int m_iLoadFileIndex = { 0 };
 
 private:
-    _int m_iCurrentPickingObjectIndex = { 0 };
+    _int m_iCurrentPickingObjectIndex = { -1 };
     _float m_fDungeonDegree = { 0.f };
 
 private:
@@ -86,8 +86,10 @@ private:
     _int m_iCreateDungeonIndex = { 0 };
 
 private:
+    _float m_pObjectMatrix[16];
+
     ImGuizmo::OPERATION mCurrentGizmoOperation = { ImGuizmo::TRANSLATE };
-    ImGuizmo::MODE mCurrentGizmoMode = {ImGuizmo::LOCAL};
+    ImGuizmo::MODE mCurrentGizmoMode = {ImGuizmo::WORLD};
     float camDistance = 8.f;
     float objectMatrix[4][16] = {
   { 1.f, 0.f, 0.f, 0.f,

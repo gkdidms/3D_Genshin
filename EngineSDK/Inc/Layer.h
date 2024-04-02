@@ -19,6 +19,9 @@ public:
 public:
     HRESULT Add_GameObject(class CGameObject* pObject);
 
+public:
+    void Find_Objectes(vector<class CGameObject*> Objectes);
+
 private:
     vector<class CGameObject*> m_vecObjects;
 

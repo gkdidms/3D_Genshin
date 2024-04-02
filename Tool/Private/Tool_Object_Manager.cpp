@@ -34,7 +34,7 @@ HRESULT CTool_Object_Manager::Add_CloneObject(const char* pName, OBJECTTYPE eTyp
 	if (eType == OBJECT_MONSTER)
 	{
 		CTool_Object::OBJECT_DESC tDesc{};
-		strcpy_s(tDesc.pObjectName, pName);
+		strcpy_s(tDesc.pObjectName, m_CloneDesc[OBJECT_MONSTER][iObjectIndex].strName.c_str());
 		tDesc.vPosition = _float4(vObjPosFloat3.x, vObjPosFloat3.y, vObjPosFloat3.z, 1.f);
 		tDesc.strPrototypeVIBufferCom = m_CloneDesc[OBJECT_MONSTER][iObjectIndex].strPrototypeVIBufferCom;
 		tDesc.strComVIBufferCOm = m_CloneDesc[OBJECT_MONSTER][iObjectIndex].strComVIBufferCom;
@@ -45,7 +45,7 @@ HRESULT CTool_Object_Manager::Add_CloneObject(const char* pName, OBJECTTYPE eTyp
 	else if (eType == OBJECT_DUNGEON)
 	{
 		CTool_Dungeon::TOOL_DUNGEON_DESC tDesc{};
-		strcpy_s(tDesc.pName, pName);
+		strcpy_s(tDesc.pName, m_CloneDesc[OBJECT_DUNGEON][iObjectIndex].strName.c_str());
 		tDesc.strPrototypeVIBufferCom = m_CloneDesc[OBJECT_DUNGEON][iObjectIndex].strPrototypeVIBufferCom;
 		tDesc.strComVIBufferCom = m_CloneDesc[OBJECT_DUNGEON][iObjectIndex].strComVIBufferCom;
 
@@ -54,6 +54,12 @@ HRESULT CTool_Object_Manager::Add_CloneObject(const char* pName, OBJECTTYPE eTyp
 	}
 
     return S_OK;
+}
+
+void CTool_Object_Manager::Release_Object()
+{
+	for (auto& iter : m_Objects)
+		Safe_Release(iter);
 }
 
 void CTool_Object_Manager::Free()

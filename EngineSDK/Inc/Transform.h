@@ -52,6 +52,7 @@ public:
     void LookAt(_fvector vTargetPosition);
     void Turn(_fvector vAxis, _float fTimeDelta);
     void Rotation(_fvector vAxis, _float fRadian);
+    void Rotation(_float fRotationX, _float fRotationY, _float fRotationZ);
 
 private:
     _float4x4 m_matWorld;
