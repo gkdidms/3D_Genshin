@@ -58,6 +58,9 @@ HRESULT CTool_Object_Manager::Add_CloneObject(const char* pName, OBJECTTYPE eTyp
 
 void CTool_Object_Manager::Free()
 {
+	for (auto& iter : m_Objects)
+		Safe_Release(iter);
+
     Safe_Release(m_pGameInstance);
 	
 }

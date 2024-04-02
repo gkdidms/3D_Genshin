@@ -46,6 +46,9 @@
     <Filter Include="02. GameObject\Terrain\Dungeon">
       <UniqueIdentifier>{6d3bcd10-aafa-44f9-9e92-7f6d18676774}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98. Imgui\imGuizmo">
+      <UniqueIdentifier>{547812be-1c55-4b03-aeda-78539aaf16f1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -111,6 +114,24 @@
     <ClInclude Include="..\public\Tool_Dungeon.h">
       <Filter>02. GameObject\Terrain\Dungeon</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Imgui\imGuizmo\GraphEditor.h">
+      <Filter>98. Imgui\imGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Imgui\imGuizmo\ImCurveEdit.h">
+      <Filter>98. Imgui\imGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Imgui\imGuizmo\ImGradient.h">
+      <Filter>98. Imgui\imGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Imgui\imGuizmo\ImGuizmo.h">
+      <Filter>98. Imgui\imGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Imgui\imGuizmo\ImSequencer.h">
+      <Filter>98. Imgui\imGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Imgui\imGuizmo\ImZoomSlider.h">
+      <Filter>98. Imgui\imGuizmo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -173,6 +194,21 @@
     </ClCompile>
     <ClCompile Include="..\private\Tool_Dungeon.cpp">
       <Filter>02. GameObject\Terrain\Dungeon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Imgui\imGuizmo\GraphEditor.cpp">
+      <Filter>98. Imgui\imGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Imgui\imGuizmo\ImCurveEdit.cpp">
+      <Filter>98. Imgui\imGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Imgui\imGuizmo\ImGradient.cpp">
+      <Filter>98. Imgui\imGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Imgui\imGuizmo\ImGuizmo.cpp">
+      <Filter>98. Imgui\imGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Imgui\imGuizmo\ImSequencer.cpp">
+      <Filter>98. Imgui\imGuizmo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

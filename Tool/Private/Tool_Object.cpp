@@ -2,15 +2,20 @@
 
 #include "GameInstance.h"
 #include "Tool_Manager.h"
+#include "Tool_Object_Manager.h"
 
 CTool_Object::CTool_Object(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject{ pDevice, pContext }
+	: CGameObject{ pDevice, pContext },
+	m_pObjectManager { CTool_Object_Manager::GetInstance() }
 {
+	Safe_AddRef(m_pObjectManager);
 }
 
 CTool_Object::CTool_Object(const CTool_Object& rhs)
-	: CGameObject{ rhs }
+	: CGameObject{ rhs },
+	m_pObjectManager{ rhs.m_pObjectManager }
 {
+	Safe_AddRef(m_pObjectManager);
 }
 
 HRESULT CTool_Object::Initialize_Prototype()
@@ -38,8 +43,7 @@ HRESULT CTool_Object::Initialize(void* pArg)
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
-	CTool_Manager::Objects.push_back(this);
-	this->AddRef();
+	m_pObjectManager->Set_Object(this);
 
 	return S_OK;
 }
@@ -127,4 +131,5 @@ void CTool_Object::Free()
 
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pVIBufferCom);
+	Safe_Release(m_pObjectManager);
 }

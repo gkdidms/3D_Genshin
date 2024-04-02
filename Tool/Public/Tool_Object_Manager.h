@@ -5,6 +5,7 @@
 
 BEGIN(Engine)
 class CGameInstance;
+class CGameObject;
 END
 
 BEGIN(Tool)
@@ -27,6 +28,10 @@ private:
 
 public:
     const vector<CLONE_DESC> Get_CloneDescs(OBJECTTYPE eType) const { return m_CloneDesc[eType]; }
+    vector<CGameObject*> Get_Objects() { return m_Objects; }
+    
+public:
+    void Set_Object(CGameObject* pObject) { m_Objects.emplace_back(pObject); Safe_AddRef(pObject); }
 
 public:
     HRESULT Initialize();
@@ -34,6 +39,7 @@ public:
 
 private:
     CGameInstance* m_pGameInstance = { nullptr };
+    vector<CGameObject*> m_Objects;
     vector<CLONE_DESC> m_CloneDesc[OBJECT_END];
     
 public:

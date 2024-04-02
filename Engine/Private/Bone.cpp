@@ -25,7 +25,7 @@ HRESULT CBone::Initialize(const char* pName, _int iParentIndex, _fmatrix Transfo
 
     m_iParentIndex = iParentIndex;
 
-    XMStoreFloat4x4(&m_TransformationMatrix, XMMatrixTranspose(TransformationMatrix));
+    XMStoreFloat4x4(&m_TransformationMatrix, TransformationMatrix);
 
     XMStoreFloat4x4(&m_CombinedTransformMatrix, XMMatrixIdentity());
 

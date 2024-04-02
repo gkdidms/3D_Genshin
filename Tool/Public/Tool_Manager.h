@@ -7,8 +7,12 @@
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
 
+#include "ImGuizmo.h"
+#include "ImSequencer.h"
+
 BEGIN(Engine)
 class CGameObject;
+class CGameInstance;
 END
 
 BEGIN(Tool)
@@ -27,8 +31,6 @@ public:
     static _float fScaleTerrainZ;
 
     static _bool mTerrainPicking;
-
-    static vector<CGameObject*> Objects;
 
 public:
     string Get_SaveSeletedFileName() { return m_FileName[m_iSaveFileIndex]; }
@@ -52,9 +54,12 @@ private:
 
     void Bind_FileName();
 
+    void Guizmo_Test();
+
 private:
     ID3D11Device* m_pDevice = { nullptr };
     ID3D11DeviceContext* m_pContext = { nullptr };
+    CGameInstance* m_pGameInstance = { nullptr };
     class CTool_Object_Manager* m_pObject_Manager = { nullptr };
 
 private:
@@ -79,6 +84,39 @@ private:
 private:
     _int m_iCreateObjectIndex = { 0 };
     _int m_iCreateDungeonIndex = { 0 };
+
+private:
+    ImGuizmo::OPERATION mCurrentGizmoOperation = { ImGuizmo::TRANSLATE };
+    ImGuizmo::MODE mCurrentGizmoMode = {ImGuizmo::LOCAL};
+    float camDistance = 8.f;
+    float objectMatrix[4][16] = {
+  { 1.f, 0.f, 0.f, 0.f,
+    0.f, 1.f, 0.f, 0.f,
+    0.f, 0.f, 1.f, 0.f,
+    0.f, 0.f, 0.f, 1.f },
+
+  { 1.f, 0.f, 0.f, 0.f,
+  0.f, 1.f, 0.f, 0.f,
+  0.f, 0.f, 1.f, 0.f,
+  2.f, 0.f, 0.f, 1.f },
+
+  { 1.f, 0.f, 0.f, 0.f,
+  0.f, 1.f, 0.f, 0.f,
+  0.f, 0.f, 1.f, 0.f,
+  2.f, 0.f, 2.f, 1.f },
+
+  { 1.f, 0.f, 0.f, 0.f,
+  0.f, 1.f, 0.f, 0.f,
+  0.f, 0.f, 1.f, 0.f,
+  0.f, 0.f, 2.f, 1.f }
+    };
+
+     float identityMatrix[16] = { 1.f, 0.f, 0.f, 0.f,
+        0.f, 1.f, 0.f, 0.f,
+        0.f, 0.f, 1.f, 0.f,
+        0.f, 0.f, 0.f, 1.f };
+
+     int gizmoCount = 1;
 
 public:
     void Release_Tool();

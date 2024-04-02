@@ -40,9 +40,11 @@ public:
     HRESULT Render();
 
 private:
+    class CTool_Object_Manager* m_pObjectManager = { nullptr };
+
     CModel* m_pVIBufferCom = { nullptr };
     CShader* m_pShaderCom = { nullptr };
-
+    
     string m_strObjectName = {""};
 
     wstring m_strPrototypeVIBufferName = { L"" };

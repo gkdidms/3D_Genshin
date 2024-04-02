@@ -75,7 +75,7 @@ HRESULT CMesh::Initialize_Prototype(MESHTYPE eMeshType, _fmatrix PreTransformMat
 {
 	strcpy_s(m_szName, pName);
 
-	m_iMaterialIndex = iMaterialIndex;
+ 	m_iMaterialIndex = iMaterialIndex;
 
 	m_GIFormat = DXGI_FORMAT_R32_UINT;
 	m_Primitive_Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
@@ -345,7 +345,7 @@ HRESULT CMesh::Ready_Vertices_For_Anim(vector<VTXANIMMESH> AnimMeshed, _int iNum
 		// 오프셋 : 보정행렬 (뼈대를 공유해서 다른 모델에도 사용할때 모델의 크기를 고려해서 컴바인 행렬과 곱하기 위한 용도로 사용한다.)
 		_float4x4 mOffsetMatrix;
 		memcpy(&mOffsetMatrix, &OffsetMatrices[i], sizeof(_float4x4));
-		XMStoreFloat4x4(&mOffsetMatrix, XMMatrixTranspose(XMLoadFloat4x4(&mOffsetMatrix)));
+		//XMStoreFloat4x4(&mOffsetMatrix, XMMatrixTranspose(XMLoadFloat4x4(&mOffsetMatrix)));
 		m_OffsetMatrices.emplace_back(mOffsetMatrix);
 
 		_uint		iBoneIndex = BoneIndices[i];

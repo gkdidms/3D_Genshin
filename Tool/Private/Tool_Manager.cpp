@@ -1,5 +1,6 @@
 #include "Tool_Manager.h"
 
+#include "GameInstance.h"
 #include "GameObject.h"
 #include "Tool_Object.h"
 #include "Tool_Object_Manager.h"
@@ -12,11 +13,12 @@ _float CTool_Manager::fScaleTerrainX = { 1.f };
 _float CTool_Manager::fScaleTerrainZ = { 1.f };
 _bool CTool_Manager::mTerrainPicking = { false };
 
-vector<CGameObject*> CTool_Manager::Objects;
-
-CTool_Manager::CTool_Manager() : m_pObject_Manager{ CTool_Object_Manager::GetInstance() }
+CTool_Manager::CTool_Manager() 
+    : m_pObject_Manager{ CTool_Object_Manager::GetInstance() },
+    m_pGameInstance{ CGameInstance::GetInstance() }
 {
     Safe_AddRef(m_pObject_Manager);
+    Safe_AddRef(m_pGameInstance);
 }
 
 HRESULT CTool_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -55,6 +57,7 @@ void CTool_Manager::Tick(const _float& fTimeDelta)
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
 
+
     //_bool show_demo_window = true;
     //ImGui::ShowDemoWindow(&show_demo_window);
 
@@ -63,6 +66,8 @@ void CTool_Manager::Tick(const _float& fTimeDelta)
     Window_MainBar();
     Modal_Save();
     Modal_Load();
+
+    Guizmo_Test();
 }
 
 void CTool_Manager::Render()
@@ -147,6 +152,7 @@ void CTool_Manager::Window_Object()
     ImGui::Text("Created Objects");
     if (ImGui::BeginListBox("Created Object List"))
     {
+        vector<CGameObject*> Objects = m_pObject_Manager->Get_Objects();
         for (int n = 0; n < Objects.size(); n++)
         {
             const bool is_selected = (m_iCurrentPickingObjectIndex == n);
@@ -305,12 +311,54 @@ void CTool_Manager::Bind_FileName()
 	_findclose(handle);
 }
 
+void CTool_Manager::Guizmo_Test()
+{
+    ImGuizmo::BeginFrame();
+
+    static bool useSnap = false;
+    static float snap[3] = { 1.f, 1.f, 1.f };
+    static float bounds[] = { -0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f };
+    static float boundsSnap[] = { 0.1f, 0.1f, 0.1f };
+    static bool boundSizing = false;
+    static bool boundSizingSnap = false;
+
+    
+    float viewManipulateRight = 1280.f;
+    float viewManipulateTop = 0;
+
+    //ImGui::SetNextWindowSize(ImVec2(1280, 720));
+    //ImGui::SetNextWindowPos(ImVec2(0, 0));
+
+    //ImGui::Begin("Guizmo");
+    //ImGuizmo::SetDrawlist();
+    //float windowWidth = (float)ImGui::GetWindowWidth();
+    //float windowHeight = (float)ImGui::GetWindowHeight();
+    //ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+    ImGuizmo::SetRect(0, 0, 1280.f, 720.f);
+
+    //float viewManipulateRight = ImGui::GetWindowPos().x + windowWidth;
+    //float viewManipulateTop = ImGui::GetWindowPos().y;
+
+    _matrix cameraView = m_pGameInstance->Get_Transform_Matrix(CPipeLine::D3DTS_VIEW);
+    _matrix cameraProjection = m_pGameInstance->Get_Transform_Matrix(CPipeLine::D3DTS_PROJ);
+    _float viewMatrix[16], projMatrix[16];
+
+    memcpy(&viewMatrix, &cameraView, sizeof(_matrix));
+    memcpy(&projMatrix, &cameraProjection, sizeof(_matrix));
+
+    ImGuizmo::DrawGrid(viewMatrix, projMatrix, identityMatrix, 100.f);
+    ImGuizmo::DrawCubes(viewMatrix, projMatrix, &objectMatrix[0][0], gizmoCount);
+    ImGuizmo::Manipulate(viewMatrix, projMatrix, mCurrentGizmoOperation, mCurrentGizmoMode, objectMatrix[0], NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);
+
+    ImGuizmo::ViewManipulate(viewMatrix, camDistance, ImVec2(viewManipulateRight - 128, viewManipulateTop), ImVec2(128, 128), 0x10101010);
+
+    //ImGui::End();
+}
+
 void CTool_Manager::Free()
 {
-    for (auto& iter : Objects)
-        Safe_Release(iter);
-
     Safe_Release(m_pDevice);
     Safe_Release(m_pContext);
     Safe_Release(m_pObject_Manager);
+    Safe_Release(m_pGameInstance);
 }

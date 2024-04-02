@@ -232,8 +232,8 @@ HRESULT CModel::Ready_Model(const _char* szModelFilePath, const _char* szBinaryF
 		_char pName[MAX_PATH] = "";
 		_int iNumName = { 0 };
 
-		ifs.read((char*)&iNumName, sizeof(_int));
-		ifs.read((char*)pName, iNumName);
+		ifs.read((_char*)&iNumName, sizeof(_int));
+		ifs.read((_char*)pName, iNumName);
 
 		_int iParentIndex = { 0 };
 		ifs.read((_char*)&iParentIndex, sizeof(_int));
@@ -274,26 +274,27 @@ HRESULT CModel::Ready_Model(const _char* szModelFilePath, const _char* szBinaryF
 		unsigned int* Indices = new unsigned int[iNumIndices];
 		ZeroMemory(Indices, sizeof(unsigned int) * iNumIndices);
 
-		for (size_t i = 0; i < iNumIndices; ++i)
+		for (size_t j = 0; j < iNumIndices; ++j)
 		{
-			int iIndices = { 0 };
-			ifs.read((_char*)&iIndices, sizeof(_int));
+			_uint iIndices = { 0 };
+			ifs.read((_char*)&iIndices, sizeof(_uint));
 
-			Indices[i] = iIndices;
+			Indices[j] = iIndices;
 		}
+
 		vector<VTXANIMMESH> AnimMeshed;
 		vector<VTXMESH> Meshed;
 		if (m_eMeshType == CMesh::TYPE_ANIM)
 		{
 			VTXANIMMESH tVtxAnimMesh{};
-			for (size_t i =0; i < iNumVertices; ++i)
+			for (size_t k =0; k < iNumVertices; ++k)
 			{
 				ifs.read((_char*)&tVtxAnimMesh.vPosition, sizeof(_float3));
 				ifs.read((_char*)&tVtxAnimMesh.vNormal, sizeof(_float3));
 				ifs.read((_char*)&tVtxAnimMesh.vTexcoord, sizeof(_float2));
 				ifs.read((_char*)&tVtxAnimMesh.vTangent, sizeof(_float3));
 
-				ifs.read((_char*)&tVtxAnimMesh.vBlendIndices, sizeof(_float4));
+				ifs.read((_char*)&tVtxAnimMesh.vBlendIndices, sizeof(XMUINT4));
 				ifs.read((_char*)&tVtxAnimMesh.vBlendWeights, sizeof(_float4));
 
 				AnimMeshed.emplace_back(tVtxAnimMesh);
@@ -302,7 +303,7 @@ HRESULT CModel::Ready_Model(const _char* szModelFilePath, const _char* szBinaryF
 		else
 		{
 			VTXMESH tVtxMesh{};
-			for (size_t i = 0; i < iNumVertices; ++i)
+			for (size_t k = 0; k < iNumVertices; ++k)
 			{
 				ifs.read((_char*)&tVtxMesh.vPosition, sizeof(_float3));
 				ifs.read((_char*)&tVtxMesh.vNormal, sizeof(_float3));
@@ -317,7 +318,7 @@ HRESULT CModel::Ready_Model(const _char* szModelFilePath, const _char* szBinaryF
 		ifs.read((_char*)&iNumBones, sizeof(_int));
 
 		vector<_float4x4> OffsetMatrices;
-		for (size_t i = 0; i < iNumBones; ++i)
+		for (size_t k = 0; k < iNumBones; ++k)
 		{
 			_float4x4 OffsetMatrix;
 			ifs.read((_char*)&OffsetMatrix, sizeof(_float4x4));
@@ -325,7 +326,7 @@ HRESULT CModel::Ready_Model(const _char* szModelFilePath, const _char* szBinaryF
 		}
 
 		vector<_int> BoneIndices;
-		for (size_t i = 0; i < iNumBones; ++i)
+		for (size_t k = 0; k < iNumBones; ++k)
 		{
 			_int iBoneIndex = { 0 };
 			ifs.read((_char*)&iBoneIndex, sizeof(_int));

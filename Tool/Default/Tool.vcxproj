@@ -133,7 +133,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../Public/;../../Imgui/background/;../../Imgui/imgui/;../../EngineSDK/Inc/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Public/;../../Imgui/background/;../../Imgui/imgui/;../../EngineSDK/Inc/;../../Imgui/imGuizmo/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -147,6 +147,12 @@
   <ItemGroup>
     <ClInclude Include="..\..\Imgui\background\imgui_impl_dx11.h" />
     <ClInclude Include="..\..\Imgui\background\imgui_impl_win32.h" />
+    <ClInclude Include="..\..\Imgui\imGuizmo\GraphEditor.h" />
+    <ClInclude Include="..\..\Imgui\imGuizmo\ImCurveEdit.h" />
+    <ClInclude Include="..\..\Imgui\imGuizmo\ImGradient.h" />
+    <ClInclude Include="..\..\Imgui\imGuizmo\ImGuizmo.h" />
+    <ClInclude Include="..\..\Imgui\imGuizmo\ImSequencer.h" />
+    <ClInclude Include="..\..\Imgui\imGuizmo\ImZoomSlider.h" />
     <ClInclude Include="..\..\Imgui\imgui\imconfig.h" />
     <ClInclude Include="..\..\Imgui\imgui\imgui.h" />
     <ClInclude Include="..\..\Imgui\imgui\imgui_internal.h" />
@@ -170,6 +176,11 @@
   <ItemGroup>
     <ClCompile Include="..\..\Imgui\background\imgui_impl_dx11.cpp" />
     <ClCompile Include="..\..\Imgui\background\imgui_impl_win32.cpp" />
+    <ClCompile Include="..\..\Imgui\imGuizmo\GraphEditor.cpp" />
+    <ClCompile Include="..\..\Imgui\imGuizmo\ImCurveEdit.cpp" />
+    <ClCompile Include="..\..\Imgui\imGuizmo\ImGradient.cpp" />
+    <ClCompile Include="..\..\Imgui\imGuizmo\ImGuizmo.cpp" />
+    <ClCompile Include="..\..\Imgui\imGuizmo\ImSequencer.cpp" />
     <ClCompile Include="..\..\Imgui\imgui\imgui.cpp" />
     <ClCompile Include="..\..\Imgui\imgui\imgui_demo.cpp" />
     <ClCompile Include="..\..\Imgui\imgui\imgui_draw.cpp" />
