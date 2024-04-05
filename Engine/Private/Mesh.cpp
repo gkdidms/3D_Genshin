@@ -54,12 +54,9 @@ HRESULT CMesh::Initialize_Prototype(MESHTYPE eMeshType, aiMesh* pAiMesh, _fmatri
 	m_iNumFaces = pAiMesh->mNumFaces;
 	for (size_t i = 0; i < m_iNumFaces; ++i)
 	{
-		m_pVtxIndices[iCountIndices] = pAiMesh->mFaces[i].mIndices[0];
-		pIndices[iCountIndices++] = pAiMesh->mFaces[i].mIndices[0];
-		m_pVtxIndices[iCountIndices] = pAiMesh->mFaces[i].mIndices[1];
-		pIndices[iCountIndices++] = pAiMesh->mFaces[i].mIndices[1];
-		m_pVtxIndices[iCountIndices] = pAiMesh->mFaces[i].mIndices[2];
-		pIndices[iCountIndices++] = pAiMesh->mFaces[i].mIndices[2];
+		pIndices[iCountIndices++] = m_pVtxIndices[iCountIndices] = pAiMesh->mFaces[i].mIndices[0];
+		pIndices[iCountIndices++] = m_pVtxIndices[iCountIndices] = pAiMesh->mFaces[i].mIndices[1];
+		pIndices[iCountIndices++] = m_pVtxIndices[iCountIndices] = pAiMesh->mFaces[i].mIndices[2];
 	}
 
 	m_ResourceData.pSysMem = pIndices;

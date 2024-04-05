@@ -104,9 +104,8 @@ void CTool_Manager::Window_Terrain()
 
     if (ImGui::Button("Create"))
     {
-        m_pObject_Manager->Add_CloneObject("Dungeon_1", 
+        m_pObject_Manager->Add_CloneObject( 
             CTool_Object_Manager::OBJECT_DUNGEON, 
-            L"Prototype_GameObject_Dungeon", 
             L"GameObject_Dungeon", 
             XMVectorSet(0.f, 0.f, 0.f, 1.f), 
             m_iCreateDungeonIndex);
@@ -190,7 +189,7 @@ void CTool_Manager::Window_Object()
     ImGui::InputFloat3("Sc", matrixScale);
     ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, m_pObjectMatrix);
 
-    if (ImGuizmo::IsUsing())
+    if (m_iCurrentPickingObjectIndex != -1)
     {
         vector<CGameObject*> Objects = m_pObject_Manager->Get_Objects();
         _matrix ObjectMatrix = Objects[m_iCurrentPickingObjectIndex]->m_pTransformCom->Get_WorldMatrix();
@@ -363,10 +362,12 @@ void CTool_Manager::Guizmo_Test()
     ImGuizmo::SetRect(0, 0, g_iWinSizeX, g_iWinSizeY);
 
     _matrix cameraView = m_pGameInstance->Get_Transform_Matrix(CPipeLine::D3DTS_VIEW);
+    _matrix viewInverse = m_pGameInstance->Get_Transform_Inverse_Matrix(CPipeLine::D3DTS_VIEW); // 카메라 월드 
     _matrix cameraProjection = m_pGameInstance->Get_Transform_Matrix(CPipeLine::D3DTS_PROJ);
-    _float viewMatrix[16], projMatrix[16];
+    _float viewMatrix[16], projMatrix[16], viewInverseMatrix[16];
 
     memcpy(&viewMatrix, &cameraView, sizeof(_matrix));
+    memcpy(&viewInverseMatrix, &viewInverse, sizeof(_matrix));
     memcpy(&projMatrix, &cameraProjection, sizeof(_matrix));
 
     //ImGuizmo::DrawGrid(viewMatrix, projMatrix, identityMatrix, 100.f);
@@ -374,7 +375,10 @@ void CTool_Manager::Guizmo_Test()
     if (m_iCurrentPickingObjectIndex != -1)
         ImGuizmo::Manipulate(viewMatrix, projMatrix, mCurrentGizmoOperation, mCurrentGizmoMode, m_pObjectMatrix, NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);
    
-    ImGuizmo::ViewManipulate(viewMatrix, camDistance, ImVec2(viewManipulateRight - 128, viewManipulateTop), ImVec2(128, 128), 0x10101010);
+    ImGuizmo::ViewManipulate(viewInverseMatrix, camDistance, ImVec2(viewManipulateRight - 128, viewManipulateTop), ImVec2(128, 128), 0x10101010);
+
+    memcpy(&cameraView, &viewInverseMatrix, sizeof(_float) * 16);
+    m_pGameInstance->Set_Transform(CPipeLine::D3DTS_VIEW, XMMatrixInverse(nullptr, cameraView));
 }
 
 void CTool_Manager::Free()

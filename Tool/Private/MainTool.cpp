@@ -4,8 +4,9 @@
 #include "Main_Level.h"
 #include "Tool_Terrain.h"
 #include "Tool_Camera.h"
-#include "Tool_Object.h"
+#include "Tool_Non_Object.h"
 #include "Tool_Dungeon.h"
+#include "Tool_Anim_Object.h"
 
 CMainTool::CMainTool()
     :m_pGameInstance { CGameInstance::GetInstance() },
@@ -69,18 +70,28 @@ HRESULT CMainTool::Ready_Level_For_Main()
 {
     // ¸ðµ¨
     _matrix PreTransformMatrix = XMMatrixIdentity();
-    //if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Fiona", CModel::Create(m_pDevice, m_pContext, CMesh::TYPE_NONANIM, "../../Client/Bin/Resources/Models/Fiona/Fiona.fbx", PreTransformMatrix))))
-    //    return E_FAIL;
+    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Fiona", CModel::Create(m_pDevice, m_pContext, CMesh::TYPE_NONANIM, "../../Client/Bin/Resources/Models/Fiona/Fiona.fbx", PreTransformMatrix, "../../Data/Fiona.dat", CModel::CREATE_READ))))
+        return E_FAIL;
+
     if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Tarta", CModel::Create(m_pDevice, m_pContext, CMesh::TYPE_NONANIM, "../../Client/Bin/Resources/Models/Tarta/Tartaglia.fbx", PreTransformMatrix))))
         return E_FAIL;
 
-    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Nillou", CModel::Create(m_pDevice, m_pContext, CMesh::TYPE_NONANIM, "../../Client/Bin/Resources/Models/Nillou/Nilou.fbx", PreTransformMatrix))))
+    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Nillou", CModel::Create(m_pDevice, m_pContext, CMesh::TYPE_ANIM, "../../Client/Bin/Resources/Models/Nillou/Nilou.fbx", PreTransformMatrix, "../../Data/Nilou.dat", CModel::CREATE_READ))))
         return E_FAIL;
 
-    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Dungeon_1", CModel::Create(m_pDevice, m_pContext, CMesh::TYPE_NONANIM, "../../Client/Bin/Resources/Models/map/Dungeon_1/Dungeon_1.fbx", PreTransformMatrix))))
+    /*if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Nillou", CModel::Create(m_pDevice, m_pContext, CMesh::TYPE_ANIM, "../../Client/Bin/Resources/Models/Nillou/Nilou.fbx", PreTransformMatrix))))
+        return E_FAIL;*/
+
+    /*if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Nillou", CModel::Create(m_pDevice, m_pContext, CMesh::TYPE_ANIM, "../../Client/Bin/Resources/Models/Octopus/2202.fbx", PreTransformMatrix))))
+        return E_FAIL;*/
+
+    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Tighnari", CModel::Create(m_pDevice, m_pContext, CMesh::TYPE_NONANIM, "../../Client/Bin/Resources/Models/Tighnari/Tighnari.fbx", PreTransformMatrix, "../../Data/Tighnari.dat", CModel::CREATE_READ))))
         return E_FAIL;
 
-    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Dungeon_2", CModel::Create(m_pDevice, m_pContext, CMesh::TYPE_NONANIM, "../../Client/Bin/Resources/Models/map/Dungeon_2/Dungeon_2.fbx", PreTransformMatrix))))
+    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Dungeon_1", CModel::Create(m_pDevice, m_pContext, CMesh::TYPE_NONANIM, "../../Client/Bin/Resources/Models/map/Dungeon_1/Dungeon_1.fbx", PreTransformMatrix, "../../Data/Dungeon_1.dat", CModel::CREATE_READ))))
+        return E_FAIL;
+
+    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Dungeon_2", CModel::Create(m_pDevice, m_pContext, CMesh::TYPE_NONANIM, "../../Client/Bin/Resources/Models/map/Dungeon_2/Dungeon_2.fbx", PreTransformMatrix, "../../Data/Dungeon_2.dat", CModel::CREATE_READ))))
         return E_FAIL;
 
     //buffer
@@ -92,6 +103,9 @@ HRESULT CMainTool::Ready_Level_For_Main()
         return E_FAIL;
 
     if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Shader_VtxMesh", CShader::Create(m_pDevice, m_pContext, L"../Bin/ShaderFile/Shader_VtxMesh.hlsl", VTXMESH::Elements, VTXMESH::iNumElements))))
+        return E_FAIL;
+
+    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Shader_VtxAnimMesh", CShader::Create(m_pDevice, m_pContext, L"../Bin/ShaderFile/Shader_VtxAnimMesh.hlsl", VTXANIMMESH::Elements, VTXANIMMESH::iNumElements))))
         return E_FAIL;
 
     // Texture
@@ -109,7 +123,10 @@ HRESULT CMainTool::Ready_Level_For_Main()
     if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Camera", CTool_Camera::Create(m_pDevice, m_pContext))))
         return E_FAIL;
 
-    if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Object", CTool_Object::Create(m_pDevice, m_pContext))))
+    if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Object", CTool_Non_Object::Create(m_pDevice, m_pContext))))
+        return E_FAIL;
+
+    if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_AnimObject", CTool_Anim_Object::Create(m_pDevice, m_pContext))))
         return E_FAIL;
 
     if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Dungeon", CTool_Dungeon::Create(m_pDevice, m_pContext))))

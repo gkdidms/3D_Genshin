@@ -26,6 +26,7 @@ public:
     HRESULT Clear_BackBuffer_View(_float4 vClearColor);
     HRESULT Clear_DepthStencil_View();
     HRESULT Present();
+    _float Compute_ProjZ(const POINT& ptWindowPos);
     
     // 레벨 매니저
 public:
@@ -34,6 +35,7 @@ public:
 public: // 게임오브젝트 매니저
     HRESULT Add_GameObject_Prototype(const wstring strGameObjectTag, class CGameObject* pGameObject);
     HRESULT Add_GameObject(_uint iLevelIndex, const wstring strGameObjectTag, const wstring strLayerTag, void* pArg = nullptr);
+    class CGameObject* Clone_Object(const wstring strGameObjectTag, void* pArg);
     void Clear_Object(_uint iLevelIndex);
     vector<class CGameObject*> Find_GameObjects_Clone(_uint iLevelIndex, const wstring strLayerTag);
 
@@ -74,6 +76,9 @@ public: //Input_Device
     CInput_Device::eKEY_STATE GetKeyState(_ubyte byKeyID);
     CInput_Device::eKEY_STATE GetMouseState(MOUSEKEYSTATE eMouseState);
 
+public: // Picking
+    _vector Picking(_bool* isSuccess);
+
 private:
     class CGraphic_Device* m_pGraphic_Device = { nullptr };
     class CInput_Manager* m_pInput_Manager = { nullptr };
@@ -84,6 +89,7 @@ private:
     class CTimer_Manager* m_pTimer_Manager = { nullptr };
     class CRenderer* m_pRenderer = { nullptr };
     class CPipeLine* m_pPipeLine = { nullptr };
+    class CPicking* m_pPicking = { nullptr };
 
 public:
     void Release_Engine();

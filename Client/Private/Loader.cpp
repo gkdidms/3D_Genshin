@@ -77,7 +77,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	lstrcpy(m_szLoadingText, TEXT("모델를(을) 로딩 중 입니다."));
 	_matrix PreTransformMatrix;
-	PreTransformMatrix = XMMatrixScaling(1.f, 1.f, 1.f) * XMMatrixRotationY(XMConvertToRadians(180.0f));;
+	PreTransformMatrix = XMMatrixScaling(1.f, 1.f, 1.f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
  	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Fiona", CModel::Create(m_pDevice, m_pContext, CMesh::TYPE_ANIM, "../Bin/Resources/Models/Fiona/Fiona.fbx", PreTransformMatrix, "../../Data/Fiona.dat", CModel::CREATE_READ))))
 		return E_FAIL;
 

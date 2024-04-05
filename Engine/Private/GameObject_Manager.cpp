@@ -88,6 +88,19 @@ HRESULT CGameObject_Manager::Add_GameObject(_uint iLevelIndex, const wstring str
 	return S_OK;
 }
 
+CGameObject* CGameObject_Manager::Clone_Object(const wstring strGameObjectTag, void* pArg)
+{
+	CGameObject* pPrototype = Find_GameObject_Prototype(strGameObjectTag);
+	if (nullptr == pPrototype)
+		return nullptr;
+
+	CGameObject* pCloneObject = pPrototype->Clone(pArg);
+	if (nullptr == pCloneObject)
+		return nullptr;
+
+	return pCloneObject;
+}
+
 void CGameObject_Manager::Clear(_uint iLevelIndex)
 {
 	if (m_iMaxLevel <= iLevelIndex)

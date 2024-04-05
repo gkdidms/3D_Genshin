@@ -43,6 +43,9 @@
     <Filter Include="02. GameObject\Monster">
       <UniqueIdentifier>{7c37b1ac-82c3-4464-a7fc-34ad85b263f0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\Player">
+      <UniqueIdentifier>{b93a464a-26e8-432f-b573-292967d9fe5c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">
@@ -87,6 +90,9 @@
     <ClInclude Include="..\public\Monster.h">
       <Filter>02. GameObject\Monster</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Player.h">
+      <Filter>02. GameObject\Player</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -118,6 +124,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Monster.cpp">
       <Filter>02. GameObject\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Player.cpp">
+      <Filter>02. GameObject\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

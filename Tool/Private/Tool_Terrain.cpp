@@ -3,7 +3,7 @@
 #include "Tool_Object_Manager.h"
 #include "GameInstance.h"
 #include "Tool_Manager.h"
-#include "Tool_Object.h"
+#include "Tool_Non_Object.h"
 
 CTool_Terrain::CTool_Terrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject{ pDevice, pContext },
@@ -107,23 +107,21 @@ HRESULT CTool_Terrain::Bind_ResouceData()
 
 void CTool_Terrain::Get_MousePos_On_Terrain()
 {
-	POINT	ptMouse{};
 
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
-
-	_float3 vWorldMouse;
-	_bool IsPicking = m_pCalculatorCom->Picking_OnTerrain(XMVectorSet(ptMouse.x, ptMouse.y, 0.f, 1.f), m_pTransformCom, m_pVIBufferCom, m_pVIBufferCom->Get_Width(), m_pVIBufferCom->Get_Height(), &vWorldMouse);
+	_bool IsPicking = { false };
+	_vector vMousePos = m_pGameInstance->Picking(&IsPicking);
 	
 	if (IsPicking)
 	{
-		CTool_Manager::vWorldMousePos = vWorldMouse;
+		_float3 vMousePosFloat3;
+		XMStoreFloat3(&vMousePosFloat3, vMousePos);
 
-		if (FAILED(m_pObject_Manager->Add_CloneObject("Fiona", 
+		CTool_Manager::vWorldMousePos = vMousePosFloat3;
+
+		if (FAILED(m_pObject_Manager->Add_CloneObject(
 			CTool_Object_Manager::OBJECT_MONSTER,
-			L"Prototype_GameObject_Object",
 			L"GameObject_Object",
-			XMVectorSet(vWorldMouse.x, vWorldMouse.y, vWorldMouse.z, 1.f),
+			vMousePos,
 			m_pTool_Manager->Get_CreateObjectIndex())))
 			return;
 	}

@@ -2,7 +2,7 @@
 
 #include "GameInstance.h"
 #include "Tool_Camera.h"
-#include "Tool_Object.h"
+#include "Tool_Non_Object.h"
 #include "Tool_Object_Manager.h"
 
 CMain_Level::CMain_Level(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -27,10 +27,14 @@ HRESULT CMain_Level::Initialize()
 
 void CMain_Level::Tick(const _float& fTimeDelta)
 {           
+	m_pObjectManager->Priority_Tick(fTimeDelta);
+	m_pObjectManager->Tick(fTimeDelta);
+	m_pObjectManager->Late_Tick(fTimeDelta);
 }
 
 void CMain_Level::Render()
 {
+	m_pObjectManager->Render();
 }
 
 HRESULT CMain_Level::Ready_Layer_Camera(const wstring strName)

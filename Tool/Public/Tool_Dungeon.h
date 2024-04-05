@@ -10,11 +10,14 @@ class  CTool_Dungeon final:
     public CGameObject
 {
 public:
-    typedef struct tToolDungeonDesc : public CGameObject::GAMEOBJECT_DESC {
-        char pName[MAX_PATH];
-        wstring strPrototypeVIBufferCom{ L"" };
-        wstring strComVIBufferCom{ L"" };
-    }TOOL_DUNGEON_DESC;
+    typedef struct tToolDungeonDesc : public CGameObject::GAMEOBJECT_DESC
+    {
+        char pObjectName[MAX_PATH];
+        _float4 vPosition;
+
+        wstring strPrototypeVIBufferCom = L"";
+        wstring strComVIBufferCOm = L"";
+    }DUNGEON_DESC;
 
 private:
     CTool_Dungeon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -22,20 +25,21 @@ private:
     virtual ~CTool_Dungeon() = default;
 
 public:
-    HRESULT Initialize_Prototype() override;
-    HRESULT Initialize(void* pArg) override;
-    void Priority_Tick(const _float& fTimeDelta) override;
-    void Tick(const _float& fTimeDelta) override;
-    void Late_Tick(const _float& fTimeDelta) override;
-    HRESULT Render() override;
+    virtual HRESULT Initialize_Prototype() override;
+    virtual HRESULT Initialize(void* pArg) override;
+    virtual void Priority_Tick(const _float& fTimeDelta) override;
+    virtual void Tick(const _float& fTimeDelta) override;
+    virtual void Late_Tick(const _float& fTimeDelta) override;
+    virtual HRESULT Render() override;
 
 private:
-    CShader* m_pShaderCom = { nullptr };
-    CModel* m_pModelCom = { nullptr };
-    CCalculator* m_pCalculatorCom = { nullptr };
-
-    class CTool_Manager* m_pTool_Manager = { nullptr };
     class CTool_Object_Manager* m_pObject_Manager = { nullptr };
+    class CTool_Manager* m_pTool_Manager = { nullptr };
+
+    CModel* m_pVIBufferCom = { nullptr };
+    CShader* m_pShaderCom = { nullptr };
+
+    string m_strObjectName = { "" };
 
     wstring m_strPrototypeVIBufferName = { L"" };
     wstring m_strComVIBufferName = { L"" };

@@ -28,13 +28,6 @@ HRESULT CTool_Dungeon::Initialize_Prototype()
 
 HRESULT CTool_Dungeon::Initialize(void* pArg)
 {
-	if (nullptr != pArg)
-	{
-		TOOL_DUNGEON_DESC* pDesc = (TOOL_DUNGEON_DESC*)pArg;
-		m_strPrototypeVIBufferName = pDesc->strPrototypeVIBufferCom;
-		m_strComVIBufferName = pDesc->strComVIBufferCom;
-	}
-
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -50,7 +43,8 @@ void CTool_Dungeon::Priority_Tick(const _float& fTimeDelta)
 
 void CTool_Dungeon::Tick(const _float& fTimeDelta)
 {
-	//if (m_pTool_Manager->Is_PickingWithDungeon() && m_pGameInstance->GetMouseState(DIM_RB) == CInput_Device::TAP)
+	if (m_pTool_Manager->Is_PickingWithDungeon() && m_pGameInstance->GetMouseState(DIM_RB) == CInput_Device::TAP)
+		Get_MousePos_On_Dungeon();
 
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(m_pTool_Manager->Get_DungeonDegree()));
 }
@@ -65,14 +59,14 @@ HRESULT CTool_Dungeon::Render()
 	if (FAILED(Bind_Resource()))
 		return E_FAIL;
 
-	_uint iNumMeshes = m_pModelCom->Get_NumMeshes();
+	_uint iNumMeshes = m_pVIBufferCom->Get_NumMeshes();
 
 	for (size_t i = 0; i < iNumMeshes; ++i)
 	{
-		m_pModelCom->Bind_Material(m_pShaderCom, "g_Texture", i, aiTextureType_DIFFUSE);
+		m_pVIBufferCom->Bind_Material(m_pShaderCom, "g_Texture", i, aiTextureType_DIFFUSE);
 
 		m_pShaderCom->Begin(0);
-		m_pModelCom->Render(i);
+		m_pVIBufferCom->Render(i);
 	}
 	
 	return S_OK;
@@ -83,10 +77,7 @@ HRESULT CTool_Dungeon::Add_Components()
 	if (FAILED(Add_Component(LEVEL_MAIN, L"Prototype_Component_Shader_VtxMesh", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
-	if (FAILED(Add_Component(LEVEL_MAIN, m_strPrototypeVIBufferName, m_strComVIBufferName, reinterpret_cast<CComponent**>(&m_pModelCom))))
-		return E_FAIL;
-
-	if (FAILED(Add_Component(LEVEL_MAIN, L"Prototype_Component_Calculator", L"Com_Calculator", reinterpret_cast<CComponent**>(&m_pCalculatorCom))))
+	if (FAILED(Add_Component(LEVEL_MAIN, m_strPrototypeVIBufferName, m_strComVIBufferName, reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
 		return E_FAIL;
 
 	return S_OK;
@@ -106,27 +97,19 @@ HRESULT CTool_Dungeon::Bind_Resource()
 
 void CTool_Dungeon::Get_MousePos_On_Dungeon()
 {
-	POINT	ptMouse{};
+	_bool isSuccess = { false };
 
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
+	_vector vMousePos = m_pGameInstance->Picking(&isSuccess);
 
-	_float3 vWorldMouse;
-
-	/*_bool IsPicking = m_pCalculatorCom->Picking_OnTerrain(XMVectorSet(ptMouse.x, ptMouse.y, 0.f, 1.f), m_pTransformCom, m_pVIBufferCom, m_pVIBufferCom->Get_Width(), m_pVIBufferCom->Get_Height(), &vWorldMouse);
-
-	if (IsPicking)
+	if (isSuccess)
 	{
-		CTool_Manager::vWorldMousePos = vWorldMouse;
-
-		if (FAILED(m_pObject_Manager->Add_CloneObject("Fiona",
+		if (FAILED(m_pObject_Manager->Add_CloneObject(
 			CTool_Object_Manager::OBJECT_MONSTER,
-			L"Prototype_GameObject_Object",
 			L"GameObject_Object",
-			XMVectorSet(vWorldMouse.x, vWorldMouse.y, vWorldMouse.z, 1.f),
+			vMousePos,
 			m_pTool_Manager->Get_CreateObjectIndex())))
 			return;
-	}*/
+	}
 }
 
 CTool_Dungeon* CTool_Dungeon::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -152,9 +135,8 @@ CGameObject* CTool_Dungeon::Clone(void* pArg)
 void CTool_Dungeon::Free()
 {
 	__super::Free();
-	Safe_Release(m_pModelCom);
-	Safe_Release(m_pCalculatorCom);
 	Safe_Release(m_pShaderCom);
+	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pObject_Manager);
 	Safe_Release(m_pTool_Manager);
 }

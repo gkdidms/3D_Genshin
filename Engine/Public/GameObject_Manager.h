@@ -19,6 +19,7 @@ public:
 public:
     HRESULT Add_GameObject_Prototype(const wstring strGameObjectTag, class CGameObject* pGameObject);
     HRESULT Add_GameObject(_uint iLevelIndex, const wstring strGameObjectTag, const wstring strLayerTag, void* pArg);
+    class CGameObject* Clone_Object(const wstring strGameObjectTag, void* pArg);
     void Clear(_uint iLevelIndex);
 
 public:

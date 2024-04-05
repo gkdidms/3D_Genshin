@@ -20,6 +20,8 @@ public:
         wstring strPrototypeVIBufferCom{ L"" };
         wstring strComVIBufferCom{ L"" };
 
+        _bool IsAnimation;
+
     }CLONE_DESC;
 
 private:
@@ -31,15 +33,17 @@ public:
     vector<CGameObject*> Get_Objects() { return m_Objects; }
 
 public:
-    void Set_Object(CGameObject* pObject) { m_Objects.emplace_back(pObject); Safe_AddRef(pObject); }
-
-public:
     HRESULT Initialize();
-    HRESULT Add_CloneObject(const char* pName, OBJECTTYPE eType, wstring strGameObjectTag, wstring strLayerTag, _vector vObjPos, _uint iObjectIndex);
+    void Priority_Tick(const _float& fTimeDelta);
+    void Tick(const _float& fTimeDelta);
+    void Late_Tick(const float& fTimeDelta);
+    HRESULT Render();
+    HRESULT Add_CloneObject(OBJECTTYPE eType, wstring strLayerTag, _vector vObjPos, _uint iObjectIndex);
 
 private:
     CGameInstance* m_pGameInstance = { nullptr };
     vector<CGameObject*> m_Objects;
+    vector<CGameObject*> m_Terrains;
     vector<CLONE_DESC> m_CloneDesc[OBJECT_END];
     
 public:

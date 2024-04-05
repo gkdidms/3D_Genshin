@@ -274,67 +274,36 @@ HRESULT CModel::Ready_Model(const _char* szModelFilePath, const _char* szBinaryF
 		unsigned int* Indices = new unsigned int[iNumIndices];
 		ZeroMemory(Indices, sizeof(unsigned int) * iNumIndices);
 
-		for (size_t j = 0; j < iNumIndices; ++j)
-		{
-			_uint iIndices = { 0 };
-			ifs.read((_char*)&iIndices, sizeof(_uint));
-
-			Indices[j] = iIndices;
-		}
+		ifs.read((_char*)&Indices[0], sizeof(_uint) * iNumIndices);
 
 		vector<VTXANIMMESH> AnimMeshed;
+		AnimMeshed.resize(iNumVertices);
+		_int iNumBones = { 0 };
+		vector<_float4x4> OffsetMatrices;
+		
+		vector<_int> BoneIndices;
+		
+		_int iNumWeight = { 0 };
+
 		vector<VTXMESH> Meshed;
+		Meshed.resize(iNumVertices);
 		if (m_eMeshType == CMesh::TYPE_ANIM)
 		{
-			VTXANIMMESH tVtxAnimMesh{};
-			for (size_t k =0; k < iNumVertices; ++k)
-			{
-				ifs.read((_char*)&tVtxAnimMesh.vPosition, sizeof(_float3));
-				ifs.read((_char*)&tVtxAnimMesh.vNormal, sizeof(_float3));
-				ifs.read((_char*)&tVtxAnimMesh.vTexcoord, sizeof(_float2));
-				ifs.read((_char*)&tVtxAnimMesh.vTangent, sizeof(_float3));
+			ifs.read((_char*)&AnimMeshed[0], sizeof(VTXANIMMESH) * iNumVertices);
 
-				ifs.read((_char*)&tVtxAnimMesh.vBlendIndices, sizeof(XMUINT4));
-				ifs.read((_char*)&tVtxAnimMesh.vBlendWeights, sizeof(_float4));
+			ifs.read((_char*)&iNumBones, sizeof(_int));
 
-				AnimMeshed.emplace_back(tVtxAnimMesh);
-			}
+			OffsetMatrices.resize(iNumBones);
+			BoneIndices.resize(iNumBones);
+			ifs.read((_char*)&OffsetMatrices[0], sizeof(_float4x4) * iNumBones);
+			ifs.read((_char*)&BoneIndices[0], sizeof(_int) * iNumBones);
+
+			ifs.read((_char*)&iNumWeight, sizeof(_int));
 		}
 		else
 		{
-			VTXMESH tVtxMesh{};
-			for (size_t k = 0; k < iNumVertices; ++k)
-			{
-				ifs.read((_char*)&tVtxMesh.vPosition, sizeof(_float3));
-				ifs.read((_char*)&tVtxMesh.vNormal, sizeof(_float3));
-				ifs.read((_char*)&tVtxMesh.vTexcoord, sizeof(_float2));
-				ifs.read((_char*)&tVtxMesh.vTangent, sizeof(_float3));
-
-				Meshed.emplace_back(tVtxMesh);
-			}
+			ifs.read((_char*)&Meshed[0], sizeof(VTXMESH) * iNumVertices);
 		}
-
-		_int iNumBones = { 0 };
-		ifs.read((_char*)&iNumBones, sizeof(_int));
-
-		vector<_float4x4> OffsetMatrices;
-		for (size_t k = 0; k < iNumBones; ++k)
-		{
-			_float4x4 OffsetMatrix;
-			ifs.read((_char*)&OffsetMatrix, sizeof(_float4x4));
-			OffsetMatrices.emplace_back(OffsetMatrix);
-		}
-
-		vector<_int> BoneIndices;
-		for (size_t k = 0; k < iNumBones; ++k)
-		{
-			_int iBoneIndex = { 0 };
-			ifs.read((_char*)&iBoneIndex, sizeof(_int));
-			BoneIndices.emplace_back(iBoneIndex);
-		}
-
-		_int iNumWeight = { 0 };
- 		ifs.read((_char*)&iNumWeight, sizeof(_int));
 
 		//Anim & NonAnim 구분하기
 		CMesh* pMesh = CMesh::Create(m_pDevice, m_pContext, m_eMeshType, 
@@ -385,16 +354,8 @@ HRESULT CModel::Ready_Model(const _char* szModelFilePath, const _char* szBinaryF
 			ifs.read((_char*)&iNumKeyFrames, sizeof(_uint));
 
 			vector<KEYFRAME> KeyFrames;
-			for (size_t k = 0; k < iNumKeyFrames; ++k)
-			{
-				KEYFRAME tKeyFrame;
-				ifs.read((_char*)&tKeyFrame.vScale, sizeof(_float3));
-				ifs.read((_char*)&tKeyFrame.vRotate, sizeof(_float4));
-				ifs.read((_char*)&tKeyFrame.vPosition, sizeof(_float3));
-				ifs.read((_char*)&tKeyFrame.Time, sizeof(_double));
-
-				KeyFrames.emplace_back(tKeyFrame);
-			}
+			KeyFrames.resize(iNumKeyFrames);
+			ifs.read((_char*)&KeyFrames[0], sizeof(KEYFRAME) * iNumKeyFrames);
 
 			CChannel* pChannel = CChannel::Create(pChannelName, iBoneIndex, iNumKeyFrames, KeyFrames);
 			if (pChannel == nullptr)

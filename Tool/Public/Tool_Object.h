@@ -9,7 +9,7 @@ class CShader;
 END
 
 BEGIN(Tool)
-class CTool_Object:
+class CTool_Object abstract:
     public CGameObject
 {
 public:
@@ -20,10 +20,9 @@ public:
 
         wstring strPrototypeVIBufferCom = L"";
         wstring strComVIBufferCOm = L"";
-
     }OBJECT_DESC;
 
-private:
+protected:
     CTool_Object(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
     CTool_Object(const CTool_Object& rhs);
     virtual ~CTool_Object() = default;
@@ -32,31 +31,27 @@ public:
     string Get_ObjectName() { return m_strObjectName; }
 
 public:
-    HRESULT Initialize_Prototype();
-    HRESULT Initialize(void* pArg);
-    void Priority_Tick(const _float& fTimeDelta);
-    void Tick(const _float& fTimeDelta);
-    void Late_Tick(const _float& fTimeDelta);
-    HRESULT Render();
+    virtual HRESULT Initialize_Prototype();
+    virtual HRESULT Initialize(void* pArg);
+    virtual void Priority_Tick(const _float& fTimeDelta);
+    virtual void Tick(const _float& fTimeDelta);
+    virtual void Late_Tick(const _float& fTimeDelta);
+    virtual HRESULT Render();
 
-private:
+protected:
     class CTool_Object_Manager* m_pObjectManager = { nullptr };
 
     CModel* m_pVIBufferCom = { nullptr };
     CShader* m_pShaderCom = { nullptr };
-    
-    string m_strObjectName = {""};
+
+    string m_strObjectName = { "" };
 
     wstring m_strPrototypeVIBufferName = { L"" };
     wstring m_strComVIBufferName = { L"" };
 
-private:
-    HRESULT Add_Components();
-    HRESULT Bind_ResourceData();
-
-public:
-    static CTool_Object* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-    virtual CGameObject* Clone(void* pArg);
+protected:
+    virtual CGameObject* Clone(void* pArg) = 0;
     virtual void Free() override;
 };
+
 END

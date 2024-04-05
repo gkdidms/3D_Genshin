@@ -8,6 +8,7 @@
 #include "Component_Manager.h"
 #include "Timer_Manager.h"
 #include "Renderer.h"
+#include "Picking.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -50,6 +51,10 @@ HRESULT CGameInstance::Initialize_Engine(_uint iMaxLevelIndex, const ENGINE_DESC
 		return E_FAIL;
 
 	m_pPipeLine = CPipeLine::Create();
+	if (nullptr == m_pPipeLine)
+		return E_FAIL;
+
+	m_pPicking = CPicking::Create(*ppDevice, *ppContext, Engine_Desc.hWnd);
 	if (nullptr == m_pPipeLine)
 		return E_FAIL;
 
@@ -102,6 +107,11 @@ HRESULT CGameInstance::Present()
 	return m_pGraphic_Device->Present();
 }
 
+_float CGameInstance::Compute_ProjZ(const POINT& ptWindowPos)
+{
+	return m_pGraphic_Device->Compute_ProjZ(ptWindowPos);
+}
+
 HRESULT CGameInstance::Open_Level(_uint iLevelIndex, CLevel* pLevel)
 {
 	return m_pLevel_Manager->Open_Level(iLevelIndex, pLevel);
@@ -115,6 +125,11 @@ HRESULT CGameInstance::Add_GameObject_Prototype(const wstring strGameObjectTag, 
 HRESULT CGameInstance::Add_GameObject(_uint iLevelIndex, const wstring strGameObjectTag, const wstring strLayerTag, void* pArg)
 {
 	return m_pGameObject_Manager->Add_GameObject(iLevelIndex, strGameObjectTag, strLayerTag, pArg);
+}
+
+CGameObject* CGameInstance::Clone_Object(const wstring strGameObjectTag, void* pArg)
+{
+	return m_pGameObject_Manager->Clone_Object(strGameObjectTag, pArg);
 }
 
 void CGameInstance::Clear_Object(_uint iLevelIndex)
@@ -248,6 +263,11 @@ CInput_Device::eKEY_STATE CGameInstance::GetMouseState(MOUSEKEYSTATE eMouseState
 	return m_pInput_Device->GetMouseState(eMouseState);
 }
 
+_vector CGameInstance::Picking(_bool* isSuccess)
+{
+	return m_pPicking->Picking(isSuccess);
+}
+
 void CGameInstance::Release_Engine()
 {
 	Free();
@@ -266,4 +286,5 @@ void CGameInstance::Free()
 	Safe_Release(m_pGraphic_Device);
 	Safe_Release(m_pInput_Manager);
 	Safe_Release(m_pInput_Device);
+	Safe_Release(m_pPicking);
 }
