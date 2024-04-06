@@ -85,7 +85,7 @@ void CChannel::Update_TransformationMatrix(double CurrentPosition, const vector<
 	}
 	else
 	{
-		if (CurrentPosition >= m_KeyFrames[*iCurrentKeyFrameIndex + 1].Time)
+		while (CurrentPosition >= m_KeyFrames[*iCurrentKeyFrameIndex + 1].Time)
 			++*iCurrentKeyFrameIndex;
 
 		_float fRatio = (CurrentPosition - m_KeyFrames[*iCurrentKeyFrameIndex].Time) / (m_KeyFrames[*iCurrentKeyFrameIndex + 1].Time - m_KeyFrames[*iCurrentKeyFrameIndex].Time);

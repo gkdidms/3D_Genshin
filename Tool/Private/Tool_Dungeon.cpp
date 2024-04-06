@@ -28,11 +28,22 @@ HRESULT CTool_Dungeon::Initialize_Prototype()
 
 HRESULT CTool_Dungeon::Initialize(void* pArg)
 {
+	if (nullptr != pArg)
+	{
+		DUNGEON_DESC* pDesc = (DUNGEON_DESC*)pArg;
+
+		m_strObjectName = string(pDesc->pObjectName);
+		m_strPrototypeVIBufferName = pDesc->strPrototypeVIBufferCom;
+		m_strComVIBufferName = pDesc->strComVIBufferCOm;
+	}
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
 	if (FAILED(Add_Components()))
 		return E_FAIL;
+
+	m_pTransformCom->Set_Scale(-1.f, -1.f, -1.f);
 
 	return S_OK;
 }
@@ -63,7 +74,8 @@ HRESULT CTool_Dungeon::Render()
 
 	for (size_t i = 0; i < iNumMeshes; ++i)
 	{
-		m_pVIBufferCom->Bind_Material(m_pShaderCom, "g_Texture", i, aiTextureType_DIFFUSE);
+		if (FAILED(m_pVIBufferCom->Bind_Material(m_pShaderCom, "g_Texture", i, aiTextureType_DIFFUSE)))
+			continue;
 
 		m_pShaderCom->Begin(0);
 		m_pVIBufferCom->Render(i);

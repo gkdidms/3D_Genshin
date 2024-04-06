@@ -82,7 +82,7 @@ HRESULT CMainTool::Ready_Level_For_Main()
     /*if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Nillou", CModel::Create(m_pDevice, m_pContext, CMesh::TYPE_ANIM, "../../Client/Bin/Resources/Models/Nillou/Nilou.fbx", PreTransformMatrix))))
         return E_FAIL;*/
 
-    /*if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Nillou", CModel::Create(m_pDevice, m_pContext, CMesh::TYPE_ANIM, "../../Client/Bin/Resources/Models/Octopus/2202.fbx", PreTransformMatrix))))
+    /*if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Nillou", CModel::Create(m_pDevice, m_pContext, CMesh::TYPE_ANIM, "../../Client/Bin/Resources/Models/Octopus/2202.fbx", PreTransformMatrix, "../../Data/Octopus.dat", CModel::CREATE_READ))))
         return E_FAIL;*/
 
     if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Tighnari", CModel::Create(m_pDevice, m_pContext, CMesh::TYPE_NONANIM, "../../Client/Bin/Resources/Models/Tighnari/Tighnari.fbx", PreTransformMatrix, "../../Data/Tighnari.dat", CModel::CREATE_READ))))
