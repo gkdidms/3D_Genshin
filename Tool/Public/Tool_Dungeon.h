@@ -25,6 +25,9 @@ private:
     virtual ~CTool_Dungeon() = default;
 
 public:
+    string Get_ObjectName() { return m_strObjectName; }
+
+public:
     virtual HRESULT Initialize_Prototype() override;
     virtual HRESULT Initialize(void* pArg) override;
     virtual void Priority_Tick(const _float& fTimeDelta) override;

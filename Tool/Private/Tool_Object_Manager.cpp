@@ -16,15 +16,15 @@ HRESULT CTool_Object_Manager::Initialize()
 {
 	m_CloneDesc[OBJECT_MONSTER] = {
 		
-		CLONE_DESC { "Fiona", L"Prototype_Component_Model_Fiona", L"Com_Fiona_Model", false},
-		CLONE_DESC { "tartaglia", L"Prototype_Component_Model_Tarta", L"Com_Tarta_Model", false},
-		CLONE_DESC { "Nillou", L"Prototype_Component_Model_Nillou", L"Com_Nillou_Model", true},
-		CLONE_DESC { "Tighnari", L"Prototype_Component_Model_Tighnari", L"Com_Tighnari_Model", false}
+		CLONE_DESC { 0, "Fiona", L"Prototype_Component_Model_Fiona", L"Com_Fiona_Model", false},
+		CLONE_DESC { 1, "tartaglia", L"Prototype_Component_Model_Tarta", L"Com_Tarta_Model", false},
+		CLONE_DESC { 2, "Nillou", L"Prototype_Component_Model_Nillou", L"Com_Nillou_Model", true},
+		CLONE_DESC { 3, "Tighnari", L"Prototype_Component_Model_Tighnari", L"Com_Tighnari_Model", true}
 	};
 
 	m_CloneDesc[OBJECT_DUNGEON] = {
-		CLONE_DESC { "Dungeon_1", L"Prototype_Component_Model_Dungeon_1", L"Com_Dungeon"},
-		CLONE_DESC { "Dungeon_2", L"Prototype_Component_Model_Dungeon_2", L"Com_Dungeon"},
+		CLONE_DESC { 0, "Dungeon_1", L"Prototype_Component_Model_Dungeon_1", L"Com_Dungeon"},
+		CLONE_DESC { 1, "Dungeon_2", L"Prototype_Component_Model_Dungeon_2", L"Com_Dungeon"},
 	};
 
 	return S_OK;
@@ -87,12 +87,12 @@ HRESULT CTool_Object_Manager::Add_CloneObject(OBJECTTYPE eType, wstring strLayer
 		tDesc.strPrototypeVIBufferCom = m_CloneDesc[OBJECT_MONSTER][iObjectIndex].strPrototypeVIBufferCom;
 		tDesc.strComVIBufferCOm = m_CloneDesc[OBJECT_MONSTER][iObjectIndex].strComVIBufferCom;
 
-		CGameObject* pGameObject = { nullptr };
+		CTool_Object* pGameObject = { nullptr };
 
 		if (m_CloneDesc[OBJECT_MONSTER][iObjectIndex].IsAnimation)
-			pGameObject = m_pGameInstance->Clone_Object(L"Prototype_GameObject_AnimObject", &tDesc);
+			pGameObject = dynamic_cast<CTool_Object*>(m_pGameInstance->Clone_Object(L"Prototype_GameObject_AnimObject", &tDesc));
 		else
-			pGameObject = m_pGameInstance->Clone_Object(L"Prototype_GameObject_Object", &tDesc);
+			pGameObject = dynamic_cast<CTool_Object*>(m_pGameInstance->Clone_Object(L"Prototype_GameObject_Object", &tDesc));
 
 		if (nullptr == pGameObject)
 			return E_FAIL;
@@ -116,13 +116,127 @@ HRESULT CTool_Object_Manager::Add_CloneObject(OBJECTTYPE eType, wstring strLayer
     return S_OK;
 }
 
+HRESULT CTool_Object_Manager::Save(const char* pFileName)
+{
+	char pFilePath[MAX_PATH] = "../../Data/";
+	strcat_s(pFilePath, pFileName);
+
+	ofstream ofs(pFilePath, ios::binary | ios::out);
+
+	if (ofs.fail())
+		return E_FAIL;
+
+	//지형 (하나)
+	_uint iNumDungeon = m_Terrains.size();
+	ofs.write((_char*)&iNumDungeon, sizeof(_uint));
+
+	if (iNumDungeon != 0)
+	{
+		CTool_Dungeon* pDungeon = dynamic_cast<CTool_Dungeon*>(m_Terrains[0]);
+
+		_uint iNumDungeonObjectName = pDungeon->Get_ObjectName().size() + 1;
+		string strDungeonName = pDungeon->Get_ObjectName();
+
+		ofs.write((_char*)&iNumDungeonObjectName, sizeof(_uint));
+		ofs.write((_char*)&strDungeonName, iNumDungeonObjectName);
+	}
+
+	_uint iNumObjects = m_Objects.size();
+	ofs.write((_char*)&iNumObjects, sizeof(_uint));
+	//오브젝트
+	for (auto& pObject : m_Objects)
+	{
+		string strObjectName = pObject->Get_ObjectName();
+		_uint iNumObjectName = pObject->Get_ObjectName().size() + 1;
+		
+		ofs.write((_char*)&iNumObjectName, iNumObjectName);
+		ofs.write((_char*)strObjectName.c_str(), sizeof(_char)*iNumObjectName);
+
+		_float4x4 WorldMatrix = pObject->m_pTransformCom->Get_WorldFloat4x4();
+		ofs.write((_char*)&WorldMatrix, sizeof(WorldMatrix));
+	}
+
+	ofs.close();
+
+	return S_OK;
+}
+
+HRESULT CTool_Object_Manager::Load(const char* pFileName)
+{
+	Release_Object();
+
+	char pFilePath[MAX_PATH] = "../../Data/";
+	strcat_s(pFilePath, pFileName);
+
+	ifstream ifs(pFilePath, ios::binary | ios::in);
+
+	if (ifs.fail())
+		return E_FAIL;
+
+	//지형 (하나)
+	_uint iNumDungeon = { 0 };
+	ifs.read((_char*)&iNumDungeon, sizeof(_uint));
+
+	if (iNumDungeon != 0)
+	{
+		CTool_Dungeon* pDungeon = dynamic_cast<CTool_Dungeon*>(m_Terrains[0]);
+
+		_uint iNumDungeonObjectName = { 0 };
+		string strDungeonName = { "" };
+
+		ifs.read((_char*)&iNumDungeonObjectName, sizeof(_uint));
+		ifs.read((_char*)strDungeonName.c_str(), iNumDungeonObjectName);
+
+		int iNumObject = { 0 };
+		if (strDungeonName == "Dungeon_1")
+			iNumObject = 0;
+		else if (strDungeonName == "Dungeon_2")
+			iNumObject = 1;
+
+		Add_CloneObject(OBJECT_DUNGEON, L"Layer_Dungeon", XMVectorSet(0.f, 0.f, 0.f, 1.f), iNumObject);
+	}
+
+	_uint iNumObjects = { 0 };
+	ifs.read((_char*)&iNumObjects, sizeof(_uint));
+
+	for (int i = 0; i < iNumObjects; ++i)
+	{
+		char strObjectName[MAX_PATH] = {""};
+		_uint iNumObjectName = { 0 };
+
+		ifs.read((_char*)&iNumObjectName, sizeof(_uint));
+		ifs.read((_char*)strObjectName, iNumObjectName);
+		
+		_uint iNumObjectIndex = { 0 };
+		
+		find_if(m_CloneDesc[OBJECT_MONSTER].begin(), m_CloneDesc[OBJECT_MONSTER].end(), [&](CLONE_DESC Desc)->_uint {
+			if (!strcmp(strObjectName, Desc.strName.c_str()))
+				return iNumObjectIndex = Desc.iIndex;
+
+			return -1;
+		});
+
+		Add_CloneObject(OBJECT_MONSTER, L"Layer_Object", XMVectorSet(0.f, 0.f, 0.f, 1.f), iNumObjectIndex);
+
+		_float4x4 WorldMatrix = {};
+		ifs.read((_char*)&WorldMatrix, sizeof(_float4x4));
+
+		m_Objects[i]->m_pTransformCom->Set_WorldMatrix(XMLoadFloat4x4(&WorldMatrix));
+	}
+
+	ifs.close();
+	return S_OK;
+}
+
 void CTool_Object_Manager::Release_Object()
 {
 	for (auto& iter : m_Terrains)
 		Safe_Release(iter);
+	m_Terrains.clear();
 
 	for (auto& iter : m_Objects)
 		Safe_Release(iter);
+	m_Objects.clear();
 }
 
 void CTool_Object_Manager::Free()

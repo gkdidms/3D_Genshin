@@ -151,15 +151,15 @@ void CTool_Manager::Window_Object()
     ImGui::Text("Created Objects");
     if (ImGui::BeginListBox("Created Object List"))
     {
-        vector<CGameObject*> Objects = m_pObject_Manager->Get_Objects();
+        vector<CTool_Object*> Objects = m_pObject_Manager->Get_Objects();
         for (int n = 0; n < Objects.size(); n++)
         {
             const bool is_selected = (m_iCurrentPickingObjectIndex == n);
-            if (ImGui::Selectable(dynamic_cast<CTool_Object*>(Objects[n])->Get_ObjectName().c_str(), is_selected))
+            if (ImGui::Selectable(Objects[n]->Get_ObjectName().c_str(), is_selected))
             {
                 m_iCurrentPickingObjectIndex = n;
 
-                vector<CGameObject*> Objects = m_pObject_Manager->Get_Objects();
+                vector<CTool_Object*> Objects = m_pObject_Manager->Get_Objects();
                 _matrix ObjectMatrix = Objects[m_iCurrentPickingObjectIndex]->m_pTransformCom->Get_WorldMatrix();
                 
                 memcpy(&m_pObjectMatrix, &ObjectMatrix, sizeof(_matrix));   
@@ -191,7 +191,7 @@ void CTool_Manager::Window_Object()
 
     if (m_iCurrentPickingObjectIndex != -1)
     {
-        vector<CGameObject*> Objects = m_pObject_Manager->Get_Objects();
+        vector<CTool_Object*> Objects = m_pObject_Manager->Get_Objects();
         _matrix ObjectMatrix = Objects[m_iCurrentPickingObjectIndex]->m_pTransformCom->Get_WorldMatrix();
         memcpy(&ObjectMatrix, &m_pObjectMatrix, sizeof(_float) * 16);
         Objects[m_iCurrentPickingObjectIndex]->m_pTransformCom->Set_State(CTransform::STATE_RIGHT, ObjectMatrix.r[0]);
@@ -244,6 +244,11 @@ void CTool_Manager::Modal_Save()
         if (ImGui::Button("Save"))
         {
             // 저장하는 함수 호출 & 불변수 호출
+            if (IsNewFile)
+                m_pObject_Manager->Save(m_szNewFileName);
+            else
+                m_pObject_Manager->Save(m_FileName[m_iSaveFileIndex].c_str());
+
             ImGui::CloseCurrentPopup();            
             IsShowSaveModal = false;
         }
@@ -283,6 +288,8 @@ void CTool_Manager::Modal_Load()
         if (ImGui::Button("Load"))
         {
             // 불러오는 함수 호출 & 불변수 호출
+            m_pObject_Manager->Load(m_FileName[m_iLoadFileIndex].c_str());
+
             ImGui::CloseCurrentPopup();
             IsShowLoadModal = false;
         }

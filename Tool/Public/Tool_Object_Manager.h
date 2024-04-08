@@ -16,6 +16,7 @@ class CTool_Object_Manager :
 public:
     enum OBJECTTYPE { OBJECT_MONSTER, OBJECT_DUNGEON, OBJECT_END };
     typedef struct tCloneDesc {
+        _uint iIndex = { 0 };
         string strName = { "" };
         wstring strPrototypeVIBufferCom{ L"" };
         wstring strComVIBufferCom{ L"" };
@@ -30,7 +31,7 @@ private:
 
 public:
     const vector<CLONE_DESC> Get_CloneDescs(OBJECTTYPE eType) const { return m_CloneDesc[eType]; }
-    vector<CGameObject*> Get_Objects() { return m_Objects; }
+    vector<class CTool_Object*> Get_Objects() { return m_Objects; }
 
 public:
     HRESULT Initialize();
@@ -40,9 +41,13 @@ public:
     HRESULT Render();
     HRESULT Add_CloneObject(OBJECTTYPE eType, wstring strLayerTag, _vector vObjPos, _uint iObjectIndex);
 
+public:
+    HRESULT Save(const char* pFileName);
+    HRESULT Load(const char* pFileName);
+    
 private:
     CGameInstance* m_pGameInstance = { nullptr };
-    vector<CGameObject*> m_Objects;
+    vector<class CTool_Object*> m_Objects;
     vector<CGameObject*> m_Terrains;
     vector<CLONE_DESC> m_CloneDesc[OBJECT_END];
     

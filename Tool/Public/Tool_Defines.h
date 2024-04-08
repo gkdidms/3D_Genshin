@@ -10,6 +10,8 @@ namespace Tool
 
 #include <iostream>
 #include <io.h>
+#include <fstream>;
+#include <sstream>
 
 extern HWND g_hWnd;
 extern HINSTANCE g_hInst;

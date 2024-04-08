@@ -32,6 +32,9 @@ public:
     _matrix Get_WorldMatrix() { return XMLoadFloat4x4(&m_matWorld); }
 
 public:
+    void Set_WorldMatrix(_fmatrix WorldMatrix) { XMStoreFloat4x4(&m_matWorld, WorldMatrix); }
+
+public:
     void Set_State(STATE eState, _fvector vState);
 
     void Scaling(_float fScaleX, _float fScaleY, _float fScaleZ);

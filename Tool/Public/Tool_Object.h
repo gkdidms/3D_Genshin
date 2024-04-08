@@ -29,7 +29,7 @@ protected:
 
 public:
     string Get_ObjectName() { return m_strObjectName; }
-
+    
 public:
     virtual HRESULT Initialize_Prototype();
     virtual HRESULT Initialize(void* pArg);
