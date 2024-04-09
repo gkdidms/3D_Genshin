@@ -32,6 +32,7 @@ protected:
     _float m_fNear;
     _float m_fFar;
 
+    _float4x4 m_WorldMatrix;
 
 public:
     virtual CGameObject* Clone(void* pArg) = 0;

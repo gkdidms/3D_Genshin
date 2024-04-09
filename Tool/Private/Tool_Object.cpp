@@ -38,7 +38,7 @@ HRESULT CTool_Object::Initialize(void* pArg)
 		m_strObjectName = ObjectName;
 
 		m_strPrototypeVIBufferName = pDesc->strPrototypeVIBufferCom;
-		m_strComVIBufferName = pDesc->strComVIBufferCOm;
+		m_strComVIBufferName = pDesc->strComVIBufferCom;
 	}
 
 	return S_OK;

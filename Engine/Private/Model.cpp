@@ -390,7 +390,7 @@ HRESULT CModel::Ready_Model(const _char* szModelFilePath, const _char* szBinaryF
 		m_Materials.emplace_back(tMaterialTexture);
 	}
 
-	ifs.close();
+ 	ifs.close();
 
 	return S_OK;
 }

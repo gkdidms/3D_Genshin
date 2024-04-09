@@ -18,6 +18,7 @@ public:
 
 public:
     HRESULT Add_GameObject(class CGameObject* pObject);
+    class CComponent* Get_Component(wstring strComponentTag, _uint iIndex);
 
 public:
     void Find_Objectes(vector<class CGameObject*> Objectes);

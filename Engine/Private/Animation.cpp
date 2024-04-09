@@ -7,14 +7,15 @@ CAnimation::CAnimation()
 }
 
 CAnimation::CAnimation(const CAnimation& rhs)
-    : m_Duration{rhs.m_Duration },
+    : m_Duration{ rhs.m_Duration },
     m_TickPerSecond { rhs.m_TickPerSecond },
     m_iNumChannels { rhs.m_iNumChannels },
     m_Channels { rhs.m_Channels },
     m_iCurrentPosition { rhs.m_iCurrentPosition },
-    m_isFinished { rhs.m_isFinished },
+    m_IsFinished { rhs.m_IsFinished },
     m_CurrentKeyFrameIndex { rhs.m_CurrentKeyFrameIndex }
 {
+    strcpy_s(m_szName, rhs.m_szName);
     for (auto& pChannel : m_Channels)
         Safe_AddRef(pChannel);
 }
@@ -68,10 +69,10 @@ void CAnimation::Update_TransformationMatrix(const _float& fTimeDelta, const vec
         //애니메이션 끝
         m_iCurrentPosition = 0.0;
 
-        if (!isLoop) m_isFinished = true;
+        if (!isLoop) m_IsFinished = true;
     }
 
-    if (!m_isFinished)
+    if (!m_IsFinished)
     {
         for (size_t i = 0; i < m_iNumChannels; ++i)
         {
@@ -83,7 +84,8 @@ void CAnimation::Update_TransformationMatrix(const _float& fTimeDelta, const vec
 void CAnimation::Reset()
 {
     m_iCurrentPosition = 0.0;
-    m_isFinished = false;
+    m_IsFinished = false;
+    ZeroMemory(&m_CurrentKeyFrameIndex.front(), sizeof(_uint) * m_iNumChannels);
 }
 
 CAnimation* CAnimation::Create(aiAnimation* pAiAnimation, const vector<class CBone*> Bones)

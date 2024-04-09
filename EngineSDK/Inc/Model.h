@@ -27,6 +27,8 @@ public:
     _uint Get_NumMeshes() { return m_iNumMeshes; }
     _uint Get_NumMaterials() { return m_iNumMaterials; }
 
+    _bool Get_Animation_Finished() const { return m_Animations[m_tAnimDesc.iCurrentAnimIndex]->IsFinished(); }
+
 public:
     HRESULT Initialize_Prototype(CMesh::MESHTYPE eMeshType, const _char* szModelFilePath, _fmatrix PreTransformMatrix, const _char* szBinaryFilePath, CREATETYPE eCreateType);
     HRESULT Initialize(void* pArv) override;
@@ -38,8 +40,10 @@ public:
 public:
     void Play_Animation(const _float& fTimeDelta);
     void Set_Animation(ANIM_DESC tAnimdesc) {
+        if (m_tAnimDesc.iCurrentAnimIndex != tAnimdesc.iCurrentAnimIndex)
+            m_Animations[tAnimdesc.iCurrentAnimIndex]->Reset();
+
         m_tAnimDesc = tAnimdesc;
-        m_Animations[tAnimdesc.iCurrentAnimIndex]->Reset();
     }
 
 private:

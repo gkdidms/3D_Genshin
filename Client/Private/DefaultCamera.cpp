@@ -17,6 +17,13 @@ HRESULT CDefaultCamera::Initialize_Prototype()
 
 HRESULT CDefaultCamera::Initialize(void* pArg)
 {
+	DEFAULT_CAMERA_DESC* pDesc = (DEFAULT_CAMERA_DESC*)pArg;
+
+	if (nullptr != pDesc)
+	{
+		m_pTargetMatrix = pDesc->pPlayerMatrix;
+	}
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -29,14 +36,15 @@ void CDefaultCamera::Priority_Tick(const _float& fTimeDelta)
 
 void CDefaultCamera::Tick(const _float& fTimeDelta)
 {
-	if (GetAsyncKeyState('W') & 0x8000)
+	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * XMLoadFloat4x4(m_pTargetMatrix));
+	/*if (GetAsyncKeyState('W') & 0x8000)
 		m_pTransformCom->Go_Straight(fTimeDelta);
 	if (GetAsyncKeyState('S') & 0x8000)
 		m_pTransformCom->Go_Backwork(fTimeDelta);
 	if (GetAsyncKeyState('A') & 0x8000)
 		m_pTransformCom->Go_Left(fTimeDelta);
 	if (GetAsyncKeyState('D') & 0x8000)
-		m_pTransformCom->Go_Right(fTimeDelta);
+		m_pTransformCom->Go_Right(fTimeDelta);*/
 
 	__super::Tick(fTimeDelta);
 }

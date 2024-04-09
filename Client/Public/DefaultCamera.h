@@ -3,13 +3,14 @@
 
 #include "Client_Defines.h"
 
-BEGIN(Engine)
+BEGIN(Client)
 class CDefaultCamera :
     public CCamera
 {
 public:
     typedef struct tDefaultCamera : public CAMERA_DESC
     {
+        const _float4x4* pPlayerMatrix;
     }DEFAULT_CAMERA_DESC;
 
 private:
@@ -24,6 +25,9 @@ public:
     void Tick(const _float& fTimeDelta) override;
     void Late_Tick(const _float& fTimeDelta) override;
     HRESULT Render() override;
+
+private:
+    const _float4x4* m_pTargetMatrix;
 
 public:
     static CDefaultCamera* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

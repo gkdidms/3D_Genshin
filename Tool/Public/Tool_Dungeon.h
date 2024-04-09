@@ -16,7 +16,7 @@ public:
         _float4 vPosition;
 
         wstring strPrototypeVIBufferCom = L"";
-        wstring strComVIBufferCOm = L"";
+        wstring strComVIBufferCom = L"";
     }DUNGEON_DESC;
 
 private:

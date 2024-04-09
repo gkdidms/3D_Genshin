@@ -85,7 +85,7 @@ HRESULT CTool_Object_Manager::Add_CloneObject(OBJECTTYPE eType, wstring strLayer
 		strcpy_s(tDesc.pObjectName, m_CloneDesc[OBJECT_MONSTER][iObjectIndex].strName.c_str());
 		tDesc.vPosition = _float4(vObjPosFloat3.x, vObjPosFloat3.y, vObjPosFloat3.z, 1.f);
 		tDesc.strPrototypeVIBufferCom = m_CloneDesc[OBJECT_MONSTER][iObjectIndex].strPrototypeVIBufferCom;
-		tDesc.strComVIBufferCOm = m_CloneDesc[OBJECT_MONSTER][iObjectIndex].strComVIBufferCom;
+		tDesc.strComVIBufferCom = m_CloneDesc[OBJECT_MONSTER][iObjectIndex].strComVIBufferCom;
 
 		CTool_Object* pGameObject = { nullptr };
 
@@ -104,7 +104,7 @@ HRESULT CTool_Object_Manager::Add_CloneObject(OBJECTTYPE eType, wstring strLayer
 		CTool_Dungeon::DUNGEON_DESC tDesc{};
 		strcpy_s(tDesc.pObjectName, m_CloneDesc[OBJECT_DUNGEON][iObjectIndex].strName.c_str());
 		tDesc.strPrototypeVIBufferCom = m_CloneDesc[OBJECT_DUNGEON][iObjectIndex].strPrototypeVIBufferCom;
-		tDesc.strComVIBufferCOm = m_CloneDesc[OBJECT_DUNGEON][iObjectIndex].strComVIBufferCom;
+		tDesc.strComVIBufferCom = m_CloneDesc[OBJECT_DUNGEON][iObjectIndex].strComVIBufferCom;
 
 		CGameObject* pGameObject = m_pGameInstance->Clone_Object(L"Prototype_GameObject_Dungeon", &tDesc);
 		if (nullptr == pGameObject)

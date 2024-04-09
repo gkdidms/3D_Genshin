@@ -45,6 +45,14 @@ HRESULT CLayer::Add_GameObject(CGameObject* pObject)
 	return S_OK;
 }
 
+CComponent* CLayer::Get_Component(wstring strComponentTag, _uint iIndex)
+{
+	if (m_vecObjects.size() <= iIndex)
+		return nullptr;
+
+	return m_vecObjects[iIndex]->Get_Component(strComponentTag);
+}
+
 void CLayer::Find_Objectes(vector<class CGameObject*> Objectes)
 {
 	Objectes = m_vecObjects;

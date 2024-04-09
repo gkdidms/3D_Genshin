@@ -11,9 +11,9 @@ public:
 	enum eKEY_STATE
 	{
 		NONE,
-		TAP, //누를??
-		HOLD,//누르고 있을때
-		AWAY, // ?H을때
+		TAP, //한번 눌렀을 때
+		HOLD,//누르고 있을 때
+		AWAY, //눌렀다 땠을 때
 		KEY_END,
 	};
 

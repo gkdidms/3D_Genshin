@@ -46,6 +46,12 @@
     <Filter Include="02. GameObject\Player">
       <UniqueIdentifier>{b93a464a-26e8-432f-b573-292967d9fe5c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\Player\PartObject">
+      <UniqueIdentifier>{b3c6ca05-4d99-40a3-8d9c-c24180ba54a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\Player\PartObject\Body">
+      <UniqueIdentifier>{94e9eb27-47c1-4844-bb12-29fe353c9812}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">
@@ -93,6 +99,12 @@
     <ClInclude Include="..\public\Player.h">
       <Filter>02. GameObject\Player</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\PartObject.h">
+      <Filter>02. GameObject\Player\PartObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PartObject_Body.h">
+      <Filter>02. GameObject\Player\PartObject\Body</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -127,6 +139,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Player.cpp">
       <Filter>02. GameObject\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PartObject.cpp">
+      <Filter>02. GameObject\Player\PartObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PartObject_Body.cpp">
+      <Filter>02. GameObject\Player\PartObject\Body</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -115,6 +115,16 @@ void CGameObject_Manager::Clear(_uint iLevelIndex)
 	m_pLayers[iLevelIndex].clear();
 }
 
+CComponent* CGameObject_Manager::Get_GameObject_Component(_uint iLevelIndex, const wstring strLayerTag, const wstring strComponentTag, _uint iIndex)
+{
+	CLayer* pLayer = Find_Layer(iLevelIndex, strLayerTag);
+
+	if (nullptr == pLayer)
+		return nullptr;
+
+	return pLayer->Get_Component(strComponentTag, iIndex);
+}
+
 vector<CGameObject*> CGameObject_Manager::Find_GameObjects_Clone(_uint iLevelIndex, const wstring strLayerTag)
 {
 	vector<CGameObject*> Objectes;

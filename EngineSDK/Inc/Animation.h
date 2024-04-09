@@ -11,6 +11,9 @@ private:
     virtual ~CAnimation() = default;
 
 public:
+    _bool IsFinished() const { return m_IsFinished; }
+
+public:
     HRESULT Initialize(aiAnimation* pAiAnimation, const vector<class CBone*> Bones);
     HRESULT Initialize(const char* pName, _double Duration, _double TickPerSecond, _uint iNumChannels, vector<class CChannel*> Channels);
 
@@ -23,12 +26,13 @@ private:
     double m_Duration = { 0.0 };
     double m_TickPerSecond = { 0.0 };
     _uint m_iNumChannels = { 0 };
+
     vector<class CChannel*> m_Channels;
 
     double m_iCurrentPosition = { 0 };
 
     vector<_uint> m_CurrentKeyFrameIndex;
-    _bool m_isFinished = { false };
+    _bool m_IsFinished = { false };
 
 public:
     static CAnimation* Create(aiAnimation* pAiAnimation, const vector<class CBone*> Bones);

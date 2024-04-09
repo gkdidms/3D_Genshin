@@ -34,7 +34,7 @@ HRESULT CTool_Dungeon::Initialize(void* pArg)
 
 		m_strObjectName = string(pDesc->pObjectName);
 		m_strPrototypeVIBufferName = pDesc->strPrototypeVIBufferCom;
-		m_strComVIBufferName = pDesc->strComVIBufferCOm;
+		m_strComVIBufferName = pDesc->strComVIBufferCom;
 	}
 
 	if (FAILED(__super::Initialize(pArg)))

@@ -23,6 +23,7 @@ public:
     void Clear(_uint iLevelIndex);
 
 public:
+    class CComponent* Get_GameObject_Component(_uint iLevelIndex, const wstring strLayerTag, const wstring strComponentTag, _uint iIndex);
     vector<class CGameObject*> Find_GameObjects_Clone(_uint iLevelIndex, const wstring strLayerTag);
 
 private:

@@ -18,6 +18,9 @@ protected:
     virtual ~CGameObject() = default;
 
 public:
+    class CTransform* m_pTransformCom = { nullptr };
+
+public:
     virtual HRESULT Initialize_Prototype();
     virtual HRESULT Initialize(void* pArg);
     virtual void Priority_Tick(const _float& fTimeDelta);
@@ -25,7 +28,8 @@ public:
     virtual void Late_Tick(const _float& fTimeDelta);
     virtual HRESULT Render();
 
-    class CTransform* m_pTransformCom = { nullptr };
+public:
+    class CComponent* Get_Component(wstring strComponentTag);
 
 protected:
     ID3D11Device* m_pDevice = { nullptr };

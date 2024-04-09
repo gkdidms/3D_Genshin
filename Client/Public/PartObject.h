@@ -1,0 +1,58 @@
+#pragma once
+#include "GameObject.h"
+
+#include "Client_Defines.h"
+#include "Player.h"
+
+BEGIN(Engine)
+class CShader;
+class CModel;
+END
+
+BEGIN(Client)
+class CPartObject abstract :
+    public CGameObject
+{
+public:
+    typedef struct tPartObjDesc: public CGameObject::GAMEOBJECT_DESC
+    {
+        const _float4x4* pParentMatrix;
+        _uint* pState;
+
+    }PART_DESC;
+
+protected:
+    CPartObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+    CPartObject(const CPartObject& rhs);
+    virtual ~CPartObject() = default;
+
+public:
+    HRESULT Initialize_Prototype();
+    HRESULT Initialize(void* pArg);
+    void Priority_Tick(const _float& fTimeDelta);
+    void Tick(const _float& fTimeDelta);
+    void Late_Tick(const _float& fTimeDelta);
+    HRESULT Render();
+
+protected:
+    CShader* m_pShaderCom = { nullptr };
+    CModel* m_pModelCom = { nullptr };
+   
+    _float4x4 m_pWorldMatrix;
+
+    const _float4x4* m_pParentMatrix = { nullptr };
+    _uint* m_pState = { nullptr };
+
+    _uint m_iAnim = { 45 };
+    _bool m_IsLoop = { false };
+
+    _uint m_PreState = { CPlayer::PLAYER_END };
+
+private:
+    virtual void Change_Animation(const _float& fTimeDelta) {};
+
+protected:
+    virtual CGameObject* Clone(void* pArg) = 0;
+    virtual void Free() override;
+};
+END

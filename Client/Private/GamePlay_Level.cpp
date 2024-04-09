@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "DefaultCamera.h"
 #include "Monster.h"
+#include "Player.h"
 
 CGamePlay_Level::CGamePlay_Level(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel{ pDevice, pContext }
@@ -11,14 +12,18 @@ CGamePlay_Level::CGamePlay_Level(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 
 HRESULT CGamePlay_Level::Initialize()
 {
-	if (FAILED(Ready_Layer_Camera(L"Layer_Camera")))
-		return E_FAIL;
-
 	if (FAILED(Ready_Layer_BackGround(L"Layer_Terrain")))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Monster(L"Layer_Fiona")))
+	if (FAILED(Ready_Layer_Player(L"Layer_Player")))
 		return E_FAIL;
+
+	if (FAILED(Ready_Layer_Camera(L"Layer_Camera")))
+		return E_FAIL;
+
+	//if (FAILED(Ready_Layer_Monster(L"Layer_Fiona")))
+	//	return E_FAIL;
+
 
 	return S_OK;
 }
@@ -36,10 +41,12 @@ HRESULT CGamePlay_Level::Ready_Layer_Camera(const wstring& strLayerTag)
 {
 	CDefaultCamera::DEFAULT_CAMERA_DESC tDefaultCamera = {};
 
+	const _float4x4* PlayerMatrix = dynamic_cast<CTransform*>(m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, L"Layer_Player", L"Com_Transform", 0))->Get_WorldFloat4x4();
+	tDefaultCamera.pPlayerMatrix = PlayerMatrix;
 	tDefaultCamera.vEye = _float4(0.f, 40.f, -30.f, 1.f);
 	tDefaultCamera.vFocus = _float4(0.f, 0.f, 0.f, 1.f);
 	
-	tDefaultCamera.fFovY = XMConvertToRadians(60.f);
+	tDefaultCamera.fFovY = XMConvertToRadians(90.f);
 	tDefaultCamera.fAspect = g_iWinSizeX / (_float)g_iWinSizeY;
 	tDefaultCamera.fNear = 0.1f;
 	tDefaultCamera.fFar = 3000.f;
@@ -56,6 +63,14 @@ HRESULT CGamePlay_Level::Ready_Layer_Camera(const wstring& strLayerTag)
 HRESULT CGamePlay_Level::Ready_Layer_BackGround(const wstring& strLayerTag)
 {
 	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Terrain", strLayerTag)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CGamePlay_Level::Ready_Layer_Player(const wstring& strLayerTag)
+{
+	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Player", strLayerTag)))
 		return E_FAIL;
 
 	return S_OK;
