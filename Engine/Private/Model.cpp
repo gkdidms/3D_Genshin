@@ -423,6 +423,34 @@ void CModel::Play_Animation(const _float& fTimeDelta)
 		pBone->Update_CombinedTransformMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
 }
 
+HRESULT CModel::Play_Animation(const _float& fTimeDelta, _float4* vMovePos)
+{
+	// TransformMatrix 업데이트
+	/* 현재 애니메이션의 상태에 맞도록 뼈들의 상태행렬(TransformationMatrix)을 만들고 갱신해준다. */
+	m_Animations[m_tAnimDesc.iCurrentAnimIndex]->Update_TransformationMatrix(fTimeDelta, m_Bones, m_tAnimDesc.isLoop);
+
+	//CombinedTransformMatrix 업데이트 
+	for (auto& pBone : m_Bones)
+		pBone->Update_CombinedTransformMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
+
+	//if (Get_Animation_Finished() || Get_LoopAnimation_Finished())
+	//{
+	//	return E_FAIL;
+	//}
+
+	//find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pBone)->_bool {
+	//	if (pBone->Compare_NodeName("Bip001"))
+	//	{
+	//		const _float4x4* CombinedTransformMatrix = pBone->Get_CombinedTransformMatrix();
+	//		XMStoreFloat4(vMovePos, XMVectorSet(CombinedTransformMatrix->m[3][0], CombinedTransformMatrix->m[3][1], CombinedTransformMatrix->m[3][2] * -1.f, 1.f));
+	//		return true;
+	//	}
+	//	return false;
+	//});
+
+	return S_OK;
+}
+
 CModel* CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CMesh::MESHTYPE eMeshType, const _char* szModelFilePath, _fmatrix PreTransformMatrix, const _char* szBinaryFilePath, CREATETYPE eCreateType)
 {
 	CModel* pInstance = new CModel(pDevice, pContext);

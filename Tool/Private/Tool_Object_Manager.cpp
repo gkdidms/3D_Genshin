@@ -118,7 +118,7 @@ HRESULT CTool_Object_Manager::Add_CloneObject(OBJECTTYPE eType, wstring strLayer
 
 HRESULT CTool_Object_Manager::Save(const char* pFileName)
 {
-	char pFilePath[MAX_PATH] = "../../Data/";
+	char pFilePath[MAX_PATH] = "../../Data/Stage/";
 	strcat_s(pFilePath, pFileName);
 
 	ofstream ofs(pFilePath, ios::binary | ios::out);
@@ -138,7 +138,7 @@ HRESULT CTool_Object_Manager::Save(const char* pFileName)
 		string strDungeonName = pDungeon->Get_ObjectName();
 
 		ofs.write((_char*)&iNumDungeonObjectName, sizeof(_uint));
-		ofs.write((_char*)&strDungeonName, iNumDungeonObjectName);
+		ofs.write(strDungeonName.c_str(), iNumDungeonObjectName);
 	}
 
 	_uint iNumObjects = m_Objects.size();
@@ -149,11 +149,11 @@ HRESULT CTool_Object_Manager::Save(const char* pFileName)
 		string strObjectName = pObject->Get_ObjectName();
 		_uint iNumObjectName = pObject->Get_ObjectName().size() + 1;
 		
-		ofs.write((_char*)&iNumObjectName, iNumObjectName);
-		ofs.write((_char*)strObjectName.c_str(), sizeof(_char)*iNumObjectName);
+		ofs.write((_char*)&iNumObjectName, sizeof(_uint));
+		ofs.write(strObjectName.c_str(), sizeof(_char)*iNumObjectName);
 
-		_float4x4 WorldMatrix = pObject->m_pTransformCom->Get_WorldFloat4x4();
-		ofs.write((_char*)&WorldMatrix, sizeof(WorldMatrix));
+		const _float4x4* WorldMatrix = pObject->m_pTransformCom->Get_WorldFloat4x4();
+		ofs.write((_char*)WorldMatrix, sizeof(_float4x4));
 	}
 
 	ofs.close();
@@ -165,7 +165,7 @@ HRESULT CTool_Object_Manager::Load(const char* pFileName)
 {
 	Release_Object();
 
-	char pFilePath[MAX_PATH] = "../../Data/";
+	char pFilePath[MAX_PATH] = "../../Data/Stage/";
 	strcat_s(pFilePath, pFileName);
 
 	ifstream ifs(pFilePath, ios::binary | ios::in);
@@ -179,18 +179,16 @@ HRESULT CTool_Object_Manager::Load(const char* pFileName)
 
 	if (iNumDungeon != 0)
 	{
-		CTool_Dungeon* pDungeon = dynamic_cast<CTool_Dungeon*>(m_Terrains[0]);
-
 		_uint iNumDungeonObjectName = { 0 };
-		string strDungeonName = { "" };
+		char pDungeonName[MAX_PATH] = {""};
 
 		ifs.read((_char*)&iNumDungeonObjectName, sizeof(_uint));
-		ifs.read((_char*)strDungeonName.c_str(), iNumDungeonObjectName);
+		ifs.read((_char*)pDungeonName, iNumDungeonObjectName);
 
 		int iNumObject = { 0 };
-		if (strDungeonName == "Dungeon_1")
+		if (!strcmp(pDungeonName, "Dungeon_1"))
 			iNumObject = 0;
-		else if (strDungeonName == "Dungeon_2")
+		else if (!strcmp(pDungeonName,"Dungeon_2"))
 			iNumObject = 1;
 
 		Add_CloneObject(OBJECT_DUNGEON, L"Layer_Dungeon", XMVectorSet(0.f, 0.f, 0.f, 1.f), iNumObject);
@@ -209,11 +207,14 @@ HRESULT CTool_Object_Manager::Load(const char* pFileName)
 		
 		_uint iNumObjectIndex = { 0 };
 		
-		find_if(m_CloneDesc[OBJECT_MONSTER].begin(), m_CloneDesc[OBJECT_MONSTER].end(), [&](CLONE_DESC Desc)->_uint {
+		find_if(m_CloneDesc[OBJECT_MONSTER].begin(), m_CloneDesc[OBJECT_MONSTER].end(), [&](CLONE_DESC Desc)->_bool {
 			if (!strcmp(strObjectName, Desc.strName.c_str()))
-				return iNumObjectIndex = Desc.iIndex;
-
-			return -1;
+			{
+				iNumObjectIndex = Desc.iIndex;
+				return true;
+			}
+			
+			return false;
 		});
 
 		Add_CloneObject(OBJECT_MONSTER, L"Layer_Object", XMVectorSet(0.f, 0.f, 0.f, 1.f), iNumObjectIndex);

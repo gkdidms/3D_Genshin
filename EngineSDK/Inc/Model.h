@@ -27,7 +27,9 @@ public:
     _uint Get_NumMeshes() { return m_iNumMeshes; }
     _uint Get_NumMaterials() { return m_iNumMaterials; }
 
-    _bool Get_Animation_Finished() const { return m_Animations[m_tAnimDesc.iCurrentAnimIndex]->IsFinished(); }
+    _bool Get_Animation_Finished() const { return m_Animations[m_tAnimDesc.iCurrentAnimIndex]->IsFinished(); } //현재 재생되고 있는 애니메이션 모델이 종료 되었는지 확인하는 함수
+    _bool Get_Animation_Finished(_uint iIndex) const { return m_Animations[iIndex]->IsFinished(); } // 매개변수의 인덱스 애니메이션이 종료 되었는지 확인하는 함수
+    _bool Get_LoopAnimation_Finished() const { return m_Animations[m_tAnimDesc.iCurrentAnimIndex]->IsLoopFinished(); } // 현재 재생되고 있는 루프 애니메이션이 한번 루프를 돌았는지 확인하는 함수
 
 public:
     HRESULT Initialize_Prototype(CMesh::MESHTYPE eMeshType, const _char* szModelFilePath, _fmatrix PreTransformMatrix, const _char* szBinaryFilePath, CREATETYPE eCreateType);
@@ -39,10 +41,15 @@ public:
 
 public:
     void Play_Animation(const _float& fTimeDelta);
+    HRESULT Play_Animation(const _float& fTimeDelta, _float4* vMovePos);
     void Set_Animation(ANIM_DESC tAnimdesc) {
-        if (m_tAnimDesc.iCurrentAnimIndex != tAnimdesc.iCurrentAnimIndex)
-            m_Animations[tAnimdesc.iCurrentAnimIndex]->Reset();
+        if (Get_LoopAnimation_Finished())
+            m_Animations[tAnimdesc.iCurrentAnimIndex]->Loop_Reset();
 
+        if (m_tAnimDesc.iCurrentAnimIndex == tAnimdesc.iCurrentAnimIndex)
+            return;
+
+        m_Animations[tAnimdesc.iCurrentAnimIndex]->Reset();
         m_tAnimDesc = tAnimdesc;
     }
 
@@ -70,7 +77,7 @@ private:
 private:
     _uint m_iNumAnimations = { 0 };
     vector<class CAnimation*> m_Animations;
-    ANIM_DESC m_tAnimDesc{0, false};
+    ANIM_DESC m_tAnimDesc{ 0, false};
 
 private:
     HRESULT Ready_Meshes();

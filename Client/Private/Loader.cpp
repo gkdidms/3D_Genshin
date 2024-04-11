@@ -7,6 +7,8 @@
 #include "Monster.h"
 #include "Player.h"
 #include "PartObject_Body.h"
+#include "Dungeon_1.h"
+#include "Dungeon_2.h"
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pContext{pContext}, m_pDevice{pDevice} , m_pGameInstance{ CGameInstance::GetInstance() }
@@ -87,6 +89,13 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Tighnari", CModel::Create(m_pDevice, m_pContext, CMesh::TYPE_ANIM, "../Bin/Resources/Models/Tighnari/Tighnari.fbx", PreTransformMatrix, "../../Data/Tighnari.dat", CModel::CREATE_READ))))
 		return E_FAIL;
 
+	PreTransformMatrix = XMMatrixIdentity();
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Dungeon_1", CModel::Create(m_pDevice, m_pContext, CMesh::TYPE_NONANIM, "../Bin/Resources/Models/Map/Dungeon_1/Dungeon_1.fbx", PreTransformMatrix, "../../Data/Dungeon_1.dat", CModel::CREATE_READ))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Dungeon_2", CModel::Create(m_pDevice, m_pContext, CMesh::TYPE_NONANIM, "../Bin/Resources/Models/Map/Dungeon_2/Dungeon_2.fbx", PreTransformMatrix, "../../Data/Dungeon_2.dat", CModel::CREATE_READ))))
+		return E_FAIL;
+
 	lstrcpy(m_szLoadingText, TEXT("셰이더를(을) 로딩 중 입니다."));
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxNorTex", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFile/Shader_VtxNorTex.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements))))
 		return E_FAIL;
@@ -116,6 +125,17 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Player_Body", CPartObject_Body::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Map_Dungeon_1", CDungeon_1::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Map_Dungeon_2", CDungeon_2::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	//게임 오브젝트 준비
+	lstrcpy(m_szLoadingText, TEXT("오브젝트 클론을 로딩 중 입니다."));
+	if (FAILED(Open_File(LEVEL_GAMEPLAY)))
+		return E_FAIL;
+
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
 	m_isFinished = true;
 
@@ -143,4 +163,80 @@ void CLoader::Free()
 	Safe_Release(m_pContext);
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pGameInstance);
+}
+
+HRESULT CLoader::Open_File(LEVEL_STATE eNextLevel)
+{
+	char pFilePath[MAX_PATH] = "";
+	strcpy_s(pFilePath, eNextLevel == LEVEL_GAMEPLAY ? "../../Data/Stage/Stage_1.dat" : "../../Data/Stage/Stage_1.dat");
+
+	ifstream ifs(pFilePath, ios::binary | ios::in);
+
+	if (ifs.fail())
+		return E_FAIL;
+
+	//지형 (하나)
+	_uint iNumDungeon = { 0 };
+	ifs.read((_char*)&iNumDungeon, sizeof(_uint));
+
+	if (iNumDungeon != 0)
+	{
+		_uint iNumDungeonObjectName = { 0 };
+		char pDungeonName[MAX_PATH] = { "" };
+
+		ifs.read((_char*)&iNumDungeonObjectName, sizeof(_uint));
+		ifs.read((_char*)pDungeonName, iNumDungeonObjectName);
+
+		Ready_Object(pDungeonName, L"Layer_Map");
+	}
+
+	_uint iNumObjects = { 0 };
+	ifs.read((_char*)&iNumObjects, sizeof(_uint));
+
+	for (int i = 0; i < iNumObjects; ++i)
+	{
+		char strObjectName[MAX_PATH] = { "" };
+		_uint iNumObjectName = { 0 };
+
+		ifs.read((_char*)&iNumObjectName, sizeof(_uint));
+		ifs.read((_char*)strObjectName, iNumObjectName);
+
+		_uint iNumObjectIndex = { 0 };
+
+		//find_if(m_CloneDesc[OBJECT_MONSTER].begin(), m_CloneDesc[OBJECT_MONSTER].end(), [&](CLONE_DESC Desc)->_bool {
+		//	if (!strcmp(strObjectName, Desc.strName.c_str()))
+		//	{
+		//		iNumObjectIndex = Desc.iIndex;
+		//		return true;
+		//	}
+
+		//	return false;
+		//	});
+
+		//Add_CloneObject(OBJECT_MONSTER, L"Layer_Object", XMVectorSet(0.f, 0.f, 0.f, 1.f), iNumObjectIndex);
+
+		//_float4x4 WorldMatrix = {};
+		//ifs.read((_char*)&WorldMatrix, sizeof(_float4x4));
+
+		//m_Objects[i]->m_pTransformCom->Set_WorldMatrix(XMLoadFloat4x4(&WorldMatrix));
+	}
+
+	ifs.close();
+	return S_OK;
+}
+
+HRESULT CLoader::Ready_Object(const char* pObjectName, const wstring& strLayerTag)
+{
+	if (!strcmp(pObjectName, "Dungeon_1"))
+	{
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Map_Dungeon_1", strLayerTag)))
+			return E_FAIL;
+	}
+	else if (!strcmp(pObjectName, "Dungeon_2"))
+	{
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Map_Dungeon_2", strLayerTag)))
+			return E_FAIL;
+	}
+
+	return S_OK;
 }

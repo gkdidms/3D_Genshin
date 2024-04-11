@@ -249,6 +249,7 @@ void CTool_Manager::Modal_Save()
             else
                 m_pObject_Manager->Save(m_FileName[m_iSaveFileIndex].c_str());
 
+            Bind_FileName();
             ImGui::CloseCurrentPopup();            
             IsShowSaveModal = false;
         }
@@ -318,7 +319,7 @@ void CTool_Manager::Bind_FileName()
 
     // _finddata_t : <io.h>에서 제공하며 파일 정보를 저장하는 구조체
     _wfinddata64_t fd;
-    __int64 handle = _wfindfirst64(L"../../Data/*.*", &fd);
+    __int64 handle = _wfindfirst64(L"../../Data/Stage/*.*", &fd);
     if (handle == -1 || handle == 0)
         return;
 
@@ -326,7 +327,7 @@ void CTool_Manager::Bind_FileName()
 
 	int iResult = 0; 
 
-	char szCurPath[128] = "../Data/";
+	char szCurPath[128] = "../Data/Stage/";
 	char szFullPath[128] = ""; 
     char szFileName[MAX_PATH] = "";
 

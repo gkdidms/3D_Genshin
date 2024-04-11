@@ -27,6 +27,9 @@ protected:
     virtual ~CPartObject() = default;
 
 public:
+    void Set_PlayerPos(_float4* vParentPos) { XMStoreFloat4(vParentPos, XMLoadFloat4(&m_PlayerMovePos)); }
+
+public:
     HRESULT Initialize_Prototype();
     HRESULT Initialize(void* pArg);
     void Priority_Tick(const _float& fTimeDelta);
@@ -42,11 +45,16 @@ protected:
 
     const _float4x4* m_pParentMatrix = { nullptr };
     _uint* m_pState = { nullptr };
+    _uint m_PreState = { CPlayer::PLAYER_END };
 
     _uint m_iAnim = { 45 };
     _bool m_IsLoop = { false };
+    _int m_iPreAnim = { -1 };
 
-    _uint m_PreState = { CPlayer::PLAYER_END };
+
+    _float4 m_vCurrentPos;
+    _float4 m_vPrePos;
+    _float4 m_PlayerMovePos;
 
 private:
     virtual void Change_Animation(const _float& fTimeDelta) {};

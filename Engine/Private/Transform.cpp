@@ -110,15 +110,15 @@ void CTransform::Go_Right(const _float& fTimeDelta)
 
 void CTransform::LookAt(_fvector vTargetPosition)
 {
-	_float3 vScale = Get_Scaled();
+	_float3 m_vScale = Get_Scaled();
 
 	_vector vLook = vTargetPosition - Get_State(STATE_POSITION);
 	_vector vRight = XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook);
 	_vector vUp = XMVector3Cross(vLook, vRight);
 
-	Set_State(STATE_RIGHT, XMVector4Normalize(vRight) * vScale.x);
-	Set_State(STATE_UP, XMVector4Normalize(vUp) * vScale.y);
-	Set_State(STATE_LOOK, XMVector4Normalize(vLook) * vScale.z);
+	Set_State(STATE_RIGHT, XMVector4Normalize(vRight) * m_vScale.x);
+	Set_State(STATE_UP, XMVector4Normalize(vUp) * m_vScale.y);
+	Set_State(STATE_LOOK, XMVector4Normalize(vLook) * m_vScale.z);
 }
 
 void CTransform::Turn(_fvector vAxis, _float fTimeDelta)

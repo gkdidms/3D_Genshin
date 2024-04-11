@@ -64,6 +64,7 @@ void CTool_Camera::Tick(const _float& fTimeDelta)
 
 void CTool_Camera::Late_Tick(const _float& fTimeDelta)
 {
+	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix());
 }
 
 HRESULT CTool_Camera::Render()

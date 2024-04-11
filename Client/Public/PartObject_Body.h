@@ -16,6 +16,8 @@ private:
     CPartObject_Body(const CPartObject_Body& rhs);
     virtual ~CPartObject_Body() = default;
 
+
+
 public:
     HRESULT Initialize_Prototype();
     HRESULT Initialize(void* pArg);
@@ -26,6 +28,8 @@ public:
 
 private:
     wstring m_strPrototypeModelTag = { L"" };
+
+    _bool m_IsFinished = { false };
 
 private:
     HRESULT Add_Components();

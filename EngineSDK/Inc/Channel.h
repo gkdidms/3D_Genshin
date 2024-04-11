@@ -14,7 +14,7 @@ public:
     HRESULT Initialize(const char* pName, _int iBoneIndex, _uint iNumKeyFrames, vector<KEYFRAME> KeyFrames);
 
     void Update_TransformationMatrix(double CurrentPosition, const vector<class CBone*> Bones, _uint* iCurrentKeyFrameIndex);
-
+    void First_TransformationMatrix(double CurrentPosition, const vector<class CBone*> Bones, _uint* iCurrentKeyFrameIndex);
 private:
     char m_szName[MAX_PATH] = "";
     _uint m_iBoneIndex = { 0 };

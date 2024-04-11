@@ -90,10 +90,10 @@ HRESULT CMainTool::Ready_Level_For_Main()
         return E_FAIL;
 
     PreTransformMatrix = XMMatrixIdentity();
-    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Dungeon_1", CModel::Create(m_pDevice, m_pContext, CMesh::TYPE_NONANIM, "../../Client/Bin/Resources/Models/map/Dungeon_1/Dungeon_1.fbx", PreTransformMatrix, "../../Data/Dungeon_1.dat", CModel::CREATE_READ))))
+    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Dungeon_1", CModel::Create(m_pDevice, m_pContext, CMesh::TYPE_NONANIM, "../../Client/Bin/Resources/Models/Map/Dungeon_1/Dungeon_1.fbx", PreTransformMatrix, "../../Data/Dungeon_1.dat", CModel::CREATE_READ))))
         return E_FAIL;
 
-    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Dungeon_2", CModel::Create(m_pDevice, m_pContext, CMesh::TYPE_NONANIM, "../../Client/Bin/Resources/Models/map/Dungeon_2/Dungeon_2.fbx", PreTransformMatrix, "../../Data/Dungeon_2.dat", CModel::CREATE_READ))))
+    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Dungeon_2", CModel::Create(m_pDevice, m_pContext, CMesh::TYPE_NONANIM, "../../Client/Bin/Resources/Models/Map/Dungeon_2/Dungeon_2.fbx", PreTransformMatrix, "../../Data/Dungeon_2.dat", CModel::CREATE_READ))))
         return E_FAIL;
 
     //buffer

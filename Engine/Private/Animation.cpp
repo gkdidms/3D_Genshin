@@ -70,13 +70,17 @@ void CAnimation::Update_TransformationMatrix(const _float& fTimeDelta, const vec
         m_iCurrentPosition = 0.0;
 
         if (!isLoop) m_IsFinished = true;
+        else m_IsLoopFinished = true;
     }
 
     if (!m_IsFinished)
     {
         for (size_t i = 0; i < m_iNumChannels; ++i)
         {
-            m_Channels[i]->Update_TransformationMatrix(m_iCurrentPosition, Bones, &m_CurrentKeyFrameIndex[i]);
+            if (m_Duration < 0.2f)
+                m_Channels[i]->First_TransformationMatrix(m_iCurrentPosition, Bones, &m_CurrentKeyFrameIndex[i]);
+            else
+                m_Channels[i]->Update_TransformationMatrix(m_iCurrentPosition, Bones, &m_CurrentKeyFrameIndex[i]);
         }
     }
 }
@@ -85,6 +89,7 @@ void CAnimation::Reset()
 {
     m_iCurrentPosition = 0.0;
     m_IsFinished = false;
+    m_IsLoopFinished = false;
     ZeroMemory(&m_CurrentKeyFrameIndex.front(), sizeof(_uint) * m_iNumChannels);
 }
 

@@ -12,8 +12,8 @@ CGamePlay_Level::CGamePlay_Level(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 
 HRESULT CGamePlay_Level::Initialize()
 {
-	if (FAILED(Ready_Layer_BackGround(L"Layer_Terrain")))
-		return E_FAIL;
+	//if (FAILED(Ready_Layer_BackGround(L"Layer_Terrain")))
+	//	return E_FAIL;
 
 	if (FAILED(Ready_Layer_Player(L"Layer_Player")))
 		return E_FAIL;

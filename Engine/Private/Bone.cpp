@@ -29,6 +29,10 @@ HRESULT CBone::Initialize(const char* pName, _int iParentIndex, _fmatrix Transfo
 
     XMStoreFloat4x4(&m_CombinedTransformMatrix, XMMatrixIdentity());
 
+    XMStoreFloat3(&m_vScale, XMVectorSet(1.f, 1.f, 1.f, 0.f));
+    XMStoreFloat4(&m_vRotation, XMVectorSet(0.f, 0.f, 0.f, 1.f));
+    XMStoreFloat3(&m_vTranslation, XMVectorSet(0.f, 0.f, 0.f, 1.f));
+
     return S_OK;
 }
 

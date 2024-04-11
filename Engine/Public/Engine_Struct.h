@@ -64,7 +64,7 @@ namespace Engine
 
 	typedef struct
 	{
-		XMFLOAT3 vScale;
+		XMFLOAT3 m_vScale;
 		XMFLOAT4 vRotate;
 		XMFLOAT3 vPosition;
 

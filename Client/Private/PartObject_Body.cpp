@@ -33,7 +33,6 @@ HRESULT CPartObject_Body::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ 45, true });
-	
 	return S_OK;
 }
 
@@ -43,14 +42,35 @@ void CPartObject_Body::Priority_Tick(const _float& fTimeDelta)
 
 void CPartObject_Body::Tick(const _float& fTimeDelta)
 {
-
+	if (m_pModelCom->Get_Animation_Finished() && m_iAnim != 32)
+	{
+		if (*m_pState == CPlayer::PLAYER_ATTACK_1 || *m_pState == CPlayer::PLAYER_ATTACK_2 || *m_pState == CPlayer::PLAYER_ATTACK_3 || *m_pState == CPlayer::PLAYER_ATTACK_4 ||
+			*m_pState == CPlayer::PLAYER_ELEMENTAL_END || *m_pState == CPlayer::PLAYER_ELENENTAL_BURST_END)
+		{
+			*m_pState = CPlayer::PLAYER_ATTACK_IDLE;
+		}
+		else if (*m_pState == CPlayer::PLAYER_ELEMENTAL_1)
+		{
+			*m_pState = CPlayer::PLAYER_ELEMENTAL_END;
+		}
+		else if (*m_pState == CPlayer::PLAYER_ELENENTAL_BURST)
+		{
+			*m_pState = CPlayer::PLAYER_ELENENTAL_BURST_END;
+		}
+		else
+			*m_pState = CPlayer::PLAYER_IDLE;
+	}
 
 	Change_Animation(fTimeDelta);
+
+	if (FAILED(m_pModelCom->Play_Animation(fTimeDelta, &m_vCurrentPos)))
+	{
+		//XMStoreFloat4(&m_vPrePos, XMVectorSet(0.f, 0.f, 0.f, 1.f));
+	}
 	
-
-	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ m_iAnim, m_IsLoop });
-
-	m_pModelCom->Play_Animation(fTimeDelta);
+	XMStoreFloat4(&m_PlayerMovePos, XMLoadFloat4(&m_vCurrentPos) - XMLoadFloat4(&m_vPrePos));
+	m_PlayerMovePos.w = 1.f;
+	m_vPrePos = m_vCurrentPos;
 }
 
 void CPartObject_Body::Late_Tick(const _float& fTimeDelta)
@@ -98,9 +118,6 @@ HRESULT CPartObject_Body::Bind_ResourceData()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_pWorldMatrix)))
 		return E_FAIL;
 
-	//if (FAILED(m_pTransformCom->Bind_ShaderMatrix(m_pShaderCom, "g_WorldMatrix")))
-	//	return E_FAIL;
-
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(CPipeLine::D3DTS_VIEW))))
 		return E_FAIL;
 
@@ -112,64 +129,98 @@ HRESULT CPartObject_Body::Bind_ResourceData()
 
 void CPartObject_Body::Change_Animation(const _float& fTimeDelta)
 {
-	if (m_pModelCom->Get_Animation_Finished())
+	switch (*m_pState)
 	{
-		if (*m_pState == CPlayer::PLAYER_RUN_START)
-		{
-			*m_pState = CPlayer::PLAYER_RUN;
-		}
-		else
-		{
-			*m_pState = CPlayer::PLAYER_IDLE;
-		}
-	}
-
-	if (m_PreState == *m_pState)
-		return;
-
-	if (*m_pState == CPlayer::PLAYER_ATTACK_1)
+	case CPlayer::PLAYER_ATTACK_1:
 	{
 		m_iAnim = 0;
 		m_IsLoop = false;
+		break;
 	}
-	else if (*m_pState == CPlayer::PLAYER_ATTACK_2)
+	case CPlayer::PLAYER_ATTACK_2:
 	{
 		m_iAnim = 1;
 		m_IsLoop = false;
+		break;
 	}
-	else if (*m_pState == CPlayer::PLAYER_ATTACK_3)
+	case CPlayer::PLAYER_ATTACK_3:
 	{
 		m_iAnim = 2;
 		m_IsLoop = false;
+		break;
 	}
-	else if (*m_pState == CPlayer::PLAYER_ATTACK_4)
+	case CPlayer::PLAYER_ATTACK_4:
 	{
 		m_iAnim = 3;
 		m_IsLoop = false;
+		break;
 	}
-	else if (*m_pState == CPlayer::PLAYER_RUN_START)
+	case CPlayer::PLAYER_ATTACK_IDLE:
 	{
-		m_iAnim = 32;
+		m_iAnim = 47;
 		m_IsLoop = false;
+		break;
 	}
-	else if (*m_pState == CPlayer::PLAYER_RUN)
+	case CPlayer::PLAYER_ELEMENTAL_1:
+	{
+		m_iAnim = 4;
+		m_IsLoop = false;
+		break;
+	}
+	case CPlayer::PLAYER_ELEMENTAL_END:
+	{
+		m_iAnim = 5;
+		m_IsLoop = false;
+		break;
+	}
+	case CPlayer::PLAYER_ELENENTAL_BURST:
+	{
+		m_iAnim = 6;
+		m_IsLoop = false;
+		break;
+	}
+	case CPlayer::PLAYER_ELENENTAL_BURST_END:
+	{
+		m_iAnim = 7;
+		m_IsLoop = false;
+		break;
+	}
+	case CPlayer::PLAYER_RUN:
 	{
 		m_iAnim = 32;
 		m_IsLoop = false;
 
-		m_iAnim = 33;
-		m_IsLoop = true;
+		if (m_PreState == *m_pState && m_pModelCom->Get_Animation_Finished(32))
+		{
+			m_iAnim = 33;
+			m_IsLoop = true;
+		}
+		break;
 	}
-	else if (*m_pState == CPlayer::PLAYER_STOP)
+	case CPlayer::PLAYER_STOP:
 	{
 		m_iAnim = 36;
 		m_IsLoop = false;
+		break;
 	}
-	else if (*m_pState == CPlayer::PLAYER_IDLE)
+	case CPlayer::PLAYER_IDLE:
 	{
 		m_iAnim = 45;
 		m_IsLoop = true;
+		break;
 	}
+	default:
+		break;
+	}
+
+	if (m_pModelCom->Get_LoopAnimation_Finished() || m_iPreAnim != m_iAnim)
+		XMStoreFloat4(&m_vPrePos, XMVectorSet(0.f, 0.f, 0.f, 1.f));
+
+	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ m_iAnim, m_IsLoop });
+
+	m_PreState = *m_pState;
+	m_iPreAnim = m_iAnim;
+
 }
 
 CPartObject_Body* CPartObject_Body::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

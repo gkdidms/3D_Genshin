@@ -12,6 +12,7 @@ private:
 
 public:
     _bool IsFinished() const { return m_IsFinished; }
+    _bool IsLoopFinished() const { return m_IsLoopFinished; }
 
 public:
     HRESULT Initialize(aiAnimation* pAiAnimation, const vector<class CBone*> Bones);
@@ -20,6 +21,7 @@ public:
 public:
     void Update_TransformationMatrix(const _float& fTimeDelta, const vector<CBone*> Bones, _bool isLoop);
     void Reset();
+    void Loop_Reset() { m_IsLoopFinished = false; }
 
 private:
     char m_szName[MAX_PATH] = "";
@@ -33,6 +35,8 @@ private:
 
     vector<_uint> m_CurrentKeyFrameIndex;
     _bool m_IsFinished = { false };
+    _bool m_IsLoopFinished = { false }; // 루프 애니메이션이 끝났는지 아닌지 확인
+
 
 public:
     static CAnimation* Create(aiAnimation* pAiAnimation, const vector<class CBone*> Bones);

@@ -25,7 +25,7 @@ HRESULT CMonster::Initialize(void* pArg)
     if (FAILED(Add_Components()))
         return E_FAIL;
 
-    m_pVIBufferModelCom->Set_Animation(CModel::ANIM_DESC{(_uint)rand() % 20, true});
+    //m_pVIBufferModelCom->Set_Animation(CModel::ANIM_DESC{(_uint)rand() % 20, true});
     m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(rand() % 20, 3.f, rand() % 20, 1.f));
     return S_OK;
 }

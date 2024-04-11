@@ -52,6 +52,15 @@
     <Filter Include="02. GameObject\Player\PartObject\Body">
       <UniqueIdentifier>{94e9eb27-47c1-4844-bb12-29fe353c9812}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\Map">
+      <UniqueIdentifier>{ff2d225b-e574-4af4-8cce-e28051baf40d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\Map\Stage_Dungeon_2">
+      <UniqueIdentifier>{70c3ff82-cda4-4aae-9b41-e107143f54f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\Map\Stage_Dungeon_1">
+      <UniqueIdentifier>{4a914a1e-563b-43d4-983c-acb042bc7c96}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">
@@ -105,6 +114,15 @@
     <ClInclude Include="..\public\PartObject_Body.h">
       <Filter>02. GameObject\Player\PartObject\Body</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Map.h">
+      <Filter>02. GameObject\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Dungeon_1.h">
+      <Filter>02. GameObject\Map\Stage_Dungeon_1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dungeon_2.h">
+      <Filter>02. GameObject\Map\Stage_Dungeon_2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -145,6 +163,15 @@
     </ClCompile>
     <ClCompile Include="..\private\PartObject_Body.cpp">
       <Filter>02. GameObject\Player\PartObject\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Map.cpp">
+      <Filter>02. GameObject\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Dungeon_1.cpp">
+      <Filter>02. GameObject\Map\Stage_Dungeon_1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dungeon_2.cpp">
+      <Filter>02. GameObject\Map\Stage_Dungeon_2</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

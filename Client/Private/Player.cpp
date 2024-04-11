@@ -42,51 +42,7 @@ void CPlayer::Priority_Tick(const _float& fTimeDelta)
 
 void CPlayer::Tick(const _float& fTimeDelta)
 {
-
-	if (m_pGameInstance->GetMouseState(DIM_LB) == CInput_Device::TAP)
-	{
-		if (m_iNumMouseClick >= m_iMaxMouseClick)
-			m_iNumMouseClick = 0;
-
-		if (m_iNumMouseClick == 0)
-			m_iState = PLAYER_ATTACK_1;
-		else if (m_iNumMouseClick == 1)
-			m_iState = PLAYER_ATTACK_2;
-		else if (m_iNumMouseClick == 2)
-			m_iState = PLAYER_ATTACK_3;
-		else if (m_iNumMouseClick == 3)
-			m_iState = PLAYER_ATTACK_4;
-
-		++m_iNumMouseClick;
-	}
-
-	if (m_pGameInstance->GetKeyState(DIK_W) == CInput_Device::HOLD)
-	{
-		m_pTransformCom->Go_Straight(fTimeDelta);
-
-		m_iState = PLAYER_RUN;
-	}
-	if (m_pGameInstance->GetKeyState(DIK_A) == CInput_Device::HOLD)
-	{
-		m_pTransformCom->Turn(XMVectorSet(0.f, -1.f, 0.f, 0.f), fTimeDelta);
-		m_iState = PLAYER_RUN;
-	}
-	if (m_pGameInstance->GetKeyState(DIK_D) == CInput_Device::HOLD)
-	{
-		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta);
-		m_iState = PLAYER_RUN;
-	}
-	if (m_pGameInstance->GetKeyState(DIK_S) == CInput_Device::HOLD)
-	{
-		m_pTransformCom->Go_Backwork(fTimeDelta);
-
-		m_iState = PLAYER_RUN;
-	}
-
-	if (m_pGameInstance->GetKeyState(DIK_W) == CInput_Device::AWAY)
-	{
-		m_iState = PLAYER_STOP;
-	}
+	Input_Key(fTimeDelta);
 
 	for (auto& pObject : m_PartObject)
 		pObject->Tick(fTimeDelta);
@@ -94,6 +50,13 @@ void CPlayer::Tick(const _float& fTimeDelta)
 
 void CPlayer::Late_Tick(const _float& fTimeDelta)
 {
+	_float4 vPos;
+	m_PartObject[PART_BODY]->Set_PlayerPos(&vPos);
+	XMStoreFloat4(&vPos, XMVector3TransformCoord(XMLoadFloat4(&vPos), m_pTransformCom->Get_WorldMatrix()));
+	//_vector vMovePos = m_pTransformCom->Get_State(CTransform::STATE_POSITION) + XMLoadFloat4(&vPos);
+	_vector vMovePos = XMVectorSetW(XMLoadFloat4(&vPos), 1.f);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vMovePos);
+
 	for (auto& pObject : m_PartObject)
 		pObject->Late_Tick(fTimeDelta);
 
@@ -112,7 +75,7 @@ HRESULT CPlayer::Ready_PartObjects()
 {
 	//PartObject::Body
 	CPartObject_Body::BODY_DESC Desc{};
-	
+
 	Desc.pParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
 	Desc.strPrototypeModelTag = L"Prototype_Component_Model_Tighnari";
 	Desc.pState = &m_iState;
@@ -126,6 +89,56 @@ HRESULT CPlayer::Ready_PartObjects()
 	m_PartObject.emplace_back(pBodyObject);
 
 	return S_OK;
+}
+
+void CPlayer::Input_Key(const _float& fTimeDelta)
+{
+	if (m_pGameInstance->GetMouseState(DIM_LB) == CInput_Device::TAP) // 일반 공격
+	{
+		if (m_iNumMouseClick >= m_iMaxMouseClick)
+			m_iNumMouseClick = 0;
+
+		if (m_iNumMouseClick == 0)
+			m_iState = PLAYER_ATTACK_1;
+		else if (m_iNumMouseClick == 1)
+			m_iState = PLAYER_ATTACK_2;
+		else if (m_iNumMouseClick == 2)
+			m_iState = PLAYER_ATTACK_3;
+		else if (m_iNumMouseClick == 3)
+			m_iState = PLAYER_ATTACK_4;
+
+		++m_iNumMouseClick;
+	}
+	if (m_pGameInstance->GetKeyState(DIK_E) == CInput_Device::TAP) // 원소스킬
+	{
+		m_iState = PLAYER_ELEMENTAL_1;
+	}
+	if (m_pGameInstance->GetKeyState(DIK_Q) == CInput_Device::TAP) // 원소폭팔 스킬
+	{
+		m_iState = PLAYER_ELENENTAL_BURST;
+	}
+
+	if (m_pGameInstance->GetKeyState(DIK_W) == CInput_Device::HOLD)
+	{
+		m_iState = PLAYER_RUN;
+	}
+	if (m_pGameInstance->GetKeyState(DIK_A) == CInput_Device::HOLD)
+	{
+		m_pTransformCom->Turn(XMVectorSet(0.f, -1.f, 0.f, 0.f), fTimeDelta);
+	}
+	if (m_pGameInstance->GetKeyState(DIK_D) == CInput_Device::HOLD)
+	{
+		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta);
+	}
+	if (m_pGameInstance->GetKeyState(DIK_S) == CInput_Device::HOLD)
+	{
+		m_iState = PLAYER_RUN;
+	}
+
+	if (m_pGameInstance->GetKeyState(DIK_W) == CInput_Device::AWAY)
+	{
+		m_iState = PLAYER_STOP;
+	}
 }
 
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
