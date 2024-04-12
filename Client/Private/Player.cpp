@@ -2,7 +2,6 @@
 
 #include "GameInstance.h"
 #include "PartObject_Body.h"
-#include "PartObject.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject { pDevice, pContext }
@@ -53,7 +52,6 @@ void CPlayer::Late_Tick(const _float& fTimeDelta)
 	_float4 vPos;
 	m_PartObject[PART_BODY]->Set_PlayerPos(&vPos);
 	XMStoreFloat4(&vPos, XMVector3TransformCoord(XMLoadFloat4(&vPos), m_pTransformCom->Get_WorldMatrix()));
-	//_vector vMovePos = m_pTransformCom->Get_State(CTransform::STATE_POSITION) + XMLoadFloat4(&vPos);
 	_vector vMovePos = XMVectorSetW(XMLoadFloat4(&vPos), 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vMovePos);
 
@@ -117,7 +115,8 @@ void CPlayer::Input_Key(const _float& fTimeDelta)
 	{
 		m_iState = PLAYER_ELENENTAL_BURST;
 	}
-
+	
+	// ¶Ù±â Á¦¾î
 	if (m_pGameInstance->GetKeyState(DIK_W) == CInput_Device::HOLD)
 	{
 		m_iState = PLAYER_RUN;
@@ -134,11 +133,19 @@ void CPlayer::Input_Key(const _float& fTimeDelta)
 	{
 		m_iState = PLAYER_RUN;
 	}
-
-	if (m_pGameInstance->GetKeyState(DIK_W) == CInput_Device::AWAY)
+	
+	//¶ÙÁö ¾ÊÀ»¶§
+	if (m_pGameInstance->GetKeyState(DIK_W) == CInput_Device::AWAY 
+		|| m_pGameInstance->GetKeyState(DIK_S) == CInput_Device::AWAY)
 	{
 		m_iState = PLAYER_STOP;
 	}
+
+	//¶Ù±â Á¦¾î
+	if (m_pGameInstance->GetKeyState(DIK_LSHIFT) == CInput_Device::HOLD)
+		m_iState = PLAYER_SPRINT;
+	if (m_pGameInstance->GetKeyState(DIK_LSHIFT) == CInput_Device::AWAY)
+		m_iState = PLAYER_RUN;
 }
 
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

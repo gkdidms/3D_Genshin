@@ -28,7 +28,7 @@ protected:
 
 public:
     void Set_PlayerPos(_float4* vParentPos) { XMStoreFloat4(vParentPos, XMLoadFloat4(&m_PlayerMovePos)); }
-
+    
 public:
     HRESULT Initialize_Prototype();
     HRESULT Initialize(void* pArg);

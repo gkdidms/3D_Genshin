@@ -21,7 +21,7 @@ public:
     class CComponent* Get_Component(wstring strComponentTag, _uint iIndex);
 
 public:
-    void Find_Objectes(vector<class CGameObject*> Objectes);
+    class CGameObject* Get_Objecte(_uint iIndex);
 
 private:
     vector<class CGameObject*> m_vecObjects;

@@ -125,17 +125,14 @@ CComponent* CGameObject_Manager::Get_GameObject_Component(_uint iLevelIndex, con
 	return pLayer->Get_Component(strComponentTag, iIndex);
 }
 
-vector<CGameObject*> CGameObject_Manager::Find_GameObjects_Clone(_uint iLevelIndex, const wstring strLayerTag)
+CGameObject* CGameObject_Manager::Get_GameObject(_uint iLevelIndex, const wstring strLayerTag, _uint iIndex)
 {
-	vector<CGameObject*> Objectes;
-	auto pLayer = m_pLayers[iLevelIndex].find(strLayerTag);
+	CLayer* pLayer = Find_Layer(iLevelIndex, strLayerTag);
 
-	if (m_pLayers[iLevelIndex].end() == pLayer)
-		return Objectes;
+	if (nullptr == pLayer)
+		return nullptr;
 
-	pLayer->second->Find_Objectes(Objectes);
-
-	return Objectes;
+	return pLayer->Get_Objecte(iIndex);
 }
 
 CGameObject* CGameObject_Manager::Find_GameObject_Prototype(const wstring strGameObjectTag)

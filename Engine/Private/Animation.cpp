@@ -77,10 +77,27 @@ void CAnimation::Update_TransformationMatrix(const _float& fTimeDelta, const vec
     {
         for (size_t i = 0; i < m_iNumChannels; ++i)
         {
-            if (m_Duration < 0.2f)
-                m_Channels[i]->First_TransformationMatrix(m_iCurrentPosition, Bones, &m_CurrentKeyFrameIndex[i]);
-            else
-                m_Channels[i]->Update_TransformationMatrix(m_iCurrentPosition, Bones, &m_CurrentKeyFrameIndex[i]);
+            m_Channels[i]->Update_TransformationMatrix(m_iCurrentPosition, Bones, &m_CurrentKeyFrameIndex[i]);
+        }
+    }
+}
+
+void CAnimation::Linear_TransformationMatrix(const _float& fTimeDelta, const vector<CBone*> Bones)
+{
+    m_iCurrentPosition += m_TickPerSecond * fTimeDelta;
+
+    if (m_iCurrentPosition >= 5)
+    {
+        //애니메이션 끝
+        m_iCurrentPosition = 0.0;
+        m_IsFirst = false;
+    }
+
+    if (m_IsFirst)
+    {
+        for (size_t i = 0; i < m_iNumChannels; ++i)
+        {
+            m_Channels[i]->First_TransformationMatrix(m_iCurrentPosition, Bones);
         }
     }
 }
@@ -90,6 +107,7 @@ void CAnimation::Reset()
     m_iCurrentPosition = 0.0;
     m_IsFinished = false;
     m_IsLoopFinished = false;
+    m_IsFirst = true;
     ZeroMemory(&m_CurrentKeyFrameIndex.front(), sizeof(_uint) * m_iNumChannels);
 }
 

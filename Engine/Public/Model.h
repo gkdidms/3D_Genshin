@@ -2,6 +2,7 @@
 #include "Component.h"
 #include "Mesh.h"
 #include "Animation.h"
+#include "Bone.h"
 
 BEGIN(Engine)
 class ENGINE_DLL CModel final:
@@ -41,7 +42,7 @@ public:
 
 public:
     void Play_Animation(const _float& fTimeDelta);
-    HRESULT Play_Animation(const _float& fTimeDelta, _float4* vMovePos);
+    void Play_Animation(const _float& fTimeDelta, _float4* vMovePos, _bool isInterpolation = true);
     void Set_Animation(ANIM_DESC tAnimdesc) {
         if (Get_LoopAnimation_Finished())
             m_Animations[tAnimdesc.iCurrentAnimIndex]->Loop_Reset();
@@ -70,6 +71,7 @@ private:
 
 private:
     _uint m_iNumBones = { 0 };
+    _uint m_iRootBoneIndex = { 0 }; // "Bip001" ª¿ ¿Œµ¶Ω∫ ¿˙¿Â
     vector<class CBone*> m_Bones;
 
     _float4x4 m_MeshBoneMatrices[512];

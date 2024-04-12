@@ -53,9 +53,9 @@ CComponent* CLayer::Get_Component(wstring strComponentTag, _uint iIndex)
 	return m_vecObjects[iIndex]->Get_Component(strComponentTag);
 }
 
-void CLayer::Find_Objectes(vector<class CGameObject*> Objectes)
+CGameObject* CLayer::Get_Objecte(_uint iIndex)
 {
-	Objectes = m_vecObjects;
+	return m_vecObjects[iIndex];
 }
 
 CLayer* CLayer::Create()

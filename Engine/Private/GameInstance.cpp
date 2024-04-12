@@ -138,14 +138,14 @@ void CGameInstance::Clear_Object(_uint iLevelIndex)
 	m_pComponent_Manager->Clear(iLevelIndex);
 }
 
-vector<class CGameObject*> CGameInstance::Find_GameObjects_Clone(_uint iLevelIndex, const wstring strLayerTag)
-{
-	return m_pGameObject_Manager->Find_GameObjects_Clone(iLevelIndex, strLayerTag);
-}
-
 CComponent* CGameInstance::Get_GameObject_Component(_uint iLevelIndex, const wstring strLayerTag, const wstring strComponentTag, _uint iIndex)
 {
 	return m_pGameObject_Manager->Get_GameObject_Component(iLevelIndex, strLayerTag, strComponentTag, iIndex);
+}
+
+CGameObject* CGameInstance::Get_GameObject(_uint iLevelIndex, const wstring strLayerTag, _uint iIndex)
+{
+	return m_pGameObject_Manager->Get_GameObject(iLevelIndex, strLayerTag, iIndex);
 }
 
 void CGameInstance::Add_Renderer(CRenderer::RENDERER_STATE eRenderState, CGameObject* pGameObject)

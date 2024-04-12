@@ -41,10 +41,9 @@ HRESULT CGamePlay_Level::Ready_Layer_Camera(const wstring& strLayerTag)
 {
 	CDefaultCamera::DEFAULT_CAMERA_DESC tDefaultCamera = {};
 
-	const _float4x4* PlayerMatrix = dynamic_cast<CTransform*>(m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, L"Layer_Player", L"Com_Transform", 0))->Get_WorldFloat4x4();
-	tDefaultCamera.pPlayerMatrix = PlayerMatrix;
-	tDefaultCamera.vEye = _float4(0.f, 40.f, -30.f, 1.f);
-	tDefaultCamera.vFocus = _float4(0.f, 0.f, 0.f, 1.f);
+	tDefaultCamera.pPlayerMatrix = dynamic_cast<CTransform*>(m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, L"Layer_Player", L"Com_Transform"))->Get_WorldFloat4x4();
+	tDefaultCamera.vEye = _float4(0.f, 20.f, -30.f, 1.f);
+	tDefaultCamera.vFocus = _float4(0.f, 10.f, 0.f, 1.f);
 	
 	tDefaultCamera.fFovY = XMConvertToRadians(90.f);
 	tDefaultCamera.fAspect = g_iWinSizeX / (_float)g_iWinSizeY;

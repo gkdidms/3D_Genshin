@@ -36,7 +36,8 @@ void CDefaultCamera::Priority_Tick(const _float& fTimeDelta)
 
 void CDefaultCamera::Tick(const _float& fTimeDelta)
 {
-	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * XMLoadFloat4x4(m_pTargetMatrix));
+
+	
 	/*if (GetAsyncKeyState('W') & 0x8000)
 		m_pTransformCom->Go_Straight(fTimeDelta);
 	if (GetAsyncKeyState('S') & 0x8000)
@@ -45,6 +46,9 @@ void CDefaultCamera::Tick(const _float& fTimeDelta)
 		m_pTransformCom->Go_Left(fTimeDelta);
 	if (GetAsyncKeyState('D') & 0x8000)
 		m_pTransformCom->Go_Right(fTimeDelta);*/
+
+	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * XMLoadFloat4x4(m_pTargetMatrix));
+	
 
 	__super::Tick(fTimeDelta);
 }

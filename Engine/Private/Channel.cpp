@@ -76,8 +76,6 @@ void CChannel::Update_TransformationMatrix(double CurrentPosition, const vector<
 
 	KEYFRAME LastKeyFrame = m_KeyFrames.back();
 
-	
-
 	_vector vScale, vRotation, vTranslation;
 	if (CurrentPosition >= LastKeyFrame.Time)
 	{
@@ -103,13 +101,8 @@ void CChannel::Update_TransformationMatrix(double CurrentPosition, const vector<
 	Bones[m_iBoneIndex]->Set_StateVector(vScale, vRotation, vTranslation);
 }
 
-void CChannel::First_TransformationMatrix(double CurrentPosition, const vector<class CBone*> Bones, _uint* iCurrentKeyFrameIndex)
+void CChannel::First_TransformationMatrix(double CurrentPosition, const vector<class CBone*> Bones)
 {
-	if (CurrentPosition == 0.0)
-		*iCurrentKeyFrameIndex = 0;
-
-	KEYFRAME LastKeyFrame = m_KeyFrames.back();
-
 	_vector vScale, vRotation, vTranslation;
 
 	_vector vPreScale, vPreRotation, vPreTranslation;
@@ -117,15 +110,12 @@ void CChannel::First_TransformationMatrix(double CurrentPosition, const vector<c
 	vPreRotation = Bones[m_iBoneIndex]->Get_Rotation();
 	vPreTranslation = Bones[m_iBoneIndex]->Get_Translation();
 
-	while (CurrentPosition >= m_KeyFrames[*iCurrentKeyFrameIndex + 1].Time)
-		++*iCurrentKeyFrameIndex;
-
-	_float fRatio = 0.65f;
-
-	vScale = XMVectorLerp(vPreScale, XMLoadFloat3(&m_KeyFrames[*iCurrentKeyFrameIndex].m_vScale), fRatio);
-	vRotation = XMQuaternionSlerp(vPreRotation, XMLoadFloat4(&m_KeyFrames[*iCurrentKeyFrameIndex].vRotate), fRatio);
-	vTranslation = XMVectorSetW(XMVectorLerp(vPreTranslation, XMLoadFloat3(&m_KeyFrames[*iCurrentKeyFrameIndex].vPosition), fRatio), 1.f);
-
+	_float fRatio = (CurrentPosition - m_KeyFrames[0].Time) / 5.f;
+	
+	vScale = XMVectorLerp(vPreScale, XMLoadFloat3(&m_KeyFrames[0].m_vScale), fRatio);
+	vRotation = XMQuaternionSlerp(vPreRotation, XMLoadFloat4(&m_KeyFrames[0].vRotate), fRatio);
+	vTranslation = XMVectorSetW(XMVectorLerp(vPreTranslation, XMLoadFloat3(&m_KeyFrames[0].vPosition), fRatio), 1.f);
+	
 	_matrix TransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vTranslation);
 
 	Bones[m_iBoneIndex]->Set_TranformationMatrix(TransformationMatrix);

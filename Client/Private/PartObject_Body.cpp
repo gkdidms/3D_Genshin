@@ -63,10 +63,7 @@ void CPartObject_Body::Tick(const _float& fTimeDelta)
 
 	Change_Animation(fTimeDelta);
 
-	if (FAILED(m_pModelCom->Play_Animation(fTimeDelta, &m_vCurrentPos)))
-	{
-		//XMStoreFloat4(&m_vPrePos, XMVectorSet(0.f, 0.f, 0.f, 1.f));
-	}
+	m_pModelCom->Play_Animation(fTimeDelta, &m_vCurrentPos, m_IsLoop);
 	
 	XMStoreFloat4(&m_PlayerMovePos, XMLoadFloat4(&m_vCurrentPos) - XMLoadFloat4(&m_vPrePos));
 	m_PlayerMovePos.w = 1.f;
