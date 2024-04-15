@@ -1,15 +1,20 @@
 #include "PartObject.h"
 
 #include "GameInstance.h"
+#include "State_Manager.h"
 
 CPartObject::CPartObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject{ pDevice, pContext }
+	: CGameObject{ pDevice, pContext },
+	m_pState_Manager { CState_Manager::GetInstance() }
 {
+	Safe_AddRef(m_pState_Manager);
 }
 
 CPartObject::CPartObject(const CPartObject& rhs)
-	: CGameObject { rhs }
+	: CGameObject { rhs },
+	m_pState_Manager { rhs.m_pState_Manager }
 {
+	Safe_AddRef(m_pState_Manager);
 }
 
 HRESULT CPartObject::Initialize_Prototype()
@@ -56,4 +61,5 @@ void CPartObject::Free()
 
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
+	Safe_Release(m_pState_Manager);
 }

@@ -121,6 +121,26 @@ void CTransform::LookAt(_fvector vTargetPosition)
 	Set_State(STATE_LOOK, XMVector4Normalize(vLook) * m_vScale.z);
 }
 
+void CTransform::LookForCamera(_fvector vCamLook, _float fRadian)
+{
+	_float3 m_vScale = Get_Scaled();
+
+	_vector vChangeCamLook = XMVectorSetY(vCamLook, 0.f);
+	_vector vLook = XMVector4Normalize(vChangeCamLook);
+	_vector vRight = XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook);
+	_vector vUp = XMVector3Cross(vLook, vRight);
+
+	_matrix		RotationMatrix = XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), fRadian);
+
+	vRight = XMVector3TransformNormal(vRight, RotationMatrix);
+	vUp = XMVector3TransformNormal(vUp, RotationMatrix);
+	vLook = XMVector3TransformNormal(vLook, RotationMatrix);
+
+	Set_State(STATE_RIGHT, XMVector4Normalize(vRight) * m_vScale.x);
+	Set_State(STATE_UP, XMVector4Normalize(vUp) * m_vScale.y);
+	Set_State(STATE_LOOK, XMVector4Normalize(vLook) * m_vScale.z);
+}
+
 void CTransform::Turn(_fvector vAxis, _float fTimeDelta)
 {
 	_vector		vRight = Get_State(STATE_RIGHT);

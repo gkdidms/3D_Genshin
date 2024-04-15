@@ -19,6 +19,7 @@ public:
     _matrix Get_Transform_Inverse_Matrix(D3DTRANSFORMSTATE eState);
     const _float4* Get_CamPosition_Float4();
     _vector Get_CamPosition();
+    _vector Get_CamLook();
 
 public:
     void Set_Transform(D3DTRANSFORMSTATE eState, _fmatrix matTransform) {
@@ -33,6 +34,7 @@ private:
     _float4x4 m_TransformStateMatrix[D3DTS_END];
     _float4x4 m_TransformStateInverseMatrix[D3DTS_END];
     _float4 m_vCamPosition;
+    _float4 m_vCamLook;
 
 public:
     static CPipeLine* Create();

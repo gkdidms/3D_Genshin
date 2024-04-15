@@ -2,15 +2,20 @@
 
 #include "GameInstance.h"
 #include "PartObject_Body.h"
+#include "State_Manager.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject { pDevice, pContext }
+	: CGameObject { pDevice, pContext },
+	m_pState_Manager { CState_Manager::GetInstance() }
 {
+	Safe_AddRef(m_pState_Manager);
 }
 
 CPlayer::CPlayer(const CPlayer& rhs)
-	: CGameObject { rhs }
+	: CGameObject { rhs },
+	m_pState_Manager{ rhs.m_pState_Manager }
 {
+	Safe_AddRef(m_pState_Manager);
 }
 
 HRESULT CPlayer::Initialize_Prototype()
@@ -24,6 +29,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 	Desc.fSpeedPecSec = 20.f;
 	Desc.fRotatePecSec = XMConvertToRadians(60.f);
 
+	m_pState_Manager->Initialize();
+	m_pState_Manager->Set_CurrentState(CState_Manager::STATE_TYPE_IDEL);
+
 	if (FAILED(__super::Initialize(&Desc)))
 		return E_FAIL;
 
@@ -35,7 +43,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 void CPlayer::Priority_Tick(const _float& fTimeDelta)
 {
-	for (auto& pObject : m_PartObject)
+	for (auto& pObject : m_PartObject[m_CurrentPlayerble])
 		pObject->Priority_Tick(fTimeDelta);
 }
 
@@ -43,19 +51,19 @@ void CPlayer::Tick(const _float& fTimeDelta)
 {
 	Input_Key(fTimeDelta);
 
-	for (auto& pObject : m_PartObject)
+	for (auto& pObject : m_PartObject[m_CurrentPlayerble])
 		pObject->Tick(fTimeDelta);
 }
 
 void CPlayer::Late_Tick(const _float& fTimeDelta)
 {
 	_float4 vPos;
-	m_PartObject[PART_BODY]->Set_PlayerPos(&vPos);
+	m_PartObject[m_CurrentPlayerble][PART_BODY]->Set_PlayerPos(&vPos);
 	XMStoreFloat4(&vPos, XMVector3TransformCoord(XMLoadFloat4(&vPos), m_pTransformCom->Get_WorldMatrix()));
 	_vector vMovePos = XMVectorSetW(XMLoadFloat4(&vPos), 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vMovePos);
 
-	for (auto& pObject : m_PartObject)
+	for (auto& pObject : m_PartObject[m_CurrentPlayerble])
 		pObject->Late_Tick(fTimeDelta);
 
 	m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONBLENDER, this);
@@ -63,7 +71,7 @@ void CPlayer::Late_Tick(const _float& fTimeDelta)
 
 HRESULT CPlayer::Render()
 {
-	for (auto& pObject : m_PartObject)
+	for (auto& pObject : m_PartObject[m_CurrentPlayerble])
 		pObject->Render();
 
 	return S_OK;
@@ -72,80 +80,82 @@ HRESULT CPlayer::Render()
 HRESULT CPlayer::Ready_PartObjects()
 {
 	//PartObject::Body
-	CPartObject_Body::BODY_DESC Desc{};
+	CPartObject_Body::PART_DESC Desc{};
 
 	Desc.pParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
-	Desc.strPrototypeModelTag = L"Prototype_Component_Model_Tighnari";
 	Desc.pState = &m_iState;
 	Desc.fSpeedPecSec = 20.f;
 	Desc.fRotatePecSec = XMConvertToRadians(45.f);
 
-	CPartObject* pBodyObject = dynamic_cast<CPartObject*>(m_pGameInstance->Clone_Object(L"Prototype_GameObject_Player_Body", &Desc));
+	CPartObject* pBodyObject = dynamic_cast<CPartObject*>(m_pGameInstance->Clone_Object(L"Prototype_GameObject_Player_Tighnari", &Desc));
 	if (nullptr == pBodyObject)
 		return E_FAIL;
 
-	m_PartObject.emplace_back(pBodyObject);
+	m_PartObject[PLAYER_TIGHNARI].emplace_back(pBodyObject);
+
+	pBodyObject = dynamic_cast<CPartObject*>(m_pGameInstance->Clone_Object(L"Prototype_GameObject_Player_Nilou", &Desc));
+	if (nullptr == pBodyObject)
+		return E_FAIL;
+
+	m_PartObject[PLAYER_NILOU].emplace_back(pBodyObject);
+
+	pBodyObject = dynamic_cast<CPartObject*>(m_pGameInstance->Clone_Object(L"Prototype_GameObject_Player_Wanderer", &Desc));
+	if (nullptr == pBodyObject)
+		return E_FAIL;
+
+	m_PartObject[PLAYER_WANDERER].emplace_back(pBodyObject);
+
+	pBodyObject = dynamic_cast<CPartObject*>(m_pGameInstance->Clone_Object(L"Prototype_GameObject_Player_Yae", &Desc));
+	if (nullptr == pBodyObject)
+		return E_FAIL;
+
+	m_PartObject[PLAYER_YAE].emplace_back(pBodyObject);
 
 	return S_OK;
 }
 
 void CPlayer::Input_Key(const _float& fTimeDelta)
 {
-	if (m_pGameInstance->GetMouseState(DIM_LB) == CInput_Device::TAP) // 일반 공격
-	{
-		if (m_iNumMouseClick >= m_iMaxMouseClick)
-			m_iNumMouseClick = 0;
+	m_iState = m_pState_Manager->Update(PLAYER_STATE(m_iState));
 
-		if (m_iNumMouseClick == 0)
-			m_iState = PLAYER_ATTACK_1;
-		else if (m_iNumMouseClick == 1)
-			m_iState = PLAYER_ATTACK_2;
-		else if (m_iNumMouseClick == 2)
-			m_iState = PLAYER_ATTACK_3;
-		else if (m_iNumMouseClick == 3)
-			m_iState = PLAYER_ATTACK_4;
-
-		++m_iNumMouseClick;
-	}
-	if (m_pGameInstance->GetKeyState(DIK_E) == CInput_Device::TAP) // 원소스킬
-	{
-		m_iState = PLAYER_ELEMENTAL_1;
-	}
-	if (m_pGameInstance->GetKeyState(DIK_Q) == CInput_Device::TAP) // 원소폭팔 스킬
-	{
-		m_iState = PLAYER_ELENENTAL_BURST;
-	}
-	
 	// 뛰기 제어
-	if (m_pGameInstance->GetKeyState(DIK_W) == CInput_Device::HOLD)
+	if (m_pGameInstance->GetKeyState(DIK_W) == CInput_Device::HOLD) // 앞
 	{
-		m_iState = PLAYER_RUN;
+		m_pTransformCom->LookForCamera(m_pGameInstance->Get_CamLook(), XMConvertToRadians(0.f));
 	}
-	if (m_pGameInstance->GetKeyState(DIK_A) == CInput_Device::HOLD)
+	if (m_pGameInstance->GetKeyState(DIK_S) == CInput_Device::HOLD) // 뒤
 	{
-		m_pTransformCom->Turn(XMVectorSet(0.f, -1.f, 0.f, 0.f), fTimeDelta);
+		m_pTransformCom->LookForCamera(m_pGameInstance->Get_CamLook(), XMConvertToRadians(180.f));
 	}
-	if (m_pGameInstance->GetKeyState(DIK_D) == CInput_Device::HOLD)
+	if (m_pGameInstance->GetKeyState(DIK_A) == CInput_Device::TAP) // 왼쪽
 	{
-		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta);
+		m_pTransformCom->LookForCamera(m_pGameInstance->Get_CamLook(), XMConvertToRadians(-90.f));
 	}
-	if (m_pGameInstance->GetKeyState(DIK_S) == CInput_Device::HOLD)
+	if (m_pGameInstance->GetKeyState(DIK_D) == CInput_Device::TAP) // 오른쪽 
 	{
-		m_iState = PLAYER_RUN;
+		m_pTransformCom->LookForCamera(m_pGameInstance->Get_CamLook(), XMConvertToRadians(90.f));
 	}
-	
-	//뛰지 않을때
-	if (m_pGameInstance->GetKeyState(DIK_W) == CInput_Device::AWAY 
-		|| m_pGameInstance->GetKeyState(DIK_S) == CInput_Device::AWAY)
+	if (m_pGameInstance->GetKeyState(DIK_W) == CInput_Device::HOLD && m_pGameInstance->GetKeyState(DIK_A) == CInput_Device::HOLD) // 왼쪽 사이드
 	{
-		m_iState = PLAYER_STOP;
+		m_pTransformCom->LookForCamera(m_pGameInstance->Get_CamLook(), XMConvertToRadians(-45.f));
+	}
+	if (m_pGameInstance->GetKeyState(DIK_W) == CInput_Device::HOLD && m_pGameInstance->GetKeyState(DIK_D) == CInput_Device::HOLD) // 오른쪽 사이드
+	{
+		m_pTransformCom->LookForCamera(m_pGameInstance->Get_CamLook(), XMConvertToRadians(45.f));
 	}
 
-	//뛰기 제어
-	if (m_pGameInstance->GetKeyState(DIK_LSHIFT) == CInput_Device::HOLD)
-		m_iState = PLAYER_SPRINT;
-	if (m_pGameInstance->GetKeyState(DIK_LSHIFT) == CInput_Device::AWAY)
-		m_iState = PLAYER_RUN;
+	//캐릭터 변경
+	if (m_pGameInstance->GetKeyState(DIK_1) == CInput_Device::TAP)
+		m_CurrentPlayerble = PLAYER_TIGHNARI;
+
+	if (m_pGameInstance->GetKeyState(DIK_2) == CInput_Device::TAP)
+		m_CurrentPlayerble = PLAYER_NILOU;
+
+	if (m_pGameInstance->GetKeyState(DIK_3) == CInput_Device::TAP)
+		m_CurrentPlayerble = PLAYER_WANDERER;
+
+	if (m_pGameInstance->GetKeyState(DIK_4) == CInput_Device::TAP)
+		m_CurrentPlayerble = PLAYER_YAE;
 }
 
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -172,7 +182,12 @@ void CPlayer::Free()
 {
 	__super::Free();
 
-	for (auto& pPartObject : m_PartObject)
-		Safe_Release(pPartObject);
-	m_PartObject.clear();
+	Safe_Release(m_pState_Manager);
+
+	for (auto& PartObjects : m_PartObject)
+	{
+		for (auto& pPartObject : PartObjects)
+			Safe_Release(pPartObject);
+		PartObjects.clear();
+	}
 }

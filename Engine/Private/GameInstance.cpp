@@ -198,6 +198,11 @@ void CGameInstance::Set_Transform(CPipeLine::D3DTRANSFORMSTATE eState, _fmatrix 
 	m_pPipeLine->Set_Transform(eState, matTransform);
 }
 
+_vector CGameInstance::Get_CamLook()
+{
+	return m_pPipeLine->Get_CamLook();
+}
+
 _float CGameInstance::Get_TimeDelta(const _tchar* pTimerTag)
 {
 	return m_pTimer_Manager->Get_TimeDelta(pTimerTag);

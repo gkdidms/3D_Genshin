@@ -18,7 +18,6 @@ public:
     {
         const _float4x4* pParentMatrix;
         _uint* pState;
-
     }PART_DESC;
 
 protected:
@@ -30,14 +29,15 @@ public:
     void Set_PlayerPos(_float4* vParentPos) { XMStoreFloat4(vParentPos, XMLoadFloat4(&m_PlayerMovePos)); }
     
 public:
-    HRESULT Initialize_Prototype();
-    HRESULT Initialize(void* pArg);
-    void Priority_Tick(const _float& fTimeDelta);
-    void Tick(const _float& fTimeDelta);
-    void Late_Tick(const _float& fTimeDelta);
-    HRESULT Render();
+    virtual HRESULT Initialize_Prototype();
+    virtual HRESULT Initialize(void* pArg);
+    virtual void Priority_Tick(const _float& fTimeDelta);
+    virtual void Tick(const _float& fTimeDelta);
+    virtual void Late_Tick(const _float& fTimeDelta);
+    virtual HRESULT Render();
 
 protected:
+    class CState_Manager* m_pState_Manager = { nullptr };
     CShader* m_pShaderCom = { nullptr };
     CModel* m_pModelCom = { nullptr };
    
@@ -45,7 +45,7 @@ protected:
 
     const _float4x4* m_pParentMatrix = { nullptr };
     _uint* m_pState = { nullptr };
-    _uint m_PreState = { CPlayer::PLAYER_END };
+    PLAYER_STATE m_iCurrentState = { PLAYER_END };
 
     _uint m_iAnim = { 45 };
     _bool m_IsLoop = { false };

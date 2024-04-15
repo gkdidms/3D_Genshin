@@ -53,6 +53,7 @@ public:
     void Go_Left(const _float& fTimeDelta);
     void Go_Right(const _float& fTimeDelta);
     void LookAt(_fvector vTargetPosition);
+    void LookForCamera(_fvector vCamLook, _float fRadian);
     void Turn(_fvector vAxis, _float fTimeDelta);
     void Rotation(_fvector vAxis, _float fRadian);
     void Rotation(_float fRotationX, _float fRotationY, _float fRotationZ);

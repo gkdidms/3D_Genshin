@@ -55,6 +55,7 @@ public: // 파이프라인
     const _float4* Get_CamPosition_Float4();
     _vector Get_CamPosition();
     void Set_Transform(CPipeLine::D3DTRANSFORMSTATE eState, _fmatrix matTransform);
+    _vector Get_CamLook();
 
 public: // 타이머
     _float		Get_TimeDelta(const _tchar* pTimerTag);

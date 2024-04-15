@@ -41,8 +41,8 @@ public:
     HRESULT Bind_BoneMatrices(class CShader* pShader, const char* strConstansName, _uint iMeshIndex);
 
 public:
-    void Play_Animation(const _float& fTimeDelta);
-    void Play_Animation(const _float& fTimeDelta, _float4* vMovePos, _bool isInterpolation = true);
+    void Play_Animation(const _float& fTimeDelta, _float4* vMovePos);
+    void Play_Animation(const _float& fTimeDelta, _float4* vMovePos, _bool isInterpolation);
     void Set_Animation(ANIM_DESC tAnimdesc) {
         if (Get_LoopAnimation_Finished())
             m_Animations[tAnimdesc.iCurrentAnimIndex]->Loop_Reset();

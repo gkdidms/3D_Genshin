@@ -36,7 +36,7 @@ void CMonster::Priority_Tick(const _float& fTimeDelta)
 
 void CMonster::Tick(const _float& fTimeDelta)
 {
-    m_pVIBufferModelCom->Play_Animation(fTimeDelta);
+   // m_pVIBufferModelCom->Play_Animation(fTimeDelta);
 }
 
 void CMonster::Late_Tick(const _float& fTimeDelta)

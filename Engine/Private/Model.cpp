@@ -423,13 +423,21 @@ HRESULT CModel::Bind_BoneMatrices(CShader* pShader, const char* strConstansName,
 	return pShader->Bind_Matrices(strConstansName, m_MeshBoneMatrices, 512);
 }
 
-void CModel::Play_Animation(const _float& fTimeDelta)
+void CModel::Play_Animation(const _float& fTimeDelta, _float4* vMovePos)
 {
-	// TransformMatrix 업데이트
-	/* 현재 애니메이션의 상태에 맞도록 뼈들의 상태행렬(TransformationMatrix)을 만들고 갱신해준다. */
-	m_Animations[m_tAnimDesc.iCurrentAnimIndex]->Update_TransformationMatrix(fTimeDelta, m_Bones, m_tAnimDesc.isLoop);
+	if (m_Animations[m_tAnimDesc.iCurrentAnimIndex]->IsFirst())
+	{
+		m_Animations[m_tAnimDesc.iCurrentAnimIndex]->Linear_TransformationMatrix(fTimeDelta, m_Bones);
 
-	//CombinedTransformMatrix 업데이트 
+		for (auto& pBone : m_Bones)
+			pBone->Update_CombinedTransformMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
+
+		XMStoreFloat4(vMovePos, XMVectorSet(0.f, 0.f, 0.f, 1.f));
+		return;
+	}
+	else
+		m_Animations[m_tAnimDesc.iCurrentAnimIndex]->Update_TransformationMatrix(fTimeDelta, m_Bones, m_tAnimDesc.isLoop);
+
 	for (auto& pBone : m_Bones)
 		pBone->Update_CombinedTransformMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
 }
