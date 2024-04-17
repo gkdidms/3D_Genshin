@@ -1,5 +1,7 @@
 #pragma once
 #include "PartObject_Body.h"
+
+BEGIN(Client)
 class CYae_Body :
     public CPartObject_Body
 {   
@@ -27,3 +29,4 @@ public:
     virtual void Free() override; 
 };
 
+END

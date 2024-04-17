@@ -43,15 +43,17 @@ protected:
    
     _float4x4 m_pWorldMatrix;
 
+protected:
     const _float4x4* m_pParentMatrix = { nullptr };
     _uint* m_pState = { nullptr };
-    PLAYER_STATE m_iCurrentState = { PLAYER_END };
 
+protected:
     _uint m_iAnim = { 45 };
     _bool m_IsLoop = { false };
+    _bool m_IsLinear = { false };
     _int m_iPreAnim = { -1 };
 
-
+protected:
     _float4 m_vCurrentPos;
     _float4 m_vPrePos;
     _float4 m_PlayerMovePos;

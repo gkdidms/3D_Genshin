@@ -29,6 +29,7 @@ public:
 
 private:
     void Turn(_fvector vAxis, const _float& fTimeDelta);
+    void Zoom(const _float& fTimeDelta);
 
 private:
     const _float4x4* m_pTargetMatrix;

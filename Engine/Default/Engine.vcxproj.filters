@@ -106,6 +106,9 @@
     <Filter Include="01. Utility\97. Picking">
       <UniqueIdentifier>{95fd0382-b1b8-4f1a-92a4-5ddf25760ce3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98.ShaderFile">
+      <UniqueIdentifier>{0cd706ce-aa18-4e47-810d-97ad32c7691d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -314,5 +317,10 @@
     <ClInclude Include="..\public\Picking.h">
       <Filter>01. Utility\97. Picking</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Bin\ShaderFiles\Shader_Cell.hlsli">
+      <Filter>98.ShaderFile</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
 #include "Yae_Body.h"
 
 #include "GameInstance.h"
+#include "State_Manager.h"
 
 CYae_Body::CYae_Body(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject_Body{ pDevice, pContext } 
@@ -37,32 +38,12 @@ void CYae_Body::Tick(const _float& fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if (m_pModelCom->Get_Animation_Finished() && m_iAnim != 35)
-	{
-		//if (*m_pState == CPlayer::PLAYER_ATTACK_1 || *m_pState == CPlayer::PLAYER_ATTACK_2 || *m_pState == CPlayer::PLAYER_ATTACK_3 || *m_pState == CPlayer::PLAYER_ATTACK_4 ||
-		//	*m_pState == CPlayer::PLAYER_ELEMENTAL_END || *m_pState == CPlayer::PLAYER_ELENENTAL_BURST_END)
-		//{
-		//	*m_pState = CPlayer::PLAYER_ATTACK_IDLE;
-		//}
-		//else if (*m_pState == CPlayer::PLAYER_ELEMENTAL_1)
-		//{
-		//	*m_pState = CPlayer::PLAYER_ELEMENTAL_END;
-		//}
-		//else if (*m_pState == CPlayer::PLAYER_ELENENTAL_BURST)
-		//{
-		//	*m_pState = CPlayer::PLAYER_ELENENTAL_BURST_END;
-		//}
-		//else
-		//	*m_pState = CPlayer::PLAYER_IDLE;
-	}
+	if (m_pModelCom->Get_Animation_Finished())
+		*m_pState = m_pState_Manager->Exit(PLAYER_STATE(*m_pState));
 
 	Change_Animation(fTimeDelta);
 
-	m_pModelCom->Play_Animation(fTimeDelta, &m_vCurrentPos, m_IsLoop);
-
-	XMStoreFloat4(&m_PlayerMovePos, XMLoadFloat4(&m_vCurrentPos) - XMLoadFloat4(&m_vPrePos));
-	m_PlayerMovePos.w = 1.f;
-	m_vPrePos = m_vCurrentPos;
+	m_pModelCom->Play_Animation(fTimeDelta, &m_PlayerMovePos, m_IsLinear);
 }
 
 void CYae_Body::Late_Tick(const _float& fTimeDelta)
@@ -107,97 +88,135 @@ HRESULT CYae_Body::Bind_ResourceData()
 
 void CYae_Body::Change_Animation(const _float& fTimeDelta)
 {
-}
+	m_IsLinear = true;
+	switch (*m_pState)
+	{
+	case PLAYER_ATTACK_1:
+	{
+		m_iAnim = 0;
+		m_IsLoop = false;
+		break;
+	}
+	case PLAYER_ATTACK_2:
+	{
+		m_iAnim = 2;
+		m_IsLoop = false;
+		break;
+	}
+	case PLAYER_ATTACK_3:
+	{
+		m_iAnim = 3;
+		m_IsLoop = false;
+		break;
+	}
+	case PLAYER_ATTACK_IDLE:
+	{
+		m_iAnim = 51;
+		m_IsLoop = false;
+		m_IsLinear = false;
+		break;
+	}
+	case PLAYER_ELEMENTAL_1:
+	{
+		m_iAnim = 7;
+		m_IsLoop = false;
+		break;
+	}
+	case PLAYER_ELEMENTAL_1_END:
+	{
+		m_iAnim = 8;
+		m_IsLoop = false;
+		m_IsLinear = false;
+		break;
+	}
+	case PLAYER_ELEMENTAL_2:
+	{
+		m_iAnim = 9;
+		m_IsLoop = false;
+		break;
+	}
+	case PLAYER_ELEMENTAL_2_END:
+	{
+		m_iAnim = 10;
+		m_IsLoop = false;
+		m_IsLinear = false;
+		break;
+	}
+	case PLAYER_ELEMENTAL_BURST:
+	{
+		m_iAnim = 11;
+		m_IsLoop = false;
+		break;
+	}
+	case PLAYER_ELEMENTAL_BURST_END:
+	{
+		m_iAnim = 12;
+		m_IsLoop = false;
+		m_IsLinear = false;
+		break;
+	}
+	case PLAYER_RUN_START:
+	{
+		m_iAnim = 35;
+		m_IsLoop = false;
+		break;
+	}
+	case PLAYER_RUN:
+	{
+		m_iAnim = 36;
+		m_IsLoop = true;
+		break;
+	}
+	case PLAYER_RUN_STOP:
+	{
+		m_iAnim = 39;
+		m_IsLoop = false;
+		break;
+	}
+	case PLAYER_SPRINT_START:
+	{
+		m_iAnim = 44;
+		m_IsLoop = false;
+		break;
+	}
+	case PLAYER_SPRINT:
+	{
+		m_iAnim = 45;
+		m_IsLoop = true;
+		break;
+	}
+	case PLAYER_SPRINT_TO_RUN:
+	{
+		m_iAnim = 47;
+		m_IsLoop = false;
+		m_IsLinear = false;
+		break;
+	}
+	case PLAYER_SPRINT_STOP:
+	{
+		m_iAnim = 46;
+		m_IsLoop = false;
+		break;
+	}
+	case PLAYER_IDLE:
+	{
+		m_iAnim = 48;
+		m_IsLoop = true;
+		break;
+	}
+	case PLAYER_IDLE_PUT_AWAY:
+	{
+		m_iAnim = 50;
+		m_IsLoop = true;
+		break;
+	}
+	default:
+		break;
+	}
 
-//void CYae_Body::Change_Animation(const _float& fTimeDelta)
-//{
-//	switch (*m_pState)
-//	{
-//	case CPlayer::PLAYER_ATTACK_1:
-//	{
-//		m_iAnim = 0;
-//		m_IsLoop = false;
-//		break;
-//	}
-//	case CPlayer::PLAYER_ATTACK_2:
-//	{
-//		m_iAnim = 2;
-//		m_IsLoop = false;
-//		break;
-//	}
-//	case CPlayer::PLAYER_ATTACK_3:
-//	{
-//		m_iAnim = 3;
-//		m_IsLoop = false;
-//		break;
-//	}
-//	case CPlayer::PLAYER_ATTACK_IDLE:
-//	{
-//		m_iAnim = 51;
-//		m_IsLoop = false;
-//		break;
-//	}
-//	case CPlayer::PLAYER_ELEMENTAL_1:
-//	{
-//		m_iAnim = 7;
-//		m_IsLoop = false;
-//		break;
-//	}
-//	case CPlayer::PLAYER_ELEMENTAL_END:
-//	{
-//		m_iAnim = 8;
-//		m_IsLoop = false;
-//		break;
-//	}
-//	case CPlayer::PLAYER_ELENENTAL_BURST:
-//	{
-//		m_iAnim = 11;
-//		m_IsLoop = false;
-//		break;
-//	}
-//	case CPlayer::PLAYER_ELENENTAL_BURST_END:
-//	{
-//		m_iAnim = 12;
-//		m_IsLoop = false;
-//		break;
-//	}
-//	case CPlayer::PLAYER_RUN:
-//	{
-//		m_iAnim = 35;
-//		m_IsLoop = false;
-//
-//		if (m_PreState == *m_pState && m_pModelCom->Get_Animation_Finished(35))
-//		{
-//			m_iAnim = 36;
-//			m_IsLoop = true;
-//		}
-//		break;
-//	}
-//	case CPlayer::PLAYER_STOP:
-//	{
-//		m_iAnim = 39;
-//		m_IsLoop = false;
-//		break;
-//	}
-//	case CPlayer::PLAYER_IDLE:
-//	{
-//		m_iAnim = 48;
-//		m_IsLoop = true;
-//		break;
-//	}
-//	default:
-//		break;
-//	}
-//
-//	if (m_pModelCom->Get_LoopAnimation_Finished() || m_iPreAnim != m_iAnim)
-//		XMStoreFloat4(&m_vPrePos, XMVectorSet(0.f, 0.f, 0.f, 1.f));
-//
-//	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ m_iAnim, m_IsLoop });
-//
-//	m_PreState = *m_pState;
-//	m_iPreAnim = m_iAnim;
-//
-//}
+	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ m_iAnim, m_IsLoop });
+
+}
 
 CYae_Body* CYae_Body::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

@@ -39,6 +39,15 @@ CModel::CModel(const CModel& rhs)
 		m_Animations.emplace_back(pAnimation->Clone());
 }
 
+const _float4x4* CModel::Get_BoneCombinedTransformationMatrix(const _char* szBoneName) const 
+{
+	auto iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pBone) {
+		return pBone->Compare_NodeName(szBoneName);
+	});
+
+	return (*iter)->Get_CombinedTransformationMatrix();
+}
+
 HRESULT CModel::Initialize_Prototype(CMesh::MESHTYPE eMeshType, const _char* szModelFilePath, _fmatrix PreTransformMatrix, const _char* szBinaryFilePath, CREATETYPE eCreateType)
 {
 	m_eMeshType = eMeshType;
@@ -423,47 +432,43 @@ HRESULT CModel::Bind_BoneMatrices(CShader* pShader, const char* strConstansName,
 	return pShader->Bind_Matrices(strConstansName, m_MeshBoneMatrices, 512);
 }
 
-void CModel::Play_Animation(const _float& fTimeDelta, _float4* vMovePos)
+void CModel::Play_Animation(const _float& fTimeDelta, _float4* vMovePos, _bool isLinear)
 {
-	if (m_Animations[m_tAnimDesc.iCurrentAnimIndex]->IsFirst())
-	{
-		m_Animations[m_tAnimDesc.iCurrentAnimIndex]->Linear_TransformationMatrix(fTimeDelta, m_Bones);
 
-		for (auto& pBone : m_Bones)
-			pBone->Update_CombinedTransformMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
-
-		XMStoreFloat4(vMovePos, XMVectorSet(0.f, 0.f, 0.f, 1.f));
-		return;
-	}
-	else
-		m_Animations[m_tAnimDesc.iCurrentAnimIndex]->Update_TransformationMatrix(fTimeDelta, m_Bones, m_tAnimDesc.isLoop);
-
-	for (auto& pBone : m_Bones)
-		pBone->Update_CombinedTransformMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
-}
-
-void CModel::Play_Animation(const _float& fTimeDelta, _float4* vMovePos, _bool isInterpolation)
-{
-	if (m_Animations[m_tAnimDesc.iCurrentAnimIndex]->IsFirst() && isInterpolation)
+	if (m_Animations[m_tAnimDesc.iCurrentAnimIndex]->IsFirst() && isLinear)
 	{
 		m_Animations[m_tAnimDesc.iCurrentAnimIndex]->Linear_TransformationMatrix(fTimeDelta, m_Bones);
 
 		for (auto& pBone : m_Bones)
 			pBone->Update_CombinedTransformMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
 		
-		XMStoreFloat4(vMovePos, XMVectorSet(0.f, 0.f, 0.f, 1.f));
+		//XMStoreFloat4(vMovePos, XMVectorSet(0.f, 0.f, 0.f, 1.f));
+		*vMovePos = m_vAnimSpeed;
 		return;
 	}
 	else
+	{
 		m_Animations[m_tAnimDesc.iCurrentAnimIndex]->Update_TransformationMatrix(fTimeDelta, m_Bones, m_tAnimDesc.isLoop);
 
-	for (auto& pBone : m_Bones)
-		pBone->Update_CombinedTransformMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
+		for (auto& pBone : m_Bones)
+			pBone->Update_CombinedTransformMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
 
-	if (!Get_LoopAnimation_Finished())
-	{
-		const _float4x4* CombinedTransformMatrix = m_Bones[m_iRootBoneIndex]->Get_CombinedTransformMatrix();
-		XMStoreFloat4(vMovePos, XMVectorSet(CombinedTransformMatrix->m[3][0], CombinedTransformMatrix->m[3][1], CombinedTransformMatrix->m[3][2] * -1.f, 1.f));
+		const _float4x4* CombinedTransformMatrix = m_Bones[m_iRootBoneIndex]->Get_CombinedTransformationMatrix();
+		XMStoreFloat4(&m_vCurMovePos, XMVectorSet(CombinedTransformMatrix->m[3][0], CombinedTransformMatrix->m[3][1], CombinedTransformMatrix->m[3][2] * -1.f, 1.f));
+
+		if (!Get_LoopAnimation_Finished())
+		{
+			XMStoreFloat4(vMovePos, XMLoadFloat4(&m_vCurMovePos) - XMLoadFloat4(&m_vPreMovePos));
+			vMovePos->w = 1.f;
+			m_vPreMovePos = m_vCurMovePos;
+			
+			if (!(vMovePos->z == 0.f))
+				m_vAnimSpeed = *vMovePos;
+		}
+		
+		if (Get_LoopAnimation_Finished()) {
+			XMStoreFloat4(&m_vPreMovePos, XMVectorSet(0.f, 0.f, 0.f, 1.f));
+		}
 	}
 
 	return;

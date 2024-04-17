@@ -41,7 +41,7 @@ void CBone::Update_CombinedTransformMatrix(const vector<CBone*>& Bones, _fmatrix
     if (-1 == m_iParentIndex)
         XMStoreFloat4x4(&m_CombinedTransformMatrix, XMLoadFloat4x4(&m_TransformationMatrix) * PreTransformMatrix);
     else
-        XMStoreFloat4x4(&m_CombinedTransformMatrix, XMLoadFloat4x4(&m_TransformationMatrix) * XMLoadFloat4x4(Bones[m_iParentIndex]->Get_CombinedTransformMatrix()));
+        XMStoreFloat4x4(&m_CombinedTransformMatrix, XMLoadFloat4x4(&m_TransformationMatrix) * XMLoadFloat4x4(Bones[m_iParentIndex]->Get_CombinedTransformationMatrix()));
 }
 
 CBone* CBone::Create(const aiNode* pNode, _int iParentIndex)

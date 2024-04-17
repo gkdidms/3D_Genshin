@@ -1,8 +1,15 @@
 #pragma once
 #include "PartObject_Body.h"
+
+BEGIN(Client)
 class CWanderer_Body :
     public CPartObject_Body
 {   
+public:
+    typedef struct tWandererDesc : public PART_DESC{
+        const _uint* pDirState;
+        const _bool* isElementalAir;
+    }WANDERER_DESC;
 private:
     CWanderer_Body(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
     CWanderer_Body(const CWanderer_Body& rhs);
@@ -21,9 +28,13 @@ private:
     virtual HRESULT Bind_ResourceData() override;
     virtual void Change_Animation(const _float& fTimeDelta) override;
 
+private:
+    const _uint* m_pDirState = { nullptr };
+    const _bool* m_pElementalAir = { nullptr };
+
 public:
     static CWanderer_Body* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
     virtual CGameObject* Clone(void* pArg) override;
     virtual void Free() override; 
 };
-
+END

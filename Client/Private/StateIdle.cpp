@@ -8,12 +8,12 @@ CStateIdle::CStateIdle()
 {
 }
 
-PLAYER_STATE CStateIdle::Enter()
+PLAYER_STATE CStateIdle::Enter(PLAYER_STATE CurrentState)
 {
 	return PLAYER_IDLE;
 }
 
-PLAYER_STATE CStateIdle::Update(class CState_Manager& pStateManager, PLAYER_STATE CurrentState)
+PLAYER_STATE CStateIdle::Update(const _float& fTimeDelta, class CState_Manager& pStateManager, PLAYER_STATE CurrentState)
 {
 	if (m_pGameInstance->GetKeyState(DIK_W) == CInput_Device::HOLD
 		|| m_pGameInstance->GetKeyState(DIK_S) == CInput_Device::HOLD
@@ -23,6 +23,12 @@ PLAYER_STATE CStateIdle::Update(class CState_Manager& pStateManager, PLAYER_STAT
 
 	if (m_pGameInstance->GetMouseState(DIM_LB) == CInput_Device::TAP)
 		return pStateManager.Set_CurrentState(CState_Manager::STATE_TYPE_ATTACK);
+
+	if (m_pGameInstance->GetKeyState(DIK_E) == CInput_Device::TAP)
+		return pStateManager.Set_CurrentState(CState_Manager::STATE_TYPE_ELEMENTALART);
+
+	if (m_pGameInstance->GetKeyState(DIK_Q) == CInput_Device::TAP)
+		return pStateManager.Set_CurrentState(CState_Manager::STATE_TYPE_ELEMNETALBURST);
 
 	return CurrentState;
 }

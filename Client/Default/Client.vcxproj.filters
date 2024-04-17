@@ -103,8 +103,20 @@
     <Filter Include="96. Utility\State\ElementalArt">
       <UniqueIdentifier>{75f25e71-12aa-4dad-af53-0f10fba785bc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="96. Utility\State\Attack\Wanderer">
-      <UniqueIdentifier>{f0d33544-9146-4c35-a847-e6382bccd3ff}</UniqueIdentifier>
+    <Filter Include="96. Utility\State\ElementalArt\Wanderer">
+      <UniqueIdentifier>{c9ca96a4-de52-4d22-9192-25074f8792d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility\State\ElementalBurst">
+      <UniqueIdentifier>{83d7e4e1-91b9-42ff-9336-c0aaadf3bc78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility\State\ElementalArt\Tighnari">
+      <UniqueIdentifier>{02408b8d-e9da-4e76-9e6e-c843a3db1598}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility\State\ElementalArt\Yae">
+      <UniqueIdentifier>{95525f62-d88a-4e26-8e87-dcf4a649ceb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility\State\ElementalArt\Nilou">
+      <UniqueIdentifier>{b8b5f337-dc0a-4b2e-91de-0019ce6f638a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -180,14 +192,11 @@
     <ClInclude Include="..\Public\Wanderer_Body.h">
       <Filter>02. GameObject\Player\PartObject\Body\Wanderer</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\PartObject_Weapon.h">
+    <ClInclude Include="..\public\Weapon.h">
       <Filter>02. GameObject\Player\PartObject\Weapon</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\PartObject_Ayus.h">
+    <ClInclude Include="..\public\Weapon_Ayus.h">
       <Filter>02. GameObject\Player\PartObject\Weapon\Tighnari</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\State.h">
-      <Filter>96. Utility\State</Filter>
     </ClInclude>
     <ClInclude Include="..\public\StateRun.h">
       <Filter>96. Utility\State\Run</Filter>
@@ -202,10 +211,25 @@
       <Filter>96. Utility\State\Idle</Filter>
     </ClInclude>
     <ClInclude Include="..\public\StateElementalArt_Wanderer.h">
-      <Filter>96. Utility\State\ElementalArt</Filter>
+      <Filter>96. Utility\State\ElementalArt\Wanderer</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\StateAttack_Wanderer.h">
-      <Filter>96. Utility\State\Attack\Wanderer</Filter>
+    <ClInclude Include="..\public\StateElementalBurst.h">
+      <Filter>96. Utility\State\ElementalBurst</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\StateElementalArt_Tighanri.h">
+      <Filter>96. Utility\State\ElementalArt\Tighnari</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\StateAttack.h">
+      <Filter>96. Utility\State\Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\StateElementalArt_Yae.h">
+      <Filter>96. Utility\State\ElementalArt\Yae</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\State.h">
+      <Filter>96. Utility\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\StateElementalArt_Nilou.h">
+      <Filter>96. Utility\State\ElementalArt\Nilou</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -269,14 +293,11 @@
     <ClCompile Include="..\Private\Wanderer_Body.cpp">
       <Filter>02. GameObject\Player\PartObject\Body\Wanderer</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\PartObject_Weapon.cpp">
+    <ClCompile Include="..\private\Weapon.cpp">
       <Filter>02. GameObject\Player\PartObject\Weapon</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\PartObject_Ayus.cpp">
+    <ClCompile Include="..\private\Weapon_Ayus.cpp">
       <Filter>02. GameObject\Player\PartObject\Weapon\Tighnari</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\State.cpp">
-      <Filter>96. Utility\State</Filter>
     </ClCompile>
     <ClCompile Include="..\private\StateRun.cpp">
       <Filter>96. Utility\State\Run</Filter>
@@ -291,10 +312,25 @@
       <Filter>96. Utility\State\Idle</Filter>
     </ClCompile>
     <ClCompile Include="..\private\StateElementalArt_Wanderer.cpp">
-      <Filter>96. Utility\State\ElementalArt</Filter>
+      <Filter>96. Utility\State\ElementalArt\Wanderer</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\StateAttack_Wanderer.cpp">
-      <Filter>96. Utility\State\Attack\Wanderer</Filter>
+    <ClCompile Include="..\private\StateElementalBurst.cpp">
+      <Filter>96. Utility\State\ElementalBurst</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StateElementalArt_Tighanri.cpp">
+      <Filter>96. Utility\State\ElementalArt\Tighnari</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StateAttack.cpp">
+      <Filter>96. Utility\State\Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StateElementalArt_Yae.cpp">
+      <Filter>96. Utility\State\ElementalArt\Yae</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\State.cpp">
+      <Filter>96. Utility\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StateElementalArt_Nilou.cpp">
+      <Filter>96. Utility\State\ElementalArt\Nilou</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

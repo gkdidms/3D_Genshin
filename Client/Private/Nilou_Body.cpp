@@ -1,6 +1,7 @@
 #include "Nilou_Body.h"
 
 #include "GameInstance.h"
+#include "State_Manager.h"
 
 CNilou_Body::CNilou_Body(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject_Body{ pDevice, pContext } 
@@ -35,32 +36,12 @@ void CNilou_Body::Priority_Tick(const _float& fTimeDelta)
 
 void CNilou_Body::Tick(const _float& fTimeDelta)
 {
-	if (m_pModelCom->Get_Animation_Finished() && m_iAnim != 32)
-	{
-		//if (*m_pState == CPlayer::PLAYER_ATTACK_1 || *m_pState == CPlayer::PLAYER_ATTACK_2 || *m_pState == CPlayer::PLAYER_ATTACK_3 || *m_pState == CPlayer::PLAYER_ATTACK_4 ||
-		//	*m_pState == CPlayer::PLAYER_ELEMENTAL_END || *m_pState == CPlayer::PLAYER_ELENENTAL_BURST_END)
-		//{
-		//	*m_pState = CPlayer::PLAYER_ATTACK_IDLE;
-		//}
-		//else if (*m_pState == CPlayer::PLAYER_ELEMENTAL_1)
-		//{
-		//	*m_pState = CPlayer::PLAYER_ELEMENTAL_END;
-		//}
-		//else if (*m_pState == CPlayer::PLAYER_ELENENTAL_BURST)
-		//{
-		//	*m_pState = CPlayer::PLAYER_ELENENTAL_BURST_END;
-		//}
-		//else
-		//	*m_pState = CPlayer::PLAYER_IDLE;
-	}
+	if (m_pModelCom->Get_Animation_Finished())
+		*m_pState = m_pState_Manager->Exit(PLAYER_STATE(*m_pState));
 
 	Change_Animation(fTimeDelta);
 
-	m_pModelCom->Play_Animation(fTimeDelta, &m_vCurrentPos, m_IsLoop);
-
-	XMStoreFloat4(&m_PlayerMovePos, XMLoadFloat4(&m_vCurrentPos) - XMLoadFloat4(&m_vPrePos));
-	m_PlayerMovePos.w = 1.f;
-	m_vPrePos = m_vCurrentPos;
+	m_pModelCom->Play_Animation(fTimeDelta, &m_PlayerMovePos, m_IsLinear);
 }
 
 void CNilou_Body::Late_Tick(const _float& fTimeDelta)
@@ -105,97 +86,128 @@ HRESULT CNilou_Body::Bind_ResourceData()
 
 void CNilou_Body::Change_Animation(const _float& fTimeDelta)
 {
-	/*switch (*m_pState)
+	m_IsLinear = true;
+	switch (*m_pState)
 	{
-	case CPlayer::PLAYER_ATTACK_1:
+	case PLAYER_ATTACK_1:
 	{
 		m_iAnim = 0;
 		m_IsLoop = false;
 		break;
 	}
-	case CPlayer::PLAYER_ATTACK_2:
+	case PLAYER_ATTACK_2:
 	{
 		m_iAnim = 1;
 		m_IsLoop = false;
 		break;
 	}
-	case CPlayer::PLAYER_ATTACK_3:
+	case PLAYER_ATTACK_3:
 	{
 		m_iAnim = 2;
 		m_IsLoop = false;
 		break;
 	}
-	case CPlayer::PLAYER_ATTACK_4:
+	case PLAYER_ATTACK_4:
 	{
 		m_iAnim = 3;
 		m_IsLoop = false;
 		break;
 	}
-	case CPlayer::PLAYER_ATTACK_IDLE:
+	case PLAYER_ATTACK_IDLE:
 	{
 		m_iAnim = 47;
 		m_IsLoop = false;
+		m_IsLinear = false;
 		break;
 	}
-	case CPlayer::PLAYER_ELEMENTAL_1:
+	case PLAYER_ELEMENTAL_1:
 	{
 		m_iAnim = 4;
 		m_IsLoop = false;
 		break;
 	}
-	case CPlayer::PLAYER_ELEMENTAL_END:
+	case PLAYER_ELEMENTAL_END:
 	{
 		m_iAnim = 5;
 		m_IsLoop = false;
+		m_IsLinear = false;
 		break;
 	}
-	case CPlayer::PLAYER_ELENENTAL_BURST:
+	case PLAYER_ELEMENTAL_BURST:
 	{
 		m_iAnim = 6;
 		m_IsLoop = false;
 		break;
 	}
-	case CPlayer::PLAYER_ELENENTAL_BURST_END:
+	case PLAYER_ELEMENTAL_BURST_END:
 	{
 		m_iAnim = 7;
 		m_IsLoop = false;
+		m_IsLinear = false;
 		break;
 	}
-	case CPlayer::PLAYER_RUN:
+	case PLAYER_RUN_START:
 	{
 		m_iAnim = 32;
 		m_IsLoop = false;
-
-		if (m_PreState == *m_pState && m_pModelCom->Get_Animation_Finished(32))
-		{
-			m_iAnim = 33;
-			m_IsLoop = true;
-		}
 		break;
 	}
-	case CPlayer::PLAYER_STOP:
+	case PLAYER_RUN:
+	{
+		m_iAnim = 33;
+		m_IsLoop = true;
+		break;
+	}
+	case PLAYER_RUN_STOP:
 	{
 		m_iAnim = 36;
 		m_IsLoop = false;
 		break;
 	}
-	case CPlayer::PLAYER_IDLE:
+	case PLAYER_SPRINT_START:
+	{
+		m_iAnim = 32;
+		m_IsLoop = false;
+		break;
+	}
+	case PLAYER_SPRINT:
+	{
+		m_iAnim = 33;
+		m_IsLoop = true;
+		break;
+	}
+	case PLAYER_SPRINT_STOP:
+	{
+		m_iAnim = 36;
+		m_IsLoop = false;
+		break;
+	}
+	case PLAYER_SPRINT_TO_RUN:
+	{
+		m_iAnim = 37;
+		m_IsLoop = false;
+		m_IsLinear = false;
+		break;
+	}
+	case PLAYER_IDLE:
+	{
+		m_iAnim = 10;
+		m_IsLoop = true;
+		m_IsLinear = false;
+		break;
+	}
+	case PLAYER_IDLE_PUT_AWAY:
 	{
 		m_iAnim = 45;
 		m_IsLoop = true;
+		m_IsLinear = false;
 		break;
 	}
 	default:
 		break;
 	}
 
-	if (m_pModelCom->Get_LoopAnimation_Finished() || m_iPreAnim != m_iAnim)
-		XMStoreFloat4(&m_vPrePos, XMVectorSet(0.f, 0.f, 0.f, 1.f));
-
 	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ m_iAnim, m_IsLoop });
-
-	m_PreState = *m_pState;
-	m_iPreAnim = m_iAnim;*/
 
 }
 

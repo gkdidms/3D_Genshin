@@ -20,6 +20,11 @@ HRESULT CWanderer_Body::Initialize_Prototype()
 
 HRESULT CWanderer_Body::Initialize(void* pArg)
 {
+	WANDERER_DESC* pDesc = (WANDERER_DESC*)pArg;
+
+	m_pDirState = pDesc->pDirState;
+	m_pElementalAir = pDesc->isElementalAir;
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -41,19 +46,10 @@ void CWanderer_Body::Tick(const _float& fTimeDelta)
 
 	Change_Animation(fTimeDelta);
 
-	if (*m_pState == PLAYER_RUN || *m_pState == PLAYER_RUN_START || *m_pState == PLAYER_SPRINT_START || *m_pState == PLAYER_SPRINT || *m_pState == PLAYER_SPRINT_TO_RUN)
-	{
-		m_pModelCom->Play_Animation(fTimeDelta, &m_vCurrentPos);
-	}
-	else
-	{
-		m_pModelCom->Play_Animation(fTimeDelta, &m_vCurrentPos, !m_IsLoop);
+	m_pModelCom->Play_Animation(fTimeDelta, &m_PlayerMovePos, m_IsLinear);
 
-		XMStoreFloat4(&m_PlayerMovePos, XMLoadFloat4(&m_vCurrentPos) - XMLoadFloat4(&m_vPrePos));
-		m_PlayerMovePos.w = 1.f;
-		m_vPrePos = m_vCurrentPos;
-	}
-
+	if (*m_pElementalAir && (*m_pState == PLAYER_RUN_START || *m_pState == PLAYER_RUN))
+		XMStoreFloat4(&m_PlayerMovePos, XMVectorSet(0.f, 0.f, m_fRunSpeed * fTimeDelta, 1.f));
 }
 
 void CWanderer_Body::Late_Tick(const _float& fTimeDelta)
@@ -98,23 +94,24 @@ HRESULT CWanderer_Body::Bind_ResourceData()
 
 void CWanderer_Body::Change_Animation(const _float& fTimeDelta)
 {
+	m_IsLinear = true;
 	switch (*m_pState)
 	{
 	case PLAYER_ATTACK_1:
 	{
-		m_iAnim = 0;
+		m_iAnim = *m_pElementalAir ? 35: 0;
 		m_IsLoop = false;
 		break;
 	}
 	case PLAYER_ATTACK_2:
 	{
-		m_iAnim = 1;
+		m_iAnim = *m_pElementalAir ? 36: 1;
 		m_IsLoop = false;
 		break;
 	}
 	case PLAYER_ATTACK_3:
 	{
-		m_iAnim = 2;
+		m_iAnim = *m_pElementalAir ? 37: 2;
 		m_IsLoop = false;
 		break;
 	}
@@ -122,50 +119,136 @@ void CWanderer_Body::Change_Animation(const _float& fTimeDelta)
 	{
 		m_iAnim = 82;
 		m_IsLoop = false;
+		m_IsLinear = false;
 		break;
 	}
-	case PLAYER_ELEMENTAL_1:
+	case PLAYER_ELEMENTAL_START: // Air
 	{
-		m_iAnim = 4;
+		m_iAnim = 6;
 		m_IsLoop = false;
 		break;
 	}
-	case PLAYER_ELEMENTAL_END:
+	case PLAYER_ELEMENTAL_END: // ÂøÁö
 	{
-		m_iAnim = 5;
+		m_iAnim = 50;
+		m_IsLoop = false;
+		m_IsLinear = false;
+		break;
+	}
+	case PLAYER_ELEMENTAL_BURST:
+	{
+		m_iAnim = *m_pElementalAir ? 39: 38;
 		m_IsLoop = false;
 		break;
 	}
-	case PLAYER_ELENENTAL_BURST:
+	case PLAYER_ELEMENTAL_BURST_END:
 	{
-		m_iAnim = 38;
+		m_iAnim = *m_pElementalAir ? 40 : 41;
 		m_IsLoop = false;
-		break;
-	}
-	case PLAYER_ELENENTAL_BURST_END:
-	{
-		m_iAnim = 41;
-		m_IsLoop = false;
+		m_IsLinear = false;
 		break;
 	}
 	case PLAYER_RUN_START:
 	{
-		m_iAnim = 69;
-		m_IsLoop = false;
-		XMStoreFloat4(&m_PlayerMovePos, XMVectorSet(0.f, 0.f, m_fRunSpeed * fTimeDelta, 1.f));
+		if (*m_pElementalAir)
+		{
+			if (*m_pDirState == CPlayer::DIR_STRIGHT)
+			{
+				m_iAnim = 24;
+				m_IsLoop = false;
+			}
+			else if (*m_pDirState == CPlayer::DIR_BACKWORK)
+			{
+				m_iAnim = 21;
+				m_IsLoop = false;
+			}
+			else if (*m_pDirState == CPlayer::DIR_LEFT_SIDE)
+			{
+				m_iAnim = 27;
+				m_IsLoop = false;
+			}
+			else if (*m_pDirState == CPlayer::DIR_RIGHT_SIDE)
+			{
+				m_iAnim = 30;
+				m_IsLoop = false;
+			}
+		}
+		else
+		{
+			m_iAnim = 69;
+			m_IsLoop = false;
+		}
+		m_IsLinear = false;
 		break;
 	}
 	case PLAYER_RUN:
 	{
-		m_iAnim = 70;
-		m_IsLoop = true;
+		if (*m_pElementalAir)
+		{
+			if (*m_pDirState == CPlayer::DIR_STRIGHT)
+			{
+				m_iAnim = 25;
+				m_IsLoop = true;
+			}
+			else if (*m_pDirState == CPlayer::DIR_BACKWORK)
+			{
+				m_iAnim = 22;
+				m_IsLoop = true;
+			}
+			else if (*m_pDirState == CPlayer::DIR_LEFT_SIDE)
+			{
+				m_iAnim = 28;
+				m_IsLoop = true;
+			}
+			else if (*m_pDirState == CPlayer::DIR_RIGHT_SIDE)
+			{
+				m_iAnim = 31;
+				m_IsLoop = true;
+			}
+		}
+		else
+		{
+			m_iAnim = 70;
+			m_IsLoop = true;
+		}
+		break;
+	}
+	case PLAYER_RUN_STOP:
+	{
+		if (*m_pElementalAir)
+		{
+			if (*m_pDirState == CPlayer::DIR_STRIGHT)
+			{
+				m_iAnim = 23;
+				m_IsLoop = false;
+			}
+			else if (*m_pDirState == CPlayer::DIR_BACKWORK)
+			{
+				m_iAnim = 20;
+				m_IsLoop = false;
+			}
+			else if (*m_pDirState == CPlayer::DIR_LEFT_SIDE)
+			{
+				m_iAnim = 26;
+				m_IsLoop = false;
+			}
+			else if (*m_pDirState == CPlayer::DIR_RIGHT_SIDE)
+			{
+				m_iAnim = 29;
+				m_IsLoop = false;
+			}
+		}
+		else
+		{
+			m_iAnim = 73;
+			m_IsLoop = false;
+		}
 		break;
 	}
 	case PLAYER_SPRINT_START:
 	{
 		m_iAnim = 76;
 		m_IsLoop = false;
-		XMStoreFloat4(&m_PlayerMovePos, XMVectorSet(0.f, 0.f, m_fRunSpeed * fTimeDelta, 1.f));
 		break;
 	}
 	case PLAYER_SPRINT:
@@ -178,6 +261,7 @@ void CWanderer_Body::Change_Animation(const _float& fTimeDelta)
 	{
 		m_iAnim = 79;
 		m_IsLoop = false;
+		m_IsLinear = false;
 		break;
 	}
 	case PLAYER_SPRINT_STOP:
@@ -186,29 +270,18 @@ void CWanderer_Body::Change_Animation(const _float& fTimeDelta)
 		m_IsLoop = false;
 		break;
 	}
-	case PLAYER_RUN_STOP:
-	{
-		m_iAnim = 73;
-		m_IsLoop = false;
-		break;
-	}
 	case PLAYER_IDLE:
 	{
-		m_iAnim = 80;
+		m_iAnim = *m_pElementalAir ? 34 : 80;
 		m_IsLoop = true;
+		m_IsLinear = false;
 		break;
 	}
 	default:
 		break;
 	}
 
-	if (m_pModelCom->Get_LoopAnimation_Finished() || m_iPreAnim != m_iAnim)
-		XMStoreFloat4(&m_vPrePos, XMVectorSet(0.f, 0.f, 0.f, 1.f));
-
 	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ m_iAnim, m_IsLoop });
-
-	m_iPreAnim = m_iAnim;
-
 }
 
 CWanderer_Body* CWanderer_Body::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

@@ -21,7 +21,8 @@ public:
 protected:
     _bool m_IsFinished = { false };
 
-    _float m_fRunSpeed = { 30.f };
+    _float m_fRunSpeed = { 50.f };
+    _float m_fSprintSpeed = { 80.f };
 
 protected:
     virtual HRESULT Add_Components() = 0;

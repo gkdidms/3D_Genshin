@@ -67,7 +67,8 @@ void CAnimation::Update_TransformationMatrix(const _float& fTimeDelta, const vec
     if (m_iCurrentPosition >= m_Duration)
     {
         //局聪皋捞记 场
-        m_iCurrentPosition = 0.0;
+        m_iCurrentPosition -= m_Duration;
+        ZeroMemory(&m_CurrentKeyFrameIndex.front(), sizeof(_uint) * m_iNumChannels);
 
         if (!isLoop) m_IsFinished = true;
         else m_IsLoopFinished = true;
@@ -84,12 +85,13 @@ void CAnimation::Update_TransformationMatrix(const _float& fTimeDelta, const vec
 
 void CAnimation::Linear_TransformationMatrix(const _float& fTimeDelta, const vector<CBone*> Bones)
 {
+    double LinearDuration = 5;
     m_iCurrentPosition += m_TickPerSecond * fTimeDelta;
 
-    if (m_iCurrentPosition >= 5)
+    if (m_iCurrentPosition >= LinearDuration)
     {
         //局聪皋捞记 场
-        m_iCurrentPosition = 0.0;
+        m_iCurrentPosition -= LinearDuration;
         m_IsFirst = false;
     }
 
@@ -97,7 +99,7 @@ void CAnimation::Linear_TransformationMatrix(const _float& fTimeDelta, const vec
     {
         for (size_t i = 0; i < m_iNumChannels; ++i)
         {
-            m_Channels[i]->First_TransformationMatrix(m_iCurrentPosition, Bones);
+            m_Channels[i]->First_TransformationMatrix(m_iCurrentPosition, Bones, LinearDuration);
         }
     }
 }

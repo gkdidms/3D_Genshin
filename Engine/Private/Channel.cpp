@@ -71,9 +71,6 @@ HRESULT CChannel::Initialize(const char* pName, _int iBoneIndex, _uint iNumKeyFr
 
 void CChannel::Update_TransformationMatrix(double CurrentPosition, const vector<CBone*> Bones, _uint* iCurrentKeyFrameIndex)
 {
-	if (CurrentPosition == 0.0)
-		*iCurrentKeyFrameIndex = 0;
-
 	KEYFRAME LastKeyFrame = m_KeyFrames.back();
 
 	_vector vScale, vRotation, vTranslation;
@@ -101,7 +98,7 @@ void CChannel::Update_TransformationMatrix(double CurrentPosition, const vector<
 	Bones[m_iBoneIndex]->Set_StateVector(vScale, vRotation, vTranslation);
 }
 
-void CChannel::First_TransformationMatrix(double CurrentPosition, const vector<class CBone*> Bones)
+void CChannel::First_TransformationMatrix(double CurrentPosition, const vector<class CBone*> Bones, double LinearDuration)
 {
 	_vector vScale, vRotation, vTranslation;
 
@@ -110,7 +107,7 @@ void CChannel::First_TransformationMatrix(double CurrentPosition, const vector<c
 	vPreRotation = Bones[m_iBoneIndex]->Get_Rotation();
 	vPreTranslation = Bones[m_iBoneIndex]->Get_Translation();
 
-	_float fRatio = (CurrentPosition - m_KeyFrames[0].Time) / 5.f;
+	_float fRatio = (CurrentPosition - m_KeyFrames[0].Time) / LinearDuration;
 	
 	vScale = XMVectorLerp(vPreScale, XMLoadFloat3(&m_KeyFrames[0].m_vScale), fRatio);
 	vRotation = XMQuaternionSlerp(vPreRotation, XMLoadFloat4(&m_KeyFrames[0].vRotate), fRatio);

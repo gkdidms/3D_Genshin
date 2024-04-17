@@ -1,5 +1,7 @@
 #pragma once
 #include "PartObject_Body.h"
+
+BEGIN(Client)
 class CNilou_Body :
     public CPartObject_Body
 {   
@@ -26,4 +28,4 @@ public:
     virtual CGameObject* Clone(void* pArg) override;
     virtual void Free() override; 
 };
-
+END

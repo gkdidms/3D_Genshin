@@ -16,7 +16,7 @@ void CMesh::Fill_Matrices(const vector<CBone*>& Bones, _float4x4* BoneTransformM
 {
 	for (size_t i = 0; i < m_iNumBones; ++i)
 	{
-		XMStoreFloat4x4(&BoneTransformMatrix[i], XMLoadFloat4x4(&m_OffsetMatrices[i]) * XMLoadFloat4x4(Bones[m_BoneIndices[i]]->Get_CombinedTransformMatrix()));
+		XMStoreFloat4x4(&BoneTransformMatrix[i], XMLoadFloat4x4(&m_OffsetMatrices[i]) * XMLoadFloat4x4(Bones[m_BoneIndices[i]]->Get_CombinedTransformationMatrix()));
 	}
 }
 

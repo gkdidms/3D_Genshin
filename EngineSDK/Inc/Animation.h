@@ -37,6 +37,8 @@ private:
 
     vector<_uint> m_CurrentKeyFrameIndex;
     _bool m_IsFinished = { false };
+
+private:
     _bool m_IsLoopFinished = { false }; // 루프 애니메이션이 끝났는지 아닌지 확인
     _bool m_IsFirst = { true };
 

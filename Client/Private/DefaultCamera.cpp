@@ -43,6 +43,8 @@ void CDefaultCamera::Tick(const _float& fTimeDelta)
 	_float MouseMove = { 0.f };
 	if (MouseMove = m_pGameInstance->Get_DIMouseMove(DIMS_X))
 		Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta * MouseMove * m_fSensor);
+	if (MouseMove = m_pGameInstance->Get_DIMouseMove(DIMS_Z))
+		Zoom(fTimeDelta * MouseMove * m_fSensor);
 
 	_matrix ParentMatrix = XMMatrixIdentity();
 	ParentMatrix.r[3] = XMLoadFloat4x4(m_pTargetMatrix).r[3];
@@ -79,6 +81,17 @@ void CDefaultCamera::Turn(_fvector vAxis, const _float& fTimeDelta)
 	OrbitMatrix.r[2] = vLook;
 
 	XMStoreFloat4x4(&m_OrbitMatrix, OrbitMatrix);
+}
+
+void CDefaultCamera::Zoom(const _float& fTimeDelta)
+{
+	_vector m_CamPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	_vector m_CamLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+
+	_vector m_CamZoom = fTimeDelta < 0 ? m_CamPos + m_CamLook : m_CamPos - m_CamLook;
+
+	m_CamZoom = XMVectorSetW(m_CamZoom, 1.f);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_CamZoom);
 }
 
 CDefaultCamera* CDefaultCamera::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
