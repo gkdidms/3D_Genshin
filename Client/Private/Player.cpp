@@ -135,14 +135,18 @@ HRESULT CPlayer::Ready_PartObjects()
 		return E_FAIL;
 	m_PartObject[PLAYER_YAE].emplace_back(pGameObject);
 
-	//Weapon
+	//Tighnari Weapon
 	CWeapon_Ayus::WEAPON_DESC WeaponDesc{};
 	CComponent* pComponent = m_PartObject[PLAYER_TIGHNARI][PART_BODY]->Get_Component(L"Com_Model");
 	if (nullptr == pComponent)
 		return E_FAIL;
 	
-	WeaponDesc.pSocketMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("AO_Bip001_R_Hand");
-	if (nullptr == WeaponDesc.pSocketMatrix)
+	WeaponDesc.pHandCombinedTransformationMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("AO_Bip001_L_Hand");
+	if (nullptr == WeaponDesc.pHandCombinedTransformationMatrix)
+		return E_FAIL;
+
+	WeaponDesc.pBackCombinedTransformationMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("_HemB_R_F01");
+	if (nullptr == WeaponDesc.pBackCombinedTransformationMatrix)
 		return E_FAIL;
 
 	WeaponDesc.pParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
@@ -154,6 +158,24 @@ HRESULT CPlayer::Ready_PartObjects()
 	if (nullptr == pGameObject)
 		return E_FAIL;
 	m_PartObject[PLAYER_TIGHNARI].emplace_back(pGameObject);
+
+	//Yae Weapon
+	//pComponent = m_PartObject[PLAYER_YAE][PART_BODY]->Get_Component(L"Com_Model");
+	//if (nullptr == pComponent)
+	//	return E_FAIL;
+
+	//WeaponDesc.pHandCombinedTransformationMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("AO_Bip001_L_Hand");
+	//if (nullptr == WeaponDesc.pHandCombinedTransformationMatrix)
+	//	return E_FAIL;
+
+	//WeaponDesc.pBackCombinedTransformationMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("_HemB_R_F01");
+	//if (nullptr == WeaponDesc.pBackCombinedTransformationMatrix)
+	//	return E_FAIL;
+
+	//pGameObject = dynamic_cast<CPartObject*>(m_pGameInstance->Clone_Object(L"Prototype_GameObject_Weapon_Alaya", &WeaponDesc));
+	//if (nullptr == pGameObject)
+	//	return E_FAIL;
+	//m_PartObject[PLAYER_YAE].emplace_back(pGameObject);
 
 	return S_OK;
 }

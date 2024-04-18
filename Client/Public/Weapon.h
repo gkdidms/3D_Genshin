@@ -5,7 +5,8 @@ class CWeapon :
 {
 public:
     typedef struct tWeaponDesc : public CPartObject::PART_DESC{
-        const _float4x4* pSocketMatrix;
+        const _float4x4* pHandCombinedTransformationMatrix;
+        const _float4x4* pBackCombinedTransformationMatrix;
     
     }WEAPON_DESC;
 
@@ -24,6 +25,7 @@ public:
 
 protected:
     const _float4x4* m_pSocketMatrix = { nullptr };
+    const _float4x4* m_pBackMatrix = { nullptr };
 
 protected:
     virtual HRESULT Add_Components() = 0;

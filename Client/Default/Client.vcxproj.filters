@@ -118,6 +118,9 @@
     <Filter Include="96. Utility\State\ElementalArt\Nilou">
       <UniqueIdentifier>{b8b5f337-dc0a-4b2e-91de-0019ce6f638a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\Player\PartObject\Weapon\Yae">
+      <UniqueIdentifier>{27ccd271-970a-44d8-903d-683b7d41bb19}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">
@@ -231,6 +234,9 @@
     <ClInclude Include="..\public\StateElementalArt_Nilou.h">
       <Filter>96. Utility\State\ElementalArt\Nilou</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Weapon_Alaya.h">
+      <Filter>02. GameObject\Player\PartObject\Weapon\Yae</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -331,6 +337,9 @@
     </ClCompile>
     <ClCompile Include="..\private\StateElementalArt_Nilou.cpp">
       <Filter>96. Utility\State\ElementalArt\Nilou</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Weapon_Alaya.cpp">
+      <Filter>02. GameObject\Player\PartObject\Weapon\Yae</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

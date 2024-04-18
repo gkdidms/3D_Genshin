@@ -26,8 +26,7 @@ HRESULT CWeapon_Ayus::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_pTransformCom->Scaling(10.f, 10.f, 10.f);
-	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(90.0f));
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(0.6f, 0.f, 0.f, 1.f));
+	//m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(90.0f));
 
 	return S_OK;
 }
@@ -42,7 +41,22 @@ void CWeapon_Ayus::Tick(const _float& fTimeDelta)
 
 void CWeapon_Ayus::Late_Tick(const _float& fTimeDelta)
 {
-	_matrix		SocketMatrix = XMLoadFloat4x4(m_pSocketMatrix);
+	_matrix		SocketMatrix = XMMatrixIdentity();
+
+	if (*m_pState == PLAYER_ATTACK_1
+		|| *m_pState == PLAYER_ATTACK_2
+		|| *m_pState == PLAYER_ATTACK_3
+		|| *m_pState == PLAYER_ATTACK_4
+		|| *m_pState == PLAYER_ELEMENTAL_BURST
+		|| *m_pState == PLAYER_ELEMENTAL_BURST_END)
+	{
+		SocketMatrix = XMLoadFloat4x4(m_pSocketMatrix);
+	}
+	else
+	{
+		SocketMatrix = XMLoadFloat4x4(m_pBackMatrix);
+		m_pTransformCom->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), XMConvertToRadians(90.0f));
+	}
 
 	SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
 	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);

@@ -20,7 +20,8 @@ HRESULT CWeapon::Initialize_Prototype()
 HRESULT CWeapon::Initialize(void* pArg)
 {
 	WEAPON_DESC* pDesc = (WEAPON_DESC*)pArg;
-	m_pSocketMatrix = pDesc->pSocketMatrix;
+	m_pSocketMatrix = pDesc->pHandCombinedTransformationMatrix;
+	m_pBackMatrix = pDesc->pBackCombinedTransformationMatrix;
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;

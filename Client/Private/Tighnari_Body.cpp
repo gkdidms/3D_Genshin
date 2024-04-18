@@ -43,18 +43,6 @@ void CTighnari_Body::Tick(const _float& fTimeDelta)
 
 	Change_Animation(fTimeDelta);
 
-	//if (m_IsRootPos)
-	//{
-	//	m_pModelCom->Play_Animation(fTimeDelta);
-	//}
-	//else
-	//{
-	//	m_pModelCom->Play_Animation(fTimeDelta, &m_vCurrentPos);
-
-	//	XMStoreFloat4(&m_PlayerMovePos, XMLoadFloat4(&m_vCurrentPos) - XMLoadFloat4(&m_vPrePos));
-	//	m_PlayerMovePos.w = 1.f;
-	//	m_vPrePos = m_vCurrentPos;
-	//}
 	m_pModelCom->Play_Animation(fTimeDelta, &m_PlayerMovePos, m_IsLinear);
 }
 

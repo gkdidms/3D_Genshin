@@ -178,7 +178,6 @@ void CWanderer_Body::Change_Animation(const _float& fTimeDelta)
 			m_iAnim = 69;
 			m_IsLoop = false;
 		}
-		m_IsLinear = false;
 		break;
 	}
 	case PLAYER_RUN:

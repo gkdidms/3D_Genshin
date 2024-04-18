@@ -107,7 +107,7 @@ void CNilou_Body::Change_Animation(const _float& fTimeDelta)
 		m_IsLoop = false;
 		break;
 	}
-	case PLAYER_ATTACK_4:
+	case PALYER_ATTACK_SPEC:
 	{
 		m_iAnim = 3;
 		m_IsLoop = false;
@@ -115,7 +115,7 @@ void CNilou_Body::Change_Animation(const _float& fTimeDelta)
 	}
 	case PLAYER_ATTACK_IDLE:
 	{
-		m_iAnim = 47;
+		m_iAnim = 42;
 		m_IsLoop = false;
 		m_IsLinear = false;
 		break;
@@ -126,79 +126,114 @@ void CNilou_Body::Change_Animation(const _float& fTimeDelta)
 		m_IsLoop = false;
 		break;
 	}
-	case PLAYER_ELEMENTAL_END:
+	case PLAYER_ELEMENTAL_1_END:
 	{
 		m_iAnim = 5;
 		m_IsLoop = false;
-		m_IsLinear = false;
 		break;
 	}
-	case PLAYER_ELEMENTAL_BURST:
+	case PLAYER_ELEMENTAL_2:
 	{
 		m_iAnim = 6;
 		m_IsLoop = false;
 		break;
 	}
-	case PLAYER_ELEMENTAL_BURST_END:
+	case PLAYER_ELEMENTAL_2_END:
 	{
 		m_iAnim = 7;
+		m_IsLoop = false;
+		break;
+	}
+	case PLAYER_ELEMENTAL_3:
+	{
+		m_iAnim = 8;
+		m_IsLoop = false;
+		break;
+	}
+	case PLAYER_ELEMENTAL_3_END:
+	{
+		m_iAnim = 9;
+		m_IsLoop = false;
+		break;
+	}
+	case PLAYER_ELEMENTAL_SPEC:
+	{
+		m_iAnim = 10;
+		m_IsLoop = false;
+		break;
+	}
+	case PLAYER_ELEMENTAL_SPEC_END:
+	{
+		m_iAnim = 11;
+		m_IsLoop = false;
+		break;
+	}
+	case PLAYER_ELEMENTAL_BURST:
+	{
+		m_iAnim = 12;
+		m_IsLoop = false;
+		break;
+	}
+	case PLAYER_ELEMENTAL_BURST_END:
+	{
+		m_iAnim = 13;
 		m_IsLoop = false;
 		m_IsLinear = false;
 		break;
 	}
 	case PLAYER_RUN_START:
 	{
-		m_iAnim = 32;
+		m_iAnim = 30;
 		m_IsLoop = false;
 		break;
 	}
 	case PLAYER_RUN:
 	{
-		m_iAnim = 33;
+		m_iAnim = 31;
 		m_IsLoop = true;
 		break;
 	}
 	case PLAYER_RUN_STOP:
 	{
-		m_iAnim = 36;
+		m_iAnim = 34;
 		m_IsLoop = false;
 		break;
 	}
 	case PLAYER_SPRINT_START:
 	{
-		m_iAnim = 32;
+		m_iAnim = 38;
 		m_IsLoop = false;
 		break;
 	}
 	case PLAYER_SPRINT:
 	{
-		m_iAnim = 33;
+		m_iAnim = 39;
 		m_IsLoop = true;
 		break;
 	}
 	case PLAYER_SPRINT_STOP:
 	{
-		m_iAnim = 36;
+		m_iAnim = 40;
 		m_IsLoop = false;
 		break;
 	}
 	case PLAYER_SPRINT_TO_RUN:
 	{
-		m_iAnim = 37;
+		m_iAnim = 41;
 		m_IsLoop = false;
 		m_IsLinear = false;
 		break;
 	}
 	case PLAYER_IDLE:
 	{
-		m_iAnim = 10;
+		m_iAnim = 42;
 		m_IsLoop = true;
 		m_IsLinear = false;
 		break;
 	}
 	case PLAYER_IDLE_PUT_AWAY:
 	{
-		m_iAnim = 45;
+		m_iAnim = 42;
 		m_IsLoop = true;
 		m_IsLinear = false;
 		break;

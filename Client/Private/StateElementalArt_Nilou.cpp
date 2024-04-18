@@ -14,6 +14,15 @@ PLAYER_STATE CStateElementalArt_Nilou::Enter(PLAYER_STATE CurrentState)
 
 PLAYER_STATE CStateElementalArt_Nilou::Update(const _float& fTimeDelta, CState_Manager& pStateManager, PLAYER_STATE CurrentState)
 {
+	m_fTime += fTimeDelta;
+	m_fCurrentTime += fTimeDelta;
+
+	if (m_fCurrentTime > m_fFinishTime)
+		return pStateManager.Set_CurrentState(CState_Manager::STATE_TYPE_IDEL);
+
+	if (m_fTime < m_fAttackTime)
+		return CurrentState;
+
 	if (CurrentState == PLAYER_ELEMENTAL_1_END ||
 		CurrentState == PLAYER_ELEMENTAL_2_END ||
 		CurrentState == PLAYER_ELEMENTAL_3_END ||
@@ -21,9 +30,17 @@ PLAYER_STATE CStateElementalArt_Nilou::Update(const _float& fTimeDelta, CState_M
 		CurrentState == PLAYER_ATTACK_2 || 
 		CurrentState == PLAYER_ATTACK_3)
 	{
+		if (m_iSkillCount == m_iMaxSkill)
+		{
+			m_iAttackCount = 0;
+			m_iElementalArtCount = 0;
+		}
+
 		PLAYER_STATE State = { PLAYER_END };
 		if (m_pGameInstance->GetMouseState(DIM_LB) == CInput_Device::TAP)
 		{
+			m_fTime = 0.f;
+
 			if (m_iAttackCount == 0)
 				State = PLAYER_ATTACK_1;
 			else if (m_iAttackCount == 1)
@@ -38,6 +55,8 @@ PLAYER_STATE CStateElementalArt_Nilou::Update(const _float& fTimeDelta, CState_M
 		}
 		else if (m_pGameInstance->GetKeyState(DIK_E) == CInput_Device::TAP)
 		{
+			m_fTime = 0.f;
+
 			if (m_iElementalArtCount == 0)
 				State = PLAYER_ELEMENTAL_2;
 			else if (m_iElementalArtCount == 1)
@@ -49,8 +68,6 @@ PLAYER_STATE CStateElementalArt_Nilou::Update(const _float& fTimeDelta, CState_M
 			m_iElementalArtCount++;
 		}
 		m_iSkillCount++;
-
-		return State;
 	}
 
 	return CurrentState;
