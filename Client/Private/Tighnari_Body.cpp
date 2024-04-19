@@ -191,6 +191,24 @@ void CTighnari_Body::Change_Animation(const _float& fTimeDelta)
 		m_IsLinear = false;
 		break;
 	}
+	case PLAYER_JUMP:
+	{
+		m_iAnim = 32;
+		m_IsLoop = false;
+		break;
+	}
+	case PLAYER_JUMP_FOR_RUN:
+	{
+		m_iAnim = 33;
+		m_IsLoop = false;
+		break;
+	}
+	case PLAYER_JUMP_FOR_SPRINT:
+	{
+		m_iAnim = 34;
+		m_IsLoop = false;
+		break;
+	}
 	case PLAYER_IDLE:
 	{
 		m_iAnim = 48;

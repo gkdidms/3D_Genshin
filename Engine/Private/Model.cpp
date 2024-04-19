@@ -461,7 +461,6 @@ void CModel::Play_Animation(const _float& fTimeDelta, _float4* vMovePos, _bool i
 			XMStoreFloat4(vMovePos, XMLoadFloat4(&m_vCurMovePos) - XMLoadFloat4(&m_vPreMovePos));
 			vMovePos->w = 1.f;
 			m_vPreMovePos = m_vCurMovePos;
-			
 			if (!(vMovePos->z == 0.f))
 				m_vAnimSpeed = *vMovePos;
 		}

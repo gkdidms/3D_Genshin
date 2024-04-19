@@ -15,6 +15,9 @@ PLAYER_STATE CStateIdle::Enter(PLAYER_STATE CurrentState)
 
 PLAYER_STATE CStateIdle::Update(const _float& fTimeDelta, class CState_Manager& pStateManager, PLAYER_STATE CurrentState)
 {
+	if (m_pGameInstance->GetKeyState(DIK_SPACE) == CInput_Device::TAP)
+		return pStateManager.Set_CurrentState(CState_Manager::STATE_TYPE_JUMP, PLAYER_IDLE);
+
 	if (m_pGameInstance->GetKeyState(DIK_W) == CInput_Device::HOLD
 		|| m_pGameInstance->GetKeyState(DIK_S) == CInput_Device::HOLD
 		|| m_pGameInstance->GetKeyState(DIK_A) == CInput_Device::HOLD

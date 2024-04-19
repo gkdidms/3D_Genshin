@@ -10,6 +10,9 @@ CStateSprint::CStateSprint()
 
 PLAYER_STATE CStateSprint::Enter(PLAYER_STATE CurrentState)
 {
+	if (CurrentState == PLAYER_JUMP_FOR_SPRINT)
+		return PLAYER_SPRINT;
+
 	return PLAYER_SPRINT_START;
 }
 
@@ -17,6 +20,9 @@ PLAYER_STATE CStateSprint::Update(const _float& fTimeDelta, class CState_Manager
 {
 	if (m_pGameInstance->GetMouseState(DIM_LB) == CInput_Device::TAP)
 		return pStateManager.Set_CurrentState(CState_Manager::STATE_TYPE_ATTACK);
+
+	if (CurrentState == PLAYER_SPRINT && m_pGameInstance->GetKeyState(DIK_SPACE) == CInput_Device::TAP)
+		return pStateManager.Set_CurrentState(CState_Manager::STATE_TYPE_JUMP, PLAYER_SPRINT);
 
 	if (CurrentState == PLAYER_SPRINT && m_pGameInstance->GetKeyState(DIK_LSHIFT) == CInput_Device::HOLD)
 		return PLAYER_SPRINT;

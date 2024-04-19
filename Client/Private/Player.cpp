@@ -141,11 +141,11 @@ HRESULT CPlayer::Ready_PartObjects()
 	if (nullptr == pComponent)
 		return E_FAIL;
 	
-	WeaponDesc.pHandCombinedTransformationMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("AO_Bip001_L_Hand");
+	WeaponDesc.pHandCombinedTransformationMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("PRIVATE_WeaponArrow");
 	if (nullptr == WeaponDesc.pHandCombinedTransformationMatrix)
 		return E_FAIL;
 
-	WeaponDesc.pBackCombinedTransformationMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("_HemB_R_F01");
+	WeaponDesc.pBackCombinedTransformationMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("PRIVATE_WeaponRootBow");
 	if (nullptr == WeaponDesc.pBackCombinedTransformationMatrix)
 		return E_FAIL;
 
@@ -176,6 +176,20 @@ HRESULT CPlayer::Ready_PartObjects()
 	//if (nullptr == pGameObject)
 	//	return E_FAIL;
 	//m_PartObject[PLAYER_YAE].emplace_back(pGameObject);
+
+	//Wanderer Weapon
+	pComponent = m_PartObject[PLAYER_WANDERER][PART_BODY]->Get_Component(L"Com_Model");
+	if (nullptr == pComponent)
+		return E_FAIL;
+
+	WeaponDesc.pHandCombinedTransformationMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("PRIVATE_WeaponRootSword");
+	if (nullptr == WeaponDesc.pHandCombinedTransformationMatrix)
+		return E_FAIL;
+
+	pGameObject = dynamic_cast<CPartObject*>(m_pGameInstance->Clone_Object(L"Prototype_GameObject_Weapon_Narukami", &WeaponDesc));
+	if (nullptr == pGameObject)
+		return E_FAIL;
+	m_PartObject[PLAYER_WANDERER].emplace_back(pGameObject);
 
 	return S_OK;
 }

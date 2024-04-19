@@ -173,6 +173,7 @@
     <ClInclude Include="..\public\Monster.h" />
     <ClInclude Include="..\Public\Nilou_Body.h" />
     <ClInclude Include="..\public\PartObject.h" />
+    <ClInclude Include="..\public\StateJump.h" />
     <ClInclude Include="..\public\Weapon_Alaya.h" />
     <ClInclude Include="..\public\Weapon_Ayus.h" />
     <ClInclude Include="..\public\PartObject_Body.h" />
@@ -188,6 +189,7 @@
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\public\Tighnari_Body.h" />
     <ClInclude Include="..\Public\Wanderer_Body.h" />
+    <ClInclude Include="..\public\Weapon_Narukami.h" />
     <ClInclude Include="..\Public\Yae_Body.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
@@ -212,6 +214,7 @@
     <ClCompile Include="..\private\Monster.cpp" />
     <ClCompile Include="..\Private\Nilou_Body.cpp" />
     <ClCompile Include="..\private\PartObject.cpp" />
+    <ClCompile Include="..\private\StateJump.cpp" />
     <ClCompile Include="..\private\Weapon_Alaya.cpp" />
     <ClCompile Include="..\private\Weapon_Ayus.cpp" />
     <ClCompile Include="..\private\PartObject_Body.cpp" />
@@ -227,6 +230,7 @@
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\private\Tighnari_Body.cpp" />
     <ClCompile Include="..\Private\Wanderer_Body.cpp" />
+    <ClCompile Include="..\private\Weapon_Narukami.cpp" />
     <ClCompile Include="..\Private\Yae_Body.cpp" />
     <ClCompile Include="Client.cpp" />
   </ItemGroup>

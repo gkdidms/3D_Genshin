@@ -1,6 +1,7 @@
 #pragma once
 #include "Weapon.h"
 
+BEGIN(Client)
 class CWeapon_Alaya :
     public CWeapon
 {
@@ -27,3 +28,4 @@ public:
     virtual CGameObject* Clone(void* pArg) override;
     virtual void Free() override;
 };
+END

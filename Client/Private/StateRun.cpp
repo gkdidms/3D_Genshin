@@ -10,7 +10,7 @@ CStateRun::CStateRun()
 
 PLAYER_STATE CStateRun::Enter(PLAYER_STATE CurrentState)
 {
-	if (CurrentState == PLAYER_SPRINT_STOP)
+	if (CurrentState == PLAYER_SPRINT_STOP || CurrentState == PLAYER_JUMP_FOR_RUN)
 		return PLAYER_RUN;
 
 	return PLAYER_RUN_START;
@@ -18,6 +18,9 @@ PLAYER_STATE CStateRun::Enter(PLAYER_STATE CurrentState)
 
 PLAYER_STATE CStateRun::Update(const _float& fTimeDelta, class CState_Manager& pStateManager, PLAYER_STATE CurrentState)
 {
+	if (CurrentState == PLAYER_RUN && m_pGameInstance->GetKeyState(DIK_SPACE) == CInput_Device::TAP)
+		return pStateManager.Set_CurrentState(CState_Manager::STATE_TYPE_JUMP, PLAYER_RUN);
+
 	if (m_pGameInstance->GetKeyState(DIK_LSHIFT) == CInput_Device::TAP)
 		return pStateManager.Set_CurrentState(CState_Manager::STATE_TYPE_SPRINT);
 

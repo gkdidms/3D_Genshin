@@ -27,7 +27,7 @@ protected:
 
 protected:
     _float m_fTime = { 0.f };
-    _float m_fAttackTime = { 0.6f };
+    _float m_fAttackTime = { 0.5f }; // 공격 모션 지속시간 
 
 public:
     virtual void Free();

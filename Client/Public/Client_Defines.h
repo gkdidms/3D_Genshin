@@ -16,7 +16,6 @@ namespace Client {
         PLAYER_SPRINT,
         PLAYER_SPRINT_TO_RUN,
         PLAYER_SPRINT_STOP,
-        PLAYER_JUMP,
         PLAYER_FLY,
         PLAYER_ATTACK_1,
         PLAYER_ATTACK_2,
@@ -37,6 +36,12 @@ namespace Client {
         PLAYER_ELEMENTAL_END,
         PLAYER_ELEMENTAL_BURST,
         PLAYER_ELEMENTAL_BURST_END,
+        PLAYER_JUMP,
+        PLAYER_JUMP_FOR_RUN,
+        PLAYER_JUMP_FOR_SPRINT,
+        PLAYER_FALL_GROUND,
+        PLAYER_FALL_GROUND_FOR_RUN,
+        PLAYER_FALL_GROUND_FOR_SPRINT,
         PLAYER_END
     };
 

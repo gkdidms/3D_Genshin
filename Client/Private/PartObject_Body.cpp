@@ -53,10 +53,20 @@ HRESULT CPartObject_Body::Render()
 
 		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_Texture", i, aiTextureType_DIFFUSE)))
 			continue;
-
 		m_pShaderCom->Begin(0);
 		m_pModelCom->Render(i);
 	}
+	/*for (int i = 0; i < 15; ++i)
+	{
+		_uint iTemp = { 1 };
+		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
+			return E_FAIL;
+
+		m_pModelCom->Bind_Material(m_pShaderCom, "g_Texture", i, aiTextureType_DIFFUSE);
+
+		m_pShaderCom->Begin(0);
+		m_pModelCom->Render(i);
+	}*/
 
 	return S_OK;
 }

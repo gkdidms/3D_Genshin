@@ -1,5 +1,7 @@
 #pragma once
 #include "PartObject.h"
+
+BEGIN(Client)
 class CWeapon :
     public CPartObject
 {
@@ -37,3 +39,4 @@ protected:
     virtual void Free();
 };
 
+END

@@ -26,7 +26,6 @@ HRESULT CWeapon_Ayus::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_pTransformCom->Scaling(10.f, 10.f, 10.f);
-	//m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(90.0f));
 
 	return S_OK;
 }
@@ -55,7 +54,6 @@ void CWeapon_Ayus::Late_Tick(const _float& fTimeDelta)
 	else
 	{
 		SocketMatrix = XMLoadFloat4x4(m_pBackMatrix);
-		m_pTransformCom->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), XMConvertToRadians(90.0f));
 	}
 
 	SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);

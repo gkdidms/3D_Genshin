@@ -178,7 +178,7 @@ void CNilou_Body::Change_Animation(const _float& fTimeDelta)
 	{
 		m_iAnim = 13;
 		m_IsLoop = false;
-		m_IsLinear = false;
+		//m_IsLinear = false;
 		break;
 	}
 	case PLAYER_RUN_START:
@@ -221,7 +221,25 @@ void CNilou_Body::Change_Animation(const _float& fTimeDelta)
 	{
 		m_iAnim = 41;
 		m_IsLoop = false;
-		m_IsLinear = false;
+		//m_IsLinear = false;
+		break;
+	}
+	case PLAYER_JUMP:
+	{
+		m_iAnim = 32;
+		m_IsLoop = false;
+		break;
+	}
+	case PLAYER_JUMP_FOR_RUN:
+	{
+		m_iAnim = 33;
+		m_IsLoop = false;
+		break;
+	}
+	case PLAYER_JUMP_FOR_SPRINT:
+	{
+		m_iAnim = 34;
+		m_IsLoop = false;
 		break;
 	}
 	case PLAYER_IDLE:

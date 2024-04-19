@@ -7,6 +7,7 @@
 #include "StateIdle.h"
 #include "StateElementalBurst.h"
 #include "StateAttack.h"
+#include "StateJump.h"
 #include "StateElementalArt_Wanderer.h"
 #include "StateElementalArt_Tighanri.h"
 #include "StateElementalArt_Nilou.h"
@@ -61,6 +62,9 @@ PLAYER_STATE CState_Manager::Set_CurrentState(STATE_TYPE Type, PLAYER_STATE Curr
 		break;
 	case Client::CState_Manager::STATE_TYPE_SPRINT:
 		m_pCurrentState = CStateSprint::Create();
+		break;
+	case STATE_TYPE_JUMP:
+		m_pCurrentState = CStateJump::Create();
 		break;
 	case Client::CState_Manager::STATE_TYPE_END:
 		break;

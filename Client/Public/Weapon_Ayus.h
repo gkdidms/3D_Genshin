@@ -1,5 +1,7 @@
 #pragma once
 #include "Weapon.h"
+
+BEGIN(Client)
 class CWeapon_Ayus :
     public CWeapon
 {
@@ -27,3 +29,4 @@ public:
     virtual void Free() override;
 };
 
+END

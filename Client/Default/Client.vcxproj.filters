@@ -121,6 +121,12 @@
     <Filter Include="02. GameObject\Player\PartObject\Weapon\Yae">
       <UniqueIdentifier>{27ccd271-970a-44d8-903d-683b7d41bb19}</UniqueIdentifier>
     </Filter>
+    <Filter Include="96. Utility\State\Jump">
+      <UniqueIdentifier>{eb5dee08-fb86-4490-b40f-0ef6b3bbb10c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\Player\PartObject\Weapon\Wanderer">
+      <UniqueIdentifier>{8114c022-cae7-4320-bac2-6a3c2ecf64f6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">
@@ -237,6 +243,12 @@
     <ClInclude Include="..\public\Weapon_Alaya.h">
       <Filter>02. GameObject\Player\PartObject\Weapon\Yae</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\StateJump.h">
+      <Filter>96. Utility\State\Jump</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Weapon_Narukami.h">
+      <Filter>02. GameObject\Player\PartObject\Weapon\Wanderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -340,6 +352,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Weapon_Alaya.cpp">
       <Filter>02. GameObject\Player\PartObject\Weapon\Yae</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StateJump.cpp">
+      <Filter>96. Utility\State\Jump</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Weapon_Narukami.cpp">
+      <Filter>02. GameObject\Player\PartObject\Weapon\Wanderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

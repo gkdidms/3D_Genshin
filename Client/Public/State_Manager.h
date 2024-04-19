@@ -23,6 +23,7 @@ public:
         STATE_TYPE_ELEMNETALBURST,
         STATE_TYPE_RUN,
         STATE_TYPE_SPRINT,
+        STATE_TYPE_JUMP,
         STATE_TYPE_END
     };
 
