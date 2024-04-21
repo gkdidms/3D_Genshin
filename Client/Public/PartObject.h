@@ -1,13 +1,14 @@
 #pragma once
 #include "GameObject.h"
 
+#include "GameInstance.h"
 #include "Client_Defines.h"
 #include "Player.h"
 
-BEGIN(Engine)
-class CShader;
-class CModel;
-END
+//BEGIN(Engine)
+//class CShader;
+//class CModel;
+//END
 
 BEGIN(Client)
 class CPartObject abstract :
@@ -26,7 +27,10 @@ protected:
     virtual ~CPartObject() = default;
 
 public:
-    void Set_PlayerPos(_float4* vParentPos) { XMStoreFloat4(vParentPos, XMLoadFloat4(&m_PlayerMovePos)); }
+    void Set_PlayerPos(_float4x4* vParentPos) { *vParentPos = m_PlayerMovePos; }
+   
+public:
+    const _float4x4* Get_CameraLook() const { return m_pModelCom->Get_BoneCombinedTransformationMatrix("CameraLook"); }
     
 public:
     virtual HRESULT Initialize_Prototype();
@@ -56,7 +60,7 @@ protected:
 protected:
     _float4 m_vCurrentPos;
     _float4 m_vPrePos;
-    _float4 m_PlayerMovePos;
+    _float4x4 m_PlayerMovePos;
 
 private:
     virtual void Change_Animation(const _float& fTimeDelta) {};

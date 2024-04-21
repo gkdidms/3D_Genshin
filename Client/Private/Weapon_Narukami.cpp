@@ -25,7 +25,7 @@ HRESULT CWeapon_Narukami::Initialize(void* pArg)
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
-	m_pTransformCom->Scaling(10.f, 10.f, 10.f);
+	//m_pTransformCom->Scaling(10.f, 10.f, 10.f);
 	//m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(90.0f));
 
 	return S_OK;

@@ -20,7 +20,7 @@ public:
     HRESULT Initialize(const char* pName, _double Duration, _double TickPerSecond, _uint iNumChannels, vector<class CChannel*> Channels);
 
 public:
-    void Update_TransformationMatrix(const _float& fTimeDelta, const vector<CBone*> Bones, _bool isLoop);
+    void Update_TransformationMatrix(const _float& fTimeDelta, const vector<CBone*> Bones, _bool isLoop, _bool isLinear);
     void Linear_TransformationMatrix(const _float& fTimeDelta, const vector<CBone*> Bones);
     void Reset();
     void Loop_Reset() { m_IsLoopFinished = false; }
@@ -37,10 +37,11 @@ private:
 
     vector<_uint> m_CurrentKeyFrameIndex;
     _bool m_IsFinished = { false };
+    _bool m_IsFirst = { false };
 
 private:
     _bool m_IsLoopFinished = { false }; // 루프 애니메이션이 끝났는지 아닌지 확인
-    _bool m_IsFirst = { true };
+    _bool m_IsStart = { true };
 
 public:
     static CAnimation* Create(aiAnimation* pAiAnimation, const vector<class CBone*> Bones);

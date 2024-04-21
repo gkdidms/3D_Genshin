@@ -60,9 +60,10 @@ HRESULT CAnimation::Initialize(const char* pName, _double Duration, _double Tick
     return S_OK;
 }
 
-void CAnimation::Update_TransformationMatrix(const _float& fTimeDelta, const vector<CBone*> Bones, _bool isLoop)
+void CAnimation::Update_TransformationMatrix(const _float& fTimeDelta, const vector<CBone*> Bones, _bool isLoop, _bool isLinear)
 {
     m_iCurrentPosition += m_TickPerSecond * fTimeDelta;
+    if (m_IsStart && !isLinear) m_iCurrentPosition *= 2;
 
     if (m_iCurrentPosition >= m_Duration)
     {
@@ -79,13 +80,14 @@ void CAnimation::Update_TransformationMatrix(const _float& fTimeDelta, const vec
         for (size_t i = 0; i < m_iNumChannels; ++i)
         {
             m_Channels[i]->Update_TransformationMatrix(m_iCurrentPosition, Bones, &m_CurrentKeyFrameIndex[i]);
+            m_IsStart = false;
         }
     }
 }
 
 void CAnimation::Linear_TransformationMatrix(const _float& fTimeDelta, const vector<CBone*> Bones)
 {
-    double LinearDuration = 5;
+    double LinearDuration = 7;
     m_iCurrentPosition += m_TickPerSecond * fTimeDelta;
 
     if (m_iCurrentPosition >= LinearDuration)
@@ -109,7 +111,7 @@ void CAnimation::Reset()
     m_iCurrentPosition = 0.0;
     m_IsFinished = false;
     m_IsLoopFinished = false;
-    m_IsFirst = true;
+    m_IsStart = true;
     ZeroMemory(&m_CurrentKeyFrameIndex.front(), sizeof(_uint) * m_iNumChannels);
 }
 

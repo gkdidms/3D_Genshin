@@ -16,6 +16,9 @@ public:
     const _float4x4* Get_CombinedTransformationMatrix() const {
         return &m_CombinedTransformMatrix;
     }
+    const _float4x4* Get_TranfromationMatrix() const {
+        return &m_TransformationMatrix;
+    }
     _vector Get_Scale() { return XMLoadFloat3(&m_vScale); }
     _vector Get_Rotation() { return XMLoadFloat4(&m_vRotation); }
     _vector Get_Translation() { return XMLoadFloat3(&m_vTranslation); }

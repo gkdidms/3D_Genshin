@@ -24,6 +24,7 @@ HRESULT CDefaultCamera::Initialize(void* pArg)
 	if (nullptr != pDesc)
 	{
 		m_pTargetMatrix = pDesc->pPlayerMatrix;
+		m_pCameraLook = pDesc->pCameraLookMatrix;
 		m_fSensor = pDesc->fSensor;
 	}
 
@@ -49,8 +50,9 @@ void CDefaultCamera::Tick(const _float& fTimeDelta)
 	_matrix ParentMatrix = XMMatrixIdentity();
 	ParentMatrix.r[3] = XMLoadFloat4x4(m_pTargetMatrix).r[3];
 
-	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * XMLoadFloat4x4(&m_OrbitMatrix) * ParentMatrix);
+	m_pTransformCom->LookAt(XMLoadFloat4x4(m_pCameraLook).r[3]);
 
+	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * XMLoadFloat4x4(&m_OrbitMatrix) * ParentMatrix);
 	__super::Tick(fTimeDelta);
 }
 

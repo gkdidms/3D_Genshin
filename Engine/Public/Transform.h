@@ -58,6 +58,9 @@ public:
     void Rotation(_fvector vAxis, _float fRadian);
     void Rotation(_float fRotationX, _float fRotationY, _float fRotationZ);
 
+public:
+    void Get_RootTransformationMatrix(_fmatrix RootMatrix);
+
 private:
     _float4x4 m_matWorld;
     _float m_fSpeedPerSec = { 0 };

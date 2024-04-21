@@ -12,6 +12,7 @@ public:
     {
         _float fSensor;
         const _float4x4* pPlayerMatrix;
+        const _float4x4* pCameraLookMatrix;
     }DEFAULT_CAMERA_DESC;
 
 private:
@@ -33,6 +34,7 @@ private:
 
 private:
     const _float4x4* m_pTargetMatrix;
+    const _float4x4* m_pCameraLook;
     _float4x4 m_OrbitMatrix;
     _float m_fSensor = { 0.f };
 

@@ -48,8 +48,8 @@ void CWanderer_Body::Tick(const _float& fTimeDelta)
 
 	m_pModelCom->Play_Animation(fTimeDelta, &m_PlayerMovePos, m_IsLinear);
 
-	if (*m_pElementalAir && (*m_pState == PLAYER_RUN_START || *m_pState == PLAYER_RUN))
-		XMStoreFloat4(&m_PlayerMovePos, XMVectorSet(0.f, 0.f, m_fRunSpeed * fTimeDelta, 1.f));
+	//if (*m_pElementalAir && (*m_pState == PLAYER_RUN_START || *m_pState == PLAYER_RUN))
+	//	XMStoreFloat4x4(&m_PlayerMovePos, XMVectorSet(0.f, 0.f, m_fRunSpeed * fTimeDelta, 1.f));
 }
 
 void CWanderer_Body::Late_Tick(const _float& fTimeDelta)
@@ -310,7 +310,7 @@ void CWanderer_Body::Change_Animation(const _float& fTimeDelta)
 		m_iAnim = *m_pElementalAir ? 34 : 80;
 
 		m_IsLoop = true;
-		m_IsLinear = false;
+		// m_IsLinear = false;
 		break;
 	}
 	default:

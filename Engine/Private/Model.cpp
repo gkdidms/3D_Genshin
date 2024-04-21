@@ -432,7 +432,7 @@ HRESULT CModel::Bind_BoneMatrices(CShader* pShader, const char* strConstansName,
 	return pShader->Bind_Matrices(strConstansName, m_MeshBoneMatrices, 512);
 }
 
-void CModel::Play_Animation(const _float& fTimeDelta, _float4* vMovePos, _bool isLinear)
+void CModel::Play_Animation(const _float& fTimeDelta, _float4x4* vMovePos, _bool isLinear)
 {
 
 	if (m_Animations[m_tAnimDesc.iCurrentAnimIndex]->IsFirst() && isLinear)
@@ -442,31 +442,32 @@ void CModel::Play_Animation(const _float& fTimeDelta, _float4* vMovePos, _bool i
 		for (auto& pBone : m_Bones)
 			pBone->Update_CombinedTransformMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
 		
-		//XMStoreFloat4(vMovePos, XMVectorSet(0.f, 0.f, 0.f, 1.f));
-		*vMovePos = m_vAnimSpeed;
+		XMStoreFloat4x4(vMovePos, XMMatrixIdentity());
+		//*vMovePos = m_vAnimSpeed;
 		return;
 	}
 	else
 	{
-		m_Animations[m_tAnimDesc.iCurrentAnimIndex]->Update_TransformationMatrix(fTimeDelta, m_Bones, m_tAnimDesc.isLoop);
+		m_Animations[m_tAnimDesc.iCurrentAnimIndex]->Update_TransformationMatrix(fTimeDelta, m_Bones, m_tAnimDesc.isLoop, isLinear);
 
 		for (auto& pBone : m_Bones)
 			pBone->Update_CombinedTransformMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
 
-		const _float4x4* CombinedTransformMatrix = m_Bones[m_iRootBoneIndex]->Get_CombinedTransformationMatrix();
-		XMStoreFloat4(&m_vCurMovePos, XMVectorSet(CombinedTransformMatrix->m[3][0], CombinedTransformMatrix->m[3][1], CombinedTransformMatrix->m[3][2] * -1.f, 1.f));
+		const _float4x4* CombinedTransformMatrix = m_Bones[m_iRootBoneIndex]->Get_TranfromationMatrix();
+		m_vCurMovePos = *CombinedTransformMatrix;
 
 		if (!Get_LoopAnimation_Finished())
 		{
-			XMStoreFloat4(vMovePos, XMLoadFloat4(&m_vCurMovePos) - XMLoadFloat4(&m_vPreMovePos));
-			vMovePos->w = 1.f;
+			_matrix MoveMatrix;
+			XMStoreFloat4x4(vMovePos, XMLoadFloat4x4(&m_vCurMovePos) - XMLoadFloat4x4(&m_vPreMovePos));
+
 			m_vPreMovePos = m_vCurMovePos;
-			if (!(vMovePos->z == 0.f))
-				m_vAnimSpeed = *vMovePos;
+			//if (!(vMovePos->m[3][2] == 0.f))
+			//	m_vAnimSpeed = *vMovePos;
 		}
-		
-		if (Get_LoopAnimation_Finished()) {
-			XMStoreFloat4(&m_vPreMovePos, XMVectorSet(0.f, 0.f, 0.f, 1.f));
+		else
+		{
+			XMStoreFloat4x4(&m_vPreMovePos, XMMatrixIdentity());
 		}
 	}
 

@@ -200,6 +200,14 @@ void CTransform::Rotation(_float fRotationX, _float fRotationY, _float fRotation
 	Set_State(STATE_LOOK, vLook);
 }
 
+void CTransform::Get_RootTransformationMatrix(_fmatrix RootMatrix)
+{
+	_vector vScale, vRotation, vTranslation;
+
+	// 1. 루트 애니메이션 (현재 프레임 - 이전 프레임 행렬) 행렬의 
+	XMMatrixDecompose(&vScale, &vRotation, &vTranslation, RootMatrix);
+}
+
 CTransform* CTransform::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CTransform* pInstance = new CTransform(pDevice, pContext);

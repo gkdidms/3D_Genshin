@@ -40,6 +40,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Ready_PartObjects()))
 		return E_FAIL;
 
+	m_pCameraLook = dynamic_cast<CPartObject*>(m_PartObject[m_CurrentPlayerble][PART_BODY])->Get_CameraLook();
+
 	return S_OK;
 }
 
@@ -60,12 +62,25 @@ void CPlayer::Tick(const _float& fTimeDelta)
 
 void CPlayer::Late_Tick(const _float& fTimeDelta)
 {
-	_float4 vPos;
-	dynamic_cast<CPartObject*>(m_PartObject[m_CurrentPlayerble][PART_BODY])->Set_PlayerPos(&vPos);
-	XMStoreFloat4(&vPos, XMVector3TransformCoord(XMLoadFloat4(&vPos), m_pTransformCom->Get_WorldMatrix()));
-	_vector vMovePos = XMVectorSetW(XMLoadFloat4(&vPos), 1.f);
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vMovePos);
+	_vector vRotation, vScale, vTranslation, vPos;
+	_float4x4 RootMatrix;
+	_matrix MoveMatrix;
+	_matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
 
+	dynamic_cast<CPartObject*>(m_PartObject[m_CurrentPlayerble][PART_BODY])->Set_PlayerPos(&RootMatrix);
+	XMMatrixDecompose(&vScale, &vRotation, &vTranslation, XMLoadFloat4x4(&RootMatrix));
+	
+	//TODO::루트 애니메이션 적용 다시하기 
+	//XMMatrixRotationQuaternion(vRotation);
+	vScale = XMVector3TransformCoord(vScale, WorldMatrix);
+	vRotation = XMVector3TransformCoord(vRotation, WorldMatrix);
+	vTranslation = XMVector3TransformCoord(vTranslation, WorldMatrix);
+	
+
+	vPos = XMVector3TransformCoord(XMLoadFloat4x4(&RootMatrix).r[3], WorldMatrix);
+	//_matrix ReaultMatrix = XMMatrixMultiply(WorldMatrix, XMLoadFloat4x4(&PlayerPos));
+	m_pTransformCom->Set_WorldMatrix(MoveMatrix);
+	
 	for (auto& pObject : m_PartObject[m_CurrentPlayerble])
 		pObject->Late_Tick(fTimeDelta);
 
@@ -80,7 +95,7 @@ HRESULT CPlayer::Render()
 	return S_OK;
 }
 
-void CPlayer::Change_Playerble()
+void CPlayer::Change_Playerble() // 코드 수정하기
 {
 	//캐릭터 변경
 	if (m_pGameInstance->GetKeyState(DIK_1) == CInput_Device::TAP)
@@ -89,11 +104,17 @@ void CPlayer::Change_Playerble()
 		m_CurrentPlayerble = PLAYER_NILOU;
 	if (m_pGameInstance->GetKeyState(DIK_3) == CInput_Device::TAP)
 		m_CurrentPlayerble = PLAYER_WANDERER;
-
 	if (m_pGameInstance->GetKeyState(DIK_4) == CInput_Device::TAP)
 		m_CurrentPlayerble = PLAYER_YAE;
 
-	m_pState_Manager->Set_CurrentPlayerble(m_CurrentPlayerble);
+	if (m_pGameInstance->GetKeyState(DIK_1) == CInput_Device::TAP
+		|| m_pGameInstance->GetKeyState(DIK_2) == CInput_Device::TAP
+		|| m_pGameInstance->GetKeyState(DIK_3) == CInput_Device::TAP
+		|| m_pGameInstance->GetKeyState(DIK_4) == CInput_Device::TAP)
+	{
+		m_pCameraLook = dynamic_cast<CPartObject*>(m_PartObject[m_CurrentPlayerble][PART_BODY])->Get_CameraLook();
+		m_pState_Manager->Set_CurrentPlayerble(m_CurrentPlayerble);
+	}
 }
 
 HRESULT CPlayer::Ready_PartObjects()
@@ -106,11 +127,13 @@ HRESULT CPlayer::Ready_PartObjects()
 	Desc.fSpeedPecSec = 20.f;
 	Desc.fRotatePecSec = XMConvertToRadians(45.f);
 
+	// Tighnari
 	CGameObject* pGameObject = m_pGameInstance->Clone_Object(L"Prototype_GameObject_Player_Tighnari", &Desc);
 	if (nullptr == pGameObject)
 		return E_FAIL;
 	m_PartObject[PLAYER_TIGHNARI].emplace_back(pGameObject);
 
+	//Nilou
 	pGameObject = m_pGameInstance->Clone_Object(L"Prototype_GameObject_Player_Nilou", &Desc);
 	if (nullptr == pGameObject)
 		return E_FAIL;
@@ -130,17 +153,24 @@ HRESULT CPlayer::Ready_PartObjects()
 		return E_FAIL;
 	m_PartObject[PLAYER_WANDERER].emplace_back(pGameObject);
 
+	//Yae
 	pGameObject = m_pGameInstance->Clone_Object(L"Prototype_GameObject_Player_Yae", &Desc);
 	if (nullptr == pGameObject)
 		return E_FAIL;
 	m_PartObject[PLAYER_YAE].emplace_back(pGameObject);
 
-	//Tighnari Weapon
+	// PartObject::Weapon
 	CWeapon_Ayus::WEAPON_DESC WeaponDesc{};
 	CComponent* pComponent = m_PartObject[PLAYER_TIGHNARI][PART_BODY]->Get_Component(L"Com_Model");
 	if (nullptr == pComponent)
 		return E_FAIL;
-	
+
+	WeaponDesc.pParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
+	WeaponDesc.pState = &m_iState;
+	WeaponDesc.fSpeedPecSec = 20.f;
+	WeaponDesc.fRotatePecSec = XMConvertToRadians(45.f);
+
+	//Tighnari
 	WeaponDesc.pHandCombinedTransformationMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("PRIVATE_WeaponArrow");
 	if (nullptr == WeaponDesc.pHandCombinedTransformationMatrix)
 		return E_FAIL;
@@ -149,17 +179,12 @@ HRESULT CPlayer::Ready_PartObjects()
 	if (nullptr == WeaponDesc.pBackCombinedTransformationMatrix)
 		return E_FAIL;
 
-	WeaponDesc.pParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
-	WeaponDesc.pState = &m_iState;
-	WeaponDesc.fSpeedPecSec = 20.f;
-	WeaponDesc.fRotatePecSec = XMConvertToRadians(45.f);
-
 	pGameObject = dynamic_cast<CPartObject*>(m_pGameInstance->Clone_Object(L"Prototype_GameObject_Weapon_Ayus", &WeaponDesc));
 	if (nullptr == pGameObject)
 		return E_FAIL;
 	m_PartObject[PLAYER_TIGHNARI].emplace_back(pGameObject);
 
-	//Yae Weapon
+	// Yae
 	//pComponent = m_PartObject[PLAYER_YAE][PART_BODY]->Get_Component(L"Com_Model");
 	//if (nullptr == pComponent)
 	//	return E_FAIL;
@@ -177,7 +202,7 @@ HRESULT CPlayer::Ready_PartObjects()
 	//	return E_FAIL;
 	//m_PartObject[PLAYER_YAE].emplace_back(pGameObject);
 
-	//Wanderer Weapon
+	// Wanderer
 	pComponent = m_PartObject[PLAYER_WANDERER][PART_BODY]->Get_Component(L"Com_Model");
 	if (nullptr == pComponent)
 		return E_FAIL;
@@ -196,13 +221,16 @@ HRESULT CPlayer::Ready_PartObjects()
 
 void CPlayer::Input_Key(const _float& fTimeDelta)
 {
+	// 상태 패턴 업데이트
 	m_iState = m_pState_Manager->Update(fTimeDelta, PLAYER_STATE(m_iState));
 
+	// 방랑자 원소 스킬 사용시 부유하고 있는지, 아닌지 체크 
 	if (m_CurrentPlayerble == PLAYER_WANDERER && m_iState == PLAYER_ELEMENTAL_START)
 		m_IsElementalAir = true;
 	else if (m_CurrentPlayerble == PLAYER_WANDERER && m_iState == PLAYER_ELEMENTAL_END)
 		m_IsElementalAir = false;
 
+	// 루트 애니메이션 제어 전 까지 주석
 	// 뛰기 제어
 	if (m_pGameInstance->GetKeyState(DIK_W) == CInput_Device::HOLD) // 앞
 	{

@@ -18,6 +18,9 @@ private:
     virtual ~CPlayer() = default;
 
 public:
+    const _float4x4* Get_PlayerCameraLook() const { return m_pCameraLook; }
+
+public:
     HRESULT Initialize_Prototype();
     HRESULT Initialize(void* pArg);
     void Priority_Tick(const _float& fTimeDelta);
@@ -34,6 +37,9 @@ private:
     _uint m_iState = { 0 };
     _uint m_iDirState = { 0 };
     _bool m_IsElementalAir = { false };
+
+private:
+    const _float4x4* m_pCameraLook = {};
 
 private:
     HRESULT Ready_PartObjects();

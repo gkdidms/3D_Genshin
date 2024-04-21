@@ -42,7 +42,7 @@ public:
     HRESULT Bind_BoneMatrices(class CShader* pShader, const char* strConstansName, _uint iMeshIndex);
 
 public:
-    void Play_Animation(const _float& fTimeDelta, _float4* vMovePos, _bool isLinear);
+    void Play_Animation(const _float& fTimeDelta, _float4x4* vMovePos, _bool isLinear);
     void Set_Animation(ANIM_DESC tAnimdesc) {
         if (Get_LoopAnimation_Finished())
             m_Animations[tAnimdesc.iCurrentAnimIndex]->Loop_Reset();
@@ -50,7 +50,7 @@ public:
         if (m_tAnimDesc.iCurrentAnimIndex == tAnimdesc.iCurrentAnimIndex)
             return;
 
-        XMStoreFloat4(&m_vPreMovePos, XMVectorSet(0.f, 0.f, 0.f, 1.f));
+        XMStoreFloat4x4(&m_vPreMovePos, XMMatrixIdentity());
 
         m_Animations[tAnimdesc.iCurrentAnimIndex]->Reset();
         m_tAnimDesc = tAnimdesc;
@@ -84,10 +84,10 @@ private:
     ANIM_DESC m_tAnimDesc{ 0, false};
 
 private:
-    _float4 m_vCurMovePos = {};
-    _float4 m_vPreMovePos = {};
+    _float4x4 m_vCurMovePos = {};
+    _float4x4 m_vPreMovePos = {};
 
-    _float4 m_vAnimSpeed = {};
+    //_float4 m_vAnimSpeed = {};
 
 private:
     HRESULT Ready_Meshes();

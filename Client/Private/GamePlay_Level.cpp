@@ -43,6 +43,8 @@ HRESULT CGamePlay_Level::Ready_Layer_Camera(const wstring& strLayerTag)
 
 	tDefaultCamera.fSensor = 0.2f;
 	tDefaultCamera.pPlayerMatrix = dynamic_cast<CTransform*>(m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, L"Layer_Player", L"Com_Transform"))->Get_WorldFloat4x4();
+
+	tDefaultCamera.pCameraLookMatrix = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, L"Layer_Player", 0))->Get_PlayerCameraLook();
 	tDefaultCamera.vEye = _float4(0.f, 20.f, -20.f, 1.f);
 	tDefaultCamera.vFocus = _float4(0.f, 10.f, 0.f, 1.f);
 	

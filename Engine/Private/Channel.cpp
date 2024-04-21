@@ -81,7 +81,7 @@ void CChannel::Update_TransformationMatrix(double CurrentPosition, const vector<
 		vTranslation = XMVectorSetW(XMLoadFloat3(&LastKeyFrame.vPosition), 1.f);
 	}
 	else
-	{
+	{ 
 		while (CurrentPosition >= m_KeyFrames[*iCurrentKeyFrameIndex + 1].Time)
 			++*iCurrentKeyFrameIndex;
 
