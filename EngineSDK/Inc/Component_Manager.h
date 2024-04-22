@@ -5,11 +5,15 @@
 
 #include "VIBuffer_Rect.h"
 #include "VIBuffer_Terrain.h"
+#include "VIBuffer_Cell.h"
 #include "Shader.h"
 #include "Texture.h"
 #include "Transform.h"
 #include "Model.h"
 #include "Calculator.h"
+#include "Navigation.h"
+
+#include "Cell.h"
 
 BEGIN(Engine)
 class CComponent_Manager :

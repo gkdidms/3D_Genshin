@@ -32,6 +32,9 @@ private:
     const _uint* m_pDirState = { nullptr };
     const _bool* m_pElementalAir = { nullptr };
 
+    _float m_fAirSpeed = { 130.f };
+    _float m_fAirStartTime = { 0.f };
+
 public:
     static CWanderer_Body* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
     virtual CGameObject* Clone(void* pArg) override;

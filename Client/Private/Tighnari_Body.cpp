@@ -126,6 +126,7 @@ void CTighnari_Body::Change_Animation(const _float& fTimeDelta)
 	{
 		m_iAnim = 7;
 		m_IsLoop = false;
+		m_IsLinear = false;
 		break;
 	}
 	case PLAYER_ELEMENTAL_END:
@@ -158,6 +159,7 @@ void CTighnari_Body::Change_Animation(const _float& fTimeDelta)
 	{
 		m_iAnim = 36;
 		m_IsLoop = true;
+		//m_IsLinear = false;
 		break;
 	}
 	case PLAYER_RUN_STOP:

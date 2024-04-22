@@ -4,6 +4,7 @@
 
 #include "Tool_Non_Object.h"
 #include "Tool_Dungeon.h"
+#include "Tool_Manager.h"
 
 IMPLEMENT_SINGLETON(CTool_Object_Manager)
 CTool_Object_Manager::CTool_Object_Manager()
@@ -139,6 +140,11 @@ HRESULT CTool_Object_Manager::Save(const char* pFileName)
 
 		ofs.write((_char*)&iNumDungeonObjectName, sizeof(_uint));
 		ofs.write(strDungeonName.c_str(), iNumDungeonObjectName);
+
+		const _float4x4* WorldMatrix = pDungeon->m_pTransformCom->Get_WorldFloat4x4();
+		ofs.write((_char*)WorldMatrix, sizeof(_float4x4));
+
+
 	}
 
 	_uint iNumObjects = m_Objects.size();
@@ -192,6 +198,13 @@ HRESULT CTool_Object_Manager::Load(const char* pFileName)
 			iNumObject = 1;
 
 		Add_CloneObject(OBJECT_DUNGEON, L"Layer_Dungeon", XMVectorSet(0.f, 0.f, 0.f, 1.f), iNumObject);
+
+		_float4x4 WorldMatrix = {};
+		ifs.read((_char*)&WorldMatrix, sizeof(_float4x4));
+
+		m_Terrains[0]->m_pTransformCom->Set_WorldMatrix(XMLoadFloat4x4(&WorldMatrix));
+
+		CTool_Manager::GetInstance()->Set_DungeonPos(XMVectorSet(WorldMatrix.m[3][0], WorldMatrix.m[3][1], WorldMatrix.m[3][2], 1.f));
 	}
 
 	_uint iNumObjects = { 0 };
@@ -223,6 +236,8 @@ HRESULT CTool_Object_Manager::Load(const char* pFileName)
 		ifs.read((_char*)&WorldMatrix, sizeof(_float4x4));
 
 		m_Objects[i]->m_pTransformCom->Set_WorldMatrix(XMLoadFloat4x4(&WorldMatrix));
+
+
 	}
 
 	ifs.close();

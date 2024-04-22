@@ -29,6 +29,8 @@ protected:
     const _float4x4* m_pSocketMatrix = { nullptr };
     const _float4x4* m_pBackMatrix = { nullptr };
 
+    _bool m_isHide = { false };
+
 protected:
     virtual HRESULT Add_Components() = 0;
     virtual HRESULT Bind_ResourceData() = 0;

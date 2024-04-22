@@ -12,6 +12,14 @@ namespace Engine
 		unsigned int	iWinSizeX;
 		unsigned int	iWinSizeY;
 	}ENGINE_DESC;
+
+	typedef struct ENGINE_DLL tVexPos
+	{
+		XMFLOAT3 vPosition;
+
+		static const _uint iNumElements = 1;
+		static const D3D11_INPUT_ELEMENT_DESC Elements[iNumElements];
+	} VXTPOS;
 	
 	typedef struct ENGINE_DLL tVexPosTex 
 	{

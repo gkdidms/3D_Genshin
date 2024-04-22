@@ -160,6 +160,8 @@
     <ClInclude Include="..\public\DefaultCamera.h" />
     <ClInclude Include="..\public\Dungeon_1.h" />
     <ClInclude Include="..\Public\Dungeon_2.h" />
+    <ClInclude Include="..\public\SkillObj.h" />
+    <ClInclude Include="..\public\SkillObj_Gohei.h" />
     <ClInclude Include="..\public\StateElementalArt_Nilou.h" />
     <ClInclude Include="..\public\StateElementalArt_Tighanri.h" />
     <ClInclude Include="..\public\StateElementalArt_Yae.h" />
@@ -190,6 +192,7 @@
     <ClInclude Include="..\public\Tighnari_Body.h" />
     <ClInclude Include="..\Public\Wanderer_Body.h" />
     <ClInclude Include="..\public\Weapon_Narukami.h" />
+    <ClInclude Include="..\public\Weapon_Regalis.h" />
     <ClInclude Include="..\Public\Yae_Body.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
@@ -201,6 +204,8 @@
     <ClCompile Include="..\private\DefaultCamera.cpp" />
     <ClCompile Include="..\private\Dungeon_1.cpp" />
     <ClCompile Include="..\Private\Dungeon_2.cpp" />
+    <ClCompile Include="..\private\SkillObj.cpp" />
+    <ClCompile Include="..\private\SkillObj_Gohei.cpp" />
     <ClCompile Include="..\private\StateElementalArt_Nilou.cpp" />
     <ClCompile Include="..\private\StateElementalArt_Tighanri.cpp" />
     <ClCompile Include="..\private\StateElementalArt_Yae.cpp" />
@@ -231,6 +236,7 @@
     <ClCompile Include="..\private\Tighnari_Body.cpp" />
     <ClCompile Include="..\Private\Wanderer_Body.cpp" />
     <ClCompile Include="..\private\Weapon_Narukami.cpp" />
+    <ClCompile Include="..\private\Weapon_Regalis.cpp" />
     <ClCompile Include="..\Private\Yae_Body.cpp" />
     <ClCompile Include="Client.cpp" />
   </ItemGroup>

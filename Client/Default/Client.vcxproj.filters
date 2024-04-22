@@ -127,6 +127,15 @@
     <Filter Include="02. GameObject\Player\PartObject\Weapon\Wanderer">
       <UniqueIdentifier>{8114c022-cae7-4320-bac2-6a3c2ecf64f6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\Player\PartObject\Weapon\Nilou">
+      <UniqueIdentifier>{dfa0ef76-d365-49ec-9ac7-56c8debb2dc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\Player\PartObject\SkillObj">
+      <UniqueIdentifier>{40cc5667-558a-49ed-9dc4-a683fa48fda5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\Player\PartObject\SkillObj\Gohei">
+      <UniqueIdentifier>{78f8c0b6-1739-4aa4-b702-8b702dfd36ba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">
@@ -249,6 +258,15 @@
     <ClInclude Include="..\public\Weapon_Narukami.h">
       <Filter>02. GameObject\Player\PartObject\Weapon\Wanderer</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Weapon_Regalis.h">
+      <Filter>02. GameObject\Player\PartObject\Weapon\Nilou</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SkillObj.h">
+      <Filter>02. GameObject\Player\PartObject\SkillObj</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SkillObj_Gohei.h">
+      <Filter>02. GameObject\Player\PartObject\SkillObj\Gohei</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -358,6 +376,15 @@
     </ClCompile>
     <ClCompile Include="..\private\Weapon_Narukami.cpp">
       <Filter>02. GameObject\Player\PartObject\Weapon\Wanderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Weapon_Regalis.cpp">
+      <Filter>02. GameObject\Player\PartObject\Weapon\Nilou</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SkillObj.cpp">
+      <Filter>02. GameObject\Player\PartObject\SkillObj</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SkillObj_Gohei.cpp">
+      <Filter>02. GameObject\Player\PartObject\SkillObj\Gohei</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

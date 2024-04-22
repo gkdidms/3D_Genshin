@@ -36,8 +36,13 @@ public:
     string Get_SaveSeletedFileName() { return m_FileName[m_iSaveFileIndex]; }
     _uint Get_CreateObjectIndex() { return m_iCreateObjectIndex; }
     _float Get_DungeonDegree() { return m_fDungeonDegree; }
+    _float3 Get_DungeonPos() { return m_fDungeonPos; }
     _bool Is_ShowTerrain() { return IsShowTerrain; }
     _bool Is_PickingWithDungeon() { return IsPickingWithDungeon; }
+    _bool Is_PickingCell() { return m_isNavigationPicking; }
+
+public:
+    void Set_DungeonPos(_vector vPos) { XMStoreFloat3(&m_fDungeonPos, vPos); }
 
 public:
     HRESULT Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -48,6 +53,7 @@ private:
     void Window_Terrain();
     void Window_Object();
     void Window_MainBar();
+    void Window_Navigation();
 
     void Modal_Save();
     void Modal_Load();
@@ -72,6 +78,12 @@ private:
 
     _bool IsPickingWithDungeon = { false };
 
+private: // Navigation
+    _bool m_isNavigationPicking = { false };
+
+private:
+    _int m_iCheckRadioButton = { 0 };
+
 private:
     vector<string> m_FileName;
     _int m_iSaveFileIndex = { 0 };
@@ -80,6 +92,7 @@ private:
 private:
     _int m_iCurrentPickingObjectIndex = { -1 };
     _float m_fDungeonDegree = { 0.f };
+    _float3 m_fDungeonPos = {};
 
 private:
     _int m_iCreateObjectIndex = { 0 };

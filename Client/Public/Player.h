@@ -42,7 +42,9 @@ private:
     const _float4x4* m_pCameraLook = {};
 
 private:
-    HRESULT Ready_PartObjects();
+    HRESULT Ready_Bodys();
+    HRESULT Ready_Weapons();
+    HRESULT Ready_SkillObjs();
     void Input_Key(const _float& fTimeDelta);
     void Change_Playerble();
 

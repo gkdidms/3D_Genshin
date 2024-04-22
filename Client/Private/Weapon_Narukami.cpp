@@ -25,9 +25,6 @@ HRESULT CWeapon_Narukami::Initialize(void* pArg)
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
-	//m_pTransformCom->Scaling(10.f, 10.f, 10.f);
-	//m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(90.0f));
-
 	return S_OK;
 }
 
@@ -48,6 +45,7 @@ void CWeapon_Narukami::Late_Tick(const _float& fTimeDelta)
 		|| *m_pState == PLAYER_ELEMENTAL_BURST
 		|| *m_pState == PLAYER_ELEMENTAL_BURST_END)
 	{
+		m_isHide = false;
 		_matrix		SocketMatrix = XMLoadFloat4x4(m_pSocketMatrix);
 
 		SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
@@ -58,10 +56,15 @@ void CWeapon_Narukami::Late_Tick(const _float& fTimeDelta)
 
 		m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONBLENDER, this);
 	}
+	else
+		m_isHide = true;
 }
 
 HRESULT CWeapon_Narukami::Render()
 {
+	if (m_isHide)
+		return S_OK;
+
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 

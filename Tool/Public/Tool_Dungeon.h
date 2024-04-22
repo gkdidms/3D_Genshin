@@ -41,6 +41,7 @@ private:
 
     CModel* m_pVIBufferCom = { nullptr };
     CShader* m_pShaderCom = { nullptr };
+    CNavigation* m_pNavigationCom = { nullptr };
 
     string m_strObjectName = { "" };
 
@@ -48,10 +49,15 @@ private:
     wstring m_strComVIBufferName = { L"" };
 
 private:
+    _float3 m_Points[3] = {};
+    _uint m_iPointCount = { 0 };
+
+private:
     HRESULT Add_Components();
     HRESULT Bind_Resource();
 
     void Get_MousePos_On_Dungeon();
+    void Picking_Cell();
 
 public:
     static CTool_Dungeon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

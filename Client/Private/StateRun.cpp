@@ -13,7 +13,7 @@ PLAYER_STATE CStateRun::Enter(PLAYER_STATE CurrentState)
 	if (CurrentState == PLAYER_SPRINT_STOP || CurrentState == PLAYER_JUMP_FOR_RUN)
 		return PLAYER_RUN;
 
-	return PLAYER_RUN_START;
+	return PLAYER_RUN;
 }
 
 PLAYER_STATE CStateRun::Update(const _float& fTimeDelta, class CState_Manager& pStateManager, PLAYER_STATE CurrentState)

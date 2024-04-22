@@ -17,10 +17,10 @@ CModel::CModel(const CModel& rhs)
 	m_iNumMaterials { rhs.m_iNumMaterials },
 	m_Materials{ rhs.m_Materials },
 	//m_Bones { rhs.m_Bones },
+	m_eMeshType { rhs.m_eMeshType },
 	m_iNumAnimations { rhs.m_iNumAnimations },
 	//m_Animations { rhs.m_Animations },
 	m_PreTransformMatrix { rhs.m_PreTransformMatrix },
-	m_eMeshType { rhs.m_eMeshType },
 	m_iRootBoneIndex { rhs.m_iRootBoneIndex }
 {
 	for (auto& MaterialDesc : m_Materials)
@@ -48,39 +48,11 @@ const _float4x4* CModel::Get_BoneCombinedTransformationMatrix(const _char* szBon
 	return (*iter)->Get_CombinedTransformationMatrix();
 }
 
-HRESULT CModel::Initialize_Prototype(CMesh::MESHTYPE eMeshType, const _char* szModelFilePath, _fmatrix PreTransformMatrix, const _char* szBinaryFilePath, CREATETYPE eCreateType)
+HRESULT CModel::Initialize_Prototype(const _char* szModelFilePath, _fmatrix PreTransformMatrix, const _char* szBinaryFilePath)
 {
-	m_eMeshType = eMeshType;
-
 	XMStoreFloat4x4(&m_PreTransformMatrix, PreTransformMatrix);
 
-	if (eCreateType == CREATE_READ)
-	{
- 		if (FAILED(Ready_Model(szModelFilePath, szBinaryFilePath)))
-			return E_FAIL;
-
-		return S_OK;
-	}
-	_uint iFlag = aiProcess_ConvertToLeftHanded | aiProcess_CalcTangentSpace | aiProcess_GenNormals;
-
-	if (CMesh::TYPE_NONANIM == eMeshType)
-		iFlag |= aiProcess_PreTransformVertices;
-
-	m_pAIScene = m_Importer.ReadFile(szModelFilePath,  iFlag);
-	if (nullptr == m_pAIScene)
-		return E_FAIL;
-
-	if (FAILED(Ready_Bones(m_pAIScene->mRootNode, -1)))
-		return E_FAIL;
-	
-	if (FAILED(Ready_Meshes()))
-		return E_FAIL;
-
-	m_iNumMaterials = m_pAIScene->mNumMaterials;
-	if (FAILED(Ready_Materials(szModelFilePath)))
-		return E_FAIL;
-
-	if (FAILED(Ready_Animation()))
+	if (FAILED(Ready_Model(szModelFilePath, szBinaryFilePath)))
 		return E_FAIL;
 
 	return S_OK;
@@ -94,65 +66,6 @@ HRESULT CModel::Initialize(void* pArv)
 void CModel::Render(_uint iMeshIndex)
 {
 	m_Meshes[iMeshIndex]->Render();
-}
-
-HRESULT CModel::Ready_Meshes()
-{
-	m_iNumMeshes = m_pAIScene->mNumMeshes;
-	for (size_t i = 0; i < m_iNumMeshes; ++i)
-	{
-		CMesh* pMesh = CMesh::Create(m_pDevice, m_pContext, m_eMeshType, m_pAIScene->mMeshes[i], XMLoadFloat4x4(&m_PreTransformMatrix), m_Bones);
-		if (nullptr == pMesh)
-			return E_FAIL;
-
-		m_Meshes.emplace_back(pMesh);
-	}
-
-	return S_OK;
-}
-
-HRESULT CModel::Ready_Materials(const char* pModelFilePath)
-{
-	for (size_t i = 0; i < m_iNumMaterials; ++i)
-	{
-		aiMaterial* pAiMaterial = m_pAIScene->mMaterials[i];
-
-		MESH_MATERIAL tMaterialTexture{};
-
-		for (_uint j = aiTextureType_DIFFUSE; j < AI_TEXTURE_TYPE_MAX; ++j)
-		{
-			aiString strTextureFilePath;
-
-			if (FAILED(pAiMaterial->GetTexture(aiTextureType(j), 0, &strTextureFilePath)))
-				continue;
-
-			_char szFileName[MAX_PATH] = "";
-			_char szExt[MAX_PATH] = "";
-			_splitpath_s(strTextureFilePath.data, nullptr, 0, nullptr, 0, szFileName, MAX_PATH, szExt, MAX_PATH);
-
-			_char szDrive[MAX_PATH] = "";
-			_char szDirectory[MAX_PATH] = "";
-			_splitpath_s(pModelFilePath, szDrive, MAX_PATH, szDirectory, MAX_PATH, nullptr, 0, nullptr, 0);
-
-			_char		szFullPath[MAX_PATH] = "";
-			strcpy_s(szFullPath, szDrive);
-			strcat_s(szFullPath, szDirectory);
-			strcat_s(szFullPath, szFileName);
-			strcat_s(szFullPath, szExt);
-
-			_tchar szRealFullPath[MAX_PATH] = L"";
-			MultiByteToWideChar(CP_ACP, 0, szFullPath, strlen(szFullPath), szRealFullPath, MAX_PATH);
-
-			tMaterialTexture.pMaterialTextures[j] = CTexture::Create(m_pDevice, m_pContext, szRealFullPath, 1);
-
-			if (nullptr == tMaterialTexture.pMaterialTextures[j])
-				return E_FAIL;
-		}
-
-		m_Materials.emplace_back(tMaterialTexture);
-	}
-
-	return S_OK;
 }
 
 CTexture* CModel::Ready_Materials(const char* pModelFilePath, const char* pFilePath)
@@ -185,40 +98,6 @@ CTexture* CModel::Ready_Materials(const char* pModelFilePath, const char* pFileP
 		return nullptr;
 
 	return pTexture;
-}
-
-HRESULT CModel::Ready_Bones(const aiNode* pAINode, _int iCountBoneIndex)
-{
-	CBone* pBone = CBone::Create(pAINode, iCountBoneIndex);
-	if (nullptr == pBone)
-		return E_FAIL;
-
-	m_Bones.emplace_back(pBone);
-
-	_uint iParenIndex = m_Bones.size() - 1;
-
-	for (size_t i = 0; i < pAINode->mNumChildren; ++i)
-	{
-		Ready_Bones(pAINode->mChildren[i], iParenIndex);
-	}
-
-	return S_OK;
-}
-
-HRESULT CModel::Ready_Animation()
-{
-	m_iNumAnimations = m_pAIScene->mNumAnimations;
-	
-	for (size_t i = 0; i < m_iNumAnimations; ++i)
-	{
-		CAnimation* pAnimation = CAnimation::Create(m_pAIScene->mAnimations[i], m_Bones);
-		if (nullptr == pAnimation)
-			return E_FAIL;
-
-		m_Animations.emplace_back(pAnimation);
-	}
-	
-	return S_OK;
 }
 
 HRESULT CModel::Ready_Model(const _char* szModelFilePath, const _char* szBinaryFilePath)
@@ -265,6 +144,18 @@ HRESULT CModel::Ready_Model(const _char* szModelFilePath, const _char* szBinaryF
 		iRootBoneIndex++;
 		return false;
 	});
+
+	if (iRootBoneIndex == m_Bones.size())
+	{
+		iRootBoneIndex = 0;
+		find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pBone)->_bool {
+			if (pBone->Compare_NodeName("Bone_Root"))
+				return true;
+
+			iRootBoneIndex++;
+			return false;
+			});
+	}
 
 	m_iRootBoneIndex = iRootBoneIndex;
 
@@ -434,51 +325,57 @@ HRESULT CModel::Bind_BoneMatrices(CShader* pShader, const char* strConstansName,
 
 void CModel::Play_Animation(const _float& fTimeDelta, _float4x4* vMovePos, _bool isLinear)
 {
-
-	if (m_Animations[m_tAnimDesc.iCurrentAnimIndex]->IsFirst() && isLinear)
+	if (m_Animations[m_tAnimDesc.iCurrentAnimIndex]->IsFirst() && isLinear && m_isCheck)
 	{
-		m_Animations[m_tAnimDesc.iCurrentAnimIndex]->Linear_TransformationMatrix(fTimeDelta, m_Bones);
+		m_Animations[m_tAnimDesc.iCurrentAnimIndex]->Linear_TransformationMatrix(fTimeDelta, m_Bones, m_tAnimDesc.isLoop);
 
 		for (auto& pBone : m_Bones)
 			pBone->Update_CombinedTransformMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
 		
-		XMStoreFloat4x4(vMovePos, XMMatrixIdentity());
-		//*vMovePos = m_vAnimSpeed;
+		*vMovePos = m_vAnimSpeed;
+		
 		return;
 	}
 	else
 	{
-		m_Animations[m_tAnimDesc.iCurrentAnimIndex]->Update_TransformationMatrix(fTimeDelta, m_Bones, m_tAnimDesc.isLoop, isLinear);
+		if (m_tAnimDesc.isLoop) m_isCheck = false;
+
+		m_Animations[m_tAnimDesc.iCurrentAnimIndex]->Update_TransformationMatrix(fTimeDelta, m_Bones, m_tAnimDesc.isLoop);
 
 		for (auto& pBone : m_Bones)
 			pBone->Update_CombinedTransformMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
 
-		const _float4x4* CombinedTransformMatrix = m_Bones[m_iRootBoneIndex]->Get_TranfromationMatrix();
+		const _float4x4* CombinedTransformMatrix = m_Bones[m_iRootBoneIndex]->Get_CombinedTransformationMatrix();
 		m_vCurMovePos = *CombinedTransformMatrix;
+
 
 		if (!Get_LoopAnimation_Finished())
 		{
-			_matrix MoveMatrix;
+			// 현재 프레임에서 이전 프레임의 값을 빼줌.
 			XMStoreFloat4x4(vMovePos, XMLoadFloat4x4(&m_vCurMovePos) - XMLoadFloat4x4(&m_vPreMovePos));
-
 			m_vPreMovePos = m_vCurMovePos;
-			//if (!(vMovePos->m[3][2] == 0.f))
-			//	m_vAnimSpeed = *vMovePos;
+
+			if (!(vMovePos->m[3][2] == 0.f)) // 현재 프레임에서 움직임이 있다면 움직인 정도 저장.
+				m_vAnimSpeed = *vMovePos;
+
+			
 		}
 		else
 		{
 			XMStoreFloat4x4(&m_vPreMovePos, XMMatrixIdentity());
 		}
+
+
 	}
 
 	return;
 }
 
-CModel* CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CMesh::MESHTYPE eMeshType, const _char* szModelFilePath, _fmatrix PreTransformMatrix, const _char* szBinaryFilePath, CREATETYPE eCreateType)
+CModel* CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* szModelFilePath, _fmatrix PreTransformMatrix, const _char* szBinaryFilePath)
 {
 	CModel* pInstance = new CModel(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype(eMeshType, szModelFilePath, PreTransformMatrix, szBinaryFilePath, eCreateType)))
+	if (FAILED(pInstance->Initialize_Prototype(szModelFilePath, PreTransformMatrix, szBinaryFilePath)))
 		Safe_Release(pInstance);
 
 	return pInstance;

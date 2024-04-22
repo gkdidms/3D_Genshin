@@ -32,6 +32,7 @@ private:
 public:
     const vector<CLONE_DESC> Get_CloneDescs(OBJECTTYPE eType) const { return m_CloneDesc[eType]; }
     vector<class CTool_Object*> Get_Objects() { return m_Objects; }
+    vector< CGameObject*> Get_Terrains() { return m_Terrains; }
 
 public:
     HRESULT Initialize();

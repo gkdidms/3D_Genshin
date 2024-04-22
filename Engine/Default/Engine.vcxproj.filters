@@ -109,6 +109,15 @@
     <Filter Include="98.ShaderFile">
       <UniqueIdentifier>{0cd706ce-aa18-4e47-810d-97ad32c7691d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\03. Component\Navigation">
+      <UniqueIdentifier>{178c2eda-e803-40b6-b732-83ae7685b1cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\Navigation\Cell">
+      <UniqueIdentifier>{04ad6d77-9a6a-4ce7-9602-440875fb204f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\VIBuffer\Cell">
+      <UniqueIdentifier>{5fbda1a2-cac3-436b-a568-c1be73e36a0e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -206,6 +215,15 @@
     </ClCompile>
     <ClCompile Include="..\private\Picking.cpp">
       <Filter>01. Utility\97. Picking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Navigation.cpp">
+      <Filter>01. Utility\03. Component\Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Cell.cpp">
+      <Filter>01. Utility\03. Component\Navigation\Cell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_Cell.cpp">
+      <Filter>01. Utility\03. Component\VIBuffer\Cell</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -317,10 +335,19 @@
     <ClInclude Include="..\public\Picking.h">
       <Filter>01. Utility\97. Picking</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Navigation.h">
+      <Filter>01. Utility\03. Component\Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Cell.h">
+      <Filter>01. Utility\03. Component\Navigation\Cell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_Cell.h">
+      <Filter>01. Utility\03. Component\VIBuffer\Cell</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Bin\ShaderFiles\Shader_Cell.hlsli">
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Cell.hlsl">
       <Filter>98.ShaderFile</Filter>
-    </None>
+    </FxCompile>
   </ItemGroup>
 </Project>

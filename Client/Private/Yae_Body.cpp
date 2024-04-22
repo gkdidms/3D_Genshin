@@ -165,6 +165,7 @@ void CYae_Body::Change_Animation(const _float& fTimeDelta)
 	{
 		m_iAnim = 36;
 		m_IsLoop = true;
+		m_IsLinear = false;
 		break;
 	}
 	case PLAYER_RUN_STOP:

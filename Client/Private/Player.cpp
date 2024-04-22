@@ -7,6 +7,8 @@
 
 #include "Weapon_Ayus.h"
 
+#include "SkillObj.h"
+
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject { pDevice, pContext },
 	m_pState_Manager { CState_Manager::GetInstance() }
@@ -37,7 +39,13 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(&Desc)))
 		return E_FAIL;
 
-	if (FAILED(Ready_PartObjects()))
+	if (FAILED(Ready_Bodys()))
+		return E_FAIL;
+
+	if (FAILED(Ready_Weapons()))
+		return E_FAIL;
+
+	if (FAILED(Ready_SkillObjs()))
 		return E_FAIL;
 
 	m_pCameraLook = dynamic_cast<CPartObject*>(m_PartObject[m_CurrentPlayerble][PART_BODY])->Get_CameraLook();
@@ -62,24 +70,14 @@ void CPlayer::Tick(const _float& fTimeDelta)
 
 void CPlayer::Late_Tick(const _float& fTimeDelta)
 {
-	_vector vRotation, vScale, vTranslation, vPos;
+	_vector vPos;
 	_float4x4 RootMatrix;
-	_matrix MoveMatrix;
 	_matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
 
 	dynamic_cast<CPartObject*>(m_PartObject[m_CurrentPlayerble][PART_BODY])->Set_PlayerPos(&RootMatrix);
-	XMMatrixDecompose(&vScale, &vRotation, &vTranslation, XMLoadFloat4x4(&RootMatrix));
-	
-	//TODO::루트 애니메이션 적용 다시하기 
-	//XMMatrixRotationQuaternion(vRotation);
-	vScale = XMVector3TransformCoord(vScale, WorldMatrix);
-	vRotation = XMVector3TransformCoord(vRotation, WorldMatrix);
-	vTranslation = XMVector3TransformCoord(vTranslation, WorldMatrix);
-	
-
+	XMStoreFloat4x4(&RootMatrix, XMLoadFloat4x4(&RootMatrix) * -1.f);
 	vPos = XMVector3TransformCoord(XMLoadFloat4x4(&RootMatrix).r[3], WorldMatrix);
-	//_matrix ReaultMatrix = XMMatrixMultiply(WorldMatrix, XMLoadFloat4x4(&PlayerPos));
-	m_pTransformCom->Set_WorldMatrix(MoveMatrix);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSetW(vPos, 1.f));
 	
 	for (auto& pObject : m_PartObject[m_CurrentPlayerble])
 		pObject->Late_Tick(fTimeDelta);
@@ -117,7 +115,7 @@ void CPlayer::Change_Playerble() // 코드 수정하기
 	}
 }
 
-HRESULT CPlayer::Ready_PartObjects()
+HRESULT CPlayer::Ready_Bodys()
 {
 	//PartObject::Body
 	CPartObject::PART_DESC Desc{};
@@ -159,6 +157,13 @@ HRESULT CPlayer::Ready_PartObjects()
 		return E_FAIL;
 	m_PartObject[PLAYER_YAE].emplace_back(pGameObject);
 
+	
+
+	return S_OK;
+}
+
+HRESULT CPlayer::Ready_Weapons()
+{
 	// PartObject::Weapon
 	CWeapon_Ayus::WEAPON_DESC WeaponDesc{};
 	CComponent* pComponent = m_PartObject[PLAYER_TIGHNARI][PART_BODY]->Get_Component(L"Com_Model");
@@ -179,28 +184,24 @@ HRESULT CPlayer::Ready_PartObjects()
 	if (nullptr == WeaponDesc.pBackCombinedTransformationMatrix)
 		return E_FAIL;
 
-	pGameObject = dynamic_cast<CPartObject*>(m_pGameInstance->Clone_Object(L"Prototype_GameObject_Weapon_Ayus", &WeaponDesc));
+	CGameObject* pGameObject = dynamic_cast<CPartObject*>(m_pGameInstance->Clone_Object(L"Prototype_GameObject_Weapon_Ayus", &WeaponDesc));
 	if (nullptr == pGameObject)
 		return E_FAIL;
 	m_PartObject[PLAYER_TIGHNARI].emplace_back(pGameObject);
 
 	// Yae
-	//pComponent = m_PartObject[PLAYER_YAE][PART_BODY]->Get_Component(L"Com_Model");
-	//if (nullptr == pComponent)
-	//	return E_FAIL;
+	pComponent = m_PartObject[PLAYER_YAE][PART_BODY]->Get_Component(L"Com_Model");
+	if (nullptr == pComponent)
+		return E_FAIL;
 
-	//WeaponDesc.pHandCombinedTransformationMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("AO_Bip001_L_Hand");
-	//if (nullptr == WeaponDesc.pHandCombinedTransformationMatrix)
-	//	return E_FAIL;
+	WeaponDesc.pHandCombinedTransformationMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("PRIVATE_WeaponRootCatalyst");
+	if (nullptr == WeaponDesc.pHandCombinedTransformationMatrix)
+		return E_FAIL;
 
-	//WeaponDesc.pBackCombinedTransformationMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("_HemB_R_F01");
-	//if (nullptr == WeaponDesc.pBackCombinedTransformationMatrix)
-	//	return E_FAIL;
-
-	//pGameObject = dynamic_cast<CPartObject*>(m_pGameInstance->Clone_Object(L"Prototype_GameObject_Weapon_Alaya", &WeaponDesc));
-	//if (nullptr == pGameObject)
-	//	return E_FAIL;
-	//m_PartObject[PLAYER_YAE].emplace_back(pGameObject);
+	pGameObject = dynamic_cast<CPartObject*>(m_pGameInstance->Clone_Object(L"Prototype_GameObject_Weapon_Narukami", &WeaponDesc));
+	if (nullptr == pGameObject)
+		return E_FAIL;
+	m_PartObject[PLAYER_YAE].emplace_back(pGameObject);
 
 	// Wanderer
 	pComponent = m_PartObject[PLAYER_WANDERER][PART_BODY]->Get_Component(L"Com_Model");
@@ -211,10 +212,54 @@ HRESULT CPlayer::Ready_PartObjects()
 	if (nullptr == WeaponDesc.pHandCombinedTransformationMatrix)
 		return E_FAIL;
 
-	pGameObject = dynamic_cast<CPartObject*>(m_pGameInstance->Clone_Object(L"Prototype_GameObject_Weapon_Narukami", &WeaponDesc));
+	pGameObject = dynamic_cast<CPartObject*>(m_pGameInstance->Clone_Object(L"Prototype_GameObject_Weapon_Alaya", &WeaponDesc));
 	if (nullptr == pGameObject)
 		return E_FAIL;
 	m_PartObject[PLAYER_WANDERER].emplace_back(pGameObject);
+
+	//Nilou
+	//pComponent = m_PartObject[PLAYER_NILOU][PART_BODY]->Get_Component(L"Com_Model");
+	//if (nullptr == pComponent)
+	//	return E_FAIL;
+
+	//WeaponDesc.pHandCombinedTransformationMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("PRIVATE_WeaponArrow");
+	//if (nullptr == WeaponDesc.pHandCombinedTransformationMatrix)
+	//	return E_FAIL;
+
+	//WeaponDesc.pBackCombinedTransformationMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("PRIVATE_WeaponRootBow");
+	//if (nullptr == WeaponDesc.pBackCombinedTransformationMatrix)
+	//	return E_FAIL;
+
+	//pGameObject = dynamic_cast<CPartObject*>(m_pGameInstance->Clone_Object(L"Prototype_GameObject_Weapon_Regalis", &WeaponDesc));
+	//if (nullptr == pGameObject)
+	//	return E_FAIL;
+	//m_PartObject[PLAYER_NILOU].emplace_back(pGameObject);
+
+	return S_OK;
+}
+
+HRESULT CPlayer::Ready_SkillObjs()
+{
+	// Yae
+	CSkillObj::SKILLOBJ_DESC SKillObjDesc{};
+	CComponent* pComponent = m_PartObject[PLAYER_YAE][PART_BODY]->Get_Component(L"Com_Model");
+	if (nullptr == pComponent)
+		return E_FAIL;
+
+	SKillObjDesc.pParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
+	SKillObjDesc.pState = &m_iState;
+	SKillObjDesc.fSpeedPecSec = 20.f;
+	SKillObjDesc.fRotatePecSec = XMConvertToRadians(45.f);
+
+	SKillObjDesc.pHandCombinedTransformationMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("WeaponR");
+	if (nullptr == SKillObjDesc.pHandCombinedTransformationMatrix)
+		return E_FAIL;
+
+	CGameObject* pGameObject = dynamic_cast<CPartObject*>(m_pGameInstance->Clone_Object(L"Prototype_GameObject_SkillObj_Gohei", &SKillObjDesc));
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	m_PartObject[PLAYER_YAE].emplace_back(pGameObject);
 
 	return S_OK;
 }

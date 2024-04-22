@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "Tool_Object.h"
 #include "Tool_Object_Manager.h"
+#include "Tool_Terrain.h"
 
 IMPLEMENT_SINGLETON(CTool_Manager)
 
@@ -64,6 +65,8 @@ void CTool_Manager::Tick(const _float& fTimeDelta)
     Window_Terrain();
     Window_Object();
     Window_MainBar();
+    Window_Navigation();
+
     Modal_Save();
     Modal_Load();
 
@@ -116,6 +119,15 @@ void CTool_Manager::Window_Terrain()
     ImGui::Text("Terrain Rotation");
     ImGui::SliderFloat("Rotaion", &m_fDungeonDegree, 0.f, 360.f);
 
+    ImGui::Text("Terrain X");
+    ImGui::SliderFloat("X", &m_fDungeonPos.x, 0.f, 1000.f);
+
+    ImGui::Text("Terrain y");
+    ImGui::SliderFloat("y", &m_fDungeonPos.y, 0.f, 1000.f);
+
+    ImGui::Text("Terrain z");
+    ImGui::SliderFloat("z", &m_fDungeonPos.z, 0.f, 1000.f);
+
     ImGui::End();
 }
 
@@ -125,6 +137,7 @@ void CTool_Manager::Window_Object()
 
     ImGui::Checkbox("Terrain Picking", &mTerrainPicking);
     ImGui::Checkbox("Mesh Picking", &IsPickingWithDungeon);
+
     ImGui::NewLine();
     ImGui::Text("Picking MousePos : Terrain");
 
@@ -215,6 +228,17 @@ void CTool_Manager::Window_MainBar()
         ImGui::EndMenu();
     }
     ImGui::EndMainMenuBar();
+}
+
+void CTool_Manager::Window_Navigation()
+{
+    ImGui::Begin("Navigation");
+
+    ImGui::Checkbox("Navigation Picking", &m_isNavigationPicking);
+
+    
+
+    ImGui::End();
 }
 
 void CTool_Manager::Modal_Save()

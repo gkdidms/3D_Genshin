@@ -45,6 +45,7 @@ HRESULT CTool_Dungeon::Initialize(void* pArg)
 
 	m_pTransformCom->Set_Scale(-1.f, -1.f, -1.f);
 
+
 	return S_OK;
 }
 
@@ -56,8 +57,13 @@ void CTool_Dungeon::Tick(const _float& fTimeDelta)
 {
 	if (m_pTool_Manager->Is_PickingWithDungeon() && m_pGameInstance->GetMouseState(DIM_RB) == CInput_Device::TAP)
 		Get_MousePos_On_Dungeon();
+	if (m_pTool_Manager->Is_PickingCell() && m_pGameInstance->GetMouseState(DIM_RB) == CInput_Device::TAP)
+		Get_MousePos_On_Dungeon();
 
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(m_pTool_Manager->Get_DungeonDegree()));
+
+	_float3 vPos = m_pTool_Manager->Get_DungeonPos();
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(vPos.x, vPos.y, vPos.z, 1.f));
 }
 
 void CTool_Dungeon::Late_Tick(const _float& fTimeDelta)
@@ -80,6 +86,8 @@ HRESULT CTool_Dungeon::Render()
 		m_pShaderCom->Begin(0);
 		m_pVIBufferCom->Render(i);
 	}
+
+	m_pNavigationCom->Render();
 	
 	return S_OK;
 }
@@ -90,6 +98,9 @@ HRESULT CTool_Dungeon::Add_Components()
 		return E_FAIL;
 
 	if (FAILED(Add_Component(LEVEL_MAIN, m_strPrototypeVIBufferName, m_strComVIBufferName, reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
+		return E_FAIL;
+
+	if (FAILED(Add_Component(LEVEL_MAIN, L"Prototype_Component_Navigation", L"Com_Navigation", reinterpret_cast<CComponent**>(&m_pNavigationCom))))
 		return E_FAIL;
 
 	return S_OK;
@@ -121,6 +132,28 @@ void CTool_Dungeon::Get_MousePos_On_Dungeon()
 			vMousePos,
 			m_pTool_Manager->Get_CreateObjectIndex())))
 			return;
+	}
+}
+
+void CTool_Dungeon::Picking_Cell()
+{
+	_bool isSuccess = { false };
+
+	_vector vMousePos = m_pGameInstance->Picking(&isSuccess);
+
+	if (isSuccess)
+	{
+		//picking 성공하면 삼각형 정점 그려주기
+		XMStoreFloat3(&m_Points[m_iPointCount], vMousePos);
+
+		++m_iPointCount;
+		if (m_iPointCount == 3)
+		{
+			m_pNavigationCom->Set_Points(m_Points);
+
+			m_iPointCount = 0;
+			ZeroMemory(m_Points, sizeof(_float3) * 3);
+		}
 	}
 }
 

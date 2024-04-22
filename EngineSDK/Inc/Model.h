@@ -17,8 +17,6 @@ public:
         _bool isLoop = { false };
     }ANIM_DESC;
 
-    enum CREATETYPE { CREATE_READ, CREATE_AI };
-
 private:
     CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
     CModel(const CModel& rhs);
@@ -34,7 +32,7 @@ public:
     const _float4x4* Get_BoneCombinedTransformationMatrix(const _char* szBoneName) const;
 
 public:
-    HRESULT Initialize_Prototype(CMesh::MESHTYPE eMeshType, const _char* szModelFilePath, _fmatrix PreTransformMatrix, const _char* szBinaryFilePath, CREATETYPE eCreateType);
+    HRESULT Initialize_Prototype(const _char* szModelFilePath, _fmatrix PreTransformMatrix, const _char* szBinaryFilePath);
     HRESULT Initialize(void* pArv) override;
     void Render(_uint iMeshIndex);
 
@@ -54,6 +52,7 @@ public:
 
         m_Animations[tAnimdesc.iCurrentAnimIndex]->Reset();
         m_tAnimDesc = tAnimdesc;
+        m_isCheck = true;
     }
 
 private:
@@ -87,19 +86,16 @@ private:
     _float4x4 m_vCurMovePos = {};
     _float4x4 m_vPreMovePos = {};
 
-    //_float4 m_vAnimSpeed = {};
+    _float4x4 m_vAnimSpeed = {};
+    _bool m_isCheck = { true };
 
 private:
-    HRESULT Ready_Meshes();
-    HRESULT Ready_Materials(const char* pModelFilePath);
     CTexture* Ready_Materials(const char* pModelFilePath, const char* pFilePath);
-    HRESULT Ready_Bones(const aiNode* pAINode, _int iCountBoneIndex);
-    HRESULT Ready_Animation();
-
     HRESULT Ready_Model(const _char* szModelFilePath, const _char* szBinaryFilePath);
 
 public:
-    static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CMesh::MESHTYPE eMeshType, const _char* szModelFilePath, _fmatrix PreTransformMatrix, const _char* szBinaryFilePath = nullptr,CREATETYPE eCreateType = CREATE_AI);
+    //static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CMesh::MESHTYPE eMeshType, const _char* szModelFilePath, _fmatrix PreTransformMatrix, const _char* szBinaryFilePath = nullptr,CREATETYPE eCreateType = CREATE_AI);
+    static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* szModelFilePath, _fmatrix PreTransformMatrix, const _char* szBinaryFilePath = nullptr);
     virtual CComponent* Clone(void* vArg) override;
     virtual void Free() override;
 };

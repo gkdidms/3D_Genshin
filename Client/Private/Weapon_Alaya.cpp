@@ -27,7 +27,6 @@ HRESULT CWeapon_Alaya::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_pTransformCom->Scaling(10.f, 10.f, 10.f);
-	//m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(90.0f));
 
 	return S_OK;
 }
@@ -42,8 +41,6 @@ void CWeapon_Alaya::Tick(const _float& fTimeDelta)
 
 void CWeapon_Alaya::Late_Tick(const _float& fTimeDelta)
 {
-	_matrix		SocketMatrix = XMMatrixIdentity();
-
 	if (*m_pState == PLAYER_ATTACK_1
 		|| *m_pState == PLAYER_ATTACK_2
 		|| *m_pState == PLAYER_ATTACK_3
@@ -51,21 +48,19 @@ void CWeapon_Alaya::Late_Tick(const _float& fTimeDelta)
 		|| *m_pState == PLAYER_ELEMENTAL_BURST
 		|| *m_pState == PLAYER_ELEMENTAL_BURST_END)
 	{
-		SocketMatrix = XMLoadFloat4x4(m_pSocketMatrix);
+		m_isHide = false;
+		_matrix SocketMatrix = XMLoadFloat4x4(m_pSocketMatrix);
+
+		SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
+		SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
+		SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
+
+		XMStoreFloat4x4(&m_pWorldMatrix, m_pTransformCom->Get_WorldMatrix() * SocketMatrix * XMLoadFloat4x4(m_pParentMatrix));
+
+		m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONBLENDER, this);
 	}
 	else
-	{
-		SocketMatrix = XMLoadFloat4x4(m_pBackMatrix);
-		m_pTransformCom->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), XMConvertToRadians(90.0f));
-	}
-
-	SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
-	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
-	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
-
-	XMStoreFloat4x4(&m_pWorldMatrix, m_pTransformCom->Get_WorldMatrix() * SocketMatrix * XMLoadFloat4x4(m_pParentMatrix));
-
-	m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONBLENDER, this);
+		m_isHide = true;
 }
 
 HRESULT CWeapon_Alaya::Render()

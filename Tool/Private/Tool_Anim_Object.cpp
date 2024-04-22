@@ -39,7 +39,7 @@ void CTool_Anim_Object::Priority_Tick(const _float& fTimeDelta)
 
 void CTool_Anim_Object::Tick(const _float& fTimeDelta)
 {
-	m_pVIBufferCom->Play_Animation(fTimeDelta);
+	//m_pVIBufferCom->Play_Animation(fTimeDelta);
 }
 
 void CTool_Anim_Object::Late_Tick(const _float& fTimeDelta)

@@ -20,28 +20,6 @@ CAnimation::CAnimation(const CAnimation& rhs)
         Safe_AddRef(pChannel);
 }
 
-HRESULT CAnimation::Initialize(aiAnimation* pAiAnimation, const vector<class CBone*> Bones)
-{
-    strcpy_s(m_szName, pAiAnimation->mName.data);
-
-    m_Duration = pAiAnimation->mDuration;
-    m_TickPerSecond = pAiAnimation->mTicksPerSecond;
-    m_iNumChannels = pAiAnimation->mNumChannels;
-
-    m_CurrentKeyFrameIndex.resize(m_iNumChannels);
-
-    for (size_t i = 0; i < m_iNumChannels; ++i)
-    {
-        CChannel* pChannel = CChannel::Create(pAiAnimation->mChannels[i], Bones);
-        if (nullptr == pChannel)
-            return E_FAIL;
-
-        m_Channels.emplace_back(pChannel);
-    }
-
-    return S_OK;
-}
-
 HRESULT CAnimation::Initialize(const char* pName, _double Duration, _double TickPerSecond, _uint iNumChannels, vector<class CChannel*> Channels)
 {
     strcpy_s(m_szName, pName);
@@ -60,15 +38,14 @@ HRESULT CAnimation::Initialize(const char* pName, _double Duration, _double Tick
     return S_OK;
 }
 
-void CAnimation::Update_TransformationMatrix(const _float& fTimeDelta, const vector<CBone*> Bones, _bool isLoop, _bool isLinear)
+void CAnimation::Update_TransformationMatrix(const _float& fTimeDelta, const vector<CBone*> Bones, _bool isLoop)
 {
     m_iCurrentPosition += m_TickPerSecond * fTimeDelta;
-    if (m_IsStart && !isLinear) m_iCurrentPosition *= 2;
 
     if (m_iCurrentPosition >= m_Duration)
     {
         //局聪皋捞记 场
-        m_iCurrentPosition -= m_Duration;
+        m_iCurrentPosition = 0.0;
         ZeroMemory(&m_CurrentKeyFrameIndex.front(), sizeof(_uint) * m_iNumChannels);
 
         if (!isLoop) m_IsFinished = true;
@@ -80,20 +57,19 @@ void CAnimation::Update_TransformationMatrix(const _float& fTimeDelta, const vec
         for (size_t i = 0; i < m_iNumChannels; ++i)
         {
             m_Channels[i]->Update_TransformationMatrix(m_iCurrentPosition, Bones, &m_CurrentKeyFrameIndex[i]);
-            m_IsStart = false;
         }
     }
 }
 
-void CAnimation::Linear_TransformationMatrix(const _float& fTimeDelta, const vector<CBone*> Bones)
+void CAnimation::Linear_TransformationMatrix(const _float& fTimeDelta, const vector<CBone*> Bones, _bool isLoop)
 {
-    double LinearDuration = 7;
+    double LinearDuration = isLoop ? 8 : 5;
     m_iCurrentPosition += m_TickPerSecond * fTimeDelta;
 
     if (m_iCurrentPosition >= LinearDuration)
     {
         //局聪皋捞记 场
-        m_iCurrentPosition -= LinearDuration;
+        m_iCurrentPosition = 0.0;
         m_IsFirst = false;
     }
 
@@ -111,18 +87,8 @@ void CAnimation::Reset()
     m_iCurrentPosition = 0.0;
     m_IsFinished = false;
     m_IsLoopFinished = false;
-    m_IsStart = true;
+    m_IsFirst = true;
     ZeroMemory(&m_CurrentKeyFrameIndex.front(), sizeof(_uint) * m_iNumChannels);
-}
-
-CAnimation* CAnimation::Create(aiAnimation* pAiAnimation, const vector<class CBone*> Bones)
-{
-    CAnimation* pInstance = new CAnimation();
-
-    if (FAILED(pInstance->Initialize(pAiAnimation, Bones)))
-        Safe_Release(pInstance);
-
-    return pInstance;
 }
 
 CAnimation* CAnimation::Clone()

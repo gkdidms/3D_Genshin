@@ -52,7 +52,7 @@ protected:
     _uint* m_pState = { nullptr };
 
 protected:
-    _uint m_iAnim = { 45 };
+    _uint m_iAnim = { 0 };
     _bool m_IsLoop = { false };
     _bool m_IsLinear = { false };
     _int m_iPreAnim = { -1 };
