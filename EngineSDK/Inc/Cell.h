@@ -18,7 +18,17 @@ private:
     virtual ~CCell() = default;
 
 public:
+    _vector Get_Point(TYPE eType) { return XMLoadFloat3(&m_vPoints[eType]); }
+    _int Get_Index() { return m_iIndex; }
+
+public:
     HRESULT Initialize(const _float3* pPoints, _int iIndex);
+    _bool Compare_Points(_fvector vSourPoint, _fvector vDestPoint);
+    _float Compute_Height(_fvector vPosition);
+    _bool isIn(_fvector vPosition, _int* pNeighborsIndex);
+    void SetUp_Neighbor(LINE_TYPE eNeighbor, CCell* pCell) {
+        m_iNeighborIndices[eNeighbor] = pCell->m_iIndex;
+    }
 
 #ifdef _DEBUG
 public:
@@ -31,7 +41,7 @@ private:
 
 private:
     _float3 m_vPoints[POINT_END] = {}; // 삼각형의 좌표를 저장
-    _int m_iNeighborIndices[LINE_END] = {};
+    _int m_iNeighborIndices[LINE_END] = { -1, -1, -1 }; // 인접한 cell index를 저장
 
     _int m_iIndex = { -1 };
 

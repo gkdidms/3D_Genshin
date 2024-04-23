@@ -44,10 +44,10 @@ PLAYER_STATE CStateRun::Update(const _float& fTimeDelta, class CState_Manager& p
 		|| m_pGameInstance->GetKeyState(DIK_S) == CInput_Device::HOLD
 		|| m_pGameInstance->GetKeyState(DIK_D) == CInput_Device::HOLD)
 	{
-		if (CurrentState == PLAYER_RUN_STOP)
-			return PLAYER_RUN_START;
-		else if (CurrentState == PLAYER_RUN)
-			return PLAYER_RUN;
+		//if (CurrentState == PLAYER_RUN_STOP)
+		//	return PLAYER_RUN_START;
+		//else if (CurrentState == PLAYER_RUN)
+		return PLAYER_RUN;
 	}
 
 	return CurrentState;

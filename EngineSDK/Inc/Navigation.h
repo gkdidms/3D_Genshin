@@ -5,6 +5,11 @@ BEGIN(Engine)
 class ENGINE_DLL CNavigation :
     public CComponent
 {
+public:
+    typedef struct tNavigationDesc{
+        _int iIndex;
+    }NAVIGATION_DESC;
+
 private:
     CNavigation(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
     CNavigation(const CNavigation& rhs);
@@ -19,6 +24,10 @@ public:
     virtual HRESULT Initialize(void* pArg) override;
     virtual void Tick() override;
 
+public:
+    _int Find_Index(_fvector vTargetPos, _fvector vTargetRayDir, _fmatrix WorldMatirx);
+    _bool isMove(_fvector vMovePos);
+    _float Compute_Height(_fvector vPosition);
 #ifdef _DEBUG
 public:
     HRESULT Render();
@@ -30,8 +39,14 @@ private:
 
     _uint m_iIndexCount = { 0 };
 
+    _float4x4 m_WorldMatrix = {};
+
+private:
+    _int m_iCurrentIndex = { -1 };
+
 private:
     HRESULT Load_File(const wstring strFilePath);
+    HRESULT SetUp_Neighbors();
 
 public:
     static CNavigation* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring strFilePath);

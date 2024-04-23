@@ -48,6 +48,7 @@ HRESULT CTool_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pC
 
     //디렉토리 받아서 파일 저장하기
     Bind_FileName();
+    Bind_NavigationFileName();
 
 	return S_OK;
 }
@@ -59,8 +60,8 @@ void CTool_Manager::Tick(const _float& fTimeDelta)
     ImGui::NewFrame();
 
 
-    //_bool show_demo_window = true;
-    //ImGui::ShowDemoWindow(&show_demo_window);
+    _bool show_demo_window = true;
+    ImGui::ShowDemoWindow(&show_demo_window);
 
     Window_Terrain();
     Window_Object();
@@ -69,6 +70,9 @@ void CTool_Manager::Tick(const _float& fTimeDelta)
 
     Modal_Save();
     Modal_Load();
+
+    Modal_NavigationSave();
+    Modal_NavigationLoad();
 
     Guizmo_Test();
 }
@@ -137,6 +141,15 @@ void CTool_Manager::Window_Object()
 
     ImGui::Checkbox("Terrain Picking", &mTerrainPicking);
     ImGui::Checkbox("Mesh Picking", &IsPickingWithDungeon);
+
+    ImGui::NewLine();
+    ImGui::Text("Picking MousePos : PlayerPos");
+    ImGui::Checkbox("Player Picking", &m_isPlayerPosPicking);
+    ImGui::InputFloat3("PlayerPos", m_pObject_Manager->Get_PlayerPos());
+    ImGui::Text("Player Navigation Index"); ImGui::SameLine();
+
+    _int iIndex = m_pObject_Manager->Get_PlayerNavigationIndex();
+    ImGui::InputInt("Index", &iIndex);
 
     ImGui::NewLine();
     ImGui::Text("Picking MousePos : Terrain");
@@ -216,32 +229,32 @@ void CTool_Manager::Window_Object()
     ImGui::End();
 }
 
-void CTool_Manager::Window_MainBar()
+void CTool_Manager::Window_MainBar() // 상태바 윈도우 
 {
     ImGui::BeginMainMenuBar();
 
     if (ImGui::BeginMenu("File"))
     {
-        ImGui::MenuItem("Open", nullptr, &IsShowLoadModal);// Load
-        ImGui::MenuItem("Save", nullptr, &IsShowSaveModal);// Save
+        ImGui::MenuItem("FileOpen", nullptr, &IsShowLoadModal);// FileLoad
+        ImGui::MenuItem("FileSave", nullptr, &IsShowSaveModal);// FileSave
+        ImGui::MenuItem("NavigationOpen", nullptr, &IsShowNavigationLoadModal);// NavigationLoad
+        ImGui::MenuItem("NavigationSave", nullptr, &IsShowNavigationSaveModal);// NavigationSave
 
         ImGui::EndMenu();
     }
     ImGui::EndMainMenuBar();
 }
 
-void CTool_Manager::Window_Navigation()
+void CTool_Manager::Window_Navigation() // 내비게이션 윈도우
 {
     ImGui::Begin("Navigation");
 
     ImGui::Checkbox("Navigation Picking", &m_isNavigationPicking);
 
-    
-
     ImGui::End();
 }
 
-void CTool_Manager::Modal_Save()
+void CTool_Manager::Modal_Save() // 파일 저장
 {
     if (IsShowSaveModal)
         ImGui::OpenPopup("SaveFile");
@@ -288,7 +301,7 @@ void CTool_Manager::Modal_Save()
     }
 }
 
-void CTool_Manager::Modal_Load()
+void CTool_Manager::Modal_Load() // 파일 로드
 {
     if (IsShowLoadModal)
         ImGui::OpenPopup("LoadFile");
@@ -323,6 +336,96 @@ void CTool_Manager::Modal_Load()
         {
             ImGui::CloseCurrentPopup();
             IsShowLoadModal = false;
+        }
+
+        ImGui::EndPopup();
+    }
+}
+
+void CTool_Manager::Modal_NavigationSave() // 내비게이션 파일 저장 
+{
+    if (IsShowNavigationSaveModal)
+        ImGui::OpenPopup("SaveNavigationFile");
+
+    if (ImGui::BeginPopupModal("SaveNavigationFile", NULL, ImGuiWindowFlags_MenuBar))
+    {
+        if (ImGui::BeginListBox("File Seleted"))
+        {
+            for (int n = 0; n < m_NavigationFileName.size(); n++)
+            {
+                const bool is_selected = (m_iSaveNavigationFileIndex == n);
+                if (ImGui::Selectable(m_NavigationFileName[n].c_str(), is_selected))
+                {
+                    m_iSaveNavigationFileIndex = n;
+                }
+
+                if (is_selected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndListBox();
+        }
+        ImGui::Checkbox("Create New File ? ", &IsNewFile);
+        ImGui::InputText("New File", m_szNavigationFileName, MAX_PATH);
+
+        if (ImGui::Button("Save"))
+        {
+            // 저장하는 함수 호출 & 불변수 호출
+            if (IsNewFile)
+                m_pObject_Manager->Cell_Save(m_szNavigationFileName);
+            else
+                m_pObject_Manager->Cell_Save(m_NavigationFileName[m_iSaveNavigationFileIndex].c_str());
+
+            Bind_NavigationFileName();
+            ImGui::CloseCurrentPopup();
+            IsShowNavigationSaveModal = false;
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("Close"))
+        {
+            ImGui::CloseCurrentPopup();
+            IsShowNavigationSaveModal = false;
+        }
+
+        ImGui::EndPopup();
+    }
+}
+
+void CTool_Manager::Modal_NavigationLoad() // 내비게이션 파일 로드
+{
+    if (IsShowNavigationLoadModal)
+        ImGui::OpenPopup("LoadNavigationFile");
+
+    if (ImGui::BeginPopupModal("LoadNavigationFile", NULL, ImGuiWindowFlags_MenuBar))
+    {
+        if (ImGui::BeginListBox("File Seleted"))
+        {
+            for (int n = 0; n < m_NavigationFileName.size(); n++)
+            {
+                const bool is_selected = (m_iLoadNavigationFileIndex == n);
+                if (ImGui::Selectable(m_NavigationFileName[n].c_str(), is_selected))
+                {
+                    m_iLoadNavigationFileIndex = n;
+                }
+
+                if (is_selected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndListBox();
+        }
+
+        if (ImGui::Button("Load"))
+        {
+            // 불러오는 함수 호출 & 불변수 호출
+            m_pObject_Manager->Cell_Load(m_NavigationFileName[m_iLoadNavigationFileIndex].c_str());
+
+            ImGui::CloseCurrentPopup();
+            IsShowNavigationLoadModal = false;
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("Close"))
+        {
+            ImGui::CloseCurrentPopup();
+            IsShowNavigationLoadModal = false;
         }
 
         ImGui::EndPopup();
@@ -374,6 +477,32 @@ void CTool_Manager::Bind_FileName()
 	}
 
 	_findclose(handle);
+}
+
+void CTool_Manager::Bind_NavigationFileName()
+{
+    _wfinddata64_t fd;
+    __int64 handle = _wfindfirst64(L"../../Data/Navigation/*.*", &fd);
+    if (handle == -1 || handle == 0)
+        return;
+
+    int iResult = 0;
+
+    char szCurPath[128] = "../Data/Navigation/";
+    char szFullPath[128] = "";
+    char szFileName[MAX_PATH] = "";
+
+    _uint iFileIndex = 0;
+    while (iResult != -1)
+    {
+        wstring FileName(fd.name);
+        string strFileName(FileName.begin(), FileName.end());
+        m_NavigationFileName.emplace_back(strFileName);
+
+        iResult = _wfindnext64(handle, &fd);
+    }
+
+    _findclose(handle);
 }
 
 void CTool_Manager::Guizmo_Test()

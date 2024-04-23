@@ -163,7 +163,6 @@
     <ClInclude Include="..\public\Main_Level.h" />
     <ClInclude Include="..\public\Tool_Anim_Object.h" />
     <ClInclude Include="..\public\Tool_Dungeon.h" />
-    <ClInclude Include="..\public\Tool_Navigation.h" />
     <ClInclude Include="..\public\Tool_Non_Object.h" />
     <ClInclude Include="..\public\Tool_Camera.h" />
     <ClInclude Include="..\Public\Tool_Defines.h" />
@@ -193,7 +192,6 @@
     <ClCompile Include="..\private\Main_Level.cpp" />
     <ClCompile Include="..\private\Tool_Anim_Object.cpp" />
     <ClCompile Include="..\private\Tool_Dungeon.cpp" />
-    <ClCompile Include="..\private\Tool_Navigation.cpp" />
     <ClCompile Include="..\private\Tool_Non_Object.cpp" />
     <ClCompile Include="..\private\Tool_Camera.cpp" />
     <ClCompile Include="..\private\Tool_Manager.cpp" />

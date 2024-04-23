@@ -338,8 +338,6 @@ void CModel::Play_Animation(const _float& fTimeDelta, _float4x4* vMovePos, _bool
 	}
 	else
 	{
-		if (m_tAnimDesc.isLoop) m_isCheck = false;
-
 		m_Animations[m_tAnimDesc.iCurrentAnimIndex]->Update_TransformationMatrix(fTimeDelta, m_Bones, m_tAnimDesc.isLoop);
 
 		for (auto& pBone : m_Bones)
@@ -357,17 +355,12 @@ void CModel::Play_Animation(const _float& fTimeDelta, _float4x4* vMovePos, _bool
 
 			if (!(vMovePos->m[3][2] == 0.f)) // 현재 프레임에서 움직임이 있다면 움직인 정도 저장.
 				m_vAnimSpeed = *vMovePos;
-
-			
 		}
 		else
 		{
 			XMStoreFloat4x4(&m_vPreMovePos, XMMatrixIdentity());
 		}
-
-
 	}
-
 	return;
 }
 

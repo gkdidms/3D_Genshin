@@ -53,6 +53,7 @@ void CDefaultCamera::Tick(const _float& fTimeDelta)
 	m_pTransformCom->LookAt(XMLoadFloat4x4(m_pCameraLook).r[3]);
 
 	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * XMLoadFloat4x4(&m_OrbitMatrix) * ParentMatrix);
+
 	__super::Tick(fTimeDelta);
 }
 

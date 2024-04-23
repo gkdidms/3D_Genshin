@@ -19,8 +19,18 @@ HRESULT CMap::Initialize_Prototype()
 
 HRESULT CMap::Initialize(void* pArg)
 {
+	_float4x4 WorldMatrix = {};
+
+	if (nullptr != pArg)
+	{
+		MAP_DESC* pDesc = static_cast<MAP_DESC*>(pArg);
+		WorldMatrix = pDesc->WorldMatrix;
+	}
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
+
+	m_pTransformCom->Set_WorldMatrix(XMLoadFloat4x4(&WorldMatrix));
 
 	return S_OK;
 }
@@ -47,4 +57,5 @@ void CMap::Free()
 	__super::Free();
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
+	Safe_Release(m_pNavigationCom);
 }

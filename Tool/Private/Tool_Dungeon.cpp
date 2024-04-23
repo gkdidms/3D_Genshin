@@ -21,6 +21,14 @@ CTool_Dungeon::CTool_Dungeon(const CTool_Dungeon& rhs)
 	Safe_AddRef(m_pObject_Manager);
 }
 
+void CTool_Dungeon::Set_Cells(vector<_float3*> Cells)
+{
+	m_Cells = Cells;
+
+	for (auto& Point : m_Cells)
+		m_pNavigationCom->Set_Points(Point);
+}
+
 HRESULT CTool_Dungeon::Initialize_Prototype()
 {
 	return S_OK;
@@ -58,7 +66,9 @@ void CTool_Dungeon::Tick(const _float& fTimeDelta)
 	if (m_pTool_Manager->Is_PickingWithDungeon() && m_pGameInstance->GetMouseState(DIM_RB) == CInput_Device::TAP)
 		Get_MousePos_On_Dungeon();
 	if (m_pTool_Manager->Is_PickingCell() && m_pGameInstance->GetMouseState(DIM_RB) == CInput_Device::TAP)
-		Get_MousePos_On_Dungeon();
+		Picking_Cell();
+	if (m_pTool_Manager->Is_PickingPlayer() && m_pGameInstance->GetMouseState(DIM_RB) == CInput_Device::TAP)
+		Picking_PlayerPos();
 
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(m_pTool_Manager->Get_DungeonDegree()));
 
@@ -135,6 +145,22 @@ void CTool_Dungeon::Get_MousePos_On_Dungeon()
 	}
 }
 
+void CTool_Dungeon::Picking_PlayerPos()
+{
+	_bool isSuccess = { false };
+
+	_vector vMousePos = m_pGameInstance->Picking(&isSuccess);
+
+	if (isSuccess)
+	{
+		_float vPlayerPos[3] = { XMVectorGetX(vMousePos), XMVectorGetY(vMousePos), XMVectorGetZ(vMousePos) };
+		m_pObject_Manager->Set_PlayerPos(vPlayerPos);
+
+		_int iIndex = m_pNavigationCom->Find_Index(vMousePos, m_pGameInstance->Get_RayDir(), m_pTransformCom->Get_WorldMatrix());
+		m_pObject_Manager->Set_PlayerNavigationIndex(iIndex);
+	}
+}
+
 void CTool_Dungeon::Picking_Cell()
 {
 	_bool isSuccess = { false };
@@ -144,15 +170,62 @@ void CTool_Dungeon::Picking_Cell()
 	if (isSuccess)
 	{
 		//picking 성공하면 삼각형 정점 그려주기
-		XMStoreFloat3(&m_Points[m_iPointCount], vMousePos);
+		_float3 vMouseFloat3 = {};
+		XMStoreFloat3(&vMouseFloat3, vMousePos);
+
+		//근처에 있는 정점의 포인트로 좌표 변경
+		Check_Point(&vMouseFloat3);
+
+		XMStoreFloat3(&m_Points[m_iPointCount], XMLoadFloat3(&vMouseFloat3));
 
 		++m_iPointCount;
 		if (m_iPointCount == 3)
 		{
 			m_pNavigationCom->Set_Points(m_Points);
 
+			_float3* vPoint = new _float3[m_iPointCount];
+			memcpy(vPoint, m_Points, sizeof(_float3) * 3);
+			m_Cells.emplace_back(vPoint);
+
 			m_iPointCount = 0;
 			ZeroMemory(m_Points, sizeof(_float3) * 3);
+		}
+	}
+}
+
+void CTool_Dungeon::Check_Point(_float3* vPoint)
+{
+	_float fDistance = 0.4f;
+
+	if (m_Cells.size() <= 0)
+		return;
+
+	for (auto& CellPoints : m_Cells)
+	{
+		if (CellPoints[0].x + fDistance >= (*vPoint).x && CellPoints[0].x - fDistance <= (*vPoint).x)
+		{
+			if (CellPoints[0].z + fDistance >= (*vPoint).z && CellPoints[0].z - fDistance <= (*vPoint).z)
+			{
+				*vPoint = CellPoints[0];
+				return;
+			}
+		}
+		if (CellPoints[1].x + fDistance >= (*vPoint).x && CellPoints[1].x - fDistance <= (*vPoint).x)
+		{
+			if (CellPoints[1].z + fDistance >= (*vPoint).z && CellPoints[1].z - fDistance <= (*vPoint).z)
+			{
+				*vPoint = CellPoints[1];
+				return;
+			}
+				
+		}
+		if (CellPoints[2].x + fDistance >= (*vPoint).x && CellPoints[2].x - fDistance <= (*vPoint).x)
+		{
+			if (CellPoints[2].z + fDistance >= (*vPoint).z && CellPoints[2].z - fDistance <= (*vPoint).z)
+			{
+				*vPoint = CellPoints[2];
+				return;
+			}
 		}
 	}
 }
@@ -180,8 +253,14 @@ CGameObject* CTool_Dungeon::Clone(void* pArg)
 void CTool_Dungeon::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pNavigationCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pVIBufferCom);
+
+	for (auto& Point : m_Cells)
+		Safe_Delete(Point);
+
 	Safe_Release(m_pObject_Manager);
 	Safe_Release(m_pTool_Manager);
 }

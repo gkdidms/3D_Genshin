@@ -6,12 +6,19 @@
 BEGIN(Engine)
 class CShander;
 class CModel;
+class CNavigation;
 END
 
 BEGIN(Client)
 class CMap abstract:
     public CGameObject
 {
+public:
+    typedef struct tMapDesc : public CGameObject::GAMEOBJECT_DESC
+    {
+        _float4x4 WorldMatrix;
+    } MAP_DESC;
+
 protected:
     CMap(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
     CMap(const CMap& rhs);
@@ -28,6 +35,7 @@ public:
 protected:
     CShader* m_pShaderCom = { nullptr };
     CModel* m_pModelCom = { nullptr };
+    CNavigation* m_pNavigationCom = { nullptr };
 
 protected:
     virtual CGameObject* Clone(void* pArg) = 0;

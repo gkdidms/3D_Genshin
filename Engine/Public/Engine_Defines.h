@@ -6,17 +6,22 @@
 #include <DirectXMath.h>
 #include <DirectXCollision.h>
 #include <string>
-#include "fx11/d3dx11effect.h"
-#include "DirectXTK/DDSTextureLoader.h"
-#include "DirectXTK/WICTextureLoader.h"
-#include "DirectXTK/Keyboard.h"
-#include "DirectXTK/Mouse.h"
-#include "fmode/inc/fmod.h"
+#include "fx11\d3dx11effect.h"
+#include "DirectXTK\DDSTextureLoader.h"
+#include "DirectXTK\WICTextureLoader.h"
+#include "DirectXTK\Keyboard.h"
+#include "DirectXTK\Mouse.h"
+#include "DirectXTK\PrimitiveBatch.h"
+#include "DirectXTK\VertexTypes.h"
+#include "DirectXTK\SpriteBatch.h"
+#include "DirectXTK\SpriteFont.h"
+#include "DirectXTK\Effects.h"
+#include "fmode\inc\fmod.h"
 #pragma comment(lib, "fmod_vc.lib")
 
-#include "assimp/scene.h"
-#include "assimp/Importer.hpp"
-#include "assimp/postprocess.h"
+#include "assimp\scene.h"
+#include "assimp\Importer.hpp"
+#include "assimp\postprocess.h"
 
 using namespace DirectX;
 using namespace TriangleTests;

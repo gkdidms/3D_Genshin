@@ -40,6 +40,7 @@ public:
     _bool Is_ShowTerrain() { return IsShowTerrain; }
     _bool Is_PickingWithDungeon() { return IsPickingWithDungeon; }
     _bool Is_PickingCell() { return m_isNavigationPicking; }
+    _bool Is_PickingPlayer() { return m_isPlayerPosPicking; }
 
 public:
     void Set_DungeonPos(_vector vPos) { XMStoreFloat3(&m_fDungeonPos, vPos); }
@@ -50,16 +51,23 @@ public:
     void Render();
 
 private:
-    void Window_Terrain();
-    void Window_Object();
-    void Window_MainBar();
-    void Window_Navigation();
+    void Window_Terrain(); // 터레인 관련된 창
+    void Window_Object(); // 오브젝트 관련된 창
+    void Window_MainBar(); // 상태창 관련된 창
+    void Window_Navigation(); // 내비게이션 관련된 창
 
+private:
     void Modal_Save();
     void Modal_Load();
 
-    void Bind_FileName();
+    void Modal_NavigationSave();
+    void Modal_NavigationLoad();
 
+private:
+    void Bind_FileName();
+    void Bind_NavigationFileName();
+
+private:
     void Guizmo_Test();
 
 private:
@@ -70,10 +78,13 @@ private:
 
 private:
     char m_szNewFileName[MAX_PATH];
+    char m_szNavigationFileName[MAX_PATH];
     _bool IsNewFile = { false };
 
     _bool IsShowSaveModal = { false };
     _bool IsShowLoadModal = { false };
+    _bool IsShowNavigationSaveModal = { false };
+    _bool IsShowNavigationLoadModal = { false };
     _bool IsShowTerrain = { false };
 
     _bool IsPickingWithDungeon = { false };
@@ -82,12 +93,19 @@ private: // Navigation
     _bool m_isNavigationPicking = { false };
 
 private:
+    _bool m_isPlayerPosPicking = { false };
+
+private:
     _int m_iCheckRadioButton = { 0 };
 
 private:
     vector<string> m_FileName;
+    vector<string> m_NavigationFileName;
+
     _int m_iSaveFileIndex = { 0 };
     _int m_iLoadFileIndex = { 0 };
+    _int m_iSaveNavigationFileIndex = { 0 };
+    _int m_iLoadNavigationFileIndex = { 0 };
 
 private:
     _int m_iCurrentPickingObjectIndex = { -1 };

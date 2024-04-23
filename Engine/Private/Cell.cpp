@@ -25,6 +25,69 @@ HRESULT CCell::Initialize(const _float3* pPoints, _int iIndex)
     return S_OK;
 }
 
+_bool CCell::Compare_Points(_fvector vSourPoint, _fvector vDestPoint)
+{
+    if (XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_A]), vSourPoint))
+    {
+        if (XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_B]), vDestPoint)
+            || XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_C]), vDestPoint))
+            return true;
+    }
+    else if (XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_B]), vSourPoint))
+    {
+        if (XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_A]), vDestPoint)
+            || XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_C]), vDestPoint))
+            return true;
+    }
+    else if (XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_C]), vSourPoint))
+    {
+        if (XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_A]), vDestPoint)
+            || XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_B]), vDestPoint))
+            return true;
+    }
+
+    return false;
+}
+
+_float CCell::Compute_Height(_fvector vPosition)
+{
+    _float4 vLocalPos;// 임시로 월드 좌표 넣어주기
+
+    XMStoreFloat4(&vLocalPos, vPosition);
+
+    _vector		vPlane = XMVectorZero();
+
+    vPlane = XMPlaneFromPoints(XMLoadFloat3(&m_vPoints[POINT_A]),
+        XMLoadFloat3(&m_vPoints[POINT_B]),
+        XMLoadFloat3(&m_vPoints[POINT_C]));
+
+    /*
+    ax + by + cz + d = 0
+    y = (-ax - cz - d) / b
+    */
+    return (-XMVectorGetX(vPlane) * vLocalPos.x - XMVectorGetZ(vPlane) * vLocalPos.z - XMVectorGetW(vPlane)) / XMVectorGetY(vPlane);
+}
+
+_bool CCell::isIn(_fvector vPosition, _int* pNeighborsIndex)
+{
+    _vector vSour, vDesc;
+    
+    for (int i = 0; i < LINE_END; ++i)
+    {
+        vSour = vPosition - XMLoadFloat3(&m_vPoints[i]);
+        _vector vLine = XMLoadFloat3(&m_vPoints[(i + 1) % POINT_END]) - XMLoadFloat3(&m_vPoints[i]);
+        vDesc = XMVectorSet(XMVectorGetZ(vLine) * -1.f, 0.f, XMVectorGetX(vLine), 0.f);
+
+        if (XMVectorGetX(XMVector3Dot(XMVector3Normalize(vSour), XMVector3Normalize(vDesc))) > 0)
+        {
+            // 선을 나갔다면 그 선에 인접한 인덱스를 넣어주고 false을 리턴.
+            *pNeighborsIndex = m_iNeighborIndices[i];
+            return false;
+        }
+    }
+    return true;
+}
+
 #ifdef _DEBUG
 HRESULT CCell::Render()
 {

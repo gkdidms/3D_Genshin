@@ -278,6 +278,11 @@ _vector CGameInstance::Picking(_bool* isSuccess)
 	return m_pPicking->Picking(isSuccess);
 }
 
+_vector CGameInstance::Get_RayDir()
+{
+	return m_pPicking->Get_RayDir();
+}
+
 void CGameInstance::Release_Engine()
 {
 	Free();

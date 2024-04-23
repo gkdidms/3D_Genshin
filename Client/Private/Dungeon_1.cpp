@@ -57,6 +57,10 @@ HRESULT CDungeon_1::Render()
 		m_pModelCom->Render(i);
 	}
 
+#ifdef _DEBUG
+	m_pNavigationCom->Render();
+#endif // _DEBUG
+
 	return S_OK;
 }
 
@@ -66,6 +70,9 @@ HRESULT CDungeon_1::Add_Components()
 		return E_FAIL;
 
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Dungeon_1", L"Com_Model", reinterpret_cast<CComponent**>(&m_pModelCom))))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Navigation_Stage_1", L"Com_Navigation", reinterpret_cast<CComponent**>(&m_pNavigationCom))))
 		return E_FAIL;
 
 	return S_OK;

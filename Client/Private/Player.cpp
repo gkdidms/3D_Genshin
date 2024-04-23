@@ -30,13 +30,20 @@ HRESULT CPlayer::Initialize_Prototype()
 
 HRESULT CPlayer::Initialize(void* pArg)
 {
-	CGameObject::GAMEOBJECT_DESC Desc{};
-	Desc.fSpeedPecSec = 20.f;
-	Desc.fRotatePecSec = XMConvertToRadians(60.f);
+	if (nullptr == pArg)
+		return E_FAIL;
+
+	PLAYER_DESC* pDesc = static_cast<PLAYER_DESC*>(pArg);
+	
+	m_vPlayerPos = pDesc->vPlayerPos;
+	m_iPlayerNavigationIndex = pDesc->iPlayerNavigationIndex;
 
 	m_pState_Manager->Set_CurrentState(CState_Manager::STATE_TYPE_IDEL);
 
-	if (FAILED(__super::Initialize(&Desc)))
+	if (FAILED(__super::Initialize(pArg)))
+		return E_FAIL;
+
+	if (FAILED(Add_Components()))
 		return E_FAIL;
 
 	if (FAILED(Ready_Bodys()))
@@ -49,6 +56,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_pCameraLook = dynamic_cast<CPartObject*>(m_PartObject[m_CurrentPlayerble][PART_BODY])->Get_CameraLook();
+	
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(m_vPlayerPos.x, m_vPlayerPos.y, m_vPlayerPos.z, 1.f));
+	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(90.f));
 
 	return S_OK;
 }
@@ -72,13 +82,13 @@ void CPlayer::Late_Tick(const _float& fTimeDelta)
 {
 	_vector vPos;
 	_float4x4 RootMatrix;
-	_matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
 
 	dynamic_cast<CPartObject*>(m_PartObject[m_CurrentPlayerble][PART_BODY])->Set_PlayerPos(&RootMatrix);
 	XMStoreFloat4x4(&RootMatrix, XMLoadFloat4x4(&RootMatrix) * -1.f);
-	vPos = XMVector3TransformCoord(XMLoadFloat4x4(&RootMatrix).r[3], WorldMatrix);
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSetW(vPos, 1.f));
-	
+	m_pTransformCom->Go_Run(XMLoadFloat4x4(&RootMatrix), m_pNavigationCom);
+
+	SetUp_OnTerrain();
+
 	for (auto& pObject : m_PartObject[m_CurrentPlayerble])
 		pObject->Late_Tick(fTimeDelta);
 
@@ -112,6 +122,34 @@ void CPlayer::Change_Playerble() // 코드 수정하기
 	{
 		m_pCameraLook = dynamic_cast<CPartObject*>(m_PartObject[m_CurrentPlayerble][PART_BODY])->Get_CameraLook();
 		m_pState_Manager->Set_CurrentPlayerble(m_CurrentPlayerble);
+	}
+}
+
+HRESULT CPlayer::Add_Components()
+{
+	CNavigation::NAVIGATION_DESC NavigationDesc = {};
+	NavigationDesc.iIndex = m_iPlayerNavigationIndex;
+
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Navigation_Stage_1", L"Com_Navigation", reinterpret_cast<CComponent**>(&m_pNavigationCom), &NavigationDesc)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+void CPlayer::SetUp_OnTerrain()
+{
+	// 높이 조정
+	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+	_float fHeight = m_pNavigationCom->Compute_Height(vPos);
+
+	if (m_iState != PLAYER_JUMP)
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSetY(vPos, fHeight));
+	else
+	{
+		//점프하고 있을때 
+		if (XMVectorGetY(vPos) <= fHeight)
+			m_iState = PLAYER_FALL_GROUND;
 	}
 }
 
@@ -334,6 +372,7 @@ void CPlayer::Free()
 	__super::Free();
 
 	Safe_Release(m_pState_Manager);
+	Safe_Release(m_pNavigationCom);
 
 	for (auto& PartObjects : m_PartObject)
 	{

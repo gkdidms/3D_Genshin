@@ -117,7 +117,66 @@ HRESULT CTool_Object_Manager::Add_CloneObject(OBJECTTYPE eType, wstring strLayer
     return S_OK;
 }
 
-HRESULT CTool_Object_Manager::Save(const char* pFileName)
+HRESULT CTool_Object_Manager::Cell_Save(const _char* pFileName)
+{
+	char pFilePath[MAX_PATH] = "../../Data/Navigation/";
+	strcat_s(pFilePath, pFileName);
+
+	ofstream ofs(pFilePath, ios::binary | ios::out);
+
+	if (ofs.fail())
+		return E_FAIL;
+
+	vector<_float3*> Cells = dynamic_cast<CTool_Dungeon*>(m_Terrains[0])->Get_Cells();
+
+	_uint NumCells = Cells.size();
+	ofs.write((_char*)&NumCells, sizeof(_uint));
+
+	for (auto& Point : Cells)
+	{
+		ofs.write((_char*)Point, sizeof(_float3) * 3);
+	}
+
+	ofs.close();
+
+	return S_OK;
+}
+
+HRESULT CTool_Object_Manager::Cell_Load(const _char* pFileName)
+{
+	if (m_Terrains.size() == 0)
+		return S_OK;
+		
+	char pFilePath[MAX_PATH] = "../../Data/Navigation/";
+	strcat_s(pFilePath, pFileName);
+
+	ifstream ifs(pFilePath, ios::binary | ios::in);
+
+	if (ifs.fail())
+		return E_FAIL;
+
+	vector<_float3*> Cells;
+
+	_uint NumCells = { 0 };
+	ifs.read((_char*)&NumCells, sizeof(_uint));
+
+	for (size_t i = 0; i < NumCells; ++i)
+	{
+		_float3* vPoint = new _float3[3];
+		ifs.read((_char*)vPoint, sizeof(_float3) * 3);
+
+		Cells.emplace_back(vPoint);
+	}
+
+	
+	dynamic_cast<CTool_Dungeon*>(m_Terrains[0])->Set_Cells(Cells);
+
+	ifs.close();
+
+	return S_OK;
+}
+
+HRESULT CTool_Object_Manager::Save(const _char* pFileName)
 {
 	char pFilePath[MAX_PATH] = "../../Data/Stage/";
 	strcat_s(pFilePath, pFileName);
@@ -126,6 +185,10 @@ HRESULT CTool_Object_Manager::Save(const char* pFileName)
 
 	if (ofs.fail())
 		return E_FAIL;
+
+	//플레이어 위치 저장
+	ofs.write((_char*)&m_vPlayerPos, sizeof(_float) * 3);
+	ofs.write((_char*)&m_iPlayerNavigationIndex, sizeof(_int));
 
 	//지형 (하나)
 	_uint iNumDungeon = m_Terrains.size();
@@ -167,7 +230,7 @@ HRESULT CTool_Object_Manager::Save(const char* pFileName)
 	return S_OK;
 }
 
-HRESULT CTool_Object_Manager::Load(const char* pFileName)
+HRESULT CTool_Object_Manager::Load(const _char* pFileName)
 {
 	Release_Object();
 
@@ -178,6 +241,10 @@ HRESULT CTool_Object_Manager::Load(const char* pFileName)
 
 	if (ifs.fail())
 		return E_FAIL;
+	
+	//플레이어
+	ifs.read((_char*)&m_vPlayerPos, sizeof(_float) * 3);
+	ifs.read((_char*)&m_iPlayerNavigationIndex, sizeof(_int));
 
 	//지형 (하나)
 	_uint iNumDungeon = { 0 };

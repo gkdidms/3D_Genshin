@@ -55,9 +55,6 @@
     <Filter Include="02. GameObject\Object\NonObject">
       <UniqueIdentifier>{283f26d3-943e-4aa4-a75a-b99cbe119559}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\Navigation">
-      <UniqueIdentifier>{3fa5bb6e-7238-4bbf-91dd-7a9e1de22f37}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -147,9 +144,6 @@
     <ClInclude Include="..\public\Tool_Object.h">
       <Filter>02. GameObject\Object</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Tool_Navigation.h">
-      <Filter>02. GameObject\Navigation</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -233,9 +227,6 @@
     </ClCompile>
     <ClCompile Include="..\private\Tool_Object.cpp">
       <Filter>02. GameObject\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Tool_Navigation.cpp">
-      <Filter>02. GameObject\Navigation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

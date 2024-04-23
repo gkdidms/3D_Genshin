@@ -80,6 +80,7 @@ public: //Input_Device
 
 public: // Picking
     _vector Picking(_bool* isSuccess);
+    _vector Get_RayDir();
 
 private:
     class CGraphic_Device* m_pGraphic_Device = { nullptr };

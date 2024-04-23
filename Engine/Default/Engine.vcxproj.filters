@@ -118,6 +118,18 @@
     <Filter Include="01. Utility\03. Component\VIBuffer\Cell">
       <UniqueIdentifier>{5fbda1a2-cac3-436b-a568-c1be73e36a0e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\03. Component\Collider">
+      <UniqueIdentifier>{ef81ff15-1ad1-4ea6-be31-8d36e84470bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\Collider\Bounding">
+      <UniqueIdentifier>{7d312f7f-ca19-48dd-82cd-10e27fbd0d3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\Collider\Bounding\AABB">
+      <UniqueIdentifier>{b2cb3b84-d6c0-411a-9bcb-c8874f51b42d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\Collider\DebugDraw">
+      <UniqueIdentifier>{8687d724-14a7-4a55-9afd-30f457f4f810}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -224,6 +236,18 @@
     </ClCompile>
     <ClCompile Include="..\private\VIBuffer_Cell.cpp">
       <Filter>01. Utility\03. Component\VIBuffer\Cell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Collider.cpp">
+      <Filter>01. Utility\03. Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Bounding.cpp">
+      <Filter>01. Utility\03. Component\Collider\Bounding</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Bounding_AABB.cpp">
+      <Filter>01. Utility\03. Component\Collider\Bounding\AABB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\DebugDraw.cpp">
+      <Filter>01. Utility\03. Component\Collider\DebugDraw</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -343,6 +367,18 @@
     </ClInclude>
     <ClInclude Include="..\public\VIBuffer_Cell.h">
       <Filter>01. Utility\03. Component\VIBuffer\Cell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Collider.h">
+      <Filter>01. Utility\03. Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Bounding.h">
+      <Filter>01. Utility\03. Component\Collider\Bounding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Bounding_AABB.h">
+      <Filter>01. Utility\03. Component\Collider\Bounding\AABB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DebugDraw.h">
+      <Filter>01. Utility\03. Component\Collider\DebugDraw</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -34,6 +34,13 @@ public:
     vector<class CTool_Object*> Get_Objects() { return m_Objects; }
     vector< CGameObject*> Get_Terrains() { return m_Terrains; }
 
+    _float* Get_PlayerPos() { return m_vPlayerPos; }
+    _int Get_PlayerNavigationIndex() { return m_iPlayerNavigationIndex; }
+
+public:
+    void Set_PlayerPos(_float* vPlayerPos) { memcpy(m_vPlayerPos, vPlayerPos, sizeof(_float) * 3); }
+    void Set_PlayerNavigationIndex(_int iIndex) { m_iPlayerNavigationIndex = iIndex; }
+
 public:
     HRESULT Initialize();
     void Priority_Tick(const _float& fTimeDelta);
@@ -43,15 +50,22 @@ public:
     HRESULT Add_CloneObject(OBJECTTYPE eType, wstring strLayerTag, _vector vObjPos, _uint iObjectIndex);
 
 public:
-    HRESULT Save(const char* pFileName);
-    HRESULT Load(const char* pFileName);
+    HRESULT Save(const _char* pFileName);
+    HRESULT Load(const _char* pFileName);
+
+    HRESULT Cell_Save(const _char* pFileName);
+    HRESULT Cell_Load(const _char* pFileName);
     
 private:
     CGameInstance* m_pGameInstance = { nullptr };
     vector<class CTool_Object*> m_Objects;
     vector<CGameObject*> m_Terrains;
     vector<CLONE_DESC> m_CloneDesc[OBJECT_END];
-    
+
+private:
+    _float m_vPlayerPos[3] = { 0.f, 0.f, 0.f };
+    _int m_iPlayerNavigationIndex = { -1 };
+
 public:
     void Release_Object();
     virtual void Free();

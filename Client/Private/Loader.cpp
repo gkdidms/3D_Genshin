@@ -93,7 +93,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	lstrcpy(m_szLoadingText, TEXT("플레이어 모델를(을) 로딩 중 입니다."));
 
-	_matrix PreTransformMatrix = XMMatrixScaling(0.1f, 0.1f, 0.1f) *  XMMatrixRotationY(XMConvertToRadians(180.0f));
+	_matrix PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) *  XMMatrixRotationY(XMConvertToRadians(180.0f));
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Tighnari", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Player/Tighnari/Tighnari.fbx", PreTransformMatrix, "../../Data/Tighnari.dat"))))
 		return E_FAIL;
 
@@ -108,7 +108,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	lstrcpy(m_szLoadingText, TEXT("무기 모델를(을) 로딩 중 입니다."));
 
-	PreTransformMatrix = XMMatrixIdentity();
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Ayus", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Ayus/Ayus.fbx", PreTransformMatrix, "../../Data/Weapon_Ayus.dat"))))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Alaya", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Alaya/Alaya.fbx", PreTransformMatrix, "../../Data/Weapon_Alaya.dat"))))
@@ -119,6 +118,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("스킬 오브젝트 모델를(을) 로딩 중 입니다."));
+	PreTransformMatrix = XMMatrixIdentity();
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Gohei", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SkillObj/Yae_Gohei/Gohei.fbx", PreTransformMatrix, "../../Data/SkillObj_Gohei.dat"))))
 		return E_FAIL;
 
@@ -139,6 +139,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	lstrcpy(m_szLoadingText, TEXT("컴포넌트 로딩 중 입니다."));
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_VIBuffer_Terrain", CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Height1.bmp")))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Navigation_Stage_1", CNavigation::Create(m_pDevice, m_pContext, TEXT("../../Data/Navigation/Navigation_Stage_1.dat")))))
 		return E_FAIL;
 
 	/*객체 원형 로딩*/
@@ -232,6 +235,22 @@ HRESULT CLoader::Open_File(LEVEL_STATE eNextLevel)
 	if (ifs.fail())
 		return E_FAIL;
 
+	//플레이어
+	_float3 vPlayerPos = {};
+	_int iPlayerNavigationIndex = { 0 };
+	ifs.read((_char*)&vPlayerPos, sizeof(_float3));
+	ifs.read((_char*)&iPlayerNavigationIndex, sizeof(_int));
+
+	CPlayer::PLAYER_DESC Desc = {};
+	Desc.vPlayerPos = vPlayerPos;
+	Desc.iPlayerNavigationIndex = iPlayerNavigationIndex;
+	Desc.fSpeedPecSec = 20.f;
+	Desc.fRotatePecSec = XMConvertToRadians(60.f);
+
+	//플레이어 생성
+	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Player", L"Layer_Player", &Desc)))
+		return E_FAIL;
+
 	//지형 (하나)
 	_uint iNumDungeon = { 0 };
 	ifs.read((_char*)&iNumDungeon, sizeof(_uint));
@@ -245,6 +264,13 @@ HRESULT CLoader::Open_File(LEVEL_STATE eNextLevel)
 		ifs.read((_char*)pDungeonName, iNumDungeonObjectName);
 
 		Ready_Object(pDungeonName, L"Layer_Map");
+
+		//지형 월드 행렬 넣어주기
+		_float4x4 WorldMatrix = {};
+		ifs.read((_char*)&WorldMatrix, sizeof(_float4x4));
+
+		CTransform* pTransform = dynamic_cast<CTransform*>( m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, TEXT("Layer_Map"), TEXT("Com_Transform")));
+		pTransform->Set_WorldMatrix(XMLoadFloat4x4(&WorldMatrix));
 	}
 
 	_uint iNumObjects = { 0 };

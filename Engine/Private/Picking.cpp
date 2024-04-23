@@ -53,7 +53,15 @@ _vector CPicking::Picking(_bool* isSuccess)
 		*isSuccess = false;
 
 	vMousePos = XMVector3TransformCoord(vMousePos, m_pGameInstance->Get_Transform_Inverse_Matrix(CPipeLine::D3DTS_PROJ));
+
+	_vector	vRayDir, vRayPos;
+	vRayPos = { 0.f, 0.f, 0.f };
+	vRayDir = vMousePos - vRayPos;
+
 	vMousePos = XMVector3TransformCoord(vMousePos, m_pGameInstance->Get_Transform_Inverse_Matrix(CPipeLine::D3DTS_VIEW));
+	vRayDir = XMVector3TransformNormal(vRayDir, m_pGameInstance->Get_Transform_Inverse_Matrix(CPipeLine::D3DTS_VIEW));
+
+	XMStoreFloat3(&m_vRayDir, vRayDir);
 
 	return vMousePos;
 }

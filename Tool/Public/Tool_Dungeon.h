@@ -26,6 +26,10 @@ private:
 
 public:
     string Get_ObjectName() { return m_strObjectName; }
+    const vector<_float3*> Get_Cells() { return m_Cells; }
+
+public:
+    void Set_Cells(vector<_float3*> Cells);
 
 public:
     virtual HRESULT Initialize_Prototype() override;
@@ -52,12 +56,16 @@ private:
     _float3 m_Points[3] = {};
     _uint m_iPointCount = { 0 };
 
+    vector<_float3*> m_Cells;
+
 private:
     HRESULT Add_Components();
     HRESULT Bind_Resource();
 
     void Get_MousePos_On_Dungeon();
+    void Picking_PlayerPos();
     void Picking_Cell();
+    void Check_Point(_float3* vPoint);
 
 public:
     static CTool_Dungeon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

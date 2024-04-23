@@ -12,6 +12,9 @@ private:
     virtual ~CPicking() = default;
 
 public:
+    _vector Get_RayDir() { return XMLoadFloat3(&m_vRayDir); }
+
+public:
     HRESULT Initialize(HWND hWnd);
     _vector Picking(_bool* isSuccess);
 
@@ -24,6 +27,8 @@ private:
 
     _float m_fWinSizeX = { 0.f };
     _float m_fWinSizeY = { 0.f };
+
+    _float3 m_vRayDir = {};
 
 public:
     static CPicking* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, HWND hWnd);
