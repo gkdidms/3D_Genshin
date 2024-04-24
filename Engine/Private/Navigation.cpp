@@ -20,9 +20,9 @@ CNavigation::CNavigation(const CNavigation& rhs)
         Safe_AddRef(pCell);
 }
 
-void CNavigation::Set_Points(const _float3* vPoints)
+void CNavigation::Set_Points(const _float3* vPoints, _int OptionType)
 {
-    CCell* pCell = CCell::Create(m_pDevice, m_pContext, vPoints, m_iIndexCount++);
+    CCell* pCell = CCell::Create(m_pDevice, m_pContext, vPoints, m_iIndexCount++, CCell::OPTION(OptionType));
     if (nullptr == pCell)
         return;
 
@@ -93,15 +93,36 @@ _int CNavigation::Find_Index(_fvector vTargetPos, _fvector vTargetRayDir, _fmatr
 HRESULT CNavigation::Render()
 {
     XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());
+    m_WorldMatrix.m[3][1] += 0.1f;
     m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix);
 
     m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(CPipeLine::D3DTS_VIEW));
     m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(CPipeLine::D3DTS_PROJ));
 
-    m_pShaderCom->Begin(0);
-
     for (auto& pCell : m_Cells)
+    {
+        _vector vColor{};
+        if (pCell->Get_Option() == CCell::OPTION_NONE)
+        {
+            vColor = XMVectorSet(0.f, 0.f, 1.f, 1.f);
+            m_pShaderCom->Bind_RawValue("g_vColor", &vColor, sizeof(_vector));
+        }
+            
+        else if (pCell->Get_Option() == CCell::OPTION_STAIRS)
+        {
+            vColor = XMVectorSet(1.f, 0.f, 0.f, 1.f);
+            m_pShaderCom->Bind_RawValue("g_vColor", &vColor, sizeof(_vector));
+        }
+        else if (pCell->Get_Option() == CCell::OPTION_FLY)
+        {
+            vColor = XMVectorSet(0.f, 1.f, 0.f, 1.f);
+            m_pShaderCom->Bind_RawValue("g_vColor", &vColor, sizeof(_vector));
+        }
+
+        m_pShaderCom->Begin(0);
+
         pCell->Render();
+    }
 
     return S_OK;
 }
@@ -124,7 +145,10 @@ HRESULT CNavigation::Load_File(const wstring strFilePath)
         _float3* vPoint = new _float3[3];
         ifs.read((_char*)vPoint, sizeof(_float3) * 3);
 
-        CCell* pCell = CCell::Create(m_pDevice, m_pContext, vPoint, i);
+        _int iOption = { 0 };
+        ifs.read((_char*)&iOption, sizeof(_int));
+
+        CCell* pCell = CCell::Create(m_pDevice, m_pContext, vPoint, i, CCell::OPTION(iOption));
 
         m_Cells.emplace_back(pCell);
         Safe_Delete(vPoint);

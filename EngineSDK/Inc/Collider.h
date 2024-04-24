@@ -20,12 +20,25 @@ private:
 public:
     virtual HRESULT Initialize_Prototype();
     virtual HRESULT Initialize(void* pArg);
-    virtual void Tick();
+    virtual void Tick(_fmatrix WorldMatirx);
+
+#ifdef _DEBUG
+public:
+    HRESULT Render();
+#endif // _DEBUG
+
 
 private:
     TYPE m_ColliderType = { COLLIDER_END };
 
     class CBounding* m_pCurrentBounding = { nullptr };
+
+#ifdef _DEBUG
+private:
+    PrimitiveBatch<VertexPositionColor>* m_pBatch = { nullptr };
+    BasicEffect* m_pShader = { nullptr };
+    ID3D11InputLayout* m_pInputLayout = { nullptr };
+#endif
 
 public:
     static CCollider* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -76,10 +76,7 @@ void CPlayer::Tick(const _float& fTimeDelta)
 	
 	for (auto& pObject : m_PartObject[m_CurrentPlayerble])
 		pObject->Tick(fTimeDelta);
-}
 
-void CPlayer::Late_Tick(const _float& fTimeDelta)
-{
 	_vector vPos;
 	_float4x4 RootMatrix;
 
@@ -88,6 +85,13 @@ void CPlayer::Late_Tick(const _float& fTimeDelta)
 	m_pTransformCom->Go_Run(XMLoadFloat4x4(&RootMatrix), m_pNavigationCom);
 
 	SetUp_OnTerrain();
+
+	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
+}
+
+void CPlayer::Late_Tick(const _float& fTimeDelta)
+{
+	
 
 	for (auto& pObject : m_PartObject[m_CurrentPlayerble])
 		pObject->Late_Tick(fTimeDelta);
@@ -99,6 +103,10 @@ HRESULT CPlayer::Render()
 {
 	for (auto& pObject : m_PartObject[m_CurrentPlayerble])
 		pObject->Render();
+
+#ifdef _DEBUG
+	m_pColliderCom->Render();
+#endif // _DEBUG
 
 	return S_OK;
 }
@@ -133,23 +141,44 @@ HRESULT CPlayer::Add_Components()
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Navigation_Stage_1", L"Com_Navigation", reinterpret_cast<CComponent**>(&m_pNavigationCom), &NavigationDesc)))
 		return E_FAIL;
 
+	CBounding_AABB::BOUNDING_AABB_DESC ColliderDesc = {};
+	ColliderDesc.eType = CCollider::COLLIDER_AABB;
+	ColliderDesc.vExtents = _float3{ 0.5f, 0.8f, 0.5f };
+	ColliderDesc.vCenter = _float3{ 0.f, ColliderDesc.vExtents.y, 0.f };
+	
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Collider", L"Com_Collider", reinterpret_cast<CComponent**>(&m_pColliderCom), &ColliderDesc)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
 void CPlayer::SetUp_OnTerrain()
 {
+	if (m_IsElementalAir || (m_CurrentPlayerble == PLAYER_WANDERER && m_iState == PLAYER_ELEMENTAL_END))
+	{
+		if (m_iState != PLAYER_FALL_ATTACK_LOOP)
+			return;
+	}
+		
 	// 높이 조정
 	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
 	_float fHeight = m_pNavigationCom->Compute_Height(vPos);
 
-	if (m_iState != PLAYER_JUMP)
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSetY(vPos, fHeight));
-	else
-	{
+	if (m_iState == PLAYER_JUMP)
+	{		
 		//점프하고 있을때 
 		if (XMVectorGetY(vPos) <= fHeight)
 			m_iState = PLAYER_FALL_GROUND;
+	}
+	else if (m_IsElementalAir && m_iState == PLAYER_FALL_ATTACK_LOOP)
+	{
+		if (XMVectorGetY(vPos) <= fHeight)
+			m_iState = PLAYER_ELEMENTAL_END;
+	}
+	else
+	{
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSetY(vPos, fHeight));
 	}
 }
 
@@ -373,6 +402,7 @@ void CPlayer::Free()
 
 	Safe_Release(m_pState_Manager);
 	Safe_Release(m_pNavigationCom);
+	Safe_Release(m_pColliderCom);
 
 	for (auto& PartObjects : m_PartObject)
 	{

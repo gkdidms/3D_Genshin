@@ -26,7 +26,7 @@ HRESULT CYae_Body::Initialize(void* pArg)
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
-	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ 48, true });
+	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ 48, true, true, false });
 	return S_OK;
 }
 
@@ -43,7 +43,7 @@ void CYae_Body::Tick(const _float& fTimeDelta)
 
 	Change_Animation(fTimeDelta);
 
-	m_pModelCom->Play_Animation(fTimeDelta, &m_PlayerMovePos, m_IsLinear);
+	m_pModelCom->Play_Animation(fTimeDelta, &m_PlayerMovePos);
 }
 
 void CYae_Body::Late_Tick(const _float& fTimeDelta)
@@ -88,6 +88,7 @@ HRESULT CYae_Body::Bind_ResourceData()
 
 void CYae_Body::Change_Animation(const _float& fTimeDelta)
 {
+	m_IsLinearSpeed = false;
 	m_IsLinear = true;
 	switch (*m_pState)
 	{
@@ -166,6 +167,7 @@ void CYae_Body::Change_Animation(const _float& fTimeDelta)
 		m_iAnim = 36;
 		m_IsLoop = true;
 		m_IsLinear = false;
+		m_IsLinearSpeed = true;
 		break;
 	}
 	case PLAYER_RUN_STOP:
@@ -221,7 +223,6 @@ void CYae_Body::Change_Animation(const _float& fTimeDelta)
 	{
 		m_iAnim = 48;
 		m_IsLoop = true;
-		m_IsLinear = false;
 		break;
 	}
 	case PLAYER_IDLE_PUT_AWAY:
@@ -235,7 +236,7 @@ void CYae_Body::Change_Animation(const _float& fTimeDelta)
 		break;
 	}
 
-	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ m_iAnim, m_IsLoop });
+	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ m_iAnim, m_IsLoop, m_IsLinear, m_IsLinearSpeed });
 
 }
 

@@ -17,11 +17,11 @@ protected:
 
 public:
     virtual HRESULT Initialize(const void* pArg) = 0;
-    virtual void Tick();
+    virtual void Tick(_fmatrix WorldMatrix);
 
 #ifdef _DEBUG
 public:
-    virtual HRESULT Render();
+    virtual HRESULT Render(PrimitiveBatch<VertexPositionColor>* pBatch);
 #endif // _DEBUG
 
 protected:

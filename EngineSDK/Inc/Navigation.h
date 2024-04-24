@@ -16,7 +16,7 @@ private:
     virtual ~CNavigation() = default;
 
 public:
-    void Set_Points(const _float3* vPoints);
+    void Set_Points(const _float3* vPoints, _int OptionType);
 
 public:
     virtual HRESULT Initialize_Prototype(); // Tool¿ë

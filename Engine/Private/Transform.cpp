@@ -79,7 +79,7 @@ void CTransform::Go_Run(const _matrix vMoveMatrix, CNavigation* pNavigationCom)
 	Set_State(CTransform::STATE_POSITION, vPos);
 }
 
-void CTransform::Go_Straight(const _float& fTimeDelta, CNavigation* pNavigationCom)
+void CTransform::Go_Straight(const _float& fTimeDelta)
 {
 	_vector vPosition = Get_State(STATE_POSITION);
 	_vector vLook = Get_State(STATE_LOOK);
@@ -87,19 +87,16 @@ void CTransform::Go_Straight(const _float& fTimeDelta, CNavigation* pNavigationC
 	vPosition += XMVector3Normalize(vLook) * m_fSpeedPerSec * fTimeDelta;
 
 
-
 	Set_State(STATE_POSITION, vPosition);
 }
 
-void CTransform::Go_Backwork(const _float& fTimeDelta, CNavigation* pNavigationCom)
+void CTransform::Go_Backwork(const _float& fTimeDelta)
 {
 	_vector vPosition = Get_State(STATE_POSITION);
 	_vector vLook = Get_State(STATE_LOOK);
 
 	vPosition -= XMVector3Normalize(vLook) * m_fSpeedPerSec * fTimeDelta;
 
-	if (pNavigationCom->isMove(vPosition))
-		return;
 
 	Set_State(STATE_POSITION, vPosition);
 }

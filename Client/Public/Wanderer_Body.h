@@ -32,7 +32,7 @@ private:
     const _uint* m_pDirState = { nullptr };
     const _bool* m_pElementalAir = { nullptr };
 
-    _float m_fAirSpeed = { 130.f };
+    _float m_fAirSpeed = { 5.f };
     _float m_fAirStartTime = { 0.f };
 
 public:

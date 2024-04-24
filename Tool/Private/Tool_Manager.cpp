@@ -250,6 +250,9 @@ void CTool_Manager::Window_Navigation() // 내비게이션 윈도우
     ImGui::Begin("Navigation");
 
     ImGui::Checkbox("Navigation Picking", &m_isNavigationPicking);
+    ImGui::RadioButton("None", &m_iNavigationOption, 0); ImGui::SameLine();
+    ImGui::RadioButton("Stairs", &m_iNavigationOption, 1); ImGui::SameLine();
+    ImGui::RadioButton("Fly", &m_iNavigationOption, 2); ImGui::SameLine();
 
     ImGui::End();
 }
@@ -443,7 +446,7 @@ void CTool_Manager::Release_Tool()
 
 void CTool_Manager::Bind_FileName()
 {
-
+    m_FileName.clear();
     // _finddata_t : <io.h>에서 제공하며 파일 정보를 저장하는 구조체
     _wfinddata64_t fd;
     __int64 handle = _wfindfirst64(L"../../Data/Stage/*.*", &fd);
@@ -481,6 +484,8 @@ void CTool_Manager::Bind_FileName()
 
 void CTool_Manager::Bind_NavigationFileName()
 {
+    m_NavigationFileName.clear();
+
     _wfinddata64_t fd;
     __int64 handle = _wfindfirst64(L"../../Data/Navigation/*.*", &fd);
     if (handle == -1 || handle == 0)

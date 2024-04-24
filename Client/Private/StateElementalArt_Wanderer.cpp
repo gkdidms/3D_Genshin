@@ -15,7 +15,7 @@ PLAYER_STATE CStateElementalArt_Wanderer::Enter(PLAYER_STATE CurrentState)
 
 PLAYER_STATE CStateElementalArt_Wanderer::Update(const _float& fTimeDelta, CState_Manager& pStateManager, PLAYER_STATE CurrentState)
 {
-	if (CurrentState == PLAYER_ELEMENTAL_END || CurrentState == PLAYER_ELEMENTAL_START) // 종료 시점이라면 키 입력 불가능
+	if (CurrentState == PLAYER_ELEMENTAL_END || CurrentState == PLAYER_ELEMENTAL_START || CurrentState == PLAYER_FALL_ATTACK_LOOP) // 종료 시점이라면 키 입력 불가능
 		return CurrentState;
 
 	//일정 시간 지나면 풀려야 함
@@ -23,7 +23,7 @@ PLAYER_STATE CStateElementalArt_Wanderer::Update(const _float& fTimeDelta, CStat
 	m_fCurrentTime += fTimeDelta;
 
 	if (m_fCurrentTime > m_fFinishTime)
-		return PLAYER_ELEMENTAL_END;
+		return PLAYER_FALL_ATTACK_LOOP;
 
 	if (m_fTime < m_fAttackTime)
 		return CurrentState;
@@ -49,7 +49,7 @@ PLAYER_STATE CStateElementalArt_Wanderer::Update(const _float& fTimeDelta, CStat
 	}
 
 	if (m_pGameInstance->GetKeyState(DIK_E) == CInput_Device::TAP)
-		return PLAYER_ELEMENTAL_END;
+		return PLAYER_FALL_ATTACK_LOOP;
 
 	if (m_pGameInstance->GetKeyState(DIK_W) == CInput_Device::HOLD
 		|| m_pGameInstance->GetKeyState(DIK_A) == CInput_Device::HOLD
@@ -90,7 +90,7 @@ PLAYER_STATE CStateElementalArt_Wanderer::Exit(CState_Manager& pStateManager, PL
 	if (CurrentState == PLAYER_ELEMENTAL_END)
 		return pStateManager.Set_CurrentState(CState_Manager::STATE_TYPE_IDEL);
 
-	return PLAYER_ELEMENTAL_END;
+	return PLAYER_FALL_ATTACK_LOOP;
 }
 
 CStateElementalArt_Wanderer* CStateElementalArt_Wanderer::Create()

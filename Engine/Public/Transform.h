@@ -49,8 +49,8 @@ public:
 
 public:
     void Go_Run(const _matrix vMoveMatrix, class CNavigation* pNavigationCom);
-    void Go_Straight(const _float& fTimeDelta, class CNavigation* pNavigationCom);
-    void Go_Backwork(const _float& fTimeDelta, class CNavigation* pNavigationCom);
+    void Go_Straight(const _float& fTimeDelta);
+    void Go_Backwork(const _float& fTimeDelta);
     void Go_Left(const _float& fTimeDelta);
     void Go_Right(const _float& fTimeDelta);
     void LookAt(_fvector vTargetPosition);

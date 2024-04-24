@@ -127,14 +127,15 @@ HRESULT CTool_Object_Manager::Cell_Save(const _char* pFileName)
 	if (ofs.fail())
 		return E_FAIL;
 
-	vector<_float3*> Cells = dynamic_cast<CTool_Dungeon*>(m_Terrains[0])->Get_Cells();
+	vector<CTool_Dungeon::TOOL_CELL_DESC> Cells = dynamic_cast<CTool_Dungeon*>(m_Terrains[0])->Get_Cells();
 
 	_uint NumCells = Cells.size();
 	ofs.write((_char*)&NumCells, sizeof(_uint));
 
 	for (auto& Point : Cells)
 	{
-		ofs.write((_char*)Point, sizeof(_float3) * 3);
+		ofs.write((_char*)Point.Points, sizeof(_float3) * 3);
+		ofs.write((_char*)&Point.iOption, sizeof(_int));
 	}
 
 	ofs.close();
@@ -155,20 +156,21 @@ HRESULT CTool_Object_Manager::Cell_Load(const _char* pFileName)
 	if (ifs.fail())
 		return E_FAIL;
 
-	vector<_float3*> Cells;
+	vector<CTool_Dungeon::TOOL_CELL_DESC> Cells;
 
 	_uint NumCells = { 0 };
 	ifs.read((_char*)&NumCells, sizeof(_uint));
 
 	for (size_t i = 0; i < NumCells; ++i)
 	{
-		_float3* vPoint = new _float3[3];
-		ifs.read((_char*)vPoint, sizeof(_float3) * 3);
+		CTool_Dungeon::TOOL_CELL_DESC tDesc{};
 
-		Cells.emplace_back(vPoint);
+		ifs.read((_char*)tDesc.Points, sizeof(_float3) * 3);
+		ifs.read((_char*)&tDesc.iOption, sizeof(_int));
+
+		Cells.emplace_back(tDesc);
 	}
 
-	
 	dynamic_cast<CTool_Dungeon*>(m_Terrains[0])->Set_Cells(Cells);
 
 	ifs.close();

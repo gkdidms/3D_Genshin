@@ -136,6 +136,15 @@
     <Filter Include="02. GameObject\Player\PartObject\SkillObj\Gohei">
       <UniqueIdentifier>{78f8c0b6-1739-4aa4-b702-8b702dfd36ba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="96. Utility\State\ElementalArt\Wanderer\Run">
+      <UniqueIdentifier>{12f3c17b-6547-4bfb-aac1-87843edacf2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility\State\ElementalArt\Wanderer\Attack">
+      <UniqueIdentifier>{ff04190b-7f4f-4eca-bad5-2dbdefe526ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility\State\ElementalArt\Wanderer\Sprint">
+      <UniqueIdentifier>{f7501aee-b576-466f-afb3-ee2d4a428867}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">

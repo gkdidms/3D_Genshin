@@ -13,6 +13,10 @@
 #include "Calculator.h"
 #include "Navigation.h"
 
+#include "Bounding_AABB.h"
+
+#include "Collider.h"
+
 #include "Cell.h"
 
 BEGIN(Engine)

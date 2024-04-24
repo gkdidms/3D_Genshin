@@ -144,6 +144,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Navigation_Stage_1", CNavigation::Create(m_pDevice, m_pContext, TEXT("../../Data/Navigation/Navigation_Stage_1.dat")))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Collider", CCollider::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	/*객체 원형 로딩*/
 	lstrcpy(m_szLoadingText, TEXT("객체원형을 로딩 중 입니다."));
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Camera", CDefaultCamera::Create(m_pDevice, m_pContext))))

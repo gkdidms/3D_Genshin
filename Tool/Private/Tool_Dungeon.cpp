@@ -21,12 +21,12 @@ CTool_Dungeon::CTool_Dungeon(const CTool_Dungeon& rhs)
 	Safe_AddRef(m_pObject_Manager);
 }
 
-void CTool_Dungeon::Set_Cells(vector<_float3*> Cells)
+void CTool_Dungeon::Set_Cells(vector<TOOL_CELL_DESC> Cells)
 {
 	m_Cells = Cells;
 
 	for (auto& Point : m_Cells)
-		m_pNavigationCom->Set_Points(Point);
+		m_pNavigationCom->Set_Points(Point.Points, Point.iOption);
 }
 
 HRESULT CTool_Dungeon::Initialize_Prototype()
@@ -181,11 +181,12 @@ void CTool_Dungeon::Picking_Cell()
 		++m_iPointCount;
 		if (m_iPointCount == 3)
 		{
-			m_pNavigationCom->Set_Points(m_Points);
+			m_pNavigationCom->Set_Points(m_Points, m_pTool_Manager->Get_CellOption());
 
-			_float3* vPoint = new _float3[m_iPointCount];
-			memcpy(vPoint, m_Points, sizeof(_float3) * 3);
-			m_Cells.emplace_back(vPoint);
+			TOOL_CELL_DESC tDesc{};
+			memcpy(tDesc.Points, m_Points, sizeof(_float3) * 3);
+			tDesc.iOption = m_pTool_Manager->Get_CellOption();
+			m_Cells.emplace_back(tDesc);
 
 			m_iPointCount = 0;
 			ZeroMemory(m_Points, sizeof(_float3) * 3);
@@ -195,35 +196,35 @@ void CTool_Dungeon::Picking_Cell()
 
 void CTool_Dungeon::Check_Point(_float3* vPoint)
 {
-	_float fDistance = 0.4f;
+	_float fDistance = 0.3f;
 
 	if (m_Cells.size() <= 0)
 		return;
 
 	for (auto& CellPoints : m_Cells)
 	{
-		if (CellPoints[0].x + fDistance >= (*vPoint).x && CellPoints[0].x - fDistance <= (*vPoint).x)
+		if (CellPoints.Points[0].x + fDistance >= (*vPoint).x && CellPoints.Points[0].x - fDistance <= (*vPoint).x)
 		{
-			if (CellPoints[0].z + fDistance >= (*vPoint).z && CellPoints[0].z - fDistance <= (*vPoint).z)
+			if (CellPoints.Points[0].z + fDistance >= (*vPoint).z && CellPoints.Points[0].z - fDistance <= (*vPoint).z)
 			{
-				*vPoint = CellPoints[0];
+				*vPoint = CellPoints.Points[0];
 				return;
 			}
 		}
-		if (CellPoints[1].x + fDistance >= (*vPoint).x && CellPoints[1].x - fDistance <= (*vPoint).x)
+		if (CellPoints.Points[1].x + fDistance >= (*vPoint).x && CellPoints.Points[1].x - fDistance <= (*vPoint).x)
 		{
-			if (CellPoints[1].z + fDistance >= (*vPoint).z && CellPoints[1].z - fDistance <= (*vPoint).z)
+			if (CellPoints.Points[1].z + fDistance >= (*vPoint).z && CellPoints.Points[1].z - fDistance <= (*vPoint).z)
 			{
-				*vPoint = CellPoints[1];
+				*vPoint = CellPoints.Points[1];
 				return;
 			}
 				
 		}
-		if (CellPoints[2].x + fDistance >= (*vPoint).x && CellPoints[2].x - fDistance <= (*vPoint).x)
+		if (CellPoints.Points[2].x + fDistance >= (*vPoint).x && CellPoints.Points[2].x - fDistance <= (*vPoint).x)
 		{
-			if (CellPoints[2].z + fDistance >= (*vPoint).z && CellPoints[2].z - fDistance <= (*vPoint).z)
+			if (CellPoints.Points[2].z + fDistance >= (*vPoint).z && CellPoints.Points[2].z - fDistance <= (*vPoint).z)
 			{
-				*vPoint = CellPoints[2];
+				*vPoint = CellPoints.Points[2];
 				return;
 			}
 		}
@@ -257,9 +258,6 @@ void CTool_Dungeon::Free()
 	Safe_Release(m_pNavigationCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pVIBufferCom);
-
-	for (auto& Point : m_Cells)
-		Safe_Delete(Point);
 
 	Safe_Release(m_pObject_Manager);
 	Safe_Release(m_pTool_Manager);

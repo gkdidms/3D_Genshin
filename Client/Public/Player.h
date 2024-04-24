@@ -5,6 +5,7 @@
 
 BEGIN(Engine)
 class CNavigation;
+class CCollider;
 END
 
 BEGIN(Client)
@@ -44,6 +45,7 @@ private:
     PLAYERBLE_TYPE m_CurrentPlayerble = { PLAYER_WANDERER };
 
     CNavigation* m_pNavigationCom = { nullptr };
+    CCollider* m_pColliderCom = { nullptr };
 
 private:
     _uint m_iState = { 0 };

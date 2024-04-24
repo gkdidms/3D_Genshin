@@ -111,9 +111,6 @@
     <ClInclude Include="..\public\Tool_Camera.h">
       <Filter>02. GameObject\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Tool_Object_Manager.h">
-      <Filter>94. Tool_Object_Manager</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Tool_Dungeon.h">
       <Filter>02. GameObject\Terrain\Dungeon</Filter>
     </ClInclude>
@@ -143,6 +140,9 @@
     </ClInclude>
     <ClInclude Include="..\public\Tool_Object.h">
       <Filter>02. GameObject\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Tool_Object_Manager.h">
+      <Filter>94. Tool_Object_Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

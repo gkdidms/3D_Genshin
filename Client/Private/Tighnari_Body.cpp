@@ -26,7 +26,7 @@ HRESULT CTighnari_Body::Initialize(void* pArg)
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
-	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ 45, true });
+	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ 45, true, true, false });
 	return S_OK;
 }
 
@@ -43,7 +43,7 @@ void CTighnari_Body::Tick(const _float& fTimeDelta)
 
 	Change_Animation(fTimeDelta);
 
-	m_pModelCom->Play_Animation(fTimeDelta, &m_PlayerMovePos, m_IsLinear);
+	m_pModelCom->Play_Animation(fTimeDelta, &m_PlayerMovePos);
 }
 
 void CTighnari_Body::Late_Tick(const _float& fTimeDelta)
@@ -89,6 +89,8 @@ HRESULT CTighnari_Body::Bind_ResourceData()
 void CTighnari_Body::Change_Animation(const _float& fTimeDelta)
 {
 	m_IsLinear = true;
+	m_IsLinearSpeed = false;
+
 	switch (*m_pState)
 	{
 	case PLAYER_ATTACK_1:
@@ -159,7 +161,7 @@ void CTighnari_Body::Change_Animation(const _float& fTimeDelta)
 	{
 		m_iAnim = 36;
 		m_IsLoop = true;
-		//m_IsLinear = false;
+		m_IsLinearSpeed = true;
 		break;
 	}
 	case PLAYER_RUN_STOP:
@@ -229,7 +231,7 @@ void CTighnari_Body::Change_Animation(const _float& fTimeDelta)
 		break;
 	}
 
-	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ m_iAnim, m_IsLoop });
+	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ m_iAnim, m_IsLoop, m_IsLinear, m_IsLinearSpeed });
 }
 
 CTighnari_Body* CTighnari_Body::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

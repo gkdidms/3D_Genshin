@@ -10,11 +10,13 @@ class ENGINE_DLL CModel final:
 {
 public:
     typedef struct tAnimDesc{
-        tAnimDesc(_uint iCurrentAnimIndex, _bool isLoop)
-            : iCurrentAnimIndex{ iCurrentAnimIndex }, isLoop{ isLoop } {}
+        tAnimDesc(_uint iCurrentAnimIndex, _bool isLoop, _bool isLinear, _bool isLinearSpeed)
+            : iCurrentAnimIndex{ iCurrentAnimIndex }, isLoop{ isLoop }, isLinear{ isLinear }, isLinearSpeed{ isLinearSpeed } {}
 
         _uint iCurrentAnimIndex = { 0 };
         _bool isLoop = { false };
+        _bool isLinear = { true };
+        _bool isLinearSpeed = { false };
     }ANIM_DESC;
 
 private:
@@ -31,6 +33,8 @@ public:
     _bool Get_LoopAnimation_Finished() const { return m_Animations[m_tAnimDesc.iCurrentAnimIndex]->IsLoopFinished(); } // 현재 재생되고 있는 루프 애니메이션이 한번 루프를 돌았는지 확인하는 함수
     const _float4x4* Get_BoneCombinedTransformationMatrix(const _char* szBoneName) const;
 
+    _bool IsFindMesh(_uint iIndex, const char* szMeshName);
+
 public:
     HRESULT Initialize_Prototype(const _char* szModelFilePath, _fmatrix PreTransformMatrix, const _char* szBinaryFilePath);
     HRESULT Initialize(void* pArv) override;
@@ -40,7 +44,7 @@ public:
     HRESULT Bind_BoneMatrices(class CShader* pShader, const char* strConstansName, _uint iMeshIndex);
 
 public:
-    void Play_Animation(const _float& fTimeDelta, _float4x4* vMovePos, _bool isLinear);
+    void Play_Animation(const _float& fTimeDelta, _float4x4* vMovePos);
     void Set_Animation(ANIM_DESC tAnimdesc) {
         if (Get_LoopAnimation_Finished())
             m_Animations[tAnimdesc.iCurrentAnimIndex]->Loop_Reset();
@@ -80,7 +84,7 @@ private:
 private:
     _uint m_iNumAnimations = { 0 };
     vector<class CAnimation*> m_Animations;
-    ANIM_DESC m_tAnimDesc{ 0, false};
+    ANIM_DESC m_tAnimDesc{ 0, false, false, false};
 
 private:
     _float4x4 m_vCurMovePos = {};

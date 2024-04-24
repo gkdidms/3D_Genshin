@@ -13,6 +13,8 @@ public:
     enum TYPE { POINT_A, POINT_B, POINT_C, POINT_END };
     enum LINE_TYPE { LINE_AB, LINE_BC, LINE_CA, LINE_END };
 
+    enum OPTION { OPTION_NONE, OPTION_STAIRS, OPTION_FLY, OPTION_END };
+
 private:
     CCell(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
     virtual ~CCell() = default;
@@ -20,9 +22,10 @@ private:
 public:
     _vector Get_Point(TYPE eType) { return XMLoadFloat3(&m_vPoints[eType]); }
     _int Get_Index() { return m_iIndex; }
+    OPTION Get_Option() { return m_OptionType; }
 
 public:
-    HRESULT Initialize(const _float3* pPoints, _int iIndex);
+    HRESULT Initialize(const _float3* pPoints, _int iIndex, OPTION OptionType);
     _bool Compare_Points(_fvector vSourPoint, _fvector vDestPoint);
     _float Compute_Height(_fvector vPosition);
     _bool isIn(_fvector vPosition, _int* pNeighborsIndex);
@@ -44,6 +47,7 @@ private:
     _int m_iNeighborIndices[LINE_END] = { -1, -1, -1 }; // 인접한 cell index를 저장
 
     _int m_iIndex = { -1 };
+    OPTION m_OptionType = { OPTION_END }; // 셀의 옵션을 저장
 
 #ifdef _DEBUG
 private:
@@ -51,7 +55,7 @@ private:
 #endif // _DEBUG
 
 public:
-    static CCell* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _float3* pPoints, _int iIndex);
+    static CCell* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _float3* pPoints, _int iIndex, OPTION OptionType);
     virtual void Free() override;
 };
 

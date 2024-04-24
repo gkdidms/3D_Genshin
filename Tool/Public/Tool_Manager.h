@@ -41,6 +41,7 @@ public:
     _bool Is_PickingWithDungeon() { return IsPickingWithDungeon; }
     _bool Is_PickingCell() { return m_isNavigationPicking; }
     _bool Is_PickingPlayer() { return m_isPlayerPosPicking; }
+    _int Get_CellOption() { return m_iNavigationOption; }
 
 public:
     void Set_DungeonPos(_vector vPos) { XMStoreFloat3(&m_fDungeonPos, vPos); }
@@ -91,6 +92,7 @@ private:
 
 private: // Navigation
     _bool m_isNavigationPicking = { false };
+    _int m_iNavigationOption = { 0 };
 
 private:
     _bool m_isPlayerPosPicking = { false };

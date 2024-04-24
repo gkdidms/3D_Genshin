@@ -19,6 +19,12 @@ public:
         wstring strComVIBufferCom = L"";
     }DUNGEON_DESC;
 
+    typedef struct tToolCellDesc
+    {
+        _float3 Points[3];
+        _int iOption;
+    }TOOL_CELL_DESC;
+
 private:
     CTool_Dungeon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
     CTool_Dungeon(const CTool_Dungeon& rhs);
@@ -26,10 +32,10 @@ private:
 
 public:
     string Get_ObjectName() { return m_strObjectName; }
-    const vector<_float3*> Get_Cells() { return m_Cells; }
+    const vector<TOOL_CELL_DESC> Get_Cells() { return m_Cells; }
 
 public:
-    void Set_Cells(vector<_float3*> Cells);
+    void Set_Cells(vector<TOOL_CELL_DESC> Cells);
 
 public:
     virtual HRESULT Initialize_Prototype() override;
@@ -56,7 +62,7 @@ private:
     _float3 m_Points[3] = {};
     _uint m_iPointCount = { 0 };
 
-    vector<_float3*> m_Cells;
+    vector<TOOL_CELL_DESC> m_Cells;
 
 private:
     HRESULT Add_Components();

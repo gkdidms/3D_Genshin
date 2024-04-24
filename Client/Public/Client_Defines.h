@@ -42,6 +42,7 @@ namespace Client {
         PLAYER_FALL_GROUND,
         PLAYER_FALL_GROUND_FOR_RUN,
         PLAYER_FALL_GROUND_FOR_SPRINT,
+        PLAYER_FALL_ATTACK_LOOP,
         PLAYER_END
     };
 

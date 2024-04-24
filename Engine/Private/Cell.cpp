@@ -10,11 +10,13 @@ CCell::CCell(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     Safe_AddRef(m_pContext);
 }
 
-HRESULT CCell::Initialize(const _float3* pPoints, _int iIndex)
+HRESULT CCell::Initialize(const _float3* pPoints, _int iIndex, OPTION OptionType)
 {
     memcpy(m_vPoints, pPoints, sizeof(_float3) * POINT_END);
 
     m_iIndex = iIndex;
+
+    m_OptionType = OptionType;
 
 #ifdef _DEBUG
     m_pVIBufferCom = CVIBuffer_Cell::Create(m_pDevice, m_pContext, pPoints);
@@ -97,11 +99,11 @@ HRESULT CCell::Render()
 }
 #endif // _DEBUG
 
-CCell* CCell::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _float3* pPoints, _int iIndex)
+CCell* CCell::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _float3* pPoints, _int iIndex, OPTION OptionType)
 {
     CCell* pInstance = new CCell(pDevice, pContext);
 
-    if (FAILED(pInstance->Initialize(pPoints, iIndex)))
+    if (FAILED(pInstance->Initialize(pPoints, iIndex, OptionType)))
         Safe_Release(pInstance);
 
     return pInstance;

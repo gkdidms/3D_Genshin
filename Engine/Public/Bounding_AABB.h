@@ -15,13 +15,14 @@ private:
 
 public:
     virtual HRESULT Initialize(const void* pArg);
-    virtual void Tick() override;
+    virtual void Tick(_fmatrix WorldMatrix) override;
 
 #ifdef _DEBUG
-    virtual HRESULT Render() override;
+    virtual HRESULT Render(PrimitiveBatch<VertexPositionColor>* pBatch) override;
 #endif // _DEBUG
 
 private:
+    BoundingBox* m_pOriginalBox = { nullptr };
     BoundingBox* m_pBoundingBox = { nullptr };
 
     _float3 m_vExtents = {};

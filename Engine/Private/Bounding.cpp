@@ -8,11 +8,11 @@ CBounding::~CBounding()
 {
 }
 
-void CBounding::Tick()
+void CBounding::Tick(_fmatrix WorldMatrix)
 {
 }
 
-HRESULT CBounding::Render()
+HRESULT CBounding::Render(PrimitiveBatch<VertexPositionColor>* pBatch)
 {
     return S_OK;
 }

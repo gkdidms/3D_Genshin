@@ -21,7 +21,7 @@ public:
 protected:
     _bool m_IsFinished = { false };
 
-    _float m_fRunSpeed = { 50.f };
+    _float m_fRunSpeed = { 5.f };
     _float m_fSprintSpeed = { 80.f };
 
 protected:

@@ -38,7 +38,7 @@ PLAYER_STATE CStateSprint::Update(const _float& fTimeDelta, class CState_Manager
 		|| m_pGameInstance->GetKeyState(DIK_A) == CInput_Device::HOLD
 		|| m_pGameInstance->GetKeyState(DIK_D) == CInput_Device::HOLD
 		|| m_pGameInstance->GetKeyState(DIK_S) == CInput_Device::HOLD))
-		return pStateManager.Set_CurrentState(CState_Manager::STATE_TYPE_RUN);
+		return PLAYER_SPRINT_TO_RUN;
 
 	if (m_pGameInstance->GetKeyState(DIK_W) == CInput_Device::AWAY
 		|| m_pGameInstance->GetKeyState(DIK_A) == CInput_Device::AWAY
@@ -59,10 +59,10 @@ PLAYER_STATE CStateSprint::Exit(class CState_Manager& pStateManager, PLAYER_STAT
 
 	if (CurrentState == PLAYER_SPRINT_START &&
 		(m_pGameInstance->GetKeyState(DIK_W) == CInput_Device::HOLD
-		|| m_pGameInstance->GetKeyState(DIK_A) == CInput_Device::HOLD
-		|| m_pGameInstance->GetKeyState(DIK_D) == CInput_Device::HOLD
-		|| m_pGameInstance->GetKeyState(DIK_S) == CInput_Device::HOLD))
-		return pStateManager.Set_CurrentState(CState_Manager::STATE_TYPE_RUN);
+			|| m_pGameInstance->GetKeyState(DIK_A) == CInput_Device::HOLD
+			|| m_pGameInstance->GetKeyState(DIK_D) == CInput_Device::HOLD
+			|| m_pGameInstance->GetKeyState(DIK_S) == CInput_Device::HOLD))
+		return  PLAYER_SPRINT_TO_RUN;
 
 	if (CurrentState == PLAYER_SPRINT_TO_RUN &&
 		(m_pGameInstance->GetKeyState(DIK_W) == CInput_Device::HOLD

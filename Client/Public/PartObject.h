@@ -55,6 +55,7 @@ protected:
     _uint m_iAnim = { 0 };
     _bool m_IsLoop = { false };
     _bool m_IsLinear = { false };
+    _bool m_IsLinearSpeed = { false };
     _int m_iPreAnim = { -1 };
 
 protected:

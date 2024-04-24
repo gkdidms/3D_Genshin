@@ -48,6 +48,11 @@ const _float4x4* CModel::Get_BoneCombinedTransformationMatrix(const _char* szBon
 	return (*iter)->Get_CombinedTransformationMatrix();
 }
 
+_bool CModel::IsFindMesh(_uint iIndex, const char* szMeshName)
+{
+	return m_Meshes[iIndex]->Compare_MeshName(szMeshName);
+}
+
 HRESULT CModel::Initialize_Prototype(const _char* szModelFilePath, _fmatrix PreTransformMatrix, const _char* szBinaryFilePath)
 {
 	XMStoreFloat4x4(&m_PreTransformMatrix, PreTransformMatrix);
@@ -323,21 +328,25 @@ HRESULT CModel::Bind_BoneMatrices(CShader* pShader, const char* strConstansName,
 	return pShader->Bind_Matrices(strConstansName, m_MeshBoneMatrices, 512);
 }
 
-void CModel::Play_Animation(const _float& fTimeDelta, _float4x4* vMovePos, _bool isLinear)
+void CModel::Play_Animation(const _float& fTimeDelta, _float4x4* vMovePos)
 {
-	if (m_Animations[m_tAnimDesc.iCurrentAnimIndex]->IsFirst() && isLinear && m_isCheck)
+	if (m_Animations[m_tAnimDesc.iCurrentAnimIndex]->IsFirst() && m_tAnimDesc.isLinear && m_isCheck)
 	{
 		m_Animations[m_tAnimDesc.iCurrentAnimIndex]->Linear_TransformationMatrix(fTimeDelta, m_Bones, m_tAnimDesc.isLoop);
 
 		for (auto& pBone : m_Bones)
 			pBone->Update_CombinedTransformMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
 		
-		*vMovePos = m_vAnimSpeed;
-		
+		if (m_tAnimDesc.isLinearSpeed) // 선형보간 시 스피드값이 필요한 애니메이션의 경우 이전 애니메이션의 마지막 스피드를 대입해줌.
+			*vMovePos = m_vAnimSpeed;
+
 		return;
 	}
 	else
 	{
+		if (m_tAnimDesc.isLoop == true)
+			m_isCheck = false; // 루프 애니메이션의 경우 선형보간을 한번만 할 수 있게 제어.
+
 		m_Animations[m_tAnimDesc.iCurrentAnimIndex]->Update_TransformationMatrix(fTimeDelta, m_Bones, m_tAnimDesc.isLoop);
 
 		for (auto& pBone : m_Bones)

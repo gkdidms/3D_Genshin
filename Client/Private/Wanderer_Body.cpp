@@ -31,7 +31,7 @@ HRESULT CWanderer_Body::Initialize(void* pArg)
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
-	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ 80, true });
+	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ 80, true, true, false });
 	return S_OK;
 }
 
@@ -46,7 +46,7 @@ void CWanderer_Body::Tick(const _float& fTimeDelta)
 
 	Change_Animation(fTimeDelta);
 
-	m_pModelCom->Play_Animation(fTimeDelta, &m_PlayerMovePos, m_IsLinear);
+	m_pModelCom->Play_Animation(fTimeDelta, &m_PlayerMovePos);
 
 	_matrix MoveMatrix = XMLoadFloat4x4(&m_PlayerMovePos);
 
@@ -58,6 +58,10 @@ void CWanderer_Body::Tick(const _float& fTimeDelta)
 
 		if (m_fAirStartTime < 0.5f)
 			MoveMatrix.r[3] = XMVectorSet(0.f, m_fAirSpeed * -1.f * fTimeDelta, 0.f, 1.f);
+	}
+	else if (*m_pState == PLAYER_FALL_ATTACK_LOOP)
+	{
+		MoveMatrix.r[3] = XMVectorSet(0.f, m_fAirSpeed * fTimeDelta, 0.f, 1.f);
 	}
 	else if (*m_pState == PLAYER_ELEMENTAL_END)
 		m_fAirStartTime = 0.f;
@@ -75,8 +79,24 @@ void CWanderer_Body::Late_Tick(const _float& fTimeDelta)
 
 HRESULT CWanderer_Body::Render()
 {
-	if (FAILED(__super::Render()))
+	if (FAILED(Bind_ResourceData()))
 		return E_FAIL;
+
+	_uint iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (int i = 0; i < iNumMeshes; ++i)
+	{
+		if (*m_pElementalAir && m_pModelCom->IsFindMesh(i, "Hat"))
+			continue;
+
+		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
+			return E_FAIL;
+
+		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_Texture", i, aiTextureType_DIFFUSE)))
+			continue;
+		m_pShaderCom->Begin(0);
+		m_pModelCom->Render(i);
+	}
 
 	return S_OK;
 }
@@ -108,6 +128,8 @@ HRESULT CWanderer_Body::Bind_ResourceData()
 
 void CWanderer_Body::Change_Animation(const _float& fTimeDelta)
 {
+	m_IsLinearSpeed = false;
+
 	m_IsLinear = true;
 	switch (*m_pState)
 	{
@@ -224,6 +246,7 @@ void CWanderer_Body::Change_Animation(const _float& fTimeDelta)
 			m_iAnim = 70;
 			m_IsLoop = true;
 		}
+		m_IsLinearSpeed = true;
 		break;
 	}
 	case PLAYER_RUN_STOP:
@@ -293,6 +316,7 @@ void CWanderer_Body::Change_Animation(const _float& fTimeDelta)
 	{
 		m_iAnim = 67;
 		m_IsLoop = false;
+		m_IsLinearSpeed = true;
 		break;
 	}
 	case PLAYER_JUMP_FOR_SPRINT:
@@ -319,6 +343,13 @@ void CWanderer_Body::Change_Animation(const _float& fTimeDelta)
 		m_IsLoop = false;
 		break;
 	}
+	case PLAYER_FALL_ATTACK_LOOP: // ¶³¾îÁü
+	{
+		m_iAnim = 47;
+		m_IsLoop = true;
+		m_IsLinearSpeed = true;
+		break;
+	}
 	case PLAYER_IDLE:
 	{
 		m_iAnim = *m_pElementalAir ? 34 : 80;
@@ -331,7 +362,7 @@ void CWanderer_Body::Change_Animation(const _float& fTimeDelta)
 		break;
 	}
 
-	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ m_iAnim, m_IsLoop });
+	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ m_iAnim, m_IsLoop, m_IsLinear, m_IsLinearSpeed });
 }
 
 CWanderer_Body* CWanderer_Body::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

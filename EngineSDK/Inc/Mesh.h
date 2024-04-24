@@ -14,6 +14,9 @@ private:
     virtual ~CMesh() = default;
 
 public:
+    _bool Compare_MeshName(const char* pName) { return !strcmp(m_szName, pName); }
+
+public:
     _float3* Get_VtxPos() { return m_pVtxPos; }
     _uint* Get_VtxIndices() { return m_pVtxIndices; }
     _uint Get_NumFaces() { return m_iNumFaces; }

@@ -37,7 +37,7 @@ void CSkillObj_Gohei::Tick(const _float& fTimeDelta)
 	Change_Animation(fTimeDelta);
 
 	_float4x4 pMoveMatrix;
-	m_pModelCom->Play_Animation(fTimeDelta, &pMoveMatrix, true);
+	m_pModelCom->Play_Animation(fTimeDelta, &pMoveMatrix);
 }
 
 void CSkillObj_Gohei::Late_Tick(const _float& fTimeDelta)
@@ -97,6 +97,7 @@ HRESULT CSkillObj_Gohei::Bind_ResourceData()
 
 void CSkillObj_Gohei::Change_Animation(const _float& fTimeDelta)
 {
+
 	switch (*m_pState)
 	{
 	case PLAYER_ATTACK_1:
@@ -119,7 +120,7 @@ void CSkillObj_Gohei::Change_Animation(const _float& fTimeDelta)
 		break;
 	}
 
-	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ m_iAnim, m_IsLoop });
+	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ m_iAnim, m_IsLoop, m_IsLinear, m_IsLinearSpeed });
 
 }
 

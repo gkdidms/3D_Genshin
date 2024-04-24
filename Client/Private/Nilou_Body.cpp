@@ -26,7 +26,7 @@ HRESULT CNilou_Body::Initialize(void* pArg)
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
-	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ 10, true });
+	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ 10, true, true, false });
 	return S_OK;
 }
 
@@ -41,7 +41,7 @@ void CNilou_Body::Tick(const _float& fTimeDelta)
 
 	Change_Animation(fTimeDelta);
 
-	m_pModelCom->Play_Animation(fTimeDelta, &m_PlayerMovePos, m_IsLinear);
+	m_pModelCom->Play_Animation(fTimeDelta, &m_PlayerMovePos);
 }
 
 void CNilou_Body::Late_Tick(const _float& fTimeDelta)
@@ -260,7 +260,7 @@ void CNilou_Body::Change_Animation(const _float& fTimeDelta)
 		break;
 	}
 
-	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ m_iAnim, m_IsLoop });
+	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ m_iAnim, m_IsLoop, m_IsLinear, m_IsLinearSpeed });
 
 }
 

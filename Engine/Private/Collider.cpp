@@ -1,5 +1,7 @@
 #include "Collider.h"
 
+#include "GameInstance.h"
+
 #include "Bounding_AABB.h"
 
 CCollider::CCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -8,12 +10,29 @@ CCollider::CCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CCollider::CCollider(const CCollider& rhs)
-	: CComponent{ rhs }
+	: CComponent{ rhs },
+	m_pBatch { rhs.m_pBatch },
+	m_pShader { rhs.m_pShader },
+	m_pInputLayout { rhs.m_pInputLayout }
 {
+	Safe_AddRef(m_pInputLayout);
 }
 
 HRESULT CCollider::Initialize_Prototype()
 {
+#ifdef _DEBUG
+	m_pBatch = new PrimitiveBatch<VertexPositionColor>(m_pContext);
+	m_pShader = new BasicEffect(m_pDevice);
+
+	m_pShader->SetVertexColorEnabled(true);
+
+	const void* pShaderByteCode = { nullptr };
+	size_t		iShaderByteCodeLength = { 0 };
+
+	m_pShader->GetVertexShaderBytecode(&pShaderByteCode, &iShaderByteCodeLength);
+
+	m_pDevice->CreateInputLayout(VertexPositionColor::InputElements, VertexPositionColor::InputElementCount, pShaderByteCode, iShaderByteCodeLength, &m_pInputLayout);
+#endif
 	return S_OK;
 }
 
@@ -47,9 +66,31 @@ HRESULT CCollider::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CCollider::Tick()
+void CCollider::Tick(_fmatrix WorldMatirx)
 {
+	m_pCurrentBounding->Tick(WorldMatirx);
 }
+
+#ifdef _DEBUG
+HRESULT CCollider::Render()
+{
+	m_pShader->SetWorld(XMMatrixIdentity());
+	m_pShader->SetView(m_pGameInstance->Get_Transform_Matrix(CPipeLine::D3DTS_VIEW));
+	m_pShader->SetProjection(m_pGameInstance->Get_Transform_Matrix(CPipeLine::D3DTS_PROJ));
+
+	m_pContext->IASetInputLayout(m_pInputLayout);
+
+	m_pShader->Apply(m_pContext);
+
+	m_pBatch->Begin();
+
+	m_pCurrentBounding->Render(m_pBatch);
+
+	m_pBatch->End();
+
+	return S_OK;
+}
+#endif // _DEBUG
 
 CCollider* CCollider::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
@@ -74,6 +115,15 @@ CComponent* CCollider::Clone(void* pArg)
 void CCollider::Free()
 {
 	__super::Free();
+#ifdef _DEBUG
+	if (false == m_isCloned)
+	{
+		Safe_Delete(m_pBatch);
+		Safe_Delete(m_pShader);
+	}
+
+	Safe_Release(m_pInputLayout);
+#endif
 
 	Safe_Release(m_pCurrentBounding);
 }

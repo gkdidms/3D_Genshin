@@ -27,7 +27,7 @@ HRESULT CTool_Anim_Object::Initialize(void* pArg)
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
-	CModel::ANIM_DESC AnimDesc{ 33, true };
+	CModel::ANIM_DESC AnimDesc{ 33, true, true, false };
 	m_pVIBufferCom->Set_Animation(AnimDesc);
 
 	return S_OK;
