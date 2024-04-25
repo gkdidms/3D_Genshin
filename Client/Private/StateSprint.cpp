@@ -79,9 +79,7 @@ PLAYER_STATE CStateSprint::Exit(class CState_Manager& pStateManager, PLAYER_STAT
 
 CStateSprint* CStateSprint::Create()
 {
-	CStateSprint* pInstance = new CStateSprint();
-
-	return pInstance;
+	return new CStateSprint();
 }
 
 void CStateSprint::Free()

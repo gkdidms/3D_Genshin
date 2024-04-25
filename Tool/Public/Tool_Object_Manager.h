@@ -66,6 +66,9 @@ private:
     _float m_vPlayerPos[3] = { 0.f, 0.f, 0.f };
     _int m_iPlayerNavigationIndex = { -1 };
 
+private:
+    void SortCell(_float3* Points);
+
 public:
     void Release_Object();
     virtual void Free();

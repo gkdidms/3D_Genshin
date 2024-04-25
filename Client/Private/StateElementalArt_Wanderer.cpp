@@ -15,6 +15,9 @@ PLAYER_STATE CStateElementalArt_Wanderer::Enter(PLAYER_STATE CurrentState)
 
 PLAYER_STATE CStateElementalArt_Wanderer::Update(const _float& fTimeDelta, CState_Manager& pStateManager, PLAYER_STATE CurrentState)
 {
+	if (CurrentState == PLAYER_FALL_ATTACK_LOOP && m_pGameInstance->GetKeyState(DIK_SPACE) == CInput_Device::TAP)
+		return pStateManager.Set_CurrentState(CState_Manager::STATE_TYPE_FLY);
+
 	if (CurrentState == PLAYER_ELEMENTAL_END || CurrentState == PLAYER_ELEMENTAL_START || CurrentState == PLAYER_FALL_ATTACK_LOOP) // 종료 시점이라면 키 입력 불가능
 		return CurrentState;
 
@@ -22,6 +25,7 @@ PLAYER_STATE CStateElementalArt_Wanderer::Update(const _float& fTimeDelta, CStat
 	m_fTime += fTimeDelta;
 	m_fCurrentTime += fTimeDelta;
 
+	//지속 시간이 끝나면
 	if (m_fCurrentTime > m_fFinishTime)
 		return PLAYER_FALL_ATTACK_LOOP;
 
@@ -30,6 +34,15 @@ PLAYER_STATE CStateElementalArt_Wanderer::Update(const _float& fTimeDelta, CStat
 
 	if (m_pGameInstance->GetKeyState(DIK_Q) == CInput_Device::TAP)
 		return pStateManager.Set_CurrentState(CState_Manager::STATE_TYPE_ELEMNETALBURST);
+
+	if ((CurrentState == PLAYER_ELEMENTAL_UP || CurrentState == PLAYER_ELEMENTAL_UP_START) && m_pGameInstance->GetKeyState(DIK_SPACE) == CInput_Device::NONE)
+		return PLAYER_IDLE;
+
+	if (m_pGameInstance->GetKeyState(DIK_SPACE) == CInput_Device::HOLD)
+	{
+		//이미 업 상태라면
+		return (CurrentState != PLAYER_ELEMENTAL_UP_START || CurrentState != PLAYER_ELEMENTAL_UP) ? PLAYER_ELEMENTAL_UP : CurrentState;
+	}
 
 	if (m_pGameInstance->GetMouseState(DIM_LB) == CInput_Device::TAP)
 	{
@@ -77,6 +90,9 @@ PLAYER_STATE CStateElementalArt_Wanderer::Exit(CState_Manager& pStateManager, PL
 	if (CurrentState == PLAYER_ATTACK_3)
 		return PLAYER_ATTACK_END;
 
+	if (CurrentState == PLAYER_ELEMENTAL_UP_START)
+		return PLAYER_ELEMENTAL_UP;
+
 	if (CurrentState == PLAYER_ATTACK_1
 		|| CurrentState == PLAYER_ATTACK_2 
 		|| CurrentState == PLAYER_ATTACK_END
@@ -95,9 +111,7 @@ PLAYER_STATE CStateElementalArt_Wanderer::Exit(CState_Manager& pStateManager, PL
 
 CStateElementalArt_Wanderer* CStateElementalArt_Wanderer::Create()
 {
-	CStateElementalArt_Wanderer* pInstance = new CStateElementalArt_Wanderer();
-
-	return pInstance;
+	return new CStateElementalArt_Wanderer();
 }
 
 void CStateElementalArt_Wanderer::Free()

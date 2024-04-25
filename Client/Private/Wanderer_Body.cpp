@@ -21,8 +21,6 @@ HRESULT CWanderer_Body::Initialize_Prototype()
 HRESULT CWanderer_Body::Initialize(void* pArg)
 {
 	WANDERER_DESC* pDesc = (WANDERER_DESC*)pArg;
-
-	m_pDirState = pDesc->pDirState;
 	m_pElementalAir = pDesc->isElementalAir;
 
 	if (FAILED(__super::Initialize(pArg)))
@@ -50,8 +48,17 @@ void CWanderer_Body::Tick(const _float& fTimeDelta)
 
 	_matrix MoveMatrix = XMLoadFloat4x4(&m_PlayerMovePos);
 
+	// 해당 상태일때 이동 값이 0이면 이전 프레임의 이동값을 가져옮
+	if ((*m_pState == PLAYER_SPRINT_TO_RUN || *m_pState == PLAYER_SPRINT_START) && m_PlayerMovePos.m[3][2] <= 0.f)
+	{
+		m_pModelCom->Bind_AnimSpeed(&MoveMatrix);
+	}
+
+	// 방랑자 원소스킬 사용 중 이동 값
 	if (*m_pElementalAir && (*m_pState == PLAYER_RUN_START || *m_pState == PLAYER_RUN))
 		MoveMatrix.r[3] = XMVectorSet(0.f, 0.f, m_fRunSpeed * fTimeDelta * -1.f, 1.f);
+		
+
 	if (*m_pState == PLAYER_ELEMENTAL_START)
 	{
 		m_fAirStartTime += fTimeDelta;
@@ -61,12 +68,13 @@ void CWanderer_Body::Tick(const _float& fTimeDelta)
 	}
 	else if (*m_pState == PLAYER_FALL_ATTACK_LOOP)
 	{
-		MoveMatrix.r[3] = XMVectorSet(0.f, m_fAirSpeed * fTimeDelta, 0.f, 1.f);
+		MoveMatrix.r[3] = XMVectorSet(0.f, m_fAirDropSpeed * fTimeDelta, 0.f, 1.f);
 	}
 	else if (*m_pState == PLAYER_ELEMENTAL_END)
 		m_fAirStartTime = 0.f;
-		
 
+	__super::Move_Pos(fTimeDelta, &MoveMatrix);
+		
 	XMStoreFloat4x4(&m_PlayerMovePos, MoveMatrix);
 }
 
@@ -279,6 +287,7 @@ void CWanderer_Body::Change_Animation(const _float& fTimeDelta)
 			m_iAnim = 73;
 			m_IsLoop = false;
 		}
+		m_IsLinearSpeed = false;
 		break;
 	}
 	case PLAYER_SPRINT_START:
@@ -325,7 +334,13 @@ void CWanderer_Body::Change_Animation(const _float& fTimeDelta)
 		m_IsLoop = false;
 		break;
 	}
-	case PLAYER_FALL_GROUND:
+	case PLAYER_FALL_GROUND_H:
+	{
+		m_iAnim = 51;
+		m_IsLoop = false;
+		break;
+	}
+	case PLAYER_FALL_GROUND_L:
 	{
 		m_iAnim = 51;
 		m_IsLoop = false;
@@ -346,6 +361,46 @@ void CWanderer_Body::Change_Animation(const _float& fTimeDelta)
 	case PLAYER_FALL_ATTACK_LOOP: // 떨어짐
 	{
 		m_iAnim = 47;
+		m_IsLoop = true;
+		m_IsLinearSpeed = true;
+		break;
+	}
+	case PLAYER_ELEMENTAL_UP_START:
+	{
+		m_iAnim = 35;
+		m_IsLoop = false;
+		break;
+	}
+	case PLAYER_ELEMENTAL_UP:
+	{
+		m_iAnim = 37;
+		m_IsLoop = true;
+		m_IsLinearSpeed = true;
+		break;
+	}
+	case PLAYER_FLY_START:
+	{
+		m_iAnim = 58;
+		m_IsLoop = false;
+		break;
+	}
+	case PLAYER_FLY_NORMAL:
+	{
+		m_iAnim = 56;
+		m_IsLoop = true;
+		m_IsLinearSpeed = true;
+		break;
+	}
+	case PLAYER_FLY_TURN_L:
+	{
+		m_iAnim = 59;
+		m_IsLoop = true;
+		m_IsLinearSpeed = true;
+		break;
+	}
+	case PLAYER_FLY_TURN_R:
+	{
+		m_iAnim = 60;
 		m_IsLoop = true;
 		m_IsLinearSpeed = true;
 		break;

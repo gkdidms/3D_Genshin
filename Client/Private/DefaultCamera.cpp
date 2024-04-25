@@ -32,6 +32,8 @@ HRESULT CDefaultCamera::Initialize(void* pArg)
 		return E_FAIL;
 
 	XMStoreFloat4x4(&m_OrbitMatrix, XMMatrixIdentity());
+
+	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(90.f));
 	return S_OK;
 }
 
@@ -41,6 +43,9 @@ void CDefaultCamera::Priority_Tick(const _float& fTimeDelta)
 
 void CDefaultCamera::Tick(const _float& fTimeDelta)
 {
+	SetCursorPos(g_iWinSizeX * 0.5f, g_iWinSizeY * 0.5f); // 마우스 좌표 적용해주기
+	ShowCursor(false);
+
 	_float MouseMove = { 0.f };
 	if (MouseMove = m_pGameInstance->Get_DIMouseMove(DIMS_X))
 		Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta * MouseMove * m_fSensor);

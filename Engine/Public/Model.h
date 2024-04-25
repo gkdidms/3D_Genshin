@@ -14,6 +14,7 @@ public:
             : iCurrentAnimIndex{ iCurrentAnimIndex }, isLoop{ isLoop }, isLinear{ isLinear }, isLinearSpeed{ isLinearSpeed } {}
 
         _uint iCurrentAnimIndex = { 0 };
+        _uint iCurrentPlayerble = { 0 };
         _bool isLoop = { false };
         _bool isLinear = { true };
         _bool isLinearSpeed = { false };
@@ -34,6 +35,7 @@ public:
     const _float4x4* Get_BoneCombinedTransformationMatrix(const _char* szBoneName) const;
 
     _bool IsFindMesh(_uint iIndex, const char* szMeshName);
+    void Bind_AnimSpeed(_matrix* MoveMatrix) { *MoveMatrix = XMLoadFloat4x4(&m_vAnimSpeed); }
 
 public:
     HRESULT Initialize_Prototype(const _char* szModelFilePath, _fmatrix PreTransformMatrix, const _char* szBinaryFilePath);

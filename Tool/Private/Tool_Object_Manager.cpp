@@ -134,6 +134,7 @@ HRESULT CTool_Object_Manager::Cell_Save(const _char* pFileName)
 
 	for (auto& Point : Cells)
 	{
+		SortCell(Point.Points);
 		ofs.write((_char*)Point.Points, sizeof(_float3) * 3);
 		ofs.write((_char*)&Point.iOption, sizeof(_int));
 	}
@@ -168,6 +169,7 @@ HRESULT CTool_Object_Manager::Cell_Load(const _char* pFileName)
 		ifs.read((_char*)tDesc.Points, sizeof(_float3) * 3);
 		ifs.read((_char*)&tDesc.iOption, sizeof(_int));
 
+		SortCell(tDesc.Points);
 		Cells.emplace_back(tDesc);
 	}
 
@@ -176,6 +178,23 @@ HRESULT CTool_Object_Manager::Cell_Load(const _char* pFileName)
 	ifs.close();
 
 	return S_OK;
+}
+
+void CTool_Object_Manager::SortCell(_float3* Points)
+{
+	_vector vUP = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+	XMVECTOR ab = XMLoadFloat3(&Points[1]) - XMLoadFloat3(&Points[0]);
+	XMVECTOR bc = XMLoadFloat3(&Points[2]) - XMLoadFloat3(&Points[1]);
+
+	// ab와 bc의 크로스 제품 계산
+	XMVECTOR cross = XMVector4Normalize(XMVector3Cross(ab, bc));
+
+	float dotY = XMVectorGetX(XMVector4Dot(cross, vUP));
+
+	if (dotY < 0)
+	{
+		swap(Points[1], Points[2]);
+	}
 }
 
 HRESULT CTool_Object_Manager::Save(const _char* pFileName)

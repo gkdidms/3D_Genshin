@@ -30,7 +30,7 @@ PLAYER_STATE CStateJump::Update(const _float& fTimeDelta, CState_Manager& pState
 PLAYER_STATE CStateJump::Exit(CState_Manager& pStateManager, PLAYER_STATE CurrentState)
 {
 	if (CurrentState == PLAYER_JUMP)
-		return PLAYER_FALL_GROUND;
+		return PLAYER_FALL_GROUND_H;
 
 	if (CurrentState == PLAYER_JUMP_FOR_RUN)
 		return PLAYER_FALL_GROUND_FOR_RUN;
@@ -38,7 +38,7 @@ PLAYER_STATE CStateJump::Exit(CState_Manager& pStateManager, PLAYER_STATE Curren
 	if (CurrentState == PLAYER_JUMP_FOR_SPRINT)
 		return PLAYER_FALL_GROUND_FOR_SPRINT;
 
-	if (CurrentState == PLAYER_FALL_GROUND)
+	if (CurrentState == PLAYER_FALL_GROUND_H)
 		return pStateManager.Set_CurrentState(CState_Manager::STATE_TYPE_IDEL, PLAYER_JUMP);
 
 	if (CurrentState == PLAYER_FALL_GROUND_FOR_RUN)
@@ -53,9 +53,7 @@ PLAYER_STATE CStateJump::Exit(CState_Manager& pStateManager, PLAYER_STATE Curren
 
 CStateJump* CStateJump::Create()
 {
-	CStateJump* pInstance = new CStateJump();
-
-	return pInstance;
+	return new CStateJump();
 }
 
 void CStateJump::Free()

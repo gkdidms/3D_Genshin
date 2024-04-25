@@ -42,8 +42,6 @@ private:
 private:
     HRESULT Loading_For_Logo();
     HRESULT Loading_For_GamePlay();
-    HRESULT Open_File(LEVEL_STATE eNextLevel);
-    HRESULT Ready_Object(const char* pObjectName, const wstring& strLayerTag);
 
 public:
     static CLoader* Create(LEVEL_STATE eNextLevel, ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

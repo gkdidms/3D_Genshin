@@ -24,6 +24,7 @@ public:
         STATE_TYPE_RUN,
         STATE_TYPE_SPRINT,
         STATE_TYPE_JUMP,
+        STATE_TYPE_FLY,
         STATE_TYPE_END
     };
 
@@ -37,7 +38,7 @@ public:
 
 public:
     PLAYER_STATE Enter(PLAYER_STATE CurrentState) { return m_pCurrentState->Enter(CurrentState); }
-    PLAYER_STATE Update(const _float& fTimeDelta, PLAYER_STATE CurrentState) { return m_pCurrentState->Update(fTimeDelta, *this, CurrentState); }
+     PLAYER_STATE Update(const _float& fTimeDelta, PLAYER_STATE CurrentState) { return m_pCurrentState->Update(fTimeDelta, *this, CurrentState); }
     PLAYER_STATE Exit(PLAYER_STATE CurrentState) { return m_pCurrentState->Exit(*this, CurrentState); }
 
 private:

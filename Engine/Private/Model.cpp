@@ -339,7 +339,6 @@ void CModel::Play_Animation(const _float& fTimeDelta, _float4x4* vMovePos)
 		
 		if (m_tAnimDesc.isLinearSpeed) // 선형보간 시 스피드값이 필요한 애니메이션의 경우 이전 애니메이션의 마지막 스피드를 대입해줌.
 			*vMovePos = m_vAnimSpeed;
-
 		return;
 	}
 	else
@@ -353,16 +352,21 @@ void CModel::Play_Animation(const _float& fTimeDelta, _float4x4* vMovePos)
 			pBone->Update_CombinedTransformMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
 
 		const _float4x4* CombinedTransformMatrix = m_Bones[m_iRootBoneIndex]->Get_CombinedTransformationMatrix();
-		m_vCurMovePos = *CombinedTransformMatrix;
-
+  		m_vCurMovePos = *CombinedTransformMatrix;
 
 		if (!Get_LoopAnimation_Finished())
 		{
 			// 현재 프레임에서 이전 프레임의 값을 빼줌.
 			XMStoreFloat4x4(vMovePos, XMLoadFloat4x4(&m_vCurMovePos) - XMLoadFloat4x4(&m_vPreMovePos));
-			m_vPreMovePos = m_vCurMovePos;
 
-			if (!(vMovePos->m[3][2] == 0.f)) // 현재 프레임에서 움직임이 있다면 움직인 정도 저장.
+			// 현재 프레임이 너무 크게 움직인다면
+			if (!(vMovePos->m[3][2] > 3.f))
+				m_vPreMovePos = m_vCurMovePos;
+			else
+				*vMovePos = m_vAnimSpeed;
+
+			// 현재 프레임에서 움직임이 있다면 움직인 정도 저장.
+			if (!(vMovePos->m[3][2] == 0.f))
 				m_vAnimSpeed = *vMovePos;
 		}
 		else

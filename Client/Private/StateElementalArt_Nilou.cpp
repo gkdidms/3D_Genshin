@@ -87,9 +87,7 @@ PLAYER_STATE CStateElementalArt_Nilou::Exit(CState_Manager& pStateManager, PLAYE
 
 CStateElementalArt_Nilou* CStateElementalArt_Nilou::Create()
 {
-	CStateElementalArt_Nilou* pInstance = new CStateElementalArt_Nilou();
-
-	return pInstance;
+	return new CStateElementalArt_Nilou();
 }
 
 void CStateElementalArt_Nilou::Free()

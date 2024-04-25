@@ -42,6 +42,15 @@ void CNilou_Body::Tick(const _float& fTimeDelta)
 	Change_Animation(fTimeDelta);
 
 	m_pModelCom->Play_Animation(fTimeDelta, &m_PlayerMovePos);
+
+	// 해당 상태일때 이동 값이 0이면 이전 프레임의 이동값을 가져옮
+	if ((*m_pState == PLAYER_SPRINT_TO_RUN || *m_pState == PLAYER_SPRINT_START) && m_PlayerMovePos.m[3][2] <= 0.f)
+	{
+		_matrix MoveMatrix = XMLoadFloat4x4(&m_PlayerMovePos);
+		m_pModelCom->Bind_AnimSpeed(&MoveMatrix);
+
+		XMStoreFloat4x4(&m_PlayerMovePos, MoveMatrix);
+	}
 }
 
 void CNilou_Body::Late_Tick(const _float& fTimeDelta)

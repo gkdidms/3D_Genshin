@@ -232,7 +232,6 @@ _bool CNavigation::isMove(_fvector vMovePos)
                 if (m_Cells[iNeighborsIndex]->isIn(vMovePos, &iNeighborsIndex))
                 {
                     m_iCurrentIndex = iNeighborsIndex;
-                    cout << m_iCurrentIndex << endl;
                     return true;
                 }
                     

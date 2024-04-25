@@ -18,7 +18,7 @@ PLAYER_STATE CStateElementalArt_Yae::Update(const _float& fTimeDelta, CState_Man
 {
 	m_fTime += fTimeDelta;
 
-	if (m_fTime > 3.f)
+	if (m_fTime > m_fEndTime)
 		m_fTime = 0;
 	else
 		return CurrentState;
@@ -69,9 +69,7 @@ PLAYER_STATE CStateElementalArt_Yae::Exit(CState_Manager& pStateManager, PLAYER_
 
 CStateElementalArt_Yae* CStateElementalArt_Yae::Create()
 {
-	CStateElementalArt_Yae* pInstance = new CStateElementalArt_Yae();
-
-	return pInstance;
+	return new CStateElementalArt_Yae();
 }
 
 void CStateElementalArt_Yae::Free()

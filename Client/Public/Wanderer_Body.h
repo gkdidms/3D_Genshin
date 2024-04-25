@@ -6,34 +6,38 @@ class CWanderer_Body :
     public CPartObject_Body
 {   
 public:
-    typedef struct tWandererDesc : public PART_DESC{
-        const _uint* pDirState;
+    typedef struct tWandererDesc : public CPartObject_Body::BODY_DESC {
         const _bool* isElementalAir;
     }WANDERER_DESC;
+
 private:
     CWanderer_Body(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
     CWanderer_Body(const CWanderer_Body& rhs);
     virtual ~CWanderer_Body() = default;
 
 public:
-    HRESULT Initialize_Prototype();
-    HRESULT Initialize(void* pArg);
-    void Priority_Tick(const _float& fTimeDelta);
-    void Tick(const _float& fTimeDelta);
-    void Late_Tick(const _float& fTimeDelta);
-    HRESULT Render();
+    virtual HRESULT Initialize_Prototype() override;
+    virtual HRESULT Initialize(void* pArg) override;
+    virtual void Priority_Tick(const _float& fTimeDelta) override;
+    virtual void Tick(const _float& fTimeDelta) override;
+    virtual void Late_Tick(const _float& fTimeDelta) override;
+    virtual HRESULT Render() override;
+
+
+private:
+    const _bool* m_pElementalAir = { nullptr };
+
+    _float m_fAirSpeed = { 5.f };
+    _float m_fAirDropSpeed = { 13.f };
+    _float m_fAirStartTime = { 0.f };
 
 private:
     virtual HRESULT Add_Components() override;
     virtual HRESULT Bind_ResourceData() override;
     virtual void Change_Animation(const _float& fTimeDelta) override;
 
-private:
-    const _uint* m_pDirState = { nullptr };
-    const _bool* m_pElementalAir = { nullptr };
 
-    _float m_fAirSpeed = { 5.f };
-    _float m_fAirStartTime = { 0.f };
+
 
 public:
     static CWanderer_Body* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

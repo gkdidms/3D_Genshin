@@ -26,9 +26,7 @@ PLAYER_STATE CStateElementalArt_Tighanri::Exit(CState_Manager& pStateManager, PL
 
 CStateElementalArt_Tighanri* CStateElementalArt_Tighanri::Create()
 {
-	CStateElementalArt_Tighanri* pInstance = new CStateElementalArt_Tighanri();
-
-	return pInstance;
+	return new CStateElementalArt_Tighanri();
 }
 
 void CStateElementalArt_Tighanri::Free()

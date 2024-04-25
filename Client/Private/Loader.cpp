@@ -107,7 +107,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("무기 모델를(을) 로딩 중 입니다."));
-
+	PreTransformMatrix = XMMatrixIdentity();
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Ayus", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Ayus/Ayus.fbx", PreTransformMatrix, "../../Data/Weapon_Ayus.dat"))))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Alaya", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Alaya/Alaya.fbx", PreTransformMatrix, "../../Data/Weapon_Alaya.dat"))))
@@ -118,7 +118,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("스킬 오브젝트 모델를(을) 로딩 중 입니다."));
-	PreTransformMatrix = XMMatrixIdentity();
+	
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Gohei", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SkillObj/Yae_Gohei/Gohei.fbx", PreTransformMatrix, "../../Data/SkillObj_Gohei.dat"))))
 		return E_FAIL;
 
@@ -196,8 +196,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	//게임 오브젝트 준비
 	lstrcpy(m_szLoadingText, TEXT("오브젝트 클론을 로딩 중 입니다."));
-	if (FAILED(Open_File(LEVEL_GAMEPLAY)))
-		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
 	m_isFinished = true;
@@ -226,103 +224,4 @@ void CLoader::Free()
 	Safe_Release(m_pContext);
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pGameInstance);
-}
-
-HRESULT CLoader::Open_File(LEVEL_STATE eNextLevel)
-{
-	char pFilePath[MAX_PATH] = "";
-	strcpy_s(pFilePath, eNextLevel == LEVEL_GAMEPLAY ? "../../Data/Stage/Stage_1.dat" : "../../Data/Stage/Stage_1.dat");
-
-	ifstream ifs(pFilePath, ios::binary | ios::in);
-
-	if (ifs.fail())
-		return E_FAIL;
-
-	//플레이어
-	_float3 vPlayerPos = {};
-	_int iPlayerNavigationIndex = { 0 };
-	ifs.read((_char*)&vPlayerPos, sizeof(_float3));
-	ifs.read((_char*)&iPlayerNavigationIndex, sizeof(_int));
-
-	CPlayer::PLAYER_DESC Desc = {};
-	Desc.vPlayerPos = vPlayerPos;
-	Desc.iPlayerNavigationIndex = iPlayerNavigationIndex;
-	Desc.fSpeedPecSec = 20.f;
-	Desc.fRotatePecSec = XMConvertToRadians(60.f);
-
-	//플레이어 생성
-	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Player", L"Layer_Player", &Desc)))
-		return E_FAIL;
-
-	//지형 (하나)
-	_uint iNumDungeon = { 0 };
-	ifs.read((_char*)&iNumDungeon, sizeof(_uint));
-
-	if (iNumDungeon != 0)
-	{
-		_uint iNumDungeonObjectName = { 0 };
-		char pDungeonName[MAX_PATH] = { "" };
-
-		ifs.read((_char*)&iNumDungeonObjectName, sizeof(_uint));
-		ifs.read((_char*)pDungeonName, iNumDungeonObjectName);
-
-		Ready_Object(pDungeonName, L"Layer_Map");
-
-		//지형 월드 행렬 넣어주기
-		_float4x4 WorldMatrix = {};
-		ifs.read((_char*)&WorldMatrix, sizeof(_float4x4));
-
-		CTransform* pTransform = dynamic_cast<CTransform*>( m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, TEXT("Layer_Map"), TEXT("Com_Transform")));
-		pTransform->Set_WorldMatrix(XMLoadFloat4x4(&WorldMatrix));
-	}
-
-	_uint iNumObjects = { 0 };
-	ifs.read((_char*)&iNumObjects, sizeof(_uint));
-
-	for (int i = 0; i < iNumObjects; ++i)
-	{
-		char strObjectName[MAX_PATH] = { "" };
-		_uint iNumObjectName = { 0 };
-
-		ifs.read((_char*)&iNumObjectName, sizeof(_uint));
-		ifs.read((_char*)strObjectName, iNumObjectName);
-
-		_uint iNumObjectIndex = { 0 };
-
-		//find_if(m_CloneDesc[OBJECT_MONSTER].begin(), m_CloneDesc[OBJECT_MONSTER].end(), [&](CLONE_DESC Desc)->_bool {
-		//	if (!strcmp(strObjectName, Desc.strName.c_str()))
-		//	{
-		//		iNumObjectIndex = Desc.iIndex;
-		//		return true;
-		//	}
-
-		//	return false;
-		//	});
-
-		//Add_CloneObject(OBJECT_MONSTER, L"Layer_Object", XMVectorSet(0.f, 0.f, 0.f, 1.f), iNumObjectIndex);
-
-		//_float4x4 WorldMatrix = {};
-		//ifs.read((_char*)&WorldMatrix, sizeof(_float4x4));
-
-		//m_Objects[i]->m_pTransformCom->Set_WorldMatrix(XMLoadFloat4x4(&WorldMatrix));
-	}
-
-	ifs.close();
-	return S_OK;
-}
-
-HRESULT CLoader::Ready_Object(const char* pObjectName, const wstring& strLayerTag)
-{
-	if (!strcmp(pObjectName, "Dungeon_1"))
-	{
-		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Map_Dungeon_1", strLayerTag)))
-			return E_FAIL;
-	}
-	else if (!strcmp(pObjectName, "Dungeon_2"))
-	{
-		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Map_Dungeon_2", strLayerTag)))
-			return E_FAIL;
-	}
-
-	return S_OK;
 }

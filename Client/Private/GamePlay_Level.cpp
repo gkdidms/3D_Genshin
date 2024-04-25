@@ -4,6 +4,7 @@
 #include "DefaultCamera.h"
 #include "Monster.h"
 #include "Player.h"
+#include "Map.h"
 
 CGamePlay_Level::CGamePlay_Level(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel{ pDevice, pContext }
@@ -12,18 +13,14 @@ CGamePlay_Level::CGamePlay_Level(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 
 HRESULT CGamePlay_Level::Initialize()
 {
-	//if (FAILED(Ready_Layer_BackGround(L"Layer_Terrain")))
-	//	return E_FAIL;
-
-	/*if (FAILED(Ready_Layer_Player(L"Layer_Player")))
-		return E_FAIL;*/
+	if (FAILED(Load_File(LEVEL_GAMEPLAY)))
+		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Camera(L"Layer_Camera")))
 		return E_FAIL;
 
 	//if (FAILED(Ready_Layer_Monster(L"Layer_Fiona")))
 	//	return E_FAIL;
-
 
 	return S_OK;
 }
@@ -62,17 +59,24 @@ HRESULT CGamePlay_Level::Ready_Layer_Camera(const wstring& strLayerTag)
 	return S_OK;
 }
 
-HRESULT CGamePlay_Level::Ready_Layer_BackGround(const wstring& strLayerTag)
+HRESULT CGamePlay_Level::Ready_Layer_BackGround(const wstring& strLayerTag, const char* pObjectName, void* pArg)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Terrain", strLayerTag)))
-		return E_FAIL;
-
+	if (!strcmp(pObjectName, "Dungeon_1"))
+	{
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Map_Dungeon_1", strLayerTag, pArg)))
+			return E_FAIL;
+	}
+	else if (!strcmp(pObjectName, "Dungeon_2"))
+	{
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Map_Dungeon_2", strLayerTag, pArg)))
+			return E_FAIL;
+	}
 	return S_OK;
 }
 
-HRESULT CGamePlay_Level::Ready_Layer_Player(const wstring& strLayerTag)
+HRESULT CGamePlay_Level::Ready_Layer_Player(const wstring& strLayerTag, void* pArg)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Player", strLayerTag)))
+	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Player", strLayerTag, pArg)))
 		return E_FAIL;
 
 	return S_OK;
@@ -86,6 +90,91 @@ HRESULT CGamePlay_Level::Ready_Layer_Monster(const wstring& strLayerTag)
 			return E_FAIL;
 	}
 
+	return S_OK;
+}
+
+HRESULT CGamePlay_Level::Load_File(LEVEL_STATE eNextLevel)
+{
+	char pFilePath[MAX_PATH] = "";
+	strcpy_s(pFilePath, eNextLevel == LEVEL_GAMEPLAY ? "../../Data/Stage/Stage_1.dat" : "../../Data/Stage/Stage_1.dat");
+
+	ifstream ifs(pFilePath, ios::binary | ios::in);
+
+	if (ifs.fail())
+		return E_FAIL;
+
+	//플레이어
+	_float3 vPlayerPos = {};
+	_int iPlayerNavigationIndex = { 0 };
+	ifs.read((_char*)&vPlayerPos, sizeof(_float3));
+	ifs.read((_char*)&iPlayerNavigationIndex, sizeof(_int));
+
+	CPlayer::PLAYER_DESC Desc = {};
+	Desc.vPlayerPos = vPlayerPos;
+	Desc.iPlayerNavigationIndex = iPlayerNavigationIndex;
+	Desc.fSpeedPecSec = 20.f;
+	Desc.fRotatePecSec = XMConvertToRadians(60.f);
+
+	//플레이어 생성
+	if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"), &Desc)))
+		return E_FAIL;
+
+	//지형 (하나)
+	_uint iNumDungeon = { 0 };
+	ifs.read((_char*)&iNumDungeon, sizeof(_uint));
+
+	if (iNumDungeon != 0)
+	{
+		_uint iNumDungeonObjectName = { 0 };
+		char pDungeonName[MAX_PATH] = { "" };
+
+		ifs.read((_char*)&iNumDungeonObjectName, sizeof(_uint));
+		ifs.read((_char*)pDungeonName, iNumDungeonObjectName);
+
+		_float4x4 WorldMatrix = {};
+		ifs.read((_char*)&WorldMatrix, sizeof(_float4x4));
+
+		CMap::MAP_DESC MapDesc = {};
+		MapDesc.WorldMatrix = WorldMatrix;
+		
+		if (FAILED(Ready_Layer_BackGround(TEXT("Layer_Map"), pDungeonName, &MapDesc)))
+			return E_FAIL;
+
+		//지형 월드 행렬 넣어주기
+	}
+
+	_uint iNumObjects = { 0 };
+	ifs.read((_char*)&iNumObjects, sizeof(_uint));
+
+	for (int i = 0; i < iNumObjects; ++i)
+	{
+		char strObjectName[MAX_PATH] = { "" };
+		_uint iNumObjectName = { 0 };
+
+		ifs.read((_char*)&iNumObjectName, sizeof(_uint));
+		ifs.read((_char*)strObjectName, iNumObjectName);
+
+		_uint iNumObjectIndex = { 0 };
+
+		//find_if(m_CloneDesc[OBJECT_MONSTER].begin(), m_CloneDesc[OBJECT_MONSTER].end(), [&](CLONE_DESC Desc)->_bool {
+		//	if (!strcmp(strObjectName, Desc.strName.c_str()))
+		//	{
+		//		iNumObjectIndex = Desc.iIndex;
+		//		return true;
+		//	}
+
+		//	return false;
+		//	});
+
+		//Add_CloneObject(OBJECT_MONSTER, L"Layer_Object", XMVectorSet(0.f, 0.f, 0.f, 1.f), iNumObjectIndex);
+
+		//_float4x4 WorldMatrix = {};
+		//ifs.read((_char*)&WorldMatrix, sizeof(_float4x4));
+
+		//m_Objects[i]->m_pTransformCom->Set_WorldMatrix(XMLoadFloat4x4(&WorldMatrix));
+	}
+
+	ifs.close();
 	return S_OK;
 }
 

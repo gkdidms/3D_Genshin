@@ -69,9 +69,7 @@ PLAYER_STATE CStateRun::Exit(class CState_Manager& pStateManager, PLAYER_STATE C
 
 CStateRun* CStateRun::Create()
 {
-	CStateRun* pInstance = new CStateRun();
-
-	return pInstance;
+	return new CStateRun();
 }
 
 void CStateRun::Free()

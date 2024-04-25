@@ -18,6 +18,7 @@ private:
     _uint m_iSkillCount = { 0 };
     _uint m_iMaxSkill = { 2 };
 
+    _float m_fEndTime = { 1.f };
 public:
     static CStateElementalArt_Yae* Create();
     virtual void Free() override;

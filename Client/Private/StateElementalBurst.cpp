@@ -26,9 +26,7 @@ PLAYER_STATE CStateElementalBurst::Exit(CState_Manager& pStateManager, PLAYER_ST
 
 CStateElementalBurst* CStateElementalBurst::Create()
 {
-	CStateElementalBurst* pInstance = new CStateElementalBurst();
-
-	return pInstance;
+	return new CStateElementalBurst();
 }
 
 void CStateElementalBurst::Free()

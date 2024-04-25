@@ -26,8 +26,6 @@ HRESULT CWeapon_Alaya::Initialize(void* pArg)
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
-	m_pTransformCom->Scaling(10.f, 10.f, 10.f);
-
 	return S_OK;
 }
 

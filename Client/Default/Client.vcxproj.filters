@@ -145,6 +145,9 @@
     <Filter Include="96. Utility\State\ElementalArt\Wanderer\Sprint">
       <UniqueIdentifier>{f7501aee-b576-466f-afb3-ee2d4a428867}</UniqueIdentifier>
     </Filter>
+    <Filter Include="96. Utility\State\Fly">
+      <UniqueIdentifier>{9efae588-f1fd-40f3-8c27-344b2715aecc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">
@@ -276,6 +279,9 @@
     <ClInclude Include="..\public\SkillObj_Gohei.h">
       <Filter>02. GameObject\Player\PartObject\SkillObj\Gohei</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\StateFly.h">
+      <Filter>96. Utility\State\Fly</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -394,6 +400,9 @@
     </ClCompile>
     <ClCompile Include="..\private\SkillObj_Gohei.cpp">
       <Filter>02. GameObject\Player\PartObject\SkillObj\Gohei</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StateFly.cpp">
+      <Filter>96. Utility\State\Fly</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -91,8 +91,6 @@ void CPlayer::Tick(const _float& fTimeDelta)
 
 void CPlayer::Late_Tick(const _float& fTimeDelta)
 {
-	
-
 	for (auto& pObject : m_PartObject[m_CurrentPlayerble])
 		pObject->Late_Tick(fTimeDelta);
 
@@ -156,7 +154,7 @@ void CPlayer::SetUp_OnTerrain()
 {
 	if (m_IsElementalAir || (m_CurrentPlayerble == PLAYER_WANDERER && m_iState == PLAYER_ELEMENTAL_END))
 	{
-		if (m_iState != PLAYER_FALL_ATTACK_LOOP)
+		if (m_iState != PLAYER_FALL_ATTACK_LOOP && !m_IsFly)
 			return;
 	}
 		
@@ -165,30 +163,43 @@ void CPlayer::SetUp_OnTerrain()
 
 	_float fHeight = m_pNavigationCom->Compute_Height(vPos);
 
-	if (m_iState == PLAYER_JUMP)
+	if (m_iState == PLAYER_JUMP || m_iState == PLAYER_JUMP_FOR_RUN || m_iState == PLAYER_JUMP_FOR_SPRINT)
 	{		
 		//점프하고 있을때 
 		if (XMVectorGetY(vPos) <= fHeight)
-			m_iState = PLAYER_FALL_GROUND;
+			m_iState = PLAYER_FALL_GROUND_H;
+
+		return;
 	}
-	else if (m_IsElementalAir && m_iState == PLAYER_FALL_ATTACK_LOOP)
+	if (m_IsElementalAir && m_iState == PLAYER_FALL_ATTACK_LOOP)
 	{
 		if (XMVectorGetY(vPos) <= fHeight)
 			m_iState = PLAYER_ELEMENTAL_END;
+		else return;
 	}
-	else
+	if (m_IsFly)
 	{
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSetY(vPos, fHeight));
+		if (XMVectorGetY(vPos) <= fHeight)
+		{
+			m_iState = PLAYER_FALL_GROUND_L;
+			m_IsFly = false;
+		}
+			
+		else return;
 	}
+
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSetY(vPos, fHeight));
 }
 
 HRESULT CPlayer::Ready_Bodys()
 {
 	//PartObject::Body
-	CPartObject::PART_DESC Desc{};
+	CPartObject_Body::BODY_DESC Desc{};
 
 	Desc.pParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
 	Desc.pState = &m_iState;
+	Desc.pDirState = &m_iDirState;
+	Desc.pFly = &m_IsFly;
 	Desc.fSpeedPecSec = 20.f;
 	Desc.fRotatePecSec = XMConvertToRadians(45.f);
 
@@ -209,6 +220,7 @@ HRESULT CPlayer::Ready_Bodys()
 	WandererDesc.pParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
 	WandererDesc.pState = &m_iState;
 	WandererDesc.pDirState = &m_iDirState;
+	WandererDesc.pFly = &m_IsFly;
 	WandererDesc.isElementalAir = &m_IsElementalAir;
 	WandererDesc.fSpeedPecSec = 20.f;
 	WandererDesc.fRotatePecSec = XMConvertToRadians(45.f);
@@ -285,22 +297,22 @@ HRESULT CPlayer::Ready_Weapons()
 	m_PartObject[PLAYER_WANDERER].emplace_back(pGameObject);
 
 	//Nilou
-	//pComponent = m_PartObject[PLAYER_NILOU][PART_BODY]->Get_Component(L"Com_Model");
-	//if (nullptr == pComponent)
-	//	return E_FAIL;
+	pComponent = m_PartObject[PLAYER_NILOU][PART_BODY]->Get_Component(L"Com_Model");
+	if (nullptr == pComponent)
+		return E_FAIL;
 
-	//WeaponDesc.pHandCombinedTransformationMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("PRIVATE_WeaponArrow");
-	//if (nullptr == WeaponDesc.pHandCombinedTransformationMatrix)
-	//	return E_FAIL;
+	WeaponDesc.pHandCombinedTransformationMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("WeaponR");
+	if (nullptr == WeaponDesc.pHandCombinedTransformationMatrix)
+		return E_FAIL;
 
-	//WeaponDesc.pBackCombinedTransformationMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("PRIVATE_WeaponRootBow");
-	//if (nullptr == WeaponDesc.pBackCombinedTransformationMatrix)
-	//	return E_FAIL;
+	WeaponDesc.pBackCombinedTransformationMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("PRIVATE_WeaponRootSword");
+	if (nullptr == WeaponDesc.pBackCombinedTransformationMatrix)
+		return E_FAIL;
 
-	//pGameObject = dynamic_cast<CPartObject*>(m_pGameInstance->Clone_Object(L"Prototype_GameObject_Weapon_Regalis", &WeaponDesc));
-	//if (nullptr == pGameObject)
-	//	return E_FAIL;
-	//m_PartObject[PLAYER_NILOU].emplace_back(pGameObject);
+	pGameObject = dynamic_cast<CPartObject*>(m_pGameInstance->Clone_Object(L"Prototype_GameObject_Weapon_Regalis", &WeaponDesc));
+	if (nullptr == pGameObject)
+		return E_FAIL;
+	m_PartObject[PLAYER_NILOU].emplace_back(pGameObject);
 
 	return S_OK;
 }
@@ -339,8 +351,12 @@ void CPlayer::Input_Key(const _float& fTimeDelta)
 	// 방랑자 원소 스킬 사용시 부유하고 있는지, 아닌지 체크 
 	if (m_CurrentPlayerble == PLAYER_WANDERER && m_iState == PLAYER_ELEMENTAL_START)
 		m_IsElementalAir = true;
-	else if (m_CurrentPlayerble == PLAYER_WANDERER && m_iState == PLAYER_ELEMENTAL_END)
+	else if (m_CurrentPlayerble == PLAYER_WANDERER && (m_iState == PLAYER_ELEMENTAL_END || m_iState == PLAYER_FALL_GROUND_L))
 		m_IsElementalAir = false;
+
+	// fly 체크
+	if (m_iState == PLAYER_FLY_START)
+		m_IsFly = true;
 
 	// 루트 애니메이션 제어 전 까지 주석
 	// 뛰기 제어

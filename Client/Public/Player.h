@@ -42,7 +42,7 @@ public:
 private:
     class CState_Manager* m_pState_Manager = { nullptr };
     vector<class CGameObject*> m_PartObject[PLAYER_TYPE_END];
-    PLAYERBLE_TYPE m_CurrentPlayerble = { PLAYER_WANDERER };
+    PLAYERBLE_TYPE m_CurrentPlayerble = { PLAYER_NILOU };
 
     CNavigation* m_pNavigationCom = { nullptr };
     CCollider* m_pColliderCom = { nullptr };
@@ -51,6 +51,7 @@ private:
     _uint m_iState = { 0 };
     _uint m_iDirState = { 0 };
     _bool m_IsElementalAir = { false };
+    _bool m_IsFly = { false };
 
 private:
     _int m_iPlayerNavigationIndex = { 0 };

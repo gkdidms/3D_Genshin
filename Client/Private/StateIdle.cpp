@@ -43,9 +43,7 @@ PLAYER_STATE CStateIdle::Exit(class CState_Manager& pStateManager, PLAYER_STATE 
 
 CStateIdle* CStateIdle::Create()
 {
-	CStateIdle* pInstance = new CStateIdle();
-
-	return pInstance;
+	return new CStateIdle();
 }
 
 void CStateIdle::Free()
