@@ -68,7 +68,7 @@ private:
 
 private:
     void SortCell(_float3* Points);
-
+    _bool SamePoint(_float3* Points);
 public:
     void Release_Object();
     virtual void Free();

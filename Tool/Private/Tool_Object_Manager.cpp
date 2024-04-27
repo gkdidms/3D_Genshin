@@ -129,12 +129,19 @@ HRESULT CTool_Object_Manager::Cell_Save(const _char* pFileName)
 
 	vector<CTool_Dungeon::TOOL_CELL_DESC> Cells = dynamic_cast<CTool_Dungeon*>(m_Terrains[0])->Get_Cells();
 
+	for (int i = 0; i < Cells.size(); ++i)
+	{
+		if (!SamePoint(Cells[i].Points))
+			Cells.erase(Cells.begin() + i);
+	}
+
 	_uint NumCells = Cells.size();
 	ofs.write((_char*)&NumCells, sizeof(_uint));
 
 	for (auto& Point : Cells)
 	{
 		SortCell(Point.Points);
+			
 		ofs.write((_char*)Point.Points, sizeof(_float3) * 3);
 		ofs.write((_char*)&Point.iOption, sizeof(_int));
 	}
@@ -195,6 +202,18 @@ void CTool_Object_Manager::SortCell(_float3* Points)
 	{
 		swap(Points[1], Points[2]);
 	}
+}
+
+_bool CTool_Object_Manager::SamePoint(_float3* Points)
+{
+	if (XMVector3Equal(XMLoadFloat3(&Points[0]), XMLoadFloat3(&Points[1])))
+		return false;
+	else if (XMVector3Equal(XMLoadFloat3(&Points[1]), XMLoadFloat3(&Points[2])))
+		return false;
+	else if (XMVector3Equal(XMLoadFloat3(&Points[2]), XMLoadFloat3(&Points[0])))
+		return false;
+
+	return true;
 }
 
 HRESULT CTool_Object_Manager::Save(const _char* pFileName)
