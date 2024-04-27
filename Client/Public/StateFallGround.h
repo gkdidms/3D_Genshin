@@ -1,11 +1,11 @@
 #pragma once
 #include "State.h"
-class CStateJump :
+class CStateFallGround :
     public CState
 {
 private:
-    CStateJump();
-    virtual ~CStateJump() = default;
+    CStateFallGround();
+    virtual ~CStateFallGround() = default;
 
 public:
     virtual PLAYER_STATE Enter(PLAYER_STATE CurrentState) override;
@@ -13,7 +13,7 @@ public:
     virtual PLAYER_STATE Exit(class CState_Manager& pStateManager, PLAYER_STATE CurrentState) override;
 
 public:
-    static CStateJump* Create();
-    virtual void Free();
+    static CStateFallGround* Create();
+    virtual void Free() override;
 };
 

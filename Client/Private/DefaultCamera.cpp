@@ -43,8 +43,8 @@ void CDefaultCamera::Priority_Tick(const _float& fTimeDelta)
 
 void CDefaultCamera::Tick(const _float& fTimeDelta)
 {
-	SetCursorPos(g_iWinSizeX * 0.5f, g_iWinSizeY * 0.5f); // 마우스 좌표 적용해주기
-	ShowCursor(false);
+	//SetCursorPos(g_iWinSizeX * 0.5f, g_iWinSizeY * 0.5f); // 마우스 좌표 적용해주기
+	//ShowCursor(false);
 
 	_float MouseMove = { 0.f };
 	if (MouseMove = m_pGameInstance->Get_DIMouseMove(DIMS_X))

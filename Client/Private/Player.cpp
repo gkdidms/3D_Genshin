@@ -82,9 +82,9 @@ void CPlayer::Tick(const _float& fTimeDelta)
 
 	dynamic_cast<CPartObject*>(m_PartObject[m_CurrentPlayerble][PART_BODY])->Set_PlayerPos(&RootMatrix);
 	XMStoreFloat4x4(&RootMatrix, XMLoadFloat4x4(&RootMatrix) * -1.f);
-	m_pTransformCom->Go_Run(XMLoadFloat4x4(&RootMatrix), m_pNavigationCom);
+	_bool isMove = m_pTransformCom->Go_Run(XMLoadFloat4x4(&RootMatrix), m_pNavigationCom);
 
-	SetUp_OnTerrain();
+	SetUp_OnTerrain(isMove);
 
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 }
@@ -150,7 +150,7 @@ HRESULT CPlayer::Add_Components()
 	return S_OK;
 }
 
-void CPlayer::SetUp_OnTerrain()
+void CPlayer::SetUp_OnTerrain(_bool isMove)
 {
 	if (m_IsElementalAir || (m_CurrentPlayerble == PLAYER_WANDERER && m_iState == PLAYER_ELEMENTAL_END))
 	{
@@ -163,11 +163,18 @@ void CPlayer::SetUp_OnTerrain()
 
 	_float fHeight = m_pNavigationCom->Compute_Height(vPos);
 
-	if (m_iState == PLAYER_JUMP || m_iState == PLAYER_JUMP_FOR_RUN || m_iState == PLAYER_JUMP_FOR_SPRINT)
+	CCell::OPTION eOption = m_pNavigationCom->Get_OptionType();
+	
+
+
+	if (m_IsJump)
 	{		
 		//점프하고 있을때 
-		if (XMVectorGetY(vPos) <= fHeight)
+		if (XMVectorGetY(vPos) < fHeight)
+		{
 			m_iState = PLAYER_FALL_GROUND_H;
+			m_IsJump = false;
+		}
 
 		return;
 	}
@@ -179,6 +186,7 @@ void CPlayer::SetUp_OnTerrain()
 	}
 	if (m_IsFly)
 	{
+		m_IsJump = false;
 		if (XMVectorGetY(vPos) <= fHeight)
 		{
 			m_iState = PLAYER_FALL_GROUND_L;
@@ -186,6 +194,30 @@ void CPlayer::SetUp_OnTerrain()
 		}
 			
 		else return;
+	}
+	if (m_IsDrop)
+	{
+		if (XMVectorGetY(vPos) <= fHeight)
+		{
+			m_iState = m_pState_Manager->Set_CurrentState(CState_Manager::STATE_TYPE_FALL_GROUND);
+			m_IsDrop = false;
+		}
+		else return;
+	}
+
+	if (eOption == CCell::OPTION_FLY && isMove)
+	{
+		if (fHeight > XMVectorGetY(vPos))
+			return;
+
+		// 밟고 있는 셀이 fly이라면
+		if (m_iState != PLAYER_FALL_ATTACK_LOOP && !m_IsFly)
+		{
+			m_iState = m_pState_Manager->Set_CurrentState(CState_Manager::STATE_TYPE_FALL_ATTACK);
+			m_IsDrop = true;
+		}
+
+		return;
 	}
 
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSetY(vPos, fHeight));
@@ -358,6 +390,11 @@ void CPlayer::Input_Key(const _float& fTimeDelta)
 	if (m_iState == PLAYER_FLY_START)
 		m_IsFly = true;
 
+	// Jump 체크
+	if (m_iState == PLAYER_JUMP || m_iState == PLAYER_JUMP_FOR_RUN || m_iState == PLAYER_JUMP_FOR_SPRINT)
+		m_IsJump = true;
+
+	m_iDirState == DIR_END;
 	// 루트 애니메이션 제어 전 까지 주석
 	// 뛰기 제어
 	if (m_pGameInstance->GetKeyState(DIK_W) == CInput_Device::HOLD) // 앞

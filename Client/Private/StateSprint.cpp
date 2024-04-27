@@ -10,7 +10,7 @@ CStateSprint::CStateSprint()
 
 PLAYER_STATE CStateSprint::Enter(PLAYER_STATE CurrentState)
 {
-	if (CurrentState == PLAYER_JUMP_FOR_SPRINT)
+	if (CurrentState == PLAYER_JUMP_FOR_SPRINT || CurrentState == PLAYER_FALL_GROUND_FOR_SPRINT)
 		return PLAYER_SPRINT;
 
 	return PLAYER_SPRINT_START;

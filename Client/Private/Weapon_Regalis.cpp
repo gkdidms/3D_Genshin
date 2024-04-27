@@ -35,16 +35,18 @@ void CWeapon_Regalis::Priority_Tick(const _float& fTimeDelta)
 
 void CWeapon_Regalis::Tick(const _float& fTimeDelta)
 {
-}
-
-void CWeapon_Regalis::Late_Tick(const _float& fTimeDelta)
-{
 	_matrix		SocketMatrix = XMMatrixIdentity();
 
 	if (*m_pState == PLAYER_ATTACK_1
 		|| *m_pState == PLAYER_ATTACK_2
 		|| *m_pState == PLAYER_ATTACK_3
 		|| *m_pState == PLAYER_ATTACK_4
+		|| *m_pState == PLAYER_ELEMENTAL_1
+		|| *m_pState == PLAYER_ELEMENTAL_1_END
+		|| *m_pState == PLAYER_ELEMENTAL_2
+		|| *m_pState == PLAYER_ELEMENTAL_2_END
+		|| *m_pState == PLAYER_ELEMENTAL_3
+		|| *m_pState == PLAYER_ELEMENTAL_3_END
 		|| *m_pState == PLAYER_ELEMENTAL_BURST
 		|| *m_pState == PLAYER_ELEMENTAL_BURST_END)
 	{
@@ -61,13 +63,25 @@ void CWeapon_Regalis::Late_Tick(const _float& fTimeDelta)
 
 	XMStoreFloat4x4(&m_pWorldMatrix, m_pTransformCom->Get_WorldMatrix() * SocketMatrix * XMLoadFloat4x4(m_pParentMatrix));
 
+	m_pColliderCom->Tick(XMLoadFloat4x4(&m_pWorldMatrix));
+}
+
+void CWeapon_Regalis::Late_Tick(const _float& fTimeDelta)
+{
+	
+
 	m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONBLENDER, this);
 }
 
 HRESULT CWeapon_Regalis::Render()
 {
+	if (m_isHide)
+		return S_OK;
+
 	if (FAILED(__super::Render()))
 		return E_FAIL;
+
+	m_pColliderCom->Render();
 
 	return S_OK;
 }
@@ -78,6 +92,15 @@ HRESULT CWeapon_Regalis::Add_Components()
 		return E_FAIL;
 
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Regalis", L"Com_Model", reinterpret_cast<CComponent**>(&m_pModelCom))))
+		return E_FAIL;
+
+	CBounding_OBB::BOUNDING_OBB_DESC Desc{};
+	Desc.eType = CCollider::COLLIDER_OBB;
+	Desc.vExtents = _float3(0.1f, 0.1f, 0.4f);
+	Desc.vCenter = _float3(0.f, 0.f, Desc.vExtents.z * -1.f);
+	Desc.vRotation = _float3(0.f, 0.f, 0.f);
+
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Collider", L"Com_Collider", reinterpret_cast<CComponent**>(&m_pColliderCom), &Desc)))
 		return E_FAIL;
 
 	return S_OK;
@@ -124,4 +147,6 @@ CGameObject* CWeapon_Regalis::Clone(void* pArg)
 void CWeapon_Regalis::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pColliderCom);
 }

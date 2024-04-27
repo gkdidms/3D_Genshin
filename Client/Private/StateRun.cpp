@@ -10,7 +10,7 @@ CStateRun::CStateRun()
 
 PLAYER_STATE CStateRun::Enter(PLAYER_STATE CurrentState)
 {
-	if (CurrentState == PLAYER_SPRINT_STOP || CurrentState == PLAYER_JUMP_FOR_RUN)
+	if (CurrentState == PLAYER_SPRINT_STOP || CurrentState == PLAYER_JUMP_FOR_RUN || CurrentState == PLAYER_FALL_GROUND_FOR_RUN)
 		return PLAYER_RUN;
 
 	return PLAYER_RUN;

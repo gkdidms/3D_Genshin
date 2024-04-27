@@ -336,7 +336,7 @@ void CWanderer_Body::Change_Animation(const _float& fTimeDelta)
 	}
 	case PLAYER_FALL_GROUND_H:
 	{
-		m_iAnim = 51;
+		m_iAnim = 50;
 		m_IsLoop = false;
 		break;
 	}

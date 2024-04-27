@@ -3,10 +3,7 @@
 #include "State_Manager.h"
 
 CStateJump::CStateJump()
-{
-}
-
-CStateJump::~CStateJump()
+	: CState{}
 {
 }
 

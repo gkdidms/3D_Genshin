@@ -53,17 +53,18 @@ void CWeapon_Narukami::Late_Tick(const _float& fTimeDelta)
 		SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
 
 		XMStoreFloat4x4(&m_pWorldMatrix, m_pTransformCom->Get_WorldMatrix() * SocketMatrix * XMLoadFloat4x4(m_pParentMatrix));
-
-		m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONBLENDER, this);
 	}
 	else
 		m_isHide = true;
+
+	/*if (false == m_isHide)
+		m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONBLENDER, this);*/
 }
 
 HRESULT CWeapon_Narukami::Render()
 {
 	if (m_isHide)
-		return S_OK;
+		return S_OK;	
 
 	if (FAILED(__super::Render()))
 		return E_FAIL;

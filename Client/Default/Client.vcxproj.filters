@@ -148,6 +148,12 @@
     <Filter Include="96. Utility\State\Fly">
       <UniqueIdentifier>{9efae588-f1fd-40f3-8c27-344b2715aecc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="96. Utility\State\FallAttack">
+      <UniqueIdentifier>{14b1739a-7377-48cc-9b5e-134dce0d3093}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility\State\FallGround">
+      <UniqueIdentifier>{40e0de77-380c-40aa-856d-66e5419bfa2e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">
@@ -261,14 +267,8 @@
     <ClInclude Include="..\public\StateElementalArt_Nilou.h">
       <Filter>96. Utility\State\ElementalArt\Nilou</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Weapon_Alaya.h">
-      <Filter>02. GameObject\Player\PartObject\Weapon\Yae</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\StateJump.h">
       <Filter>96. Utility\State\Jump</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Weapon_Narukami.h">
-      <Filter>02. GameObject\Player\PartObject\Weapon\Wanderer</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Weapon_Regalis.h">
       <Filter>02. GameObject\Player\PartObject\Weapon\Nilou</Filter>
@@ -281,6 +281,18 @@
     </ClInclude>
     <ClInclude Include="..\public\StateFly.h">
       <Filter>96. Utility\State\Fly</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\StateFallAttack.h">
+      <Filter>96. Utility\State\FallAttack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\StateFallGround.h">
+      <Filter>96. Utility\State\FallGround</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Weapon_Alaya.h">
+      <Filter>02. GameObject\Player\PartObject\Weapon\Wanderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Weapon_Narukami.h">
+      <Filter>02. GameObject\Player\PartObject\Weapon\Yae</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -383,14 +395,8 @@
     <ClCompile Include="..\private\StateElementalArt_Nilou.cpp">
       <Filter>96. Utility\State\ElementalArt\Nilou</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Weapon_Alaya.cpp">
-      <Filter>02. GameObject\Player\PartObject\Weapon\Yae</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\StateJump.cpp">
       <Filter>96. Utility\State\Jump</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Weapon_Narukami.cpp">
-      <Filter>02. GameObject\Player\PartObject\Weapon\Wanderer</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Weapon_Regalis.cpp">
       <Filter>02. GameObject\Player\PartObject\Weapon\Nilou</Filter>
@@ -403,6 +409,18 @@
     </ClCompile>
     <ClCompile Include="..\private\StateFly.cpp">
       <Filter>96. Utility\State\Fly</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StateFallAttack.cpp">
+      <Filter>96. Utility\State\FallAttack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StateFallGround.cpp">
+      <Filter>96. Utility\State\FallGround</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Weapon_Alaya.cpp">
+      <Filter>02. GameObject\Player\PartObject\Weapon\Wanderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Weapon_Narukami.cpp">
+      <Filter>02. GameObject\Player\PartObject\Weapon\Yae</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

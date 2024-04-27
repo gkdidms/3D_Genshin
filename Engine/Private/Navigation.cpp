@@ -1,6 +1,5 @@
 #include "Navigation.h"
 
-#include "Cell.h"
 #include "Shader.h"
 #include "GameInstance.h"
 
@@ -93,7 +92,7 @@ _int CNavigation::Find_Index(_fvector vTargetPos, _fvector vTargetRayDir, _fmatr
 HRESULT CNavigation::Render()
 {
     XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());
-    m_WorldMatrix.m[3][1] += 0.1f;
+    m_WorldMatrix.m[3][1] += 0.2f;
     m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix);
 
     m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(CPipeLine::D3DTS_VIEW));
@@ -245,6 +244,18 @@ _bool CNavigation::isMove(_fvector vMovePos)
 _float CNavigation::Compute_Height(_fvector vPosition)
 {
     return m_Cells[m_iCurrentIndex]->Compute_Height(vPosition);
+}
+
+_bool CNavigation::isLook(_fvector vLook)
+{
+    _vector vAB = m_Cells[m_iCurrentIndex]->Get_Point(CCell::POINT_B) - m_Cells[m_iCurrentIndex]->Get_Point(CCell::POINT_A);
+    _vector vCA = m_Cells[m_iCurrentIndex]->Get_Point(CCell::POINT_C) - m_Cells[m_iCurrentIndex]->Get_Point(CCell::POINT_A);
+
+    _vector vCross = XMVector3Normalize(XMVector3Cross(vAB, vCA));
+
+    _float fAngle = XMVectorGetX(XMVector3Dot(vLook, vCross));
+    
+    return fAngle < 0.f;
 }
 
 

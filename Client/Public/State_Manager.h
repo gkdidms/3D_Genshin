@@ -25,6 +25,8 @@ public:
         STATE_TYPE_SPRINT,
         STATE_TYPE_JUMP,
         STATE_TYPE_FLY,
+        STATE_TYPE_FALL_ATTACK,
+        STATE_TYPE_FALL_GROUND,
         STATE_TYPE_END
     };
 
@@ -45,7 +47,7 @@ private:
     CGameInstance* m_pGameInstance = { nullptr };
     CState* m_pCurrentState = { nullptr };
 
-    CPlayer::PLAYERBLE_TYPE m_CurrentPlayerble = { CPlayer::PLAYER_WANDERER };
+    CPlayer::PLAYERBLE_TYPE m_CurrentPlayerble = { CPlayer::PLAYER_NILOU };
 
 public:
     virtual void Free() override;

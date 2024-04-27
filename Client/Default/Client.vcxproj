@@ -175,6 +175,8 @@
     <ClInclude Include="..\public\Monster.h" />
     <ClInclude Include="..\Public\Nilou_Body.h" />
     <ClInclude Include="..\public\PartObject.h" />
+    <ClInclude Include="..\public\StateFallAttack.h" />
+    <ClInclude Include="..\public\StateFallGround.h" />
     <ClInclude Include="..\public\StateFly.h" />
     <ClInclude Include="..\public\StateJump.h" />
     <ClInclude Include="..\public\Weapon_Alaya.h" />
@@ -220,6 +222,8 @@
     <ClCompile Include="..\private\Monster.cpp" />
     <ClCompile Include="..\Private\Nilou_Body.cpp" />
     <ClCompile Include="..\private\PartObject.cpp" />
+    <ClCompile Include="..\private\StateFallAttack.cpp" />
+    <ClCompile Include="..\private\StateFallGround.cpp" />
     <ClCompile Include="..\private\StateFly.cpp" />
     <ClCompile Include="..\private\StateJump.cpp" />
     <ClCompile Include="..\private\Weapon_Alaya.cpp" />

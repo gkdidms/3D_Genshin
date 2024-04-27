@@ -63,6 +63,9 @@ void CWeapon_Alaya::Late_Tick(const _float& fTimeDelta)
 
 HRESULT CWeapon_Alaya::Render()
 {
+	if (m_isHide)
+		return S_OK;
+
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 

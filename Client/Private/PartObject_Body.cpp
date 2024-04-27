@@ -68,7 +68,7 @@ HRESULT CPartObject_Body::Render()
 
 void CPartObject_Body::Move_Pos(const _float& fTimeDelta, _matrix* MoveMatrix)
 {
-	if (*m_pFly)
+	if (*m_pFly && *m_pState != PLAYER_FLY_START)
 	{
 		if (*m_pDirState == CPlayer::DIR_STRIGHT)
 			MoveMatrix->r[3] = XMVectorSet(0.f, m_fFlySpeed * fTimeDelta, m_fFlySpeed * fTimeDelta * -1.f, 1.f);
@@ -78,6 +78,18 @@ void CPartObject_Body::Move_Pos(const _float& fTimeDelta, _matrix* MoveMatrix)
 			MoveMatrix->r[3] = XMVectorSet(m_fFlySpeed * fTimeDelta * -1.f, m_fFlySpeed * fTimeDelta, m_fFlySpeed * fTimeDelta * -1.f, 1.f);
 		else if (*m_pDirState == CPlayer::DIR_END)
 			MoveMatrix->r[3] = XMVectorSet(0.f, m_fFlySpeed * fTimeDelta, 0.f, 1.f);
+	}
+
+	if (*m_pState == PLAYER_FALL_ATTACK_LOOP)
+	{
+		if (*m_pDirState == CPlayer::DIR_STRIGHT)
+			MoveMatrix->r[3] = XMVectorSet(0.f, m_fFallDropSpeed * fTimeDelta, m_fFlySpeed * fTimeDelta * -1.f, 1.f);
+		else if (*m_pDirState == CPlayer::DIR_LEFT_SIDE)
+			MoveMatrix->r[3] = XMVectorSet(m_fFlySpeed * fTimeDelta * 1.f, m_fFallDropSpeed * fTimeDelta, m_fFlySpeed * fTimeDelta * -1.f, 1.f);
+		else if (*m_pDirState == CPlayer::DIR_RIGHT_SIDE)
+			MoveMatrix->r[3] = XMVectorSet(m_fFlySpeed * fTimeDelta * -1.f, m_fFallDropSpeed * fTimeDelta, m_fFlySpeed * fTimeDelta * -1.f, 1.f);
+		else if (*m_pDirState == CPlayer::DIR_END)
+			MoveMatrix->r[3] = XMVectorSet(0.f, m_fFallDropSpeed * fTimeDelta, 0.f, 1.f);
 	}
 
 }

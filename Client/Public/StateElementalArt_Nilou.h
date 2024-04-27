@@ -22,7 +22,7 @@ private:
     _uint m_iElementalArtCount = { 0 };
 
     _float m_fCurrentTime = { 0.f }; // 총 스킬 작동 시간 
-    _float m_fFinishTime = { 7.f }; // 스킬 지속시간
+    _float m_fFinishTime = { 10.f }; // 스킬 지속시간
 
 public:
     static CStateElementalArt_Nilou* Create();

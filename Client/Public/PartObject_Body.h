@@ -38,6 +38,7 @@ protected:
     _float m_fSprintSpeed = { 80.f };
 
     _float m_fFlySpeed = { 2.f };
+    _float m_fFallDropSpeed = { 4.f };
 
 protected:
     virtual HRESULT Add_Components() = 0;

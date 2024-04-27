@@ -9,6 +9,8 @@
 #include "StateAttack.h"
 #include "StateJump.h"
 #include "StateFly.h"
+#include "StateFallAttack.h"
+#include "StateFallGround.h"
 #include "StateElementalArt_Wanderer.h"
 #include "StateElementalArt_Tighanri.h"
 #include "StateElementalArt_Nilou.h"
@@ -29,10 +31,10 @@ PLAYER_STATE CState_Manager::Set_CurrentState(STATE_TYPE Type, PLAYER_STATE Curr
 
 	switch (Type)
 	{
-	case Client::CState_Manager::STATE_TYPE_IDEL:
+	case STATE_TYPE_IDEL: // 대기
 		m_pCurrentState = CStateIdle::Create();
 		break;
-	case Client::CState_Manager::STATE_TYPE_ATTACK:
+	case STATE_TYPE_ATTACK: // 공격
 	{
 		_uint m_iMaxAttack = { 0 };
 		if (m_CurrentPlayerble == CPlayer::PLAYER_TIGHNARI || m_CurrentPlayerble == CPlayer::PLAYER_NILOU)
@@ -43,7 +45,7 @@ PLAYER_STATE CState_Manager::Set_CurrentState(STATE_TYPE Type, PLAYER_STATE Curr
 		m_pCurrentState = CStateAttack::Create(m_iMaxAttack);
 		break;
 	}
-	case Client::CState_Manager::STATE_TYPE_ELEMENTALART:
+	case STATE_TYPE_ELEMENTALART: // 원소스킬
 	{
 		if (m_CurrentPlayerble == CPlayer::PLAYER_WANDERER)
 			m_pCurrentState = CStateElementalArt_Wanderer::Create();
@@ -55,22 +57,28 @@ PLAYER_STATE CState_Manager::Set_CurrentState(STATE_TYPE Type, PLAYER_STATE Curr
 			m_pCurrentState = CStateElementalArt_Nilou::Create();
 		break;
 	}
-	case Client::CState_Manager::STATE_TYPE_ELEMNETALBURST:
+	case STATE_TYPE_ELEMNETALBURST: // 원소 폭팔
 		m_pCurrentState = CStateElementalBurst::Create();
 		break;
-	case Client::CState_Manager::STATE_TYPE_RUN:
+	case STATE_TYPE_RUN: // 달리기
 		m_pCurrentState = CStateRun::Create();
 		break;
-	case Client::CState_Manager::STATE_TYPE_SPRINT:
+	case STATE_TYPE_SPRINT: // 대쉬
 		m_pCurrentState = CStateSprint::Create();
 		break;
-	case STATE_TYPE_JUMP:
+	case STATE_TYPE_JUMP: // 점프
 		m_pCurrentState = CStateJump::Create();
 		break;
-	case STATE_TYPE_FLY:
+	case STATE_TYPE_FLY: // 날기
 		m_pCurrentState = CStateFly::Create();
 		break;
-	case Client::CState_Manager::STATE_TYPE_END:
+	case STATE_TYPE_FALL_ATTACK: // 점프 후 공격
+		m_pCurrentState = CStateFallAttack::Create();
+		break;
+	case STATE_TYPE_FALL_GROUND: // 착지
+		m_pCurrentState = CStateFallGround::Create();
+		break;
+	case STATE_TYPE_END:
 		break;
 	default:
 		break;

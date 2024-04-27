@@ -130,6 +130,9 @@
     <Filter Include="01. Utility\03. Component\Collider\DebugDraw">
       <UniqueIdentifier>{8687d724-14a7-4a55-9afd-30f457f4f810}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\03. Component\Collider\Bounding\OBB">
+      <UniqueIdentifier>{30def1a3-acaa-4d27-986f-2819f32a39ca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -248,6 +251,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\DebugDraw.cpp">
       <Filter>01. Utility\03. Component\Collider\DebugDraw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Bounding_OBB.cpp">
+      <Filter>01. Utility\03. Component\Collider\Bounding\OBB</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -379,6 +385,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\DebugDraw.h">
       <Filter>01. Utility\03. Component\Collider\DebugDraw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Bounding_OBB.h">
+      <Filter>01. Utility\03. Component\Collider\Bounding\OBB</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

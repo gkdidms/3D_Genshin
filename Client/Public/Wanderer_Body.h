@@ -28,7 +28,7 @@ private:
     const _bool* m_pElementalAir = { nullptr };
 
     _float m_fAirSpeed = { 5.f };
-    _float m_fAirDropSpeed = { 13.f };
+    _float m_fAirDropSpeed = { 15.f };
     _float m_fAirStartTime = { 0.f };
 
 private:

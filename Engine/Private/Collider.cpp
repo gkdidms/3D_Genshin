@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 
 #include "Bounding_AABB.h"
+#include "Bounding_OBB.h"
 
 CCollider::CCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent{ pDevice, pContext }
@@ -51,6 +52,7 @@ HRESULT CCollider::Initialize(void* pArg)
 		m_pCurrentBounding = CBounding_AABB::Create(pArg);
 		break;
 	case COLLIDER_OBB:
+		m_pCurrentBounding = CBounding_OBB::Create(pArg);
 		break;
 	case COLLIDER_SPHERE:
 		break;

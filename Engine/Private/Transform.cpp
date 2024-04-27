@@ -69,14 +69,18 @@ HRESULT CTransform::Bind_ShaderMatrix(CShader* pShader, const _char* pConstantNa
 	return pShader->Bind_Matrix(pConstantName, &m_matWorld);
 }
 
-void CTransform::Go_Run(const _matrix vMoveMatrix, CNavigation* pNavigationCom)
+_bool CTransform::Go_Run(const _matrix vMoveMatrix, CNavigation* pNavigationCom)
 {
 	_vector vPos = XMVectorSetW(XMVector3TransformCoord(vMoveMatrix.r[3], Get_WorldMatrix()), 1.f);
 
 	if (nullptr == pNavigationCom ? false : !pNavigationCom->isMove(vPos))
-		return;
+		return false;
 
+	if (pNavigationCom->Get_OptionType() == CCell::OPTION_FLY && pNavigationCom->isLook(XMVector3Normalize(Get_State(STATE_LOOK))))
+		return false;
+		
 	Set_State(CTransform::STATE_POSITION, vPos);
+	return true;
 }
 
 void CTransform::Go_Straight(const _float& fTimeDelta)

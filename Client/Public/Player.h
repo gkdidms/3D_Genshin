@@ -48,10 +48,14 @@ private:
     CCollider* m_pColliderCom = { nullptr };
 
 private:
-    _uint m_iState = { 0 };
-    _uint m_iDirState = { 0 };
-    _bool m_IsElementalAir = { false };
-    _bool m_IsFly = { false };
+    _uint m_iState = { 0 }; // 현재 플레이어 상태
+    _uint m_iDirState = { 0 }; // 플레이어 방향
+
+private: // 상태에 따른 bool값
+    _bool m_IsElementalAir = { false }; // 캐릭터가 방랑자일때 원소 스킬을 사용중인지
+    _bool m_IsFly = { false }; // 날고 있는지
+    _bool m_IsJump = { false }; // 점프중인지
+    _bool m_IsDrop = { false }; // 떨어지는 중인지
 
 private:
     _int m_iPlayerNavigationIndex = { 0 };
@@ -69,7 +73,7 @@ private:
 
 private:
     HRESULT Add_Components();
-    void SetUp_OnTerrain(); // 높이 조정 
+    void SetUp_OnTerrain(_bool isMove); // 높이 조정 
 
 public:
     static CPlayer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

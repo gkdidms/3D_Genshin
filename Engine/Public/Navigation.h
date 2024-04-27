@@ -1,6 +1,8 @@
 #pragma once
 #include "Component.h"
 
+#include "Cell.h"
+
 BEGIN(Engine)
 class ENGINE_DLL CNavigation :
     public CComponent
@@ -19,6 +21,9 @@ public:
     void Set_Points(const _float3* vPoints, _int OptionType);
 
 public:
+    CCell::OPTION Get_OptionType() { return m_Cells[m_iCurrentIndex]->Get_Option(); }
+
+public:
     virtual HRESULT Initialize_Prototype(); // Tool용
     virtual HRESULT Initialize_Prototype(const wstring strFilePath);
     virtual HRESULT Initialize(void* pArg) override;
@@ -28,6 +33,7 @@ public:
     _int Find_Index(_fvector vTargetPos, _fvector vTargetRayDir, _fmatrix WorldMatirx);
     _bool isMove(_fvector vMovePos);
     _float Compute_Height(_fvector vPosition);
+    _bool isLook(_fvector vLook);
 #ifdef _DEBUG
 public:
     HRESULT Render();
@@ -35,7 +41,7 @@ public:
 
 private:
     class CShader* m_pShaderCom = { nullptr };
-    vector<class CCell*> m_Cells; // 삼각형들의 집합 저장
+    vector<CCell*> m_Cells; // 삼각형들의 집합 저장
 
     _uint m_iIndexCount = { 0 };
 
