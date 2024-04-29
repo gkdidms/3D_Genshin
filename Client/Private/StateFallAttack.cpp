@@ -8,7 +8,7 @@ CStateFallAttack::CStateFallAttack()
 {
 }
 
-PLAYER_STATE CStateFallAttack::Enter(PLAYER_STATE CurrentState)
+PLAYER_STATE CStateFallAttack::Enter(class CState_Manager& pStateManager, PLAYER_STATE CurrentState)
 {
 	return PLAYER_FALL_ATTACK_LOOP;
 }

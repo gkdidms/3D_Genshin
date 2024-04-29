@@ -157,6 +157,9 @@
   <ItemGroup>
     <ClInclude Include="..\public\Background.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
+    <ClInclude Include="..\public\Command.h" />
+    <ClInclude Include="..\public\Command_Manager.h" />
+    <ClInclude Include="..\public\Command_ATT.h" />
     <ClInclude Include="..\public\DefaultCamera.h" />
     <ClInclude Include="..\public\Dungeon_1.h" />
     <ClInclude Include="..\Public\Dungeon_2.h" />
@@ -204,6 +207,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Background.cpp" />
+    <ClCompile Include="..\private\Command.cpp" />
+    <ClCompile Include="..\private\Command_Manager.cpp" />
+    <ClCompile Include="..\private\Command_ATT.cpp" />
     <ClCompile Include="..\private\DefaultCamera.cpp" />
     <ClCompile Include="..\private\Dungeon_1.cpp" />
     <ClCompile Include="..\Private\Dungeon_2.cpp" />

@@ -82,47 +82,8 @@
     <Filter Include="96. Utility">
       <UniqueIdentifier>{4ca56d1b-0058-40da-afc7-a78bec2b1926}</UniqueIdentifier>
     </Filter>
-    <Filter Include="96. Utility\State">
-      <UniqueIdentifier>{f7ba46d1-5f11-4b7a-8601-28e92005e65f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\Manager">
-      <UniqueIdentifier>{0b7a281c-0d37-44cb-bc74-d475b25901b6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\State\Run">
-      <UniqueIdentifier>{7d3fe171-eafa-466f-8939-de080f53dd8e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\State\Sprint">
-      <UniqueIdentifier>{d7823bbb-870e-468e-b9bb-b33a5d70fcc4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\State\Idle">
-      <UniqueIdentifier>{9d64cac8-81a9-422a-ab75-58bd9d5f8c7f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\State\Attack">
-      <UniqueIdentifier>{c4ad7558-884f-43bd-84e0-1942a49fc08d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\State\ElementalArt">
-      <UniqueIdentifier>{75f25e71-12aa-4dad-af53-0f10fba785bc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\State\ElementalArt\Wanderer">
-      <UniqueIdentifier>{c9ca96a4-de52-4d22-9192-25074f8792d1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\State\ElementalBurst">
-      <UniqueIdentifier>{83d7e4e1-91b9-42ff-9336-c0aaadf3bc78}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\State\ElementalArt\Tighnari">
-      <UniqueIdentifier>{02408b8d-e9da-4e76-9e6e-c843a3db1598}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\State\ElementalArt\Yae">
-      <UniqueIdentifier>{95525f62-d88a-4e26-8e87-dcf4a649ceb7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\State\ElementalArt\Nilou">
-      <UniqueIdentifier>{b8b5f337-dc0a-4b2e-91de-0019ce6f638a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\Player\PartObject\Weapon\Yae">
       <UniqueIdentifier>{27ccd271-970a-44d8-903d-683b7d41bb19}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\State\Jump">
-      <UniqueIdentifier>{eb5dee08-fb86-4490-b40f-0ef6b3bbb10c}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\Player\PartObject\Weapon\Wanderer">
       <UniqueIdentifier>{8114c022-cae7-4320-bac2-6a3c2ecf64f6}</UniqueIdentifier>
@@ -136,23 +97,68 @@
     <Filter Include="02. GameObject\Player\PartObject\SkillObj\Gohei">
       <UniqueIdentifier>{78f8c0b6-1739-4aa4-b702-8b702dfd36ba}</UniqueIdentifier>
     </Filter>
-    <Filter Include="96. Utility\State\ElementalArt\Wanderer\Run">
-      <UniqueIdentifier>{12f3c17b-6547-4bfb-aac1-87843edacf2f}</UniqueIdentifier>
+    <Filter Include="96. Utility\00. State">
+      <UniqueIdentifier>{3d7b9044-ab80-4d47-852e-f5c2259b19d6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="96. Utility\State\ElementalArt\Wanderer\Attack">
-      <UniqueIdentifier>{ff04190b-7f4f-4eca-bad5-2dbdefe526ae}</UniqueIdentifier>
+    <Filter Include="96. Utility\00. State\State">
+      <UniqueIdentifier>{f7ba46d1-5f11-4b7a-8601-28e92005e65f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="96. Utility\State\ElementalArt\Wanderer\Sprint">
-      <UniqueIdentifier>{f7501aee-b576-466f-afb3-ee2d4a428867}</UniqueIdentifier>
+    <Filter Include="96. Utility\00. State\State\Run">
+      <UniqueIdentifier>{7d3fe171-eafa-466f-8939-de080f53dd8e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="96. Utility\State\Fly">
+    <Filter Include="96. Utility\00. State\State\Sprint">
+      <UniqueIdentifier>{d7823bbb-870e-468e-b9bb-b33a5d70fcc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility\00. State\State\Idle">
+      <UniqueIdentifier>{9d64cac8-81a9-422a-ab75-58bd9d5f8c7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility\00. State\State\Attack">
+      <UniqueIdentifier>{c4ad7558-884f-43bd-84e0-1942a49fc08d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility\00. State\State\ElementalArt">
+      <UniqueIdentifier>{75f25e71-12aa-4dad-af53-0f10fba785bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility\00. State\State\ElementalArt\Wanderer">
+      <UniqueIdentifier>{c9ca96a4-de52-4d22-9192-25074f8792d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility\00. State\State\ElementalArt\Tighnari">
+      <UniqueIdentifier>{02408b8d-e9da-4e76-9e6e-c843a3db1598}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility\00. State\State\ElementalArt\Yae">
+      <UniqueIdentifier>{95525f62-d88a-4e26-8e87-dcf4a649ceb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility\00. State\State\ElementalArt\Nilou">
+      <UniqueIdentifier>{b8b5f337-dc0a-4b2e-91de-0019ce6f638a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility\00. State\State\ElementalBurst">
+      <UniqueIdentifier>{83d7e4e1-91b9-42ff-9336-c0aaadf3bc78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility\00. State\State\Jump">
+      <UniqueIdentifier>{eb5dee08-fb86-4490-b40f-0ef6b3bbb10c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility\00. State\State\Fly">
       <UniqueIdentifier>{9efae588-f1fd-40f3-8c27-344b2715aecc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="96. Utility\State\FallAttack">
+    <Filter Include="96. Utility\00. State\State\FallAttack">
       <UniqueIdentifier>{14b1739a-7377-48cc-9b5e-134dce0d3093}</UniqueIdentifier>
     </Filter>
-    <Filter Include="96. Utility\State\FallGround">
+    <Filter Include="96. Utility\00. State\State\FallGround">
       <UniqueIdentifier>{40e0de77-380c-40aa-856d-66e5419bfa2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility\00. State\Manager">
+      <UniqueIdentifier>{0b7a281c-0d37-44cb-bc74-d475b25901b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility\01. Command">
+      <UniqueIdentifier>{2602ebfe-664d-44c0-993d-d84b32ea7fdf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility\01. Command\Commend">
+      <UniqueIdentifier>{c1eea5a3-d53a-4d08-b208-3060db5afdc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility\01. Command\Manager">
+      <UniqueIdentifier>{e82c6b15-421c-4ddd-9dd7-618e1f1c67a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility\01. Command\Commend\Command_ATT">
+      <UniqueIdentifier>{dca0523c-338d-4ca3-8c2e-a1781e465447}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -235,40 +241,40 @@
       <Filter>02. GameObject\Player\PartObject\Weapon\Tighnari</Filter>
     </ClInclude>
     <ClInclude Include="..\public\StateRun.h">
-      <Filter>96. Utility\State\Run</Filter>
+      <Filter>96. Utility\00. State\State\Run</Filter>
     </ClInclude>
     <ClInclude Include="..\public\State_Manager.h">
-      <Filter>96. Utility\Manager</Filter>
+      <Filter>96. Utility\00. State\Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\StateSprint.h">
-      <Filter>96. Utility\State\Sprint</Filter>
+      <Filter>96. Utility\00. State\State\Sprint</Filter>
     </ClInclude>
     <ClInclude Include="..\public\StateIdle.h">
-      <Filter>96. Utility\State\Idle</Filter>
+      <Filter>96. Utility\00. State\State\Idle</Filter>
     </ClInclude>
     <ClInclude Include="..\public\StateElementalArt_Wanderer.h">
-      <Filter>96. Utility\State\ElementalArt\Wanderer</Filter>
+      <Filter>96. Utility\00. State\State\ElementalArt\Wanderer</Filter>
     </ClInclude>
     <ClInclude Include="..\public\StateElementalBurst.h">
-      <Filter>96. Utility\State\ElementalBurst</Filter>
+      <Filter>96. Utility\00. State\State\ElementalBurst</Filter>
     </ClInclude>
     <ClInclude Include="..\public\StateElementalArt_Tighanri.h">
-      <Filter>96. Utility\State\ElementalArt\Tighnari</Filter>
+      <Filter>96. Utility\00. State\State\ElementalArt\Tighnari</Filter>
     </ClInclude>
     <ClInclude Include="..\public\StateAttack.h">
-      <Filter>96. Utility\State\Attack</Filter>
+      <Filter>96. Utility\00. State\State\Attack</Filter>
     </ClInclude>
     <ClInclude Include="..\public\StateElementalArt_Yae.h">
-      <Filter>96. Utility\State\ElementalArt\Yae</Filter>
+      <Filter>96. Utility\00. State\State\ElementalArt\Yae</Filter>
     </ClInclude>
     <ClInclude Include="..\public\State.h">
-      <Filter>96. Utility\State</Filter>
+      <Filter>96. Utility\00. State\State</Filter>
     </ClInclude>
     <ClInclude Include="..\public\StateElementalArt_Nilou.h">
-      <Filter>96. Utility\State\ElementalArt\Nilou</Filter>
+      <Filter>96. Utility\00. State\State\ElementalArt\Nilou</Filter>
     </ClInclude>
     <ClInclude Include="..\public\StateJump.h">
-      <Filter>96. Utility\State\Jump</Filter>
+      <Filter>96. Utility\00. State\State\Jump</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Weapon_Regalis.h">
       <Filter>02. GameObject\Player\PartObject\Weapon\Nilou</Filter>
@@ -280,19 +286,28 @@
       <Filter>02. GameObject\Player\PartObject\SkillObj\Gohei</Filter>
     </ClInclude>
     <ClInclude Include="..\public\StateFly.h">
-      <Filter>96. Utility\State\Fly</Filter>
+      <Filter>96. Utility\00. State\State\Fly</Filter>
     </ClInclude>
     <ClInclude Include="..\public\StateFallAttack.h">
-      <Filter>96. Utility\State\FallAttack</Filter>
+      <Filter>96. Utility\00. State\State\FallAttack</Filter>
     </ClInclude>
     <ClInclude Include="..\public\StateFallGround.h">
-      <Filter>96. Utility\State\FallGround</Filter>
+      <Filter>96. Utility\00. State\State\FallGround</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Weapon_Alaya.h">
       <Filter>02. GameObject\Player\PartObject\Weapon\Wanderer</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Weapon_Narukami.h">
       <Filter>02. GameObject\Player\PartObject\Weapon\Yae</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Command.h">
+      <Filter>96. Utility\01. Command\Commend</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Command_ATT.h">
+      <Filter>96. Utility\01. Command\Commend\Command_ATT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Command_Manager.h">
+      <Filter>96. Utility\01. Command\Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -363,40 +378,40 @@
       <Filter>02. GameObject\Player\PartObject\Weapon\Tighnari</Filter>
     </ClCompile>
     <ClCompile Include="..\private\StateRun.cpp">
-      <Filter>96. Utility\State\Run</Filter>
+      <Filter>96. Utility\00. State\State\Run</Filter>
     </ClCompile>
     <ClCompile Include="..\private\State_Manager.cpp">
-      <Filter>96. Utility\Manager</Filter>
+      <Filter>96. Utility\00. State\Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\StateSprint.cpp">
-      <Filter>96. Utility\State\Sprint</Filter>
+      <Filter>96. Utility\00. State\State\Sprint</Filter>
     </ClCompile>
     <ClCompile Include="..\private\StateIdle.cpp">
-      <Filter>96. Utility\State\Idle</Filter>
+      <Filter>96. Utility\00. State\State\Idle</Filter>
     </ClCompile>
     <ClCompile Include="..\private\StateElementalArt_Wanderer.cpp">
-      <Filter>96. Utility\State\ElementalArt\Wanderer</Filter>
+      <Filter>96. Utility\00. State\State\ElementalArt\Wanderer</Filter>
     </ClCompile>
     <ClCompile Include="..\private\StateElementalBurst.cpp">
-      <Filter>96. Utility\State\ElementalBurst</Filter>
+      <Filter>96. Utility\00. State\State\ElementalBurst</Filter>
     </ClCompile>
     <ClCompile Include="..\private\StateElementalArt_Tighanri.cpp">
-      <Filter>96. Utility\State\ElementalArt\Tighnari</Filter>
+      <Filter>96. Utility\00. State\State\ElementalArt\Tighnari</Filter>
     </ClCompile>
     <ClCompile Include="..\private\StateAttack.cpp">
-      <Filter>96. Utility\State\Attack</Filter>
+      <Filter>96. Utility\00. State\State\Attack</Filter>
     </ClCompile>
     <ClCompile Include="..\private\StateElementalArt_Yae.cpp">
-      <Filter>96. Utility\State\ElementalArt\Yae</Filter>
+      <Filter>96. Utility\00. State\State\ElementalArt\Yae</Filter>
     </ClCompile>
     <ClCompile Include="..\private\State.cpp">
-      <Filter>96. Utility\State</Filter>
+      <Filter>96. Utility\00. State\State</Filter>
     </ClCompile>
     <ClCompile Include="..\private\StateElementalArt_Nilou.cpp">
-      <Filter>96. Utility\State\ElementalArt\Nilou</Filter>
+      <Filter>96. Utility\00. State\State\ElementalArt\Nilou</Filter>
     </ClCompile>
     <ClCompile Include="..\private\StateJump.cpp">
-      <Filter>96. Utility\State\Jump</Filter>
+      <Filter>96. Utility\00. State\State\Jump</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Weapon_Regalis.cpp">
       <Filter>02. GameObject\Player\PartObject\Weapon\Nilou</Filter>
@@ -408,19 +423,28 @@
       <Filter>02. GameObject\Player\PartObject\SkillObj\Gohei</Filter>
     </ClCompile>
     <ClCompile Include="..\private\StateFly.cpp">
-      <Filter>96. Utility\State\Fly</Filter>
+      <Filter>96. Utility\00. State\State\Fly</Filter>
     </ClCompile>
     <ClCompile Include="..\private\StateFallAttack.cpp">
-      <Filter>96. Utility\State\FallAttack</Filter>
+      <Filter>96. Utility\00. State\State\FallAttack</Filter>
     </ClCompile>
     <ClCompile Include="..\private\StateFallGround.cpp">
-      <Filter>96. Utility\State\FallGround</Filter>
+      <Filter>96. Utility\00. State\State\FallGround</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Weapon_Alaya.cpp">
       <Filter>02. GameObject\Player\PartObject\Weapon\Wanderer</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Weapon_Narukami.cpp">
       <Filter>02. GameObject\Player\PartObject\Weapon\Yae</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Command.cpp">
+      <Filter>96. Utility\01. Command\Commend</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Command_ATT.cpp">
+      <Filter>96. Utility\01. Command\Commend\Command_ATT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Command_Manager.cpp">
+      <Filter>96. Utility\01. Command\Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

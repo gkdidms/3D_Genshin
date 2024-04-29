@@ -6,7 +6,7 @@ CStateElementalBurst::CStateElementalBurst()
 {
 }
 
-PLAYER_STATE CStateElementalBurst::Enter(PLAYER_STATE CurrentState)
+PLAYER_STATE CStateElementalBurst::Enter(class CState_Manager& pStateManager, PLAYER_STATE CurrentState)
 {
 	return PLAYER_ELEMENTAL_BURST;
 }
@@ -19,7 +19,7 @@ PLAYER_STATE CStateElementalBurst::Update(const _float& fTimeDelta, CState_Manag
 PLAYER_STATE CStateElementalBurst::Exit(CState_Manager& pStateManager, PLAYER_STATE CurrentState)
 {
 	if (CurrentState == PLAYER_ELEMENTAL_BURST_END)
-		return pStateManager.Set_CurrentState(CState_Manager::STATE_TYPE_IDEL);
+		return __super::ToIdle(pStateManager, CurrentState);
 
 	return PLAYER_ELEMENTAL_BURST_END;
 }

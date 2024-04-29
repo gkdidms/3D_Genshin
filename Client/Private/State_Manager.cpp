@@ -54,7 +54,10 @@ PLAYER_STATE CState_Manager::Set_CurrentState(STATE_TYPE Type, PLAYER_STATE Curr
 		else if (m_CurrentPlayerble == CPlayer::PLAYER_YAE)
 			m_pCurrentState = CStateElementalArt_Yae::Create();
 		else if (m_CurrentPlayerble == CPlayer::PLAYER_NILOU)
+		{
 			m_pCurrentState = CStateElementalArt_Nilou::Create();
+		}
+			
 		break;
 	}
 	case STATE_TYPE_ELEMNETALBURST: // ¿ø¼Ò ÆøÆÈ
@@ -87,7 +90,7 @@ PLAYER_STATE CState_Manager::Set_CurrentState(STATE_TYPE Type, PLAYER_STATE Curr
 	if (nullptr == m_pCurrentState)
 		return PLAYER_END;
 
-	return m_pCurrentState->Enter(CurrentState);
+	return m_pCurrentState->Enter(*this, CurrentState);
 }
 
 void CState_Manager::Set_CurrentPlayerble(CPlayer::PLAYERBLE_TYPE PlayerType)

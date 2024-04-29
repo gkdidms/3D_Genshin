@@ -9,6 +9,8 @@
 
 #include "SkillObj.h"
 
+#include "DefaultCamera.h"
+
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject { pDevice, pContext },
 	m_pState_Manager { CState_Manager::GetInstance() }
@@ -72,6 +74,7 @@ void CPlayer::Priority_Tick(const _float& fTimeDelta)
 void CPlayer::Tick(const _float& fTimeDelta)
 {
 	Change_Playerble();
+	Check_State(fTimeDelta);
 	Input_Key(fTimeDelta);
 	
 	for (auto& pObject : m_PartObject[m_CurrentPlayerble])
@@ -84,7 +87,8 @@ void CPlayer::Tick(const _float& fTimeDelta)
 	XMStoreFloat4x4(&RootMatrix, XMLoadFloat4x4(&RootMatrix) * -1.f);
 	_bool isMove = m_pTransformCom->Go_Run(XMLoadFloat4x4(&RootMatrix), m_pNavigationCom);
 
-	SetUp_OnTerrain(isMove);
+	SetUp_CellType(isMove);
+	SetUp_OnTerrain();
 
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 }
@@ -150,11 +154,11 @@ HRESULT CPlayer::Add_Components()
 	return S_OK;
 }
 
-void CPlayer::SetUp_OnTerrain(_bool isMove)
+void CPlayer::SetUp_OnTerrain()
 {
-	if (m_IsElementalAir || (m_CurrentPlayerble == PLAYER_WANDERER && m_iState == PLAYER_ELEMENTAL_END))
+	if (m_isElementalAir || (m_CurrentPlayerble == PLAYER_WANDERER && m_iState == PLAYER_ELEMENTAL_END))
 	{
-		if (m_iState != PLAYER_FALL_ATTACK_LOOP && !m_IsFly)
+		if (m_iState != PLAYER_FALL_ATTACK_LOOP && !m_isFly)
 			return;
 	}
 		
@@ -163,64 +167,100 @@ void CPlayer::SetUp_OnTerrain(_bool isMove)
 
 	_float fHeight = m_pNavigationCom->Compute_Height(vPos);
 
-	CCell::OPTION eOption = m_pNavigationCom->Get_OptionType();
-	
-
-
-	if (m_IsJump)
+	if (m_isJump)
 	{		
 		//점프하고 있을때 
 		if (XMVectorGetY(vPos) < fHeight)
 		{
 			m_iState = PLAYER_FALL_GROUND_H;
-			m_IsJump = false;
+			m_isJump = false;
 		}
 
 		return;
 	}
-	if (m_IsElementalAir && m_iState == PLAYER_FALL_ATTACK_LOOP)
+	if (m_isElementalAir && m_iState == PLAYER_FALL_ATTACK_LOOP)
 	{
 		if (XMVectorGetY(vPos) <= fHeight)
 			m_iState = PLAYER_ELEMENTAL_END;
 		else return;
 	}
-	if (m_IsFly)
+	if (m_isFly)
 	{
-		m_IsJump = false;
+		m_isJump = false;
 		if (XMVectorGetY(vPos) <= fHeight)
 		{
 			m_iState = PLAYER_FALL_GROUND_L;
-			m_IsFly = false;
+			m_isFly = false;
 		}
 			
 		else return;
 	}
-	if (m_IsDrop)
+	if (m_isDrop)
 	{
 		if (XMVectorGetY(vPos) <= fHeight)
 		{
 			m_iState = m_pState_Manager->Set_CurrentState(CState_Manager::STATE_TYPE_FALL_GROUND);
-			m_IsDrop = false;
+			m_isDrop = false;
 		}
 		else return;
 	}
 
-	if (eOption == CCell::OPTION_FLY && isMove)
-	{
-		if (fHeight > XMVectorGetY(vPos))
-			return;
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSetY(vPos, fHeight));
+}
 
-		// 밟고 있는 셀이 fly이라면
-		if (m_iState != PLAYER_FALL_ATTACK_LOOP && !m_IsFly)
+void CPlayer::SetUp_CellType(_bool isMove)
+{
+	CCell::OPTION eOption = m_pNavigationCom->Get_OptionType();
+
+	if (eOption == CCell::OPTION_FLY && isMove) //FLY
+	{/*
+		if (fHeight > XMVectorGetY(vPos))
+			return;*/
+
+		if (m_iState != PLAYER_FALL_ATTACK_LOOP && !m_isFly)
 		{
 			m_iState = m_pState_Manager->Set_CurrentState(CState_Manager::STATE_TYPE_FALL_ATTACK);
-			m_IsDrop = true;
+			m_isDrop = true;
 		}
-
-		return;
 	}
 
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSetY(vPos, fHeight));
+	if (eOption == CCell::OPTION_STAIRS) // 계단 타입
+	{
+		//true 이면 아래
+		m_eHill = m_pNavigationCom->isLook(m_pTransformCom->Get_State(CTransform::STATE_LOOK)) ? HILL_DOWN : HILL_UP;
+	}
+	else
+		m_eHill = HILL_END;
+}
+
+void CPlayer::Check_State(const _float& fTimeDelta)
+{
+	// 상태 패턴 업데이트
+	m_iState = m_pState_Manager->Update(fTimeDelta, PLAYER_STATE(m_iState));
+
+	// 방랑자 원소 스킬 사용시 부유하고 있는지, 아닌지 체크 
+	if (m_CurrentPlayerble == PLAYER_WANDERER && m_iState == PLAYER_ELEMENTAL_START)
+		m_isElementalAir = true;
+	else if (m_CurrentPlayerble == PLAYER_WANDERER && (m_iState == PLAYER_ELEMENTAL_END || m_iState == PLAYER_FALL_GROUND_L))
+		m_isElementalAir = false;
+
+	// fly 체크
+	if (m_iState == PLAYER_FLY_START)
+		m_isFly = true;
+
+	// Jump 체크
+	if (m_iState == PLAYER_JUMP || m_iState == PLAYER_JUMP_FOR_RUN || m_iState == PLAYER_JUMP_FOR_SPRINT)
+		m_isJump = true;
+
+	// 원소폭팔 사용 시 카메라 제어 
+	if (m_iState == PLAYER_ELEMENTAL_BURST)
+	{
+		dynamic_cast<CDefaultCamera*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, TEXT("Layer_Camera"), 0))->isEB(true, m_CurrentPlayerble);
+	}
+	else if (m_iState == PLAYER_ELEMENTAL_BURST_END)
+	{
+		dynamic_cast<CDefaultCamera*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, TEXT("Layer_Camera"), 0))->isEB(false);
+	}
 }
 
 HRESULT CPlayer::Ready_Bodys()
@@ -231,7 +271,8 @@ HRESULT CPlayer::Ready_Bodys()
 	Desc.pParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
 	Desc.pState = &m_iState;
 	Desc.pDirState = &m_iDirState;
-	Desc.pFly = &m_IsFly;
+	Desc.pFly = &m_isFly;
+	Desc.pHill = &m_eHill;
 	Desc.fSpeedPecSec = 20.f;
 	Desc.fRotatePecSec = XMConvertToRadians(45.f);
 
@@ -252,8 +293,9 @@ HRESULT CPlayer::Ready_Bodys()
 	WandererDesc.pParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
 	WandererDesc.pState = &m_iState;
 	WandererDesc.pDirState = &m_iDirState;
-	WandererDesc.pFly = &m_IsFly;
-	WandererDesc.isElementalAir = &m_IsElementalAir;
+	WandererDesc.pFly = &m_isFly;
+	WandererDesc.pHill = &m_eHill;
+	WandererDesc.isElementalAir = &m_isElementalAir;
 	WandererDesc.fSpeedPecSec = 20.f;
 	WandererDesc.fRotatePecSec = XMConvertToRadians(45.f);
 
@@ -377,23 +419,6 @@ HRESULT CPlayer::Ready_SkillObjs()
 
 void CPlayer::Input_Key(const _float& fTimeDelta)
 {
-	// 상태 패턴 업데이트
-	m_iState = m_pState_Manager->Update(fTimeDelta, PLAYER_STATE(m_iState));
-
-	// 방랑자 원소 스킬 사용시 부유하고 있는지, 아닌지 체크 
-	if (m_CurrentPlayerble == PLAYER_WANDERER && m_iState == PLAYER_ELEMENTAL_START)
-		m_IsElementalAir = true;
-	else if (m_CurrentPlayerble == PLAYER_WANDERER && (m_iState == PLAYER_ELEMENTAL_END || m_iState == PLAYER_FALL_GROUND_L))
-		m_IsElementalAir = false;
-
-	// fly 체크
-	if (m_iState == PLAYER_FLY_START)
-		m_IsFly = true;
-
-	// Jump 체크
-	if (m_iState == PLAYER_JUMP || m_iState == PLAYER_JUMP_FOR_RUN || m_iState == PLAYER_JUMP_FOR_SPRINT)
-		m_IsJump = true;
-
 	m_iDirState == DIR_END;
 	// 루트 애니메이션 제어 전 까지 주석
 	// 뛰기 제어
@@ -404,7 +429,7 @@ void CPlayer::Input_Key(const _float& fTimeDelta)
 	}
 	if (m_pGameInstance->GetKeyState(DIK_S) == CInput_Device::HOLD) // 뒤
 	{
-		if (!m_IsElementalAir) m_pTransformCom->LookForCamera(m_pGameInstance->Get_CamLook(), XMConvertToRadians(180.f));
+		if (!m_isElementalAir) m_pTransformCom->LookForCamera(m_pGameInstance->Get_CamLook(), XMConvertToRadians(180.f));
 		m_iDirState = DIR_BACKWORK;
 	}
 	if (m_pGameInstance->GetKeyState(DIK_A) == CInput_Device::TAP) // 왼쪽

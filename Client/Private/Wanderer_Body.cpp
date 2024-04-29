@@ -249,6 +249,19 @@ void CWanderer_Body::Change_Animation(const _float& fTimeDelta)
 				m_IsLoop = true;
 			}
 		}
+		else if (*m_pHill != CPlayer::HILL_END)
+		{
+			if (*m_pHill == CPlayer::HILL_UP)
+			{
+				m_iAnim = 71;
+				m_IsLoop = true;
+			}
+			else if (*m_pHill == CPlayer::HILL_DOWN)
+			{
+				m_iAnim = 74;
+				m_IsLoop = true;
+			}
+		}
 		else
 		{
 			m_iAnim = 70;

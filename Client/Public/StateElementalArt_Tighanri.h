@@ -11,7 +11,7 @@ private:
     virtual ~CStateElementalArt_Tighanri() = default;
 
 public:
-    PLAYER_STATE Enter(PLAYER_STATE CurrentState) override;
+    PLAYER_STATE Enter(class CState_Manager& pStateManager, PLAYER_STATE CurrentState) override;
     PLAYER_STATE Update(const _float& fTimeDelta, CState_Manager& pStateManager, PLAYER_STATE CurrentState) override;
     PLAYER_STATE Exit(CState_Manager& pStateManager, PLAYER_STATE CurrentState) override;
 

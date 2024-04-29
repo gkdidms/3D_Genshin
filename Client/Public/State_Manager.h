@@ -37,9 +37,9 @@ private:
 public:
     PLAYER_STATE Set_CurrentState(STATE_TYPE Type, PLAYER_STATE CurrentState = PLAYER_END);
     void Set_CurrentPlayerble(CPlayer::PLAYERBLE_TYPE PlayerType);
-
+    
 public:
-    PLAYER_STATE Enter(PLAYER_STATE CurrentState) { return m_pCurrentState->Enter(CurrentState); }
+    PLAYER_STATE Enter(PLAYER_STATE CurrentState) { return m_pCurrentState->Enter(*this, CurrentState); }
      PLAYER_STATE Update(const _float& fTimeDelta, PLAYER_STATE CurrentState) { return m_pCurrentState->Update(fTimeDelta, *this, CurrentState); }
     PLAYER_STATE Exit(PLAYER_STATE CurrentState) { return m_pCurrentState->Exit(*this, CurrentState); }
 

@@ -7,7 +7,7 @@ CStateElementalArt_Yae::CStateElementalArt_Yae()
 {
 }
 
-PLAYER_STATE CStateElementalArt_Yae::Enter(PLAYER_STATE CurrentState)
+PLAYER_STATE CStateElementalArt_Yae::Enter(class CState_Manager& pStateManager, PLAYER_STATE CurrentState)
 {
 	m_iSkillCount++;
 

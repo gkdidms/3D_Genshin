@@ -8,7 +8,7 @@ CStateFly::CStateFly()
 {
 }
 
-PLAYER_STATE CStateFly::Enter(PLAYER_STATE CurrentState)
+PLAYER_STATE CStateFly::Enter(class CState_Manager& pStateManager, PLAYER_STATE CurrentState)
 {
 	return PLAYER_FLY_START;
 }
@@ -33,7 +33,7 @@ PLAYER_STATE CStateFly::Exit(CState_Manager& pStateManager, PLAYER_STATE Current
 		return PLAYER_FLY_NORMAL;
 
 	if (CurrentState == PLAYER_FALL_GROUND_L)
-		return pStateManager.Set_CurrentState(CState_Manager::STATE_TYPE_IDEL);
+		return __super::ToIdle(pStateManager, CurrentState);
 
 	return PLAYER_FALL_GROUND_L;
 }

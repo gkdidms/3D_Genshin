@@ -8,7 +8,7 @@ CStateSprint::CStateSprint()
 {
 }
 
-PLAYER_STATE CStateSprint::Enter(PLAYER_STATE CurrentState)
+PLAYER_STATE CStateSprint::Enter(class CState_Manager& pStateManager, PLAYER_STATE CurrentState)
 {
 	if (CurrentState == PLAYER_JUMP_FOR_SPRINT || CurrentState == PLAYER_FALL_GROUND_FOR_SPRINT)
 		return PLAYER_SPRINT;
@@ -18,26 +18,78 @@ PLAYER_STATE CStateSprint::Enter(PLAYER_STATE CurrentState)
 
 PLAYER_STATE CStateSprint::Update(const _float& fTimeDelta, class CState_Manager& pStateManager, PLAYER_STATE CurrentState)
 {
-	if (m_pGameInstance->GetMouseState(DIM_LB) == CInput_Device::TAP)
-		return pStateManager.Set_CurrentState(CState_Manager::STATE_TYPE_ATTACK);
+	PLAYER_STATE eState{ CurrentState };
 
-	if (CurrentState == PLAYER_SPRINT && m_pGameInstance->GetKeyState(DIK_SPACE) == CInput_Device::TAP)
-		return pStateManager.Set_CurrentState(CState_Manager::STATE_TYPE_JUMP, PLAYER_SPRINT);
+	if ((eState = ToAttack(pStateManager, CurrentState)) != CurrentState)
+		return eState;
 
+	if ((eState = ToElementalArt(pStateManager, CurrentState)) != CurrentState)
+		return eState;
+
+	if ((eState = ToElementalBurst(pStateManager, CurrentState)) != CurrentState)
+		return eState;
+
+	if ((eState = ToJump(pStateManager, CurrentState)) != CurrentState)
+		return eState;
+
+	if ((eState = ToSprint(pStateManager, CurrentState)) != CurrentState)
+		return eState;
+
+	return CurrentState;
+}
+
+PLAYER_STATE CStateSprint::Exit(class CState_Manager& pStateManager, PLAYER_STATE CurrentState)
+{
+	PLAYER_STATE eState{ CurrentState };
+
+	if (CurrentState == PLAYER_SPRINT_START &&
+		(m_pGameInstance->GetKeyState(DIK_W) == CInput_Device::HOLD
+			|| m_pGameInstance->GetKeyState(DIK_A) == CInput_Device::HOLD
+			|| m_pGameInstance->GetKeyState(DIK_D) == CInput_Device::HOLD
+			|| m_pGameInstance->GetKeyState(DIK_S) == CInput_Device::HOLD))
+		return  PLAYER_SPRINT_TO_RUN;
+
+	if ((eState == ToRun(pStateManager, CurrentState)) != CurrentState)
+		return eState;
+
+	if ((eState == ToIdle(pStateManager, CurrentState)) != CurrentState)
+		return eState;
+
+	if (m_pGameInstance->GetKeyState(DIK_LSHIFT) == CInput_Device::HOLD)
+		return PLAYER_SPRINT;
+
+	return PLAYER_SPRINT_STOP;
+}
+
+PLAYER_STATE CStateSprint::ToIdle(CState_Manager& pStateManager, PLAYER_STATE CurrentState)
+{
+	if (CurrentState == PLAYER_SPRINT_STOP)
+		return __super::ToIdle(pStateManager, CurrentState);
+
+	return CurrentState;
+}
+
+PLAYER_STATE CStateSprint::ToRun(CState_Manager& pStateManager, PLAYER_STATE CurrentState)
+{
+	if (CurrentState == PLAYER_SPRINT_TO_RUN)
+		return __super::ToRun(pStateManager, CurrentState);
+
+	return CurrentState;
+}
+
+PLAYER_STATE CStateSprint::ToSprint(CState_Manager& pStateManager, PLAYER_STATE CurrentState)
+{
 	if (CurrentState == PLAYER_SPRINT && m_pGameInstance->GetKeyState(DIK_LSHIFT) == CInput_Device::HOLD)
 		return PLAYER_SPRINT;
 
 	if (CurrentState == PLAYER_SPRINT && m_pGameInstance->GetKeyState(DIK_LSHIFT) == CInput_Device::AWAY)
 		return PLAYER_SPRINT_STOP;
 
-	if (m_pGameInstance->GetKeyState(DIK_E) == CInput_Device::TAP)
-		return pStateManager.Set_CurrentState(CState_Manager::STATE_TYPE_ELEMENTALART);
-
-	if (CurrentState == PLAYER_SPRINT_STOP && 
-		( m_pGameInstance->GetKeyState(DIK_W) == CInput_Device::HOLD
-		|| m_pGameInstance->GetKeyState(DIK_A) == CInput_Device::HOLD
-		|| m_pGameInstance->GetKeyState(DIK_D) == CInput_Device::HOLD
-		|| m_pGameInstance->GetKeyState(DIK_S) == CInput_Device::HOLD))
+	if (CurrentState == PLAYER_SPRINT_STOP &&
+		(m_pGameInstance->GetKeyState(DIK_W) == CInput_Device::HOLD
+			|| m_pGameInstance->GetKeyState(DIK_A) == CInput_Device::HOLD
+			|| m_pGameInstance->GetKeyState(DIK_D) == CInput_Device::HOLD
+			|| m_pGameInstance->GetKeyState(DIK_S) == CInput_Device::HOLD))
 		return PLAYER_SPRINT_TO_RUN;
 
 	if (m_pGameInstance->GetKeyState(DIK_W) == CInput_Device::AWAY
@@ -49,32 +101,27 @@ PLAYER_STATE CStateSprint::Update(const _float& fTimeDelta, class CState_Manager
 	return CurrentState;
 }
 
-PLAYER_STATE CStateSprint::Exit(class CState_Manager& pStateManager, PLAYER_STATE CurrentState)
+PLAYER_STATE CStateSprint::ToJump(CState_Manager& pStateManager, PLAYER_STATE CurrentState)
 {
-	if (m_pGameInstance->GetKeyState(DIK_LSHIFT) == CInput_Device::HOLD)
-		return PLAYER_SPRINT;
+	if (CurrentState == PLAYER_SPRINT)
+		return __super::ToJump(pStateManager, CurrentState);
 
-	if (m_pGameInstance->GetKeyState(DIK_Q) == CInput_Device::TAP)
-		return pStateManager.Set_CurrentState(CState_Manager::STATE_TYPE_ELEMNETALBURST);
+	return CurrentState;
+}
 
-	if (CurrentState == PLAYER_SPRINT_START &&
-		(m_pGameInstance->GetKeyState(DIK_W) == CInput_Device::HOLD
-			|| m_pGameInstance->GetKeyState(DIK_A) == CInput_Device::HOLD
-			|| m_pGameInstance->GetKeyState(DIK_D) == CInput_Device::HOLD
-			|| m_pGameInstance->GetKeyState(DIK_S) == CInput_Device::HOLD))
-		return  PLAYER_SPRINT_TO_RUN;
+PLAYER_STATE CStateSprint::ToAttack(CState_Manager& pStateManager, PLAYER_STATE CurrentState)
+{
+	return __super::ToAttack(pStateManager, CurrentState);
+}
 
-	if (CurrentState == PLAYER_SPRINT_TO_RUN &&
-		(m_pGameInstance->GetKeyState(DIK_W) == CInput_Device::HOLD
-			|| m_pGameInstance->GetKeyState(DIK_A) == CInput_Device::HOLD
-			|| m_pGameInstance->GetKeyState(DIK_D) == CInput_Device::HOLD
-			|| m_pGameInstance->GetKeyState(DIK_S) == CInput_Device::HOLD))
-		return pStateManager.Set_CurrentState(CState_Manager::STATE_TYPE_RUN, PLAYER_SPRINT_STOP);
+PLAYER_STATE CStateSprint::ToElementalArt(CState_Manager& pStateManager, PLAYER_STATE CurrentState)
+{
+	return __super::ToElementalArt(pStateManager, CurrentState);
+}
 
-	if (CurrentState == PLAYER_SPRINT_STOP)
-		return pStateManager.Set_CurrentState(CState_Manager::STATE_TYPE_IDEL);
-
-	return PLAYER_SPRINT_STOP;
+PLAYER_STATE CStateSprint::ToElementalBurst(CState_Manager& pStateManager, PLAYER_STATE CurrentState)
+{
+	return __super::ToElementalBurst(pStateManager, CurrentState);
 }
 
 CStateSprint* CStateSprint::Create()

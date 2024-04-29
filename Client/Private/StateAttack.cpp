@@ -14,7 +14,7 @@ HRESULT CStateAttack::Initialize(_uint iMaxAttack)
 	return S_OK;
 }
 
-PLAYER_STATE CStateAttack::Enter(PLAYER_STATE CurrentState)
+PLAYER_STATE CStateAttack::Enter(class CState_Manager& pStateManager, PLAYER_STATE CurrentState)
 {
 	return PLAYER_ATTACK_1;
 }

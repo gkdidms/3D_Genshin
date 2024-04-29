@@ -53,7 +53,7 @@ HRESULT CDungeon_2::Render()
 		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_Texture", i, aiTextureType_DIFFUSE)))
 			continue;
 
-		m_pShaderCom->Begin(0);
+		m_pShaderCom->Begin(1);
 		m_pModelCom->Render(i);
 	}
 

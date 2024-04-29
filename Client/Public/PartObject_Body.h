@@ -2,6 +2,7 @@
 #include "PartObject.h"
 
 BEGIN(Client)
+
 class CPartObject_Body abstract:
     public CPartObject
 {
@@ -10,6 +11,7 @@ public:
     {
         const _uint* pDirState;
         const _bool* pFly;
+        const CPlayer::HILL_TYPE* pHill;
     }BODY_DESC; 
 
 protected:
@@ -28,6 +30,7 @@ public:
 protected:
     const _uint* m_pDirState = { nullptr };
     const _bool* m_pFly = { nullptr };
+    const CPlayer::HILL_TYPE* m_pHill = { nullptr };
 
 protected:
     _bool m_IsFinished = { false };

@@ -8,7 +8,7 @@ CStateElementalArt_Wanderer::CStateElementalArt_Wanderer()
 {
 }
 
-PLAYER_STATE CStateElementalArt_Wanderer::Enter(PLAYER_STATE CurrentState)
+PLAYER_STATE CStateElementalArt_Wanderer::Enter(class CState_Manager& pStateManager, PLAYER_STATE CurrentState)
 {
 	return PLAYER_ELEMENTAL_START;
 }

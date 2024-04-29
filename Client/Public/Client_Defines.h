@@ -50,6 +50,8 @@ namespace Client {
         PLAYER_FLY_NORMAL,
         PLAYER_FLY_TURN_L,
         PLAYER_FLY_TURN_R,
+        PLAYER_HILL_UP,
+        PLAYER_HILL_DOWN,
         PLAYER_END
     };
 

@@ -8,7 +8,7 @@ CStateFallGround::CStateFallGround()
 {
 }
 
-PLAYER_STATE CStateFallGround::Enter(PLAYER_STATE CurrentState) 
+PLAYER_STATE CStateFallGround::Enter(class CState_Manager& pStateManager, PLAYER_STATE CurrentState)
 {
 	if (m_pGameInstance->GetKeyState(DIK_W) == CInput_Device::HOLD
 		|| m_pGameInstance->GetKeyState(DIK_A) == CInput_Device::HOLD

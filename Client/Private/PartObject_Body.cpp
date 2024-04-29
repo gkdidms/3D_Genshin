@@ -25,6 +25,7 @@ HRESULT CPartObject_Body::Initialize(void* pArg)
 	BODY_DESC* pDesc = static_cast<BODY_DESC*>(pArg);
 	m_pDirState = pDesc->pDirState;
 	m_pFly = pDesc->pFly;
+	m_pHill = pDesc->pHill;
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
