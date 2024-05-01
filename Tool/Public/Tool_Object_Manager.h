@@ -14,7 +14,7 @@ class CTool_Object_Manager :
 {
     DECLARE_SINGLETON(CTool_Object_Manager)
 public:
-    enum OBJECTTYPE { OBJECT_MONSTER, OBJECT_DUNGEON, OBJECT_END };
+    enum OBJECTTYPE { OBJECT_SCENE, OBJECT_DUNGEON, OBJECT_END };
     typedef struct tCloneDesc {
         _uint iIndex = { 0 };
         string strName = { "" };
@@ -42,12 +42,15 @@ public:
     void Set_PlayerNavigationIndex(_int iIndex) { m_iPlayerNavigationIndex = iIndex; }
 
 public:
+    void Remove_Object(int iIndex);
+
+public:
     HRESULT Initialize();
     void Priority_Tick(const _float& fTimeDelta);
     void Tick(const _float& fTimeDelta);
     void Late_Tick(const float& fTimeDelta);
     HRESULT Render();
-    HRESULT Add_CloneObject(OBJECTTYPE eType, wstring strLayerTag, _vector vObjPos, _uint iObjectIndex);
+    HRESULT Add_CloneObject(OBJECTTYPE eType, wstring strLayerTag, _vector vObjPos, _uint iNavigationIndex, _uint iObjectIndex);
 
 public:
     HRESULT Save(const _char* pFileName);

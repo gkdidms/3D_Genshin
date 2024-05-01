@@ -115,6 +115,7 @@ void CTool_Manager::Window_Terrain()
             CTool_Object_Manager::OBJECT_DUNGEON, 
             L"GameObject_Dungeon", 
             XMVectorSet(0.f, 0.f, 0.f, 1.f), 
+            0,
             m_iCreateDungeonIndex);
     }
 
@@ -156,14 +157,14 @@ void CTool_Manager::Window_Object()
 
     ImGui::Text("MousePos : %f, %f, %f", vWorldMousePos.x, vWorldMousePos.y, vWorldMousePos.z);
 
-    if (ImGui::BeginListBox("Selete Create Object"))
+    if (ImGui::BeginListBox("Selete Create Monster"))
     {
-        for (int n = 0; n < m_pObject_Manager->Get_CloneDescs(CTool_Object_Manager::OBJECT_MONSTER).size(); n++)
+        for (int n = 0; n < m_pObject_Manager->Get_CloneDescs(CTool_Object_Manager::OBJECT_SCENE).size(); n++)
         {
-            const bool is_selected = (m_iCreateObjectIndex == n);
-            if (ImGui::Selectable(m_pObject_Manager->Get_CloneDescs(CTool_Object_Manager::OBJECT_MONSTER)[n].strName.c_str(), is_selected))
+            const bool is_selected = (m_iCreateMonsterIndex == n);
+            if (ImGui::Selectable(m_pObject_Manager->Get_CloneDescs(CTool_Object_Manager::OBJECT_SCENE)[n].strName.c_str(), is_selected))
             {
-                m_iCreateObjectIndex = n;
+                m_iCreateMonsterIndex = n;
             }
 
             if (is_selected)
@@ -195,6 +196,13 @@ void CTool_Manager::Window_Object()
                 ImGui::SetItemDefaultFocus();
         }
         ImGui::EndListBox();
+    }
+
+    if (ImGui::Button("Remove"))
+    {
+        m_pObject_Manager->Remove_Object(m_iCurrentPickingObjectIndex);
+        if (m_pObject_Manager->Get_Objects().size() <= 0)
+            m_iCurrentPickingObjectIndex = -1;
     }
 
     ImGui::Text(ImGuizmo::IsOver(ImGuizmo::TRANSLATE) ? "Over translate gizmo" : "");

@@ -119,10 +119,11 @@ void CTool_Terrain::Get_MousePos_On_Terrain()
 		CTool_Manager::vWorldMousePos = vMousePosFloat3;
 
 		if (FAILED(m_pObject_Manager->Add_CloneObject(
-			CTool_Object_Manager::OBJECT_MONSTER,
+			CTool_Object_Manager::OBJECT_SCENE,
 			L"GameObject_Object",
 			vMousePos,
-			m_pTool_Manager->Get_CreateObjectIndex())))
+			0,
+			m_pTool_Manager->Get_CreateMonsterIndex())))
 			return;
 	}
 }

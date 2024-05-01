@@ -160,6 +160,33 @@
     <Filter Include="96. Utility\01. Command\Commend\Command_ATT">
       <UniqueIdentifier>{dca0523c-338d-4ca3-8c2e-a1781e465447}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\Monster\Slime">
+      <UniqueIdentifier>{92e5a98e-cd08-4e06-902f-8abddcc55da2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\Monster\Slime\Large">
+      <UniqueIdentifier>{da29d6c3-207d-4204-a2a3-87262aabca53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\Monster\Slime\Mid">
+      <UniqueIdentifier>{dd4abc52-3abf-4cf8-910e-1b6c245471c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\Monster\Slime\Large\Fire">
+      <UniqueIdentifier>{c56c8631-0c76-43c6-af46-a0b3627c97cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\Monster\Slime\Large\Water">
+      <UniqueIdentifier>{8b79b83f-2249-470e-8a18-97868cbb27c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\SceneObj">
+      <UniqueIdentifier>{8850d4a7-438c-499d-88e7-705c2241dccc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\SceneObj\TreasureBox">
+      <UniqueIdentifier>{86a12885-df31-4b40-8ed5-7610e914cc07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\Monster\Slime\Mid\FIre">
+      <UniqueIdentifier>{f949ee8a-c980-4b36-9a0c-985921cb0d20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\Monster\Slime\Mid\Water">
+      <UniqueIdentifier>{b54f5c37-a0b6-4423-95c0-509d4d9efc31}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">
@@ -309,6 +336,33 @@
     <ClInclude Include="..\public\Command_Manager.h">
       <Filter>96. Utility\01. Command\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Slime.h">
+      <Filter>02. GameObject\Monster\Slime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Slime_Large.h">
+      <Filter>02. GameObject\Monster\Slime\Large</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Slime_Large_Fire.h">
+      <Filter>02. GameObject\Monster\Slime\Large\Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SceneObj.h">
+      <Filter>02. GameObject\SceneObj</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\TreasureBox.h">
+      <Filter>02. GameObject\SceneObj\TreasureBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Slime_Large_Water.h">
+      <Filter>02. GameObject\Monster\Slime\Large\Water</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Slime_Mid_Fire.h">
+      <Filter>02. GameObject\Monster\Slime\Mid\FIre</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Slime_Mid.h">
+      <Filter>02. GameObject\Monster\Slime\Mid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Slime_Mid_Water.h">
+      <Filter>02. GameObject\Monster\Slime\Mid\Water</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -445,6 +499,33 @@
     </ClCompile>
     <ClCompile Include="..\private\Command_Manager.cpp">
       <Filter>96. Utility\01. Command\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Slime.cpp">
+      <Filter>02. GameObject\Monster\Slime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Slime_Large.cpp">
+      <Filter>02. GameObject\Monster\Slime\Large</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Slime_Large_Fire.cpp">
+      <Filter>02. GameObject\Monster\Slime\Large\Fire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SceneObj.cpp">
+      <Filter>02. GameObject\SceneObj</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\TreasureBox.cpp">
+      <Filter>02. GameObject\SceneObj\TreasureBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Slime_Large_Water.cpp">
+      <Filter>02. GameObject\Monster\Slime\Large\Water</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Slime_Mid_Fire.cpp">
+      <Filter>02. GameObject\Monster\Slime\Mid\FIre</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Slime_Mid.cpp">
+      <Filter>02. GameObject\Monster\Slime\Mid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Slime_Mid_Water.cpp">
+      <Filter>02. GameObject\Monster\Slime\Mid\Water</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

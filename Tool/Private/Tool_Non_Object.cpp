@@ -50,8 +50,9 @@ HRESULT CTool_Non_Object::Render()
 
 	for (int i = 0; i < m_pVIBufferCom->Get_NumMeshes(); ++i)
 	{
-		if (FAILED(m_pVIBufferCom->Bind_Material(m_pShaderCom, "g_Texture", i, aiTextureType_DIFFUSE)))
-			continue;
+	/*	if (FAILED(m_pVIBufferCom->Bind_Material(m_pShaderCom, "g_Texture", i, aiTextureType_DIFFUSE)))
+			continue;*/
+		m_pVIBufferCom->Bind_Material(m_pShaderCom, "g_Texture", i, aiTextureType_DIFFUSE);
 
 		m_pShaderCom->Begin(0);
 		m_pVIBufferCom->Render(i);

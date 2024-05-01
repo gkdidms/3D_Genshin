@@ -34,7 +34,7 @@ public:
 
 public:
     string Get_SaveSeletedFileName() { return m_FileName[m_iSaveFileIndex]; }
-    _uint Get_CreateObjectIndex() { return m_iCreateObjectIndex; }
+    _uint Get_CreateMonsterIndex() { return m_iCreateMonsterIndex; }
     _float Get_DungeonDegree() { return m_fDungeonDegree; }
     _float3 Get_DungeonPos() { return m_fDungeonPos; }
     _bool Is_ShowTerrain() { return IsShowTerrain; }
@@ -115,7 +115,8 @@ private:
     _float3 m_fDungeonPos = {};
 
 private:
-    _int m_iCreateObjectIndex = { 0 };
+    _int m_iCreateMonsterIndex = { 0 };
+    _int m_iCreateSceneObjIndex = { 0 };
     _int m_iCreateDungeonIndex = { 0 };
 
 private:

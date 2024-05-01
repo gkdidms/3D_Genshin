@@ -20,6 +20,7 @@ public:
 
         wstring strPrototypeVIBufferCom = L"";
         wstring strComVIBufferCom = L"";
+        _uint iObjectNavigationIndex = 0;
     }OBJECT_DESC;
 
 protected:
@@ -29,7 +30,8 @@ protected:
 
 public:
     string Get_ObjectName() { return m_strObjectName; }
-    
+    _uint Get_NavigationIndex() { return m_iObjectNavigationIndex; }
+
 public:
     virtual HRESULT Initialize_Prototype();
     virtual HRESULT Initialize(void* pArg);
@@ -48,6 +50,9 @@ protected:
 
     wstring m_strPrototypeVIBufferName = { L"" };
     wstring m_strComVIBufferName = { L"" };
+
+protected:
+    _uint m_iObjectNavigationIndex = { 0 };
 
 protected:
     virtual CGameObject* Clone(void* pArg) = 0;

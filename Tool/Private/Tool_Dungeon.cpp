@@ -137,10 +137,11 @@ void CTool_Dungeon::Get_MousePos_On_Dungeon()
 	if (isSuccess)
 	{
 		if (FAILED(m_pObject_Manager->Add_CloneObject(
-			CTool_Object_Manager::OBJECT_MONSTER,
+			CTool_Object_Manager::OBJECT_SCENE,
 			L"GameObject_Object",
 			vMousePos,
-			m_pTool_Manager->Get_CreateObjectIndex())))
+			m_pNavigationCom->Find_Index(vMousePos, m_pGameInstance->Get_RayDir(), m_pTransformCom->Get_WorldMatrix()),
+			m_pTool_Manager->Get_CreateMonsterIndex())))
 			return;
 	}
 }
@@ -203,20 +204,27 @@ void CTool_Dungeon::Check_Point(_float3* vPoint)
 
 	for (auto& CellPoints : m_Cells)
 	{
+		
 		if (CellPoints.Points[0].x + fDistance >= (*vPoint).x && CellPoints.Points[0].x - fDistance <= (*vPoint).x)
 		{
 			if (CellPoints.Points[0].z + fDistance >= (*vPoint).z && CellPoints.Points[0].z - fDistance <= (*vPoint).z)
 			{
-				*vPoint = CellPoints.Points[0];
-				return;
+				if (CellPoints.Points[0].y + fDistance >= (*vPoint).y && CellPoints.Points[0].y - fDistance <= (*vPoint).y)
+				{
+					*vPoint = CellPoints.Points[0];
+					return;
+				}
 			}
 		}
 		if (CellPoints.Points[1].x + fDistance >= (*vPoint).x && CellPoints.Points[1].x - fDistance <= (*vPoint).x)
 		{
 			if (CellPoints.Points[1].z + fDistance >= (*vPoint).z && CellPoints.Points[1].z - fDistance <= (*vPoint).z)
 			{
-				*vPoint = CellPoints.Points[1];
-				return;
+				if (CellPoints.Points[1].y + fDistance >= (*vPoint).y && CellPoints.Points[1].y - fDistance <= (*vPoint).y)
+				{
+					*vPoint = CellPoints.Points[1];
+					return;
+				}
 			}
 				
 		}
@@ -224,8 +232,12 @@ void CTool_Dungeon::Check_Point(_float3* vPoint)
 		{
 			if (CellPoints.Points[2].z + fDistance >= (*vPoint).z && CellPoints.Points[2].z - fDistance <= (*vPoint).z)
 			{
-				*vPoint = CellPoints.Points[2];
-				return;
+				if (CellPoints.Points[2].y + fDistance >= (*vPoint).y && CellPoints.Points[2].y - fDistance <= (*vPoint).y)
+				{
+					*vPoint = CellPoints.Points[2];
+					return;
+				}
+
 			}
 		}
 	}

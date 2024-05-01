@@ -68,22 +68,19 @@ HRESULT CMainTool::Open_Level(LEVEL_STATE eLevelState)
 
 HRESULT CMainTool::Ready_Level_For_Main()
 {
-    // ¸ðµ¨
-    _matrix PreTransformMatrix = XMMatrixIdentity();
-    //if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Tarta", CModel::Create(m_pDevice, m_pContext, "../../Client/Bin/Resources/Models/Tarta/Tartaglia.fbx", PreTransformMatrix))))
-    //    return E_FAIL;
-
-    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Nillou", CModel::Create(m_pDevice, m_pContext, "../../Client/Bin/Resources/Models/Nillou/Nilou.fbx", PreTransformMatrix, "../../Data/Nilou.dat"))))
+    // 
+    _matrix PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+    
+    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Slime_Fire", CModel::Create(m_pDevice, m_pContext, "../../Client/Bin/Resources/Models/Monster/Slime_Fire/Slime_Fire.fbx", PreTransformMatrix, "../../Data/Slime_Fire.dat"))))
         return E_FAIL;
 
-    /*if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Nillou", CModel::Create(m_pDevice, m_pContext, CMesh::TYPE_ANIM, "../../Client/Bin/Resources/Models/Nillou/Nilou.fbx", PreTransformMatrix))))
-        return E_FAIL;*/
+    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Slime_Water", CModel::Create(m_pDevice, m_pContext, "../../Client/Bin/Resources/Models/Monster/Slime_Water/Slime_Water.fbx", PreTransformMatrix, "../../Data/Slime_Water.dat"))))
+        return E_FAIL;
 
-    /*if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Nillou", CModel::Create(m_pDevice, m_pContext, CMesh::TYPE_ANIM, "../../Client/Bin/Resources/Models/Octopus/2202.fbx", PreTransformMatrix, "../../Data/Octopus.dat", CModel::CREATE_READ))))
-        return E_FAIL;*/
+    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_TreasureBox", CModel::Create(m_pDevice, m_pContext, "../../Client/Bin/Resources/Models/SceneObj/TreasureBox/TreasureBox.fbx", PreTransformMatrix, "../../Data/TreasureBox.dat"))))
+        return E_FAIL;
 
-    PreTransformMatrix = XMMatrixScaling(0.1f, 0.1f, 0.1f);
-    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Tighnari", CModel::Create(m_pDevice, m_pContext, "../../Client/Bin/Resources/Models/Tighnari/Tighnari.fbx", PreTransformMatrix, "../../Data/Tighnari.dat"))))
+    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_WindField", CModel::Create(m_pDevice, m_pContext, "../../Client/Bin/Resources/Models/SceneObj/WindFleid/WindField.fbx", PreTransformMatrix, "../../Data/WindField.dat"))))
         return E_FAIL;
 
     PreTransformMatrix = XMMatrixIdentity();

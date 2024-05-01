@@ -37,7 +37,7 @@ private:
     CRITICAL_SECTION m_Critical_Section = { 0 };
 
     _tchar					m_szLoadingText[MAX_PATH] = { TEXT("") };
-    _bool m_isFinished;
+    _bool m_isFinished = { false };
 
 private:
     HRESULT Loading_For_Logo();

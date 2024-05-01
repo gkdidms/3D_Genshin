@@ -154,7 +154,7 @@ HRESULT CModel::Ready_Model(const _char* szModelFilePath, const _char* szBinaryF
 	{
 		iRootBoneIndex = 0;
 		find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pBone)->_bool {
-			if (pBone->Compare_NodeName("Bone_Root"))
+			if (pBone->Compare_NodeName("Bone_Root") || pBone->Compare_NodeName("Root") || pBone->Compare_NodeName("All"))
 				return true;
 
 			iRootBoneIndex++;

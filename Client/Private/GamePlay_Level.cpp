@@ -2,6 +2,7 @@
 
 #include "GameInstance.h"
 #include "DefaultCamera.h"
+#include "SceneObj.h"
 #include "Monster.h"
 #include "Player.h"
 #include "Map.h"
@@ -82,11 +83,59 @@ HRESULT CGamePlay_Level::Ready_Layer_Player(const wstring& strLayerTag, void* pA
 	return S_OK;
 }
 
-HRESULT CGamePlay_Level::Ready_Layer_Monster(const wstring& strLayerTag)
+HRESULT CGamePlay_Level::Ready_Object(const char* strName, _matrix WorldMatrix, _uint iNavigationIndex)
 {
-	for (int i = 0; i < 10; ++i)
+	if (string(strName).find("Slime_Fire_Large") != string::npos)
 	{
-		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Fiona", strLayerTag)))
+		CMonster::MONSTER_DESC Desc{};
+
+		XMStoreFloat4x4(&Desc.WorldMatrix, WorldMatrix);
+		Desc.iMonsterNavigationIndex = iNavigationIndex;
+		Desc.TargetMatrix = dynamic_cast<CTransform*>(m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, L"Layer_Player", L"Com_Transform"))->Get_WorldFloat4x4();
+
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Monster_Slime_Fire_Large", L"Layer_Monster_Slime", &Desc)))
+			return E_FAIL;
+	}
+	else if (string(strName).find("Slime_Fire_Mid") != string::npos)
+	{
+		CMonster::MONSTER_DESC Desc{};
+
+		XMStoreFloat4x4(&Desc.WorldMatrix, WorldMatrix);
+		Desc.iMonsterNavigationIndex = iNavigationIndex;
+		Desc.TargetMatrix = dynamic_cast<CTransform*>(m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, L"Layer_Player", L"Com_Transform"))->Get_WorldFloat4x4();
+
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Monster_Slime_Fire_Mid", L"Layer_Monster_Slime", &Desc)))
+			return E_FAIL;
+	}
+	else if (string(strName).find("Slime_Water_Large") != string::npos)
+	{
+		CMonster::MONSTER_DESC Desc{};
+
+		XMStoreFloat4x4(&Desc.WorldMatrix, WorldMatrix);
+		Desc.iMonsterNavigationIndex = iNavigationIndex;
+		Desc.TargetMatrix = dynamic_cast<CTransform*>(m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, L"Layer_Player", L"Com_Transform"))->Get_WorldFloat4x4();
+		
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Monster_Slime_Water_Large", L"Layer_Monster_Slime", &Desc)))
+			return E_FAIL;
+	}
+	else if (string(strName).find("Slime_Water_Mid") != string::npos)
+	{
+		CMonster::MONSTER_DESC Desc{};
+
+		XMStoreFloat4x4(&Desc.WorldMatrix, WorldMatrix);
+		Desc.iMonsterNavigationIndex = iNavigationIndex;
+		Desc.TargetMatrix = dynamic_cast<CTransform*>(m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, L"Layer_Player", L"Com_Transform"))->Get_WorldFloat4x4();
+
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Monster_Slime_Water_Mid", L"Layer_Monster_Slime", &Desc)))
+			return E_FAIL;
+	}
+	else if (string(strName).find("TreasureBox") != string::npos)
+	{
+		CSceneObj::SCENEOBJ_DESC Desc{};
+
+		XMStoreFloat4x4(&Desc.WorldMatrix, WorldMatrix);
+
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_SceneObj_TreasureBox", L"Layer_TreasureBox", &Desc)))
 			return E_FAIL;
 	}
 
@@ -154,24 +203,13 @@ HRESULT CGamePlay_Level::Load_File(LEVEL_STATE eNextLevel)
 		ifs.read((_char*)&iNumObjectName, sizeof(_uint));
 		ifs.read((_char*)strObjectName, iNumObjectName);
 
-		_uint iNumObjectIndex = { 0 };
+		_uint iNavigationIndex = 0;
+		ifs.read((_char*)&iNavigationIndex, sizeof(_uint));
 
-		//find_if(m_CloneDesc[OBJECT_MONSTER].begin(), m_CloneDesc[OBJECT_MONSTER].end(), [&](CLONE_DESC Desc)->_bool {
-		//	if (!strcmp(strObjectName, Desc.strName.c_str()))
-		//	{
-		//		iNumObjectIndex = Desc.iIndex;
-		//		return true;
-		//	}
+		_float4x4 WorldMatrix = {};
+		ifs.read((_char*)&WorldMatrix, sizeof(_float4x4));
 
-		//	return false;
-		//	});
-
-		//Add_CloneObject(OBJECT_MONSTER, L"Layer_Object", XMVectorSet(0.f, 0.f, 0.f, 1.f), iNumObjectIndex);
-
-		//_float4x4 WorldMatrix = {};
-		//ifs.read((_char*)&WorldMatrix, sizeof(_float4x4));
-
-		//m_Objects[i]->m_pTransformCom->Set_WorldMatrix(XMLoadFloat4x4(&WorldMatrix));
+		Ready_Object(strObjectName, XMLoadFloat4x4(&WorldMatrix), iNavigationIndex);
 	}
 
 	ifs.close();

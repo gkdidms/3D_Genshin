@@ -27,7 +27,7 @@ HRESULT CTool_Anim_Object::Initialize(void* pArg)
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
-	CModel::ANIM_DESC AnimDesc{ 33, true, true, false };
+	CModel::ANIM_DESC AnimDesc{0, true, true, false };
 	m_pVIBufferCom->Set_Animation(AnimDesc);
 
 	return S_OK;
@@ -39,7 +39,8 @@ void CTool_Anim_Object::Priority_Tick(const _float& fTimeDelta)
 
 void CTool_Anim_Object::Tick(const _float& fTimeDelta)
 {
-	//m_pVIBufferCom->Play_Animation(fTimeDelta);
+	_float4x4 MoveMatrix;
+	m_pVIBufferCom->Play_Animation(fTimeDelta, &MoveMatrix);
 }
 
 void CTool_Anim_Object::Late_Tick(const _float& fTimeDelta)
@@ -59,6 +60,8 @@ HRESULT CTool_Anim_Object::Render()
 
 		if (FAILED(m_pVIBufferCom->Bind_Material(m_pShaderCom, "g_Texture", i, aiTextureType_DIFFUSE)))
 			continue;
+
+		//m_pVIBufferCom->Bind_Material(m_pShaderCom, "g_Texture", i, aiTextureType_DIFFUSE);
 
 		m_pShaderCom->Begin(0);
 		m_pVIBufferCom->Render(i);
