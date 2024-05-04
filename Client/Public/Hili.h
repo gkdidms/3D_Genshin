@@ -1,0 +1,62 @@
+#pragma once
+#include "Monster.h"
+
+BEGIN(Client)
+class CHili abstract:
+    public CMonster
+{
+public:
+    enum HILI_WEAPON_TYPE { HILI_WEAPON_CLUB, HILI_WEAPON_CROSSBOW, HILI_NON_WEAPON, HILI_WEAPON_END };
+
+    enum HILI_STATE {
+        HILI_IDLE,
+        HILL_ATTACK,
+        HILI_HIT,
+        HILI_DIE,
+        HILI_RUN,
+        HILI_WALK_BACK,
+        HILI_WALK_FORWARD,
+        HILI_WALK_RIGHT,
+        HILI_WALK_LEFT,
+        HILI_END
+    };
+
+    typedef struct tHiliDesc : public CMonster::MONSTER_DESC {
+
+    } HILI_DESC;
+
+    typedef struct tHiliInfo {
+        _float fMaxHp = { 24354.f };
+        _float fHP = { 24354.f };
+        ELEMENTAL_TYPE eElementalType = { ELEMENTAL_END };
+    }HILI_INFO;
+
+
+protected:
+    CHili(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+    CHili(const CHili& rhs);
+    virtual ~CHili() = default;
+    
+public:
+    HRESULT Initialize_Prototype() override;
+    HRESULT Initialize(void* pArg) override;
+    void Priority_Tick(const _float& fTimeDelta) override;
+    void Tick(const _float& fTimeDelta) override;
+    void Late_Tick(const _float& fTimeDelta) override;
+    HRESULT Render() override;
+
+protected:
+    virtual HRESULT Add_Components();
+    virtual HRESULT Bind_ResourceData();
+    virtual void Change_Animation(const _float& fTimeDelta);
+
+protected:
+    HILI_STATE m_CurrentState = { HILI_END };
+    HILI_WEAPON_TYPE m_Weapon = { HILI_WEAPON_END };
+
+    HILI_INFO m_Info;
+
+public:
+    virtual void Free() override;
+};
+END

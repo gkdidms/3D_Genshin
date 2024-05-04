@@ -187,6 +187,36 @@
     <Filter Include="02. GameObject\Monster\Slime\Mid\Water">
       <UniqueIdentifier>{b54f5c37-a0b6-4423-95c0-509d4d9efc31}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\Monster\Slime\AI">
+      <UniqueIdentifier>{053a840c-a39b-43c9-a1e0-f94d24484fd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility\02. AI">
+      <UniqueIdentifier>{c13141d5-5a58-45aa-aa89-2b5777994ec0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility\02. AI\Node">
+      <UniqueIdentifier>{feed5125-c863-4687-a7a1-36154aeab93d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility\02. AI\Node\Sequence">
+      <UniqueIdentifier>{5420b019-550d-471a-982d-468c03a6ca64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility\02. AI\Node\Selector">
+      <UniqueIdentifier>{daf3381b-449f-47cf-9948-fee0d567268f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility\02. AI\Node\Action">
+      <UniqueIdentifier>{01196d42-b3db-49a6-bbba-4a700f1d1aca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\Monster\hili">
+      <UniqueIdentifier>{88bcf3bf-ceae-4641-93c8-6ed5a454dbfa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\Monster\hili\Fire">
+      <UniqueIdentifier>{14e40895-39dc-4be3-b774-bb0d7dcb05b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\Monster\hili\AI">
+      <UniqueIdentifier>{e7dd69ff-3675-4d08-93d7-ff08cd5363d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\Monster\hili\Electronic">
+      <UniqueIdentifier>{ff995c21-fefe-47e8-a5ae-efb9c9a7cfad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">
@@ -363,6 +393,30 @@
     <ClInclude Include="..\Public\Slime_Mid_Water.h">
       <Filter>02. GameObject\Monster\Slime\Mid\Water</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Slime_Root.h">
+      <Filter>02. GameObject\Monster\Slime\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Selector.h">
+      <Filter>96. Utility\02. AI\Node\Selector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Sequence.h">
+      <Filter>96. Utility\02. AI\Node\Sequence</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Node.h">
+      <Filter>96. Utility\02. AI\Node</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Action.h">
+      <Filter>96. Utility\02. AI\Node\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Hili.h">
+      <Filter>02. GameObject\Monster\hili</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Hili_Fire.h">
+      <Filter>02. GameObject\Monster\hili\Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BT_Hili.h">
+      <Filter>02. GameObject\Monster\hili\AI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -526,6 +580,30 @@
     </ClCompile>
     <ClCompile Include="..\Private\Slime_Mid_Water.cpp">
       <Filter>02. GameObject\Monster\Slime\Mid\Water</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Slime_Root.cpp">
+      <Filter>02. GameObject\Monster\Slime\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Selector.cpp">
+      <Filter>96. Utility\02. AI\Node\Selector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Sequence.cpp">
+      <Filter>96. Utility\02. AI\Node\Sequence</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Node.cpp">
+      <Filter>96. Utility\02. AI\Node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Action.cpp">
+      <Filter>96. Utility\02. AI\Node\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Hili.cpp">
+      <Filter>02. GameObject\Monster\hili</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Hili_Fire.cpp">
+      <Filter>02. GameObject\Monster\hili\Fire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BT_Hili.cpp">
+      <Filter>02. GameObject\Monster\hili\AI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

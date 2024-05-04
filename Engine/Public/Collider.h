@@ -22,16 +22,20 @@ public:
     virtual HRESULT Initialize(void* pArg);
     virtual void Tick(_fmatrix WorldMatirx);
 
+public:
+    _bool Intersect(CCollider* pTargetCollider);
+
 #ifdef _DEBUG
 public:
     HRESULT Render();
 #endif // _DEBUG
 
-
 private:
     TYPE m_ColliderType = { COLLIDER_END };
 
     class CBounding* m_pCurrentBounding = { nullptr };
+
+    _bool m_isColl = { false };
 
 #ifdef _DEBUG
 private:

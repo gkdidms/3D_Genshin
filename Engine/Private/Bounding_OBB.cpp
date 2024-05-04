@@ -33,6 +33,34 @@ void CBounding_OBB::Tick(_fmatrix WorldMatrix)
 	m_pOriginalBox->Transform(*m_pBoundingBox, WorldMatrix);
 }
 
+_bool CBounding_OBB::Intersect(CCollider::TYPE eTargetType, CBounding* pTargetBounding)
+{
+	_bool isColl = { false };
+	switch (eTargetType)
+	{
+	case Engine::CCollider::COLLIDER_AABB:
+	{
+		BoundingBox* pDesc = static_cast<BoundingBox*>(pTargetBounding->Get_Desc());
+		isColl = m_pBoundingBox->Intersects(*pDesc);
+		break;
+	}
+	case Engine::CCollider::COLLIDER_OBB:
+	{
+		BoundingOrientedBox* pDesc = static_cast<BoundingOrientedBox*>(pTargetBounding->Get_Desc());
+		isColl = m_pBoundingBox->Intersects(*pDesc);
+		break;
+	}
+	case Engine::CCollider::COLLIDER_SPHERE:
+		break;
+	case Engine::CCollider::COLLIDER_END:
+		break;
+	default:
+		break;
+	}
+
+	return isColl;
+}
+
 #ifdef _DEBUG
 HRESULT CBounding_OBB::Render(PrimitiveBatch<VertexPositionColor>* pBatch)
 {

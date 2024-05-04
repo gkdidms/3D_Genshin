@@ -21,7 +21,6 @@ public:
 private:
     virtual HRESULT Add_Components();
     virtual HRESULT Bind_ResourceData();
-    virtual void Change_Animation(const _float& fTimeDelta);
 
 public:
     static CSlime_Large_Water* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

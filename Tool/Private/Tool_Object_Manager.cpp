@@ -25,10 +25,12 @@ HRESULT CTool_Object_Manager::Initialize()
 		
 		CLONE_DESC { 0, "Slime_Fire_Large", L"Prototype_Component_Model_Slime_Fire", L"Com_Slime_Fire", true},
 		CLONE_DESC { 1, "Slime_Water_Large", L"Prototype_Component_Model_Slime_Water", L"Com_Slime_Water", true},
-		CLONE_DESC { 3, "Slime_Fire_Mid", L"Prototype_Component_Model_Slime_Fire", L"Com_Slime_Fire", true},
-		CLONE_DESC { 4, "Slime_Water_Mid", L"Prototype_Component_Model_Slime_Water", L"Com_Slime_Water", true},
-		CLONE_DESC { 5, "TreasureBox", L"Prototype_Component_Model_TreasureBox", L"Com_TreasureBox", true},
-		CLONE_DESC { 6, "WindField", L"Prototype_Component_Model_WindField", L"Com_WindField", true}
+		CLONE_DESC { 2, "Slime_Fire_Mid", L"Prototype_Component_Model_Slime_Fire", L"Com_Slime_Fire", true},
+		CLONE_DESC { 3, "Slime_Water_Mid", L"Prototype_Component_Model_Slime_Water", L"Com_Slime_Water", true},
+		CLONE_DESC { 4, "TreasureBox", L"Prototype_Component_Model_TreasureBox", L"Com_TreasureBox", true},
+		CLONE_DESC { 5, "WindField", L"Prototype_Component_Model_WindField", L"Com_WindField", true},
+		CLONE_DESC { 6, "Hili_Fire", L"Prototype_Component_Model_Hili_Fire", L"Com_Hili_Fire", true},
+		CLONE_DESC { 7, "Hili_Electric", L"Prototype_Component_Model_Hili_Electric", L"Com_Hili_Electric", true},
 	};
 
 	m_CloneDesc[OBJECT_DUNGEON] = {
@@ -99,6 +101,7 @@ HRESULT CTool_Object_Manager::Add_CloneObject(OBJECTTYPE eType, wstring strLayer
 		tDesc.vPosition = _float4(vObjPosFloat3.x, vObjPosFloat3.y, vObjPosFloat3.z, 1.f);
 		tDesc.strPrototypeVIBufferCom = m_CloneDesc[OBJECT_SCENE][iObjectIndex].strPrototypeVIBufferCom;
 		tDesc.strComVIBufferCom = m_CloneDesc[OBJECT_SCENE][iObjectIndex].strComVIBufferCom;
+		tDesc.iObjectNavigationIndex = iNavigationIndex;
 
 		CTool_Object* pGameObject = { nullptr };
 

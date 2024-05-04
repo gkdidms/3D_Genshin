@@ -83,6 +83,12 @@ HRESULT CMainTool::Ready_Level_For_Main()
     if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_WindField", CModel::Create(m_pDevice, m_pContext, "../../Client/Bin/Resources/Models/SceneObj/WindFleid/WindField.fbx", PreTransformMatrix, "../../Data/WindField.dat"))))
         return E_FAIL;
 
+    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Hili_Fire", CModel::Create(m_pDevice, m_pContext, "../../Client/Bin/Resources/Models/Monster/Hili_Fire/Hili_Fire.fbx", PreTransformMatrix, "../../Data/Hili_Fire.dat"))))
+        return E_FAIL;
+
+    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Hili_Electric", CModel::Create(m_pDevice, m_pContext, "../../Client/Bin/Resources/Models/Monster/Hili_Electric/Hili_Electric.fbx", PreTransformMatrix, "../../Data/Hili_Electric.dat"))))
+        return E_FAIL;
+
     PreTransformMatrix = XMMatrixIdentity();
     if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Dungeon_1", CModel::Create(m_pDevice, m_pContext,  "../../Client/Bin/Resources/Models/Map/Dungeon_1/Dungeon_1.fbx", PreTransformMatrix, "../../Data/Dungeon_1.dat"))))
         return E_FAIL;

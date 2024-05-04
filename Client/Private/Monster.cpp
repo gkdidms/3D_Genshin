@@ -30,9 +30,6 @@ HRESULT CMonster::Initialize(void* pArg)
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
 
-    if (FAILED(Add_Components()))
-        return E_FAIL;
-
     m_pTransformCom->Set_WorldMatrix(XMLoadFloat4x4(&pDesc->WorldMatrix));
 
     return S_OK;
@@ -49,7 +46,6 @@ void CMonster::Tick(const _float& fTimeDelta)
 
 void CMonster::Late_Tick(const _float& fTimeDelta)
 {
-    m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONBLENDER, this);
 }
 
 HRESULT CMonster::Render()
@@ -65,7 +61,7 @@ HRESULT CMonster::Render()
             return E_FAIL;
 
         if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_Texture", i, aiTextureType_DIFFUSE)))
-            return E_FAIL;
+            continue;
 
         m_pShaderCom->Begin(0);
         m_pModelCom->Render(i);
@@ -81,4 +77,5 @@ void CMonster::Free()
     Safe_Release(m_pShaderCom);
     Safe_Release(m_pModelCom);
     Safe_Release(m_pColliderCom);
+    Safe_Release(m_pNavigation);
 }

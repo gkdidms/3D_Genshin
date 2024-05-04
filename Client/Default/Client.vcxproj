@@ -155,7 +155,9 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\public\Action.h" />
     <ClInclude Include="..\public\Background.h" />
+    <ClInclude Include="..\Public\BT_Hili.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\public\Command.h" />
     <ClInclude Include="..\public\Command_Manager.h" />
@@ -163,7 +165,12 @@
     <ClInclude Include="..\public\DefaultCamera.h" />
     <ClInclude Include="..\public\Dungeon_1.h" />
     <ClInclude Include="..\Public\Dungeon_2.h" />
+    <ClInclude Include="..\public\Hili.h" />
+    <ClInclude Include="..\public\Hili_Fire.h" />
+    <ClInclude Include="..\public\Node.h" />
     <ClInclude Include="..\public\SceneObj.h" />
+    <ClInclude Include="..\public\Selector.h" />
+    <ClInclude Include="..\public\Sequence.h" />
     <ClInclude Include="..\public\SkillObj.h" />
     <ClInclude Include="..\public\SkillObj_Gohei.h" />
     <ClInclude Include="..\public\Slime.h" />
@@ -173,6 +180,7 @@
     <ClInclude Include="..\Public\Slime_Mid.h" />
     <ClInclude Include="..\Public\Slime_Mid_Fire.h" />
     <ClInclude Include="..\Public\Slime_Mid_Water.h" />
+    <ClInclude Include="..\public\Slime_Root.h" />
     <ClInclude Include="..\public\StateElementalArt_Nilou.h" />
     <ClInclude Include="..\public\StateElementalArt_Tighanri.h" />
     <ClInclude Include="..\public\StateElementalArt_Yae.h" />
@@ -215,14 +223,21 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\private\Action.cpp" />
     <ClCompile Include="..\private\Background.cpp" />
+    <ClCompile Include="..\Private\BT_Hili.cpp" />
     <ClCompile Include="..\private\Command.cpp" />
     <ClCompile Include="..\private\Command_Manager.cpp" />
     <ClCompile Include="..\private\Command_ATT.cpp" />
     <ClCompile Include="..\private\DefaultCamera.cpp" />
     <ClCompile Include="..\private\Dungeon_1.cpp" />
     <ClCompile Include="..\Private\Dungeon_2.cpp" />
+    <ClCompile Include="..\private\Hili.cpp" />
+    <ClCompile Include="..\private\Hili_Fire.cpp" />
+    <ClCompile Include="..\private\Node.cpp" />
     <ClCompile Include="..\private\SceneObj.cpp" />
+    <ClCompile Include="..\private\Selector.cpp" />
+    <ClCompile Include="..\private\Sequence.cpp" />
     <ClCompile Include="..\private\SkillObj.cpp" />
     <ClCompile Include="..\private\SkillObj_Gohei.cpp" />
     <ClCompile Include="..\private\Slime.cpp" />
@@ -232,6 +247,7 @@
     <ClCompile Include="..\Private\Slime_Mid.cpp" />
     <ClCompile Include="..\Private\Slime_Mid_Fire.cpp" />
     <ClCompile Include="..\Private\Slime_Mid_Water.cpp" />
+    <ClCompile Include="..\private\Slime_Root.cpp" />
     <ClCompile Include="..\private\StateElementalArt_Nilou.cpp" />
     <ClCompile Include="..\private\StateElementalArt_Tighanri.cpp" />
     <ClCompile Include="..\private\StateElementalArt_Yae.cpp" />

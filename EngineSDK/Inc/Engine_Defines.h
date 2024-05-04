@@ -30,6 +30,7 @@ using namespace TriangleTests;
 #include <list>
 #include <map>
 #include <algorithm>
+#include <functional>
 
 #include <iostream>
 #include <io.h>

@@ -138,6 +138,28 @@ HRESULT CGamePlay_Level::Ready_Object(const char* strName, _matrix WorldMatrix, 
 		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_SceneObj_TreasureBox", L"Layer_TreasureBox", &Desc)))
 			return E_FAIL;
 	}
+	else if (string(strName).find("Hili_Fire") != string::npos)
+	{
+		CMonster::MONSTER_DESC Desc{};
+
+		XMStoreFloat4x4(&Desc.WorldMatrix, WorldMatrix);
+		Desc.iMonsterNavigationIndex = iNavigationIndex;
+		Desc.TargetMatrix = dynamic_cast<CTransform*>(m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, L"Layer_Player", L"Com_Transform"))->Get_WorldFloat4x4();
+
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Monster_Hili_Fire", L"Layer_Monster_Hili_Fire", &Desc)))
+			return E_FAIL;
+	}
+	else if (string(strName).find("Hili_Electric") != string::npos)
+	{
+		CMonster::MONSTER_DESC Desc{};
+
+		XMStoreFloat4x4(&Desc.WorldMatrix, WorldMatrix);
+		Desc.iMonsterNavigationIndex = iNavigationIndex;
+		Desc.TargetMatrix = dynamic_cast<CTransform*>(m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, L"Layer_Player", L"Com_Transform"))->Get_WorldFloat4x4();
+
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Monster_Hili_Electric", L"Layer_Monster_Hili_Electric", &Desc)))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -188,8 +210,6 @@ HRESULT CGamePlay_Level::Load_File(LEVEL_STATE eNextLevel)
 		
 		if (FAILED(Ready_Layer_BackGround(TEXT("Layer_Map"), pDungeonName, &MapDesc)))
 			return E_FAIL;
-
-		//지형 월드 행렬 넣어주기
 	}
 
 	_uint iNumObjects = { 0 };

@@ -26,6 +26,8 @@
 #include "Slime_Mid_Fire.h"
 #include "Slime_Mid_Water.h"
 
+#include "Hili_Fire.h"
+
 #include "TreasureBox.h"
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -113,10 +115,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("몬스터를(을) 로딩 중 입니다."));
-	PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Slime_Fire", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Monster/Slime_Fire/Slime_Fire.fbx", PreTransformMatrix, "../../Data/Slime_Fire.dat"))))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Slime_Water", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Monster/Slime_Water/Slime_Water.fbx", PreTransformMatrix, "../../Data/Slime_Water.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Hili_Fire", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Monster/Hili_Fire/Hili_Fire.fbx", PreTransformMatrix, "../../Data/Hili_Fire.dat"))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("씬 오브젝트를(을) 로딩 중 입니다."));
@@ -222,6 +225,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_SceneObj_TreasureBox", CTreasureBox::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Monster_Hili_Fire", CHili_Fire::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));

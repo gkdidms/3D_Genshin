@@ -73,6 +73,11 @@ void CCollider::Tick(_fmatrix WorldMatirx)
 	m_pCurrentBounding->Tick(WorldMatirx);
 }
 
+_bool CCollider::Intersect(CCollider* pTargetCollider)
+{
+	return m_isColl = m_pCurrentBounding->Intersect(pTargetCollider->m_ColliderType, pTargetCollider->m_pCurrentBounding);
+}
+
 #ifdef _DEBUG
 HRESULT CCollider::Render()
 {

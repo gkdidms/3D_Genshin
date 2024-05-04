@@ -26,7 +26,7 @@ HRESULT CNilou_Body::Initialize(void* pArg)
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
-	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ 10, true, true, false });
+	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ 54, true, true, false });
 	return S_OK;
 }
 
@@ -124,143 +124,143 @@ void CNilou_Body::Change_Animation(const _float& fTimeDelta)
 	}
 	case PLAYER_ATTACK_IDLE:
 	{
-		m_iAnim = 42;
+		m_iAnim = 57;
 		m_IsLoop = false;
 		m_IsLinear = false;
 		break;
 	}
 	case PLAYER_ELEMENTAL_1:
 	{
-		m_iAnim = 4;
+		m_iAnim = 7;
 		m_IsLoop = false;
 		break;
 	}
 	case PLAYER_ELEMENTAL_1_END:
 	{
-		m_iAnim = 5;
+		m_iAnim = 8;
 		m_IsLoop = false;
 		break;
 	}
 	case PLAYER_ELEMENTAL_2:
 	{
-		m_iAnim = 6;
+		m_iAnim = 9;
 		m_IsLoop = false;
 		break;
 	}
 	case PLAYER_ELEMENTAL_2_END:
 	{
-		m_iAnim = 7;
+		m_iAnim = 10;
 		m_IsLoop = false;
 		break;
 	}
 	case PLAYER_ELEMENTAL_3:
 	{
-		m_iAnim = 8;
+		m_iAnim = 11;
 		m_IsLoop = false;
 		break;
 	}
 	case PLAYER_ELEMENTAL_3_END:
 	{
-		m_iAnim = 9;
+		m_iAnim = 12;
 		m_IsLoop = false;
 		break;
 	}
 	case PLAYER_ELEMENTAL_SPEC:
 	{
-		m_iAnim = 10;
+		m_iAnim = 13;
 		m_IsLoop = false;
 		break;
 	}
 	case PLAYER_ELEMENTAL_SPEC_END:
 	{
-		m_iAnim = 11;
+		m_iAnim = 14;
 		m_IsLoop = false;
 		break;
 	}
 	case PLAYER_ELEMENTAL_BURST:
 	{
-		m_iAnim = 12;
+		m_iAnim = 15;
 		m_IsLoop = false;
 		break;
 	}
 	case PLAYER_ELEMENTAL_BURST_END:
 	{
-		m_iAnim = 13;
+		m_iAnim = 16;
 		m_IsLoop = false;
 		//m_IsLinear = false;
 		break;
 	}
 	case PLAYER_RUN_START:
 	{
-		m_iAnim = 30;
+		m_iAnim = 43;
 		m_IsLoop = false;
 		break;
 	}
 	case PLAYER_RUN:
 	{
-		m_iAnim = 31;
+		m_iAnim = 44;
 		m_IsLoop = true;
 		break;
 	}
 	case PLAYER_RUN_STOP:
 	{
-		m_iAnim = 34;
+		m_iAnim = 47;
 		m_IsLoop = false;
 		break;
 	}
 	case PLAYER_SPRINT_START:
 	{
-		m_iAnim = 38;
+		m_iAnim = 50;
 		m_IsLoop = false;
 		break;
 	}
 	case PLAYER_SPRINT:
 	{
-		m_iAnim = 39;
+		m_iAnim = 51;
 		m_IsLoop = true;
 		break;
 	}
 	case PLAYER_SPRINT_STOP:
 	{
-		m_iAnim = 40;
+		m_iAnim = 52;
 		m_IsLoop = false;
 		break;
 	}
 	case PLAYER_SPRINT_TO_RUN:
 	{
-		m_iAnim = 41;
+		m_iAnim = 53;
 		m_IsLoop = false;
 		//m_IsLinear = false;
 		break;
 	}
 	case PLAYER_JUMP:
 	{
-		m_iAnim = 32;
+		m_iAnim = 40;
 		m_IsLoop = false;
 		break;
 	}
 	case PLAYER_JUMP_FOR_RUN:
 	{
-		m_iAnim = 33;
+		m_iAnim = 41;
 		m_IsLoop = false;
 		break;
 	}
 	case PLAYER_JUMP_FOR_SPRINT:
 	{
-		m_iAnim = 34;
+		m_iAnim = 42;
 		m_IsLoop = false;
 		break;
 	}
 	case PLAYER_IDLE:
 	{
-		m_iAnim = 42;
+		m_iAnim = 54;
 		m_IsLoop = true;
 		m_IsLinear = false;
 		break;
 	}
 	case PLAYER_IDLE_PUT_AWAY:
 	{
-		m_iAnim = 42;
+		m_iAnim = 55;
 		m_IsLoop = true;
 		m_IsLinear = false;
 		break;

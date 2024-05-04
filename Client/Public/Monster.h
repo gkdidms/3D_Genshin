@@ -43,10 +43,10 @@ protected:
     CShader* m_pShaderCom = { nullptr };
     CModel* m_pModelCom = { nullptr };
     CCollider* m_pColliderCom = { nullptr };
+    CNavigation* m_pNavigation = { nullptr };
 
-private:
+protected:
     _int m_iMonsterNavigationIndex = { 0 };
-    _float3 m_vCreatePos = {};
     const _float4x4* m_pTargetMatrix = { nullptr };
     
 public:

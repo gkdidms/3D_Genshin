@@ -26,7 +26,7 @@ HRESULT CTighnari_Body::Initialize(void* pArg)
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
-	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ 45, true, true, false });
+	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ 46, true, true, false });
 	return S_OK;
 }
 
@@ -128,7 +128,7 @@ void CTighnari_Body::Change_Animation(const _float& fTimeDelta)
 	}
 	case PLAYER_ATTACK_IDLE:
 	{
-		m_iAnim = 50;
+		m_iAnim = 48;
 		m_IsLoop = false;
 		m_IsLinear = false;
 		break;
@@ -181,25 +181,25 @@ void CTighnari_Body::Change_Animation(const _float& fTimeDelta)
 	}
 	case PLAYER_SPRINT_START:
 	{
-		m_iAnim = 44;
+		m_iAnim = 42;
 		m_IsLoop = false;
 		break;
 	}
 	case PLAYER_SPRINT:
 	{
-		m_iAnim = 45;
+		m_iAnim = 43;
 		m_IsLoop = true;
 		break;
 	}
 	case PLAYER_SPRINT_STOP:
 	{
-		m_iAnim = 46;
+		m_iAnim = 44;
 		m_IsLoop = false;
 		break;
 	}
 	case PLAYER_SPRINT_TO_RUN:
 	{
-		m_iAnim = 47;
+		m_iAnim = 45;
 		m_IsLoop = false;
 		m_IsLinear = false;
 		break;
@@ -224,14 +224,14 @@ void CTighnari_Body::Change_Animation(const _float& fTimeDelta)
 	}
 	case PLAYER_IDLE:
 	{
-		m_iAnim = 48;
+		m_iAnim = 46;
 		m_IsLoop = true;
 		m_IsLinear = false;
 		break;
 	}
 	case PLAYER_IDLE_PUT_AWAY:
 	{
-		m_iAnim = 49;
+		m_iAnim = 47;
 		m_IsLoop = false;
 		m_IsLinear = false;
 		break;
