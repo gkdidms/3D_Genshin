@@ -143,7 +143,7 @@ HRESULT CModel::Ready_Model(const _char* szModelFilePath, const _char* szBinaryF
 
 	_uint iRootBoneIndex = { 0 };
 	find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pBone)->_bool {
-		if (pBone->Compare_NodeName("Monster_Hili_Fire_01_Model") || pBone->Compare_NodeName("Bip001"))
+		if (pBone->Compare_NodeName("Monster_Hili_Fire_01_Model") || pBone->Compare_NodeName("Monster_Hili_Electric_01_Model") || pBone->Compare_NodeName("Bip001"))
 			return true;
 
 		iRootBoneIndex++;

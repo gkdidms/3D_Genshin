@@ -58,7 +58,7 @@ private:
 	CNode::NODE_STATE Attack();
 
 	CNode::NODE_STATE CheckDetect();
-	CNode::NODE_STATE MoveCloserToPlayer();
+	CNode::NODE_STATE MoveToPlayer();
 
 	CNode::NODE_STATE MoveToPrePlace();
 	CNode::NODE_STATE StandBy();

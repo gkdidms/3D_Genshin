@@ -157,7 +157,12 @@
   <ItemGroup>
     <ClInclude Include="..\public\Action.h" />
     <ClInclude Include="..\public\Background.h" />
+    <ClInclude Include="..\public\Body_Tartaglia.h" />
+    <ClInclude Include="..\public\Boss.h" />
     <ClInclude Include="..\Public\BT_Hili.h" />
+    <ClInclude Include="..\public\BT_Hili_Club.h" />
+    <ClInclude Include="..\public\BT_Hili_CrossBow.h" />
+    <ClInclude Include="..\public\BT_Tartaglia.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\public\Command.h" />
     <ClInclude Include="..\public\Command_Manager.h" />
@@ -165,8 +170,13 @@
     <ClInclude Include="..\public\DefaultCamera.h" />
     <ClInclude Include="..\public\Dungeon_1.h" />
     <ClInclude Include="..\Public\Dungeon_2.h" />
+    <ClInclude Include="..\public\GoldenHouse.h" />
     <ClInclude Include="..\public\Hili.h" />
+    <ClInclude Include="..\Public\Hili_Electric.h" />
     <ClInclude Include="..\public\Hili_Fire.h" />
+    <ClInclude Include="..\public\Hili_Weapon.h" />
+    <ClInclude Include="..\public\Hili_Weapon_Club.h" />
+    <ClInclude Include="..\Public\Hili_Weapon_Crossbow.h" />
     <ClInclude Include="..\public\Node.h" />
     <ClInclude Include="..\public\SceneObj.h" />
     <ClInclude Include="..\public\Selector.h" />
@@ -181,6 +191,7 @@
     <ClInclude Include="..\Public\Slime_Mid_Fire.h" />
     <ClInclude Include="..\Public\Slime_Mid_Water.h" />
     <ClInclude Include="..\public\Slime_Root.h" />
+    <ClInclude Include="..\public\Stage_Boss_Level.h" />
     <ClInclude Include="..\public\StateElementalArt_Nilou.h" />
     <ClInclude Include="..\public\StateElementalArt_Tighanri.h" />
     <ClInclude Include="..\public\StateElementalArt_Yae.h" />
@@ -225,15 +236,25 @@
   <ItemGroup>
     <ClCompile Include="..\private\Action.cpp" />
     <ClCompile Include="..\private\Background.cpp" />
+    <ClCompile Include="..\private\Body_Tartaglia.cpp" />
+    <ClCompile Include="..\private\Boss.cpp" />
     <ClCompile Include="..\Private\BT_Hili.cpp" />
+    <ClCompile Include="..\private\BT_Hili_Club.cpp" />
+    <ClCompile Include="..\private\BT_Hili_CrossBow.cpp" />
+    <ClCompile Include="..\private\BT_Tartaglia.cpp" />
     <ClCompile Include="..\private\Command.cpp" />
     <ClCompile Include="..\private\Command_Manager.cpp" />
     <ClCompile Include="..\private\Command_ATT.cpp" />
     <ClCompile Include="..\private\DefaultCamera.cpp" />
     <ClCompile Include="..\private\Dungeon_1.cpp" />
     <ClCompile Include="..\Private\Dungeon_2.cpp" />
+    <ClCompile Include="..\private\GoldenHouse.cpp" />
     <ClCompile Include="..\private\Hili.cpp" />
+    <ClCompile Include="..\Private\Hili_Electric.cpp" />
     <ClCompile Include="..\private\Hili_Fire.cpp" />
+    <ClCompile Include="..\private\Hili_Weapon.cpp" />
+    <ClCompile Include="..\private\Hili_Weapon_Club.cpp" />
+    <ClCompile Include="..\Private\Hili_Weapon_Crossbow.cpp" />
     <ClCompile Include="..\private\Node.cpp" />
     <ClCompile Include="..\private\SceneObj.cpp" />
     <ClCompile Include="..\private\Selector.cpp" />
@@ -248,6 +269,7 @@
     <ClCompile Include="..\Private\Slime_Mid_Fire.cpp" />
     <ClCompile Include="..\Private\Slime_Mid_Water.cpp" />
     <ClCompile Include="..\private\Slime_Root.cpp" />
+    <ClCompile Include="..\private\Stage_Boss_Level.cpp" />
     <ClCompile Include="..\private\StateElementalArt_Nilou.cpp" />
     <ClCompile Include="..\private\StateElementalArt_Tighanri.cpp" />
     <ClCompile Include="..\private\StateElementalArt_Yae.cpp" />

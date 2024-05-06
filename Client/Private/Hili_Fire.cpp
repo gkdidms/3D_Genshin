@@ -3,6 +3,8 @@
 #include "GameInstance.h"
 #include "BT_Hili.h"
 
+
+
 CHili_Fire::CHili_Fire(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CHili{ pDevice, pContext }
 {
@@ -26,20 +28,10 @@ HRESULT CHili_Fire::Initialize(void* pArg)
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
-	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ 0, true, true, true });
-
-	CBT_Hili::BT_HILI_DESC Desc{};
-	Desc.pCollider = m_pColliderCom;
-	Desc.pModel = m_pModelCom;
-	Desc.pState = &m_CurrentState;
-	Desc.pTargetMatrix = m_pTargetMatrix;
-	Desc.pTransformCom = m_pTransformCom;
-	Desc.pWeaponType = &m_Weapon;
-	Desc.pInfo = &m_Info;
-
-	m_pBT = CBT_Hili::Create(&Desc);
-	if (nullptr == m_pBT)
+	if (FAILED(__super::Ready_Object()))
 		return E_FAIL;
+
+	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ 0, true, true, true });
 
 	return S_OK;
 }
@@ -50,7 +42,7 @@ void CHili_Fire::Priority_Tick(const _float& fTimeDelta)
 
 void CHili_Fire::Tick(const _float& fTimeDelta)
 {
-	m_pBT->Tick();
+	m_pBT->Tick(fTimeDelta);
 	Change_Animation(fTimeDelta);
 
 	_float4x4 MoveMatrix;
@@ -60,6 +52,8 @@ void CHili_Fire::Tick(const _float& fTimeDelta)
 	m_pTransformCom->Go_Run(XMLoadFloat4x4(&MoveMatrix), m_pNavigation);
 
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
+
+	__super::Tick(fTimeDelta);
 }
 
 void CHili_Fire::Late_Tick(const _float& fTimeDelta)
@@ -69,6 +63,8 @@ void CHili_Fire::Late_Tick(const _float& fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 
 	m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONBLENDER, this);
+
+	__super::Late_Tick(fTimeDelta);
 }
 
 HRESULT CHili_Fire::Render()
@@ -99,7 +95,7 @@ HRESULT CHili_Fire::Add_Components()
 	CNavigation::NAVIGATION_DESC NavigationDesc = {};
 	NavigationDesc.iIndex = m_iMonsterNavigationIndex;
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Navigation_Stage_1", L"Com_Navigation", reinterpret_cast<CComponent**>(&m_pNavigation), &Desc)))
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Navigation", L"Com_Navigation", reinterpret_cast<CComponent**>(&m_pNavigation), &Desc)))
 		return E_FAIL;
 
 	return S_OK;

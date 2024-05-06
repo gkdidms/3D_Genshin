@@ -18,13 +18,10 @@ public:
     void Late_Tick(const _float& fTimeDelta) override;
     HRESULT Render() override;
 
-private:
+protected:
     virtual HRESULT Add_Components();
     virtual HRESULT Bind_ResourceData();
     virtual void Change_Animation(const _float& fTimeDelta);
-
-private:
-    class CBT_Hili* m_pBT = { nullptr };
 
 public:
     static CHili_Fire* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

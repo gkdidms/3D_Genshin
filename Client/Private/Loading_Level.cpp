@@ -4,6 +4,7 @@
 #include "Loader.h"
 #include "Logo_Level.h"
 #include "GamePlay_Level.h"
+#include "Stage_Boss_Level.h"
 
 CLoading_Level::CLoading_Level(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel{ pDevice, pContext }
@@ -25,6 +26,8 @@ HRESULT CLoading_Level::Initialize(LEVEL_STATE eNextLevel)
 
 void CLoading_Level::Tick(const _float& fTimeDelta)
 {
+	SetWindowText(g_hWnd, m_pLoader->Get_LoadingText());
+
 	if (m_pLoader->is_Finished())
 	{
 		SetWindowText(g_hWnd, m_pLoader->Get_LoadingText());
@@ -35,6 +38,8 @@ void CLoading_Level::Tick(const _float& fTimeDelta)
 				m_pGameInstance->Open_Level(LEVEL_LOGO, CLogo_Level::Create(m_pDevice, m_pContext));
 			else if (m_eNextLevel == LEVEL_GAMEPLAY)
 				m_pGameInstance->Open_Level(LEVEL_GAMEPLAY, CGamePlay_Level::Create(m_pDevice, m_pContext));
+			else if (m_eNextLevel == LEVEL_STAGE_BOSS)
+				m_pGameInstance->Open_Level(LEVEL_GAMEPLAY, CStage_Boss_Level::Create(m_pDevice, m_pContext));
 		}
 	}
 }

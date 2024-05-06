@@ -214,8 +214,44 @@
     <Filter Include="02. GameObject\Monster\hili\AI">
       <UniqueIdentifier>{e7dd69ff-3675-4d08-93d7-ff08cd5363d1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\Monster\hili\Electronic">
+    <Filter Include="02. GameObject\Monster\hili\AI\Clue">
+      <UniqueIdentifier>{2504f5fa-54bf-46ee-a6d8-9c65af8f70de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\Monster\hili\AI\CrossBow">
+      <UniqueIdentifier>{550729d7-9988-4d97-aece-be2340fae68f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\Monster\hili\Weapon">
+      <UniqueIdentifier>{fcb41c52-4c38-4b9a-bdcb-10177eb33180}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\Monster\hili\Weapon\Club">
+      <UniqueIdentifier>{c45302dc-945c-4d79-82df-65c46e1eae3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\Monster\hili\Weapon\Crossbow">
+      <UniqueIdentifier>{c68cbfe5-97a8-4e33-a767-9f8dc104f443}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\Monster\hili\Electric">
       <UniqueIdentifier>{ff995c21-fefe-47e8-a5ae-efb9c9a7cfad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Level\02. Stage_Boss">
+      <UniqueIdentifier>{7e044996-709f-4c0e-a668-484b0696decd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\Map\Stage_Boss">
+      <UniqueIdentifier>{71f10910-c581-4c22-a4e5-c5a24a6ab31f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\Boss">
+      <UniqueIdentifier>{5559e757-8ff3-4162-a815-4f73c93b00e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\Boss\PartObject">
+      <UniqueIdentifier>{ebc8e995-27aa-478f-acee-5b643949d58e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\Boss\PartObject\Body">
+      <UniqueIdentifier>{f63b44c1-988e-410d-89e8-f7011463e1f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\Boss\AI">
+      <UniqueIdentifier>{030afe71-9e2d-475c-8dc2-631f11351819}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\Boss\AI\Tartaglia">
+      <UniqueIdentifier>{45f577e1-de1c-4acb-be2d-5e1244a15003}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -414,8 +450,41 @@
     <ClInclude Include="..\public\Hili_Fire.h">
       <Filter>02. GameObject\Monster\hili\Fire</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\BT_Hili_CrossBow.h">
+      <Filter>02. GameObject\Monster\hili\AI\CrossBow</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\BT_Hili.h">
       <Filter>02. GameObject\Monster\hili\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BT_Hili_Club.h">
+      <Filter>02. GameObject\Monster\hili\AI\Clue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Hili_Weapon.h">
+      <Filter>02. GameObject\Monster\hili\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Hili_Weapon_Club.h">
+      <Filter>02. GameObject\Monster\hili\Weapon\Club</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Hili_Weapon_Crossbow.h">
+      <Filter>02. GameObject\Monster\hili\Weapon\Crossbow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Hili_Electric.h">
+      <Filter>02. GameObject\Monster\hili\Electric</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Stage_Boss_Level.h">
+      <Filter>01.Level\02. Stage_Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\GoldenHouse.h">
+      <Filter>02. GameObject\Map\Stage_Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Boss.h">
+      <Filter>02. GameObject\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Body_Tartaglia.h">
+      <Filter>02. GameObject\Boss\PartObject\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BT_Tartaglia.h">
+      <Filter>02. GameObject\Boss\AI\Tartaglia</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -602,8 +671,41 @@
     <ClCompile Include="..\private\Hili_Fire.cpp">
       <Filter>02. GameObject\Monster\hili\Fire</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\BT_Hili_CrossBow.cpp">
+      <Filter>02. GameObject\Monster\hili\AI\CrossBow</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\BT_Hili.cpp">
       <Filter>02. GameObject\Monster\hili\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BT_Hili_Club.cpp">
+      <Filter>02. GameObject\Monster\hili\AI\Clue</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Hili_Weapon.cpp">
+      <Filter>02. GameObject\Monster\hili\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Hili_Weapon_Club.cpp">
+      <Filter>02. GameObject\Monster\hili\Weapon\Club</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Hili_Weapon_Crossbow.cpp">
+      <Filter>02. GameObject\Monster\hili\Weapon\Crossbow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Hili_Electric.cpp">
+      <Filter>02. GameObject\Monster\hili\Electric</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Stage_Boss_Level.cpp">
+      <Filter>01.Level\02. Stage_Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\GoldenHouse.cpp">
+      <Filter>02. GameObject\Map\Stage_Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boss.cpp">
+      <Filter>02. GameObject\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Body_Tartaglia.cpp">
+      <Filter>02. GameObject\Boss\PartObject\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BT_Tartaglia.cpp">
+      <Filter>02. GameObject\Boss\AI\Tartaglia</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

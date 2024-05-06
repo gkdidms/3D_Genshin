@@ -22,7 +22,7 @@ public:
     };
 
     typedef struct tHiliDesc : public CMonster::MONSTER_DESC {
-
+        HILI_WEAPON_TYPE eWeapon;
     } HILI_DESC;
 
     typedef struct tHiliInfo {
@@ -50,12 +50,17 @@ protected:
     virtual HRESULT Bind_ResourceData();
     virtual void Change_Animation(const _float& fTimeDelta);
 
+    virtual HRESULT Ready_Object();
+
 protected:
     HILI_STATE m_CurrentState = { HILI_END };
     HILI_WEAPON_TYPE m_Weapon = { HILI_WEAPON_END };
-
+    class CHili_Weapon* m_pWeapon = { nullptr };
     HILI_INFO m_Info;
 
+protected:
+    class CBT_Hili* m_pBT = { nullptr };
+ 
 public:
     virtual void Free() override;
 };

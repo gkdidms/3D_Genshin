@@ -201,6 +201,7 @@ void CTool_Manager::Window_Object()
     if (ImGui::Button("Remove"))
     {
         m_pObject_Manager->Remove_Object(m_iCurrentPickingObjectIndex);
+        m_iCurrentPickingObjectIndex--;
         if (m_pObject_Manager->Get_Objects().size() <= 0)
             m_iCurrentPickingObjectIndex = -1;
     }

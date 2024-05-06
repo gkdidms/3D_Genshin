@@ -54,8 +54,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Ready_Weapons()))
 		return E_FAIL;
 
-	if (FAILED(Ready_SkillObjs()))
-		return E_FAIL;
+	//if (FAILED(Ready_SkillObjs()))
+	//	return E_FAIL;
 
 	m_pCameraLook = dynamic_cast<CPartObject*>(m_PartObject[m_CurrentPlayerble][PART_BODY])->Get_CameraLook();
 	
@@ -140,7 +140,7 @@ HRESULT CPlayer::Add_Components()
 	CNavigation::NAVIGATION_DESC NavigationDesc = {};
 	NavigationDesc.iIndex = m_iPlayerNavigationIndex;
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Navigation_Stage_1", L"Com_Navigation", reinterpret_cast<CComponent**>(&m_pNavigationCom), &NavigationDesc)))
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Navigation", L"Com_Navigation", reinterpret_cast<CComponent**>(&m_pNavigationCom), &NavigationDesc)))
 		return E_FAIL;
 
 	CBounding_AABB::BOUNDING_AABB_DESC ColliderDesc = {};

@@ -40,8 +40,6 @@ public:
     void Late_Tick(const _float& fTimeDelta);
     HRESULT Render();
 
-
-
 private:
     class CState_Manager* m_pState_Manager = { nullptr };
     vector<class CGameObject*> m_PartObject[PLAYER_TYPE_END];

@@ -30,7 +30,7 @@ public:
     virtual void Tick() override;
 
 public:
-    _int Find_Index(_fvector vTargetPos, _fvector vTargetRayDir, _fmatrix WorldMatirx);
+    _int Find_Index(POINT ptMouse, _fvector vTargetPos, _fvector vTargetRayDir, _fmatrix WorldMatirx);
     _bool isMove(_fvector vMovePos);
     _float Compute_Height(_fvector vPosition);
     _bool isLook(_fvector vLook);

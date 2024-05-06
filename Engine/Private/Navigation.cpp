@@ -68,14 +68,49 @@ void CNavigation::Tick()
 {
 }
 
-_int CNavigation::Find_Index(_fvector vTargetPos, _fvector vTargetRayDir, _fmatrix WorldMatirx)
+_int CNavigation::Find_Index(POINT ptMouse, _fvector vTargetPos, _fvector vTargetRayDir, _fmatrix WorldMatirx)
 {
+    // 스케일 값
+    // 뷰포트 -> 투영
+    D3D11_VIEWPORT ViewPort;
+    _uint iNumViewPorts = 1;
+    m_pContext->RSGetViewports(&iNumViewPorts, &ViewPort);
+
+    _float3 vMousePos;
+
+    vMousePos.x = ptMouse.x / (ViewPort.Width * 0.5f) - 1.f;
+    vMousePos.y = ptMouse.y / -(ViewPort.Height * 0.5f) + 1.f;
+
+    vMousePos.z = 0.f;
+
+    // 투영 -> 뷰
+    _matrix	matProj;
+    matProj = m_pGameInstance->Get_Transform_Inverse_Matrix(CPipeLine::D3DTS_PROJ);
+    XMStoreFloat3(&vMousePos, XMVector3TransformCoord(XMLoadFloat3(&vMousePos), matProj));
+
+    //뷰 -> 월드
+    _matrix	matView = m_pGameInstance->Get_Transform_Inverse_Matrix(CPipeLine::D3DTS_VIEW);
+
+    _vector	vRayDir, vRayPos;
+
+    vRayPos = { 0.f, 0.f, 0.f };
+    vRayDir = XMLoadFloat3(&vMousePos) - vRayPos;
+
+    vRayPos = XMVector3TransformCoord(vRayPos, matView);
+    vRayDir = XMVector3TransformNormal(vRayDir, matView);
+
+    //월드 -> 로컬
+    _matrix		matWorld = WorldMatirx;
+    matWorld = XMMatrixInverse(nullptr, matWorld);
+    vRayPos = XMVector3TransformCoord(vRayPos, matWorld);
+    vRayDir = XMVector3Normalize(XMVector3TransformCoord(vRayDir, matWorld));
+
 	_ulong	dwVtxIdx[3]{};
 	_float	fDist(0.f);
 	for (auto& pCell : m_Cells)
 	{
 		if (Intersects(vTargetPos,
-            XMVectorSet(0.f, 1.f, 0.f, 0.f),
+            vRayDir,
 			pCell->Get_Point(CCell::POINT_A),
 			pCell->Get_Point(CCell::POINT_B),
 			pCell->Get_Point(CCell::POINT_C),

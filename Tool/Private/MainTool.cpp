@@ -69,7 +69,7 @@ HRESULT CMainTool::Open_Level(LEVEL_STATE eLevelState)
 HRESULT CMainTool::Ready_Level_For_Main()
 {
     // 
-    _matrix PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+    _matrix PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) *  XMMatrixRotationY(XMConvertToRadians(180.0f));
     
     if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Slime_Fire", CModel::Create(m_pDevice, m_pContext, "../../Client/Bin/Resources/Models/Monster/Slime_Fire/Slime_Fire.fbx", PreTransformMatrix, "../../Data/Slime_Fire.dat"))))
         return E_FAIL;
@@ -78,6 +78,8 @@ HRESULT CMainTool::Ready_Level_For_Main()
         return E_FAIL;
 
     if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_TreasureBox", CModel::Create(m_pDevice, m_pContext, "../../Client/Bin/Resources/Models/SceneObj/TreasureBox/TreasureBox.fbx", PreTransformMatrix, "../../Data/TreasureBox.dat"))))
+        return E_FAIL;
+    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_TreasureBox_Big", CModel::Create(m_pDevice, m_pContext, "../../Client/Bin/Resources/Models/SceneObj/TreasureBox_Big/TreasureBox_Big.fbx", PreTransformMatrix, "../../Data/TreasureBox_Big.dat"))))
         return E_FAIL;
 
     if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_WindField", CModel::Create(m_pDevice, m_pContext, "../../Client/Bin/Resources/Models/SceneObj/WindFleid/WindField.fbx", PreTransformMatrix, "../../Data/WindField.dat"))))
@@ -89,11 +91,17 @@ HRESULT CMainTool::Ready_Level_For_Main()
     if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Hili_Electric", CModel::Create(m_pDevice, m_pContext, "../../Client/Bin/Resources/Models/Monster/Hili_Electric/Hili_Electric.fbx", PreTransformMatrix, "../../Data/Hili_Electric.dat"))))
         return E_FAIL;
 
+    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Boss_Tarta", CModel::Create(m_pDevice, m_pContext, "../../Client/Bin/Resources/Models/Boss/Tarta/Tartaglia.fbx", PreTransformMatrix, "../../Data/Boss_Tartaglia.dat"))))
+        return E_FAIL;
+
     PreTransformMatrix = XMMatrixIdentity();
     if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Dungeon_1", CModel::Create(m_pDevice, m_pContext,  "../../Client/Bin/Resources/Models/Map/Dungeon_1/Dungeon_1.fbx", PreTransformMatrix, "../../Data/Dungeon_1.dat"))))
         return E_FAIL;
 
     if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Dungeon_2", CModel::Create(m_pDevice, m_pContext,  "../../Client/Bin/Resources/Models/Map/Dungeon_2/Dungeon_2.fbx", PreTransformMatrix, "../../Data/Dungeon_2.dat"))))
+        return E_FAIL;
+
+    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_GoldenHouse", CModel::Create(m_pDevice, m_pContext, "../../Client/Bin/Resources/Models/Map/GoldenHouse/GoldenHouse.fbx", PreTransformMatrix, "../../Data/GoldenHouse.dat"))))
         return E_FAIL;
 
     //buffer

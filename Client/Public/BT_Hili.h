@@ -24,21 +24,21 @@ public:
 		CHili::HILI_INFO* pInfo;
 	} BT_HILI_DESC;
 
-private:
+protected:
 	CBT_Hili();
 	virtual ~CBT_Hili() = default;
 
 public:
-	HRESULT Initialize(void* pArg);
-	void Tick();
+	virtual HRESULT Initialize(void* pArg);
+	virtual void Tick(const _float& fTimeDelta);
 	virtual CNode::NODE_STATE Evaluate() override;
 	
-private:
+protected:
 	CNode* m_pRootNode = { nullptr };
 	CGameInstance* m_pGameInstance = { nullptr };
 	_float4x4 m_PreMatrix = {};
 
-private:
+protected:
 	const CModel* m_pModelCom;
 	const _float4x4* m_pTargetMatrix;
 	CTransform* m_pTransformCom;
@@ -48,41 +48,42 @@ private:
 	CHili::HILI_INFO* m_pInfo = { nullptr };
 
 
-private:
+protected:
 	_bool m_isDiscovered = { false }; // 인지를 했는가?
+	_bool m_isAttack = { false };
 
-	_float m_iAttackRange = { 2.f };
-	_float m_iDetectRange = { 10.f };
+	_float m_iAttackRange = { 0.f };
+	_float m_iDetectRange = { 0.f };
+	_float m_iDiscoverRange = { 20.f };
 
 	_float m_fAttackDelay = { 2.f }; // 2초
 	_float m_fAttackTime = { 0.f }; // 공격 후 시간 
 
-private:
-	CNode::NODE_STATE CheckDeath();
-	CNode::NODE_STATE Death();
+protected:
+	virtual CNode::NODE_STATE CheckDeath();
+	virtual CNode::NODE_STATE Death();
 
-	CNode::NODE_STATE CheckHit();
-	CNode::NODE_STATE Hit();
+	virtual CNode::NODE_STATE CheckHit();
+	virtual CNode::NODE_STATE Hit();
 	
-	CNode::NODE_STATE CheckAttack();
-	CNode::NODE_STATE CheckDiscoverToPlayer();
-	CNode::NODE_STATE CheckRangePlayer();
-	CNode::NODE_STATE Attack();
+	virtual CNode::NODE_STATE CheckAttack();
+	virtual CNode::NODE_STATE CheckDiscoverToPlayer();
+	virtual CNode::NODE_STATE CheckRangePlayer();
+	virtual CNode::NODE_STATE CheckAttackTime();
+	virtual CNode::NODE_STATE Attack();
 
-	CNode::NODE_STATE CheckDetect();
-	CNode::NODE_STATE CheckLookPlayer();
-	CNode::NODE_STATE MoveCloserToPlayer();
+	virtual CNode::NODE_STATE CheckDetect();
+	virtual CNode::NODE_STATE CheckLookPlayer();
+	virtual CNode::NODE_STATE MoveToPlayer();
 
-	CNode::NODE_STATE MoveToPrePlace();
-	CNode::NODE_STATE StandBy();
-	
+	virtual CNode::NODE_STATE MoveToPrePlace();
+	virtual CNode::NODE_STATE StandBy();
 
 
 private:
-	void Ready_Node();
+	virtual void Ready_Node();
 	
 public:
-	static CBT_Hili* Create(void* pArg);
-	virtual void Free();
+	virtual void Free() override;
 };
 END

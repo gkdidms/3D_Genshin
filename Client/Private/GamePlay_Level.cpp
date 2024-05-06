@@ -7,6 +7,8 @@
 #include "Player.h"
 #include "Map.h"
 
+#include "Hili.h"
+
 CGamePlay_Level::CGamePlay_Level(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel{ pDevice, pContext }
 {
@@ -140,22 +142,32 @@ HRESULT CGamePlay_Level::Ready_Object(const char* strName, _matrix WorldMatrix, 
 	}
 	else if (string(strName).find("Hili_Fire") != string::npos)
 	{
-		CMonster::MONSTER_DESC Desc{};
+		CHili::HILI_DESC Desc{};
 
 		XMStoreFloat4x4(&Desc.WorldMatrix, WorldMatrix);
 		Desc.iMonsterNavigationIndex = iNavigationIndex;
 		Desc.TargetMatrix = dynamic_cast<CTransform*>(m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, L"Layer_Player", L"Com_Transform"))->Get_WorldFloat4x4();
+
+		if (string(strName).find("Bow") != string::npos)
+			Desc.eWeapon = CHili::HILI_WEAPON_CROSSBOW;
+		else if (string(strName).find("Club") != string::npos)
+			Desc.eWeapon = CHili::HILI_WEAPON_CLUB;
 
 		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Monster_Hili_Fire", L"Layer_Monster_Hili_Fire", &Desc)))
 			return E_FAIL;
 	}
 	else if (string(strName).find("Hili_Electric") != string::npos)
 	{
-		CMonster::MONSTER_DESC Desc{};
+		CHili::HILI_DESC Desc{};
 
 		XMStoreFloat4x4(&Desc.WorldMatrix, WorldMatrix);
 		Desc.iMonsterNavigationIndex = iNavigationIndex;
 		Desc.TargetMatrix = dynamic_cast<CTransform*>(m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, L"Layer_Player", L"Com_Transform"))->Get_WorldFloat4x4();
+
+		if (string(strName).find("Bow") != string::npos)
+			Desc.eWeapon = CHili::HILI_WEAPON_CROSSBOW;
+		else if (string(strName).find("Club") != string::npos)
+			Desc.eWeapon = CHili::HILI_WEAPON_CLUB;
 
 		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Monster_Hili_Electric", L"Layer_Monster_Hili_Electric", &Desc)))
 			return E_FAIL;
@@ -167,7 +179,7 @@ HRESULT CGamePlay_Level::Ready_Object(const char* strName, _matrix WorldMatrix, 
 HRESULT CGamePlay_Level::Load_File(LEVEL_STATE eNextLevel)
 {
 	char pFilePath[MAX_PATH] = "";
-	strcpy_s(pFilePath, eNextLevel == LEVEL_GAMEPLAY ? "../../Data/Stage/Stage_1.dat" : "../../Data/Stage/Stage_1.dat");
+	strcpy_s(pFilePath, "../../Data/Stage/Stage_1.dat");
 
 	ifstream ifs(pFilePath, ios::binary | ios::in);
 

@@ -28,14 +28,19 @@ HRESULT CTool_Object_Manager::Initialize()
 		CLONE_DESC { 2, "Slime_Fire_Mid", L"Prototype_Component_Model_Slime_Fire", L"Com_Slime_Fire", true},
 		CLONE_DESC { 3, "Slime_Water_Mid", L"Prototype_Component_Model_Slime_Water", L"Com_Slime_Water", true},
 		CLONE_DESC { 4, "TreasureBox", L"Prototype_Component_Model_TreasureBox", L"Com_TreasureBox", true},
-		CLONE_DESC { 5, "WindField", L"Prototype_Component_Model_WindField", L"Com_WindField", true},
-		CLONE_DESC { 6, "Hili_Fire", L"Prototype_Component_Model_Hili_Fire", L"Com_Hili_Fire", true},
-		CLONE_DESC { 7, "Hili_Electric", L"Prototype_Component_Model_Hili_Electric", L"Com_Hili_Electric", true},
+		CLONE_DESC { 5, "TreasureBox_Big", L"Prototype_Component_Model_TreasureBox_Big", L"Com_TreasureBox", true},
+		CLONE_DESC { 6, "WindField", L"Prototype_Component_Model_WindField", L"Com_WindField", true},
+		CLONE_DESC { 7, "Hili_Fire_Bow", L"Prototype_Component_Model_Hili_Fire", L"Com_Hili_Fire", true},
+		CLONE_DESC { 8, "Hili_Fire_Club", L"Prototype_Component_Model_Hili_Fire", L"Com_Hili_Fire", true},
+		CLONE_DESC { 9, "Hili_Electric_Bow", L"Prototype_Component_Model_Hili_Electric", L"Com_Hili_Electric", true},
+		CLONE_DESC { 10, "Hili_Electric_Club", L"Prototype_Component_Model_Hili_Electric", L"Com_Hili_Electric", true},
+		CLONE_DESC { 11, "Boss_Tartaglia", L"Prototype_Component_Model_Boss_Tarta", L"Com_Boss_Tarta", true},
 	};
 
 	m_CloneDesc[OBJECT_DUNGEON] = {
 		CLONE_DESC { 0, "Dungeon_1", L"Prototype_Component_Model_Dungeon_1", L"Com_Dungeon"},
 		CLONE_DESC { 1, "Dungeon_2", L"Prototype_Component_Model_Dungeon_2", L"Com_Dungeon"},
+		CLONE_DESC { 2, "GoldenHouse", L"Prototype_Component_Model_GoldenHouse", L"Com_Dungeon"},
 	};
 
 	return S_OK;
@@ -321,6 +326,8 @@ HRESULT CTool_Object_Manager::Load(const _char* pFileName)
 			iNumObject = 0;
 		else if (!strcmp(pDungeonName,"Dungeon_2"))
 			iNumObject = 1;
+		else if (!strcmp(pDungeonName, "GoldenHouse"))
+			iNumObject = 2;
 
 		Add_CloneObject(OBJECT_DUNGEON, L"Layer_Dungeon", XMVectorSet(0.f, 0.f, 0.f, 1.f), 0, iNumObject);
 

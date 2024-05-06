@@ -136,11 +136,17 @@ void CTool_Dungeon::Get_MousePos_On_Dungeon()
 
 	if (isSuccess)
 	{
+		POINT ptMouse;
+
+		GetCursorPos(&ptMouse);
+		ScreenToClient(g_hWnd, &ptMouse);
+
+		_int iIndex = m_pNavigationCom->Find_Index(ptMouse, vMousePos, m_pGameInstance->Get_RayDir(), m_pTransformCom->Get_WorldMatrix());
 		if (FAILED(m_pObject_Manager->Add_CloneObject(
 			CTool_Object_Manager::OBJECT_SCENE,
 			L"GameObject_Object",
 			vMousePos,
-			m_pNavigationCom->Find_Index(vMousePos, m_pGameInstance->Get_RayDir(), m_pTransformCom->Get_WorldMatrix()),
+			iIndex,
 			m_pTool_Manager->Get_CreateMonsterIndex())))
 			return;
 	}
@@ -154,10 +160,15 @@ void CTool_Dungeon::Picking_PlayerPos()
 
 	if (isSuccess)
 	{
+		POINT ptMouse;
+
+		GetCursorPos(&ptMouse);
+		ScreenToClient(g_hWnd, &ptMouse);
+
 		_float vPlayerPos[3] = { XMVectorGetX(vMousePos), XMVectorGetY(vMousePos), XMVectorGetZ(vMousePos) };
 		m_pObject_Manager->Set_PlayerPos(vPlayerPos);
 
-		_int iIndex = m_pNavigationCom->Find_Index(vMousePos, m_pGameInstance->Get_RayDir(), m_pTransformCom->Get_WorldMatrix());
+		_int iIndex = m_pNavigationCom->Find_Index(ptMouse, vMousePos, m_pGameInstance->Get_RayDir(), m_pTransformCom->Get_WorldMatrix());
 		m_pObject_Manager->Set_PlayerNavigationIndex(iIndex);
 	}
 }

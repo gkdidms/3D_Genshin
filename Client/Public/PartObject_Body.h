@@ -46,7 +46,7 @@ protected:
 protected:
     virtual HRESULT Add_Components() = 0;
     virtual HRESULT Bind_ResourceData() = 0;
-    virtual void Change_Animation(const _float& fTimeDelta) = 0;
+    virtual void Change_Animation(const _float& fTimeDelta) {};
 
 protected:
     void Move_Pos(const _float& fTimeDelta, _matrix* MoveMatrix);
