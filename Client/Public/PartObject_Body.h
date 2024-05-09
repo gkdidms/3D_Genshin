@@ -14,10 +14,23 @@ public:
         const CPlayer::HILL_TYPE* pHill;
     }BODY_DESC; 
 
+    typedef struct tBodyInfo
+    {
+        char szPlayerbleName[MAX_PATH];
+        _float m_fMaxHp;
+        _float m_fHp;
+        _float m_fAtk;
+        _float m_fDef;
+        ELEMENTAL_TYPE eElementalType;
+    }BODY_INFO;
+
 protected:
     CPartObject_Body(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
     CPartObject_Body(const CPartObject_Body& rhs);
     virtual ~CPartObject_Body() = default;
+
+public:
+    ELEMENTAL_TYPE Get_PlayerbleElemental() { return m_Info.eElementalType; }
 
 public:
     virtual HRESULT Initialize_Prototype();
@@ -32,6 +45,8 @@ protected:
     const _bool* m_pFly = { nullptr };
     const CPlayer::HILL_TYPE* m_pHill = { nullptr };
 
+    BODY_INFO m_Info;
+
 protected:
     _bool m_IsFinished = { false };
 
@@ -41,7 +56,7 @@ protected:
     _float m_fSprintSpeed = { 80.f };
 
     _float m_fFlySpeed = { 2.f };
-    _float m_fFallDropSpeed = { 4.f };
+    _float m_fFallDropSpeed = { 10.f };
 
 protected:
     virtual HRESULT Add_Components() = 0;

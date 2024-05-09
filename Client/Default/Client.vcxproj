@@ -157,8 +157,13 @@
   <ItemGroup>
     <ClInclude Include="..\public\Action.h" />
     <ClInclude Include="..\public\Background.h" />
+    <ClInclude Include="..\public\Body_EvilEye.h" />
+    <ClInclude Include="..\public\Body_Harbinger.h" />
     <ClInclude Include="..\public\Body_Tartaglia.h" />
     <ClInclude Include="..\public\Boss.h" />
+    <ClInclude Include="..\public\BT_Boss.h" />
+    <ClInclude Include="..\public\BT_EvilEye.h" />
+    <ClInclude Include="..\public\BT_Harbinger.h" />
     <ClInclude Include="..\Public\BT_Hili.h" />
     <ClInclude Include="..\public\BT_Hili_Club.h" />
     <ClInclude Include="..\public\BT_Hili_CrossBow.h" />
@@ -167,6 +172,7 @@
     <ClInclude Include="..\public\Command.h" />
     <ClInclude Include="..\public\Command_Manager.h" />
     <ClInclude Include="..\public\Command_ATT.h" />
+    <ClInclude Include="..\public\CutCamera.h" />
     <ClInclude Include="..\public\DefaultCamera.h" />
     <ClInclude Include="..\public\Dungeon_1.h" />
     <ClInclude Include="..\Public\Dungeon_2.h" />
@@ -177,6 +183,7 @@
     <ClInclude Include="..\public\Hili_Weapon.h" />
     <ClInclude Include="..\public\Hili_Weapon_Club.h" />
     <ClInclude Include="..\Public\Hili_Weapon_Crossbow.h" />
+    <ClInclude Include="..\public\Boss_Body.h" />
     <ClInclude Include="..\public\Node.h" />
     <ClInclude Include="..\public\SceneObj.h" />
     <ClInclude Include="..\public\Selector.h" />
@@ -236,8 +243,13 @@
   <ItemGroup>
     <ClCompile Include="..\private\Action.cpp" />
     <ClCompile Include="..\private\Background.cpp" />
+    <ClCompile Include="..\private\Body_EvilEye.cpp" />
+    <ClCompile Include="..\private\Body_Harbinger.cpp" />
     <ClCompile Include="..\private\Body_Tartaglia.cpp" />
     <ClCompile Include="..\private\Boss.cpp" />
+    <ClCompile Include="..\private\BT_Boss.cpp" />
+    <ClCompile Include="..\private\BT_EvilEye.cpp" />
+    <ClCompile Include="..\private\BT_Harbinger.cpp" />
     <ClCompile Include="..\Private\BT_Hili.cpp" />
     <ClCompile Include="..\private\BT_Hili_Club.cpp" />
     <ClCompile Include="..\private\BT_Hili_CrossBow.cpp" />
@@ -245,6 +257,7 @@
     <ClCompile Include="..\private\Command.cpp" />
     <ClCompile Include="..\private\Command_Manager.cpp" />
     <ClCompile Include="..\private\Command_ATT.cpp" />
+    <ClCompile Include="..\private\CutCamera.cpp" />
     <ClCompile Include="..\private\DefaultCamera.cpp" />
     <ClCompile Include="..\private\Dungeon_1.cpp" />
     <ClCompile Include="..\Private\Dungeon_2.cpp" />
@@ -255,6 +268,7 @@
     <ClCompile Include="..\private\Hili_Weapon.cpp" />
     <ClCompile Include="..\private\Hili_Weapon_Club.cpp" />
     <ClCompile Include="..\Private\Hili_Weapon_Crossbow.cpp" />
+    <ClCompile Include="..\private\Boss_Body.cpp" />
     <ClCompile Include="..\private\Node.cpp" />
     <ClCompile Include="..\private\SceneObj.cpp" />
     <ClCompile Include="..\private\Selector.cpp" />

@@ -31,71 +31,8 @@
     <Filter Include="97.ShaderFile">
       <UniqueIdentifier>{b3ebe4cc-9257-419c-89ec-3099e7b941e8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\Background">
-      <UniqueIdentifier>{db761455-496d-4ed9-ae01-6c61f743249e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Terrain">
-      <UniqueIdentifier>{9fa5781c-d7c3-42c1-9723-b39fc13fc4a4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Camera">
-      <UniqueIdentifier>{9fd1f990-2fe6-47de-8e7d-8d39923717de}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Monster">
-      <UniqueIdentifier>{7c37b1ac-82c3-4464-a7fc-34ad85b263f0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Player">
-      <UniqueIdentifier>{b93a464a-26e8-432f-b573-292967d9fe5c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Player\PartObject">
-      <UniqueIdentifier>{b3c6ca05-4d99-40a3-8d9c-c24180ba54a7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Player\PartObject\Body">
-      <UniqueIdentifier>{94e9eb27-47c1-4844-bb12-29fe353c9812}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Map">
-      <UniqueIdentifier>{ff2d225b-e574-4af4-8cce-e28051baf40d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Map\Stage_Dungeon_2">
-      <UniqueIdentifier>{70c3ff82-cda4-4aae-9b41-e107143f54f7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Map\Stage_Dungeon_1">
-      <UniqueIdentifier>{4a914a1e-563b-43d4-983c-acb042bc7c96}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Player\PartObject\Body\Nilou">
-      <UniqueIdentifier>{b35363a6-2776-46ad-8b87-0e9fa0bc5ec4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Player\PartObject\Body\Tighnari">
-      <UniqueIdentifier>{4bece9fe-627f-49e8-b7a8-805855a3fa97}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Player\PartObject\Body\Yae">
-      <UniqueIdentifier>{1f2f8e21-d784-49c4-9216-b54ef0f31ede}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Player\PartObject\Body\Wanderer">
-      <UniqueIdentifier>{c6194065-ae01-4555-989f-f6dc30d0733b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Player\PartObject\Weapon">
-      <UniqueIdentifier>{be5058ad-141c-4302-9ee1-197fb48fc4aa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Player\PartObject\Weapon\Tighnari">
-      <UniqueIdentifier>{30002d29-86aa-47c1-af7f-681522ec39ba}</UniqueIdentifier>
-    </Filter>
     <Filter Include="96. Utility">
       <UniqueIdentifier>{4ca56d1b-0058-40da-afc7-a78bec2b1926}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Player\PartObject\Weapon\Yae">
-      <UniqueIdentifier>{27ccd271-970a-44d8-903d-683b7d41bb19}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Player\PartObject\Weapon\Wanderer">
-      <UniqueIdentifier>{8114c022-cae7-4320-bac2-6a3c2ecf64f6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Player\PartObject\Weapon\Nilou">
-      <UniqueIdentifier>{dfa0ef76-d365-49ec-9ac7-56c8debb2dc1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Player\PartObject\SkillObj">
-      <UniqueIdentifier>{40cc5667-558a-49ed-9dc4-a683fa48fda5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Player\PartObject\SkillObj\Gohei">
-      <UniqueIdentifier>{78f8c0b6-1739-4aa4-b702-8b702dfd36ba}</UniqueIdentifier>
     </Filter>
     <Filter Include="96. Utility\00. State">
       <UniqueIdentifier>{3d7b9044-ab80-4d47-852e-f5c2259b19d6}</UniqueIdentifier>
@@ -160,36 +97,6 @@
     <Filter Include="96. Utility\01. Command\Commend\Command_ATT">
       <UniqueIdentifier>{dca0523c-338d-4ca3-8c2e-a1781e465447}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\Monster\Slime">
-      <UniqueIdentifier>{92e5a98e-cd08-4e06-902f-8abddcc55da2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Monster\Slime\Large">
-      <UniqueIdentifier>{da29d6c3-207d-4204-a2a3-87262aabca53}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Monster\Slime\Mid">
-      <UniqueIdentifier>{dd4abc52-3abf-4cf8-910e-1b6c245471c9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Monster\Slime\Large\Fire">
-      <UniqueIdentifier>{c56c8631-0c76-43c6-af46-a0b3627c97cf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Monster\Slime\Large\Water">
-      <UniqueIdentifier>{8b79b83f-2249-470e-8a18-97868cbb27c6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\SceneObj">
-      <UniqueIdentifier>{8850d4a7-438c-499d-88e7-705c2241dccc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\SceneObj\TreasureBox">
-      <UniqueIdentifier>{86a12885-df31-4b40-8ed5-7610e914cc07}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Monster\Slime\Mid\FIre">
-      <UniqueIdentifier>{f949ee8a-c980-4b36-9a0c-985921cb0d20}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Monster\Slime\Mid\Water">
-      <UniqueIdentifier>{b54f5c37-a0b6-4423-95c0-509d4d9efc31}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Monster\Slime\AI">
-      <UniqueIdentifier>{053a840c-a39b-43c9-a1e0-f94d24484fd2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="96. Utility\02. AI">
       <UniqueIdentifier>{c13141d5-5a58-45aa-aa89-2b5777994ec0}</UniqueIdentifier>
     </Filter>
@@ -205,53 +112,167 @@
     <Filter Include="96. Utility\02. AI\Node\Action">
       <UniqueIdentifier>{01196d42-b3db-49a6-bbba-4a700f1d1aca}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\Monster\hili">
-      <UniqueIdentifier>{88bcf3bf-ceae-4641-93c8-6ed5a454dbfa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Monster\hili\Fire">
-      <UniqueIdentifier>{14e40895-39dc-4be3-b774-bb0d7dcb05b7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Monster\hili\AI">
-      <UniqueIdentifier>{e7dd69ff-3675-4d08-93d7-ff08cd5363d1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Monster\hili\AI\Clue">
-      <UniqueIdentifier>{2504f5fa-54bf-46ee-a6d8-9c65af8f70de}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Monster\hili\AI\CrossBow">
-      <UniqueIdentifier>{550729d7-9988-4d97-aece-be2340fae68f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Monster\hili\Weapon">
-      <UniqueIdentifier>{fcb41c52-4c38-4b9a-bdcb-10177eb33180}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Monster\hili\Weapon\Club">
-      <UniqueIdentifier>{c45302dc-945c-4d79-82df-65c46e1eae3e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Monster\hili\Weapon\Crossbow">
-      <UniqueIdentifier>{c68cbfe5-97a8-4e33-a767-9f8dc104f443}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Monster\hili\Electric">
-      <UniqueIdentifier>{ff995c21-fefe-47e8-a5ae-efb9c9a7cfad}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Level\02. Stage_Boss">
       <UniqueIdentifier>{7e044996-709f-4c0e-a668-484b0696decd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\Map\Stage_Boss">
+    <Filter Include="02. GameObject\00. Background">
+      <UniqueIdentifier>{db761455-496d-4ed9-ae01-6c61f743249e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Camera">
+      <UniqueIdentifier>{9fd1f990-2fe6-47de-8e7d-8d39923717de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Terrain">
+      <UniqueIdentifier>{9fa5781c-d7c3-42c1-9723-b39fc13fc4a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\03. Map">
+      <UniqueIdentifier>{ff2d225b-e574-4af4-8cce-e28051baf40d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\03. Map\Stage_Dungeon_2">
+      <UniqueIdentifier>{70c3ff82-cda4-4aae-9b41-e107143f54f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\03. Map\Stage_Dungeon_1">
+      <UniqueIdentifier>{4a914a1e-563b-43d4-983c-acb042bc7c96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\03. Map\Stage_Boss">
       <UniqueIdentifier>{71f10910-c581-4c22-a4e5-c5a24a6ab31f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\Boss">
+    <Filter Include="02. GameObject\04. Player">
+      <UniqueIdentifier>{b93a464a-26e8-432f-b573-292967d9fe5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\PartObject">
+      <UniqueIdentifier>{b3c6ca05-4d99-40a3-8d9c-c24180ba54a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\PartObject\Body">
+      <UniqueIdentifier>{94e9eb27-47c1-4844-bb12-29fe353c9812}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\PartObject\Body\Nilou">
+      <UniqueIdentifier>{b35363a6-2776-46ad-8b87-0e9fa0bc5ec4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\PartObject\Body\Tighnari">
+      <UniqueIdentifier>{4bece9fe-627f-49e8-b7a8-805855a3fa97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\PartObject\Body\Yae">
+      <UniqueIdentifier>{1f2f8e21-d784-49c4-9216-b54ef0f31ede}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\PartObject\Body\Wanderer">
+      <UniqueIdentifier>{c6194065-ae01-4555-989f-f6dc30d0733b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\PartObject\Weapon">
+      <UniqueIdentifier>{be5058ad-141c-4302-9ee1-197fb48fc4aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\PartObject\Weapon\Tighnari">
+      <UniqueIdentifier>{30002d29-86aa-47c1-af7f-681522ec39ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\PartObject\Weapon\Yae">
+      <UniqueIdentifier>{27ccd271-970a-44d8-903d-683b7d41bb19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\PartObject\Weapon\Wanderer">
+      <UniqueIdentifier>{8114c022-cae7-4320-bac2-6a3c2ecf64f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\PartObject\Weapon\Nilou">
+      <UniqueIdentifier>{dfa0ef76-d365-49ec-9ac7-56c8debb2dc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\PartObject\SkillObj">
+      <UniqueIdentifier>{40cc5667-558a-49ed-9dc4-a683fa48fda5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\PartObject\SkillObj\Gohei">
+      <UniqueIdentifier>{78f8c0b6-1739-4aa4-b702-8b702dfd36ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Monster">
+      <UniqueIdentifier>{7c37b1ac-82c3-4464-a7fc-34ad85b263f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Monster\Slime">
+      <UniqueIdentifier>{92e5a98e-cd08-4e06-902f-8abddcc55da2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Monster\Slime\Large">
+      <UniqueIdentifier>{da29d6c3-207d-4204-a2a3-87262aabca53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Monster\Slime\Large\Fire">
+      <UniqueIdentifier>{c56c8631-0c76-43c6-af46-a0b3627c97cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Monster\Slime\Large\Water">
+      <UniqueIdentifier>{8b79b83f-2249-470e-8a18-97868cbb27c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Monster\Slime\Mid">
+      <UniqueIdentifier>{dd4abc52-3abf-4cf8-910e-1b6c245471c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Monster\Slime\Mid\FIre">
+      <UniqueIdentifier>{f949ee8a-c980-4b36-9a0c-985921cb0d20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Monster\Slime\Mid\Water">
+      <UniqueIdentifier>{b54f5c37-a0b6-4423-95c0-509d4d9efc31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Monster\Slime\AI">
+      <UniqueIdentifier>{053a840c-a39b-43c9-a1e0-f94d24484fd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Monster\hili">
+      <UniqueIdentifier>{88bcf3bf-ceae-4641-93c8-6ed5a454dbfa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Monster\hili\Fire">
+      <UniqueIdentifier>{14e40895-39dc-4be3-b774-bb0d7dcb05b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Monster\hili\AI">
+      <UniqueIdentifier>{e7dd69ff-3675-4d08-93d7-ff08cd5363d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Monster\hili\AI\Clue">
+      <UniqueIdentifier>{2504f5fa-54bf-46ee-a6d8-9c65af8f70de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Monster\hili\AI\CrossBow">
+      <UniqueIdentifier>{550729d7-9988-4d97-aece-be2340fae68f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Monster\hili\Weapon">
+      <UniqueIdentifier>{fcb41c52-4c38-4b9a-bdcb-10177eb33180}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Monster\hili\Weapon\Club">
+      <UniqueIdentifier>{c45302dc-945c-4d79-82df-65c46e1eae3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Monster\hili\Weapon\Crossbow">
+      <UniqueIdentifier>{c68cbfe5-97a8-4e33-a767-9f8dc104f443}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Monster\hili\Electric">
+      <UniqueIdentifier>{ff995c21-fefe-47e8-a5ae-efb9c9a7cfad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. Boss">
       <UniqueIdentifier>{5559e757-8ff3-4162-a815-4f73c93b00e6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\Boss\PartObject">
+    <Filter Include="02. GameObject\06. Boss\PartObject">
       <UniqueIdentifier>{ebc8e995-27aa-478f-acee-5b643949d58e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\Boss\PartObject\Body">
+    <Filter Include="02. GameObject\06. Boss\PartObject\Body">
       <UniqueIdentifier>{f63b44c1-988e-410d-89e8-f7011463e1f8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\Boss\AI">
+    <Filter Include="02. GameObject\06. Boss\PartObject\Body\Tartaglia">
+      <UniqueIdentifier>{032a5864-adde-4ce3-a0e6-4fd1af2e356e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. Boss\PartObject\Body\EvilEye">
+      <UniqueIdentifier>{a7a85d56-a5ad-42f4-9771-eb15a70b78ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. Boss\AI">
       <UniqueIdentifier>{030afe71-9e2d-475c-8dc2-631f11351819}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\Boss\AI\Tartaglia">
+    <Filter Include="02. GameObject\06. Boss\AI\Tartaglia">
       <UniqueIdentifier>{45f577e1-de1c-4acb-be2d-5e1244a15003}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. Boss\AI\EvilEye">
+      <UniqueIdentifier>{6cd9481a-bbcc-4fa3-a1b4-8e7d8342822a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. SceneObj">
+      <UniqueIdentifier>{8850d4a7-438c-499d-88e7-705c2241dccc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. SceneObj\TreasureBox">
+      <UniqueIdentifier>{86a12885-df31-4b40-8ed5-7610e914cc07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. Boss\AI\Harbinger">
+      <UniqueIdentifier>{6997aa8e-c8f1-4e5f-b18d-8a44f0e96c7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. Boss\PartObject\Body\Harbinger">
+      <UniqueIdentifier>{c3290fb1-1ddf-4f5c-9367-96163cb8bc56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Camera\Default">
+      <UniqueIdentifier>{f7e014ce-f595-46c9-af2f-c3113579ebd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Camera\Cut">
+      <UniqueIdentifier>{3ac5df8a-5d51-4ead-b7f7-21d4416980f3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -286,52 +307,49 @@
       <Filter>01.Level\01. GamePlay</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Background.h">
-      <Filter>02. GameObject\Background</Filter>
+      <Filter>02. GameObject\00. Background</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Terrain.h">
-      <Filter>02. GameObject\Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\DefaultCamera.h">
-      <Filter>02. GameObject\Camera</Filter>
+      <Filter>02. GameObject\02. Terrain</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Monster.h">
-      <Filter>02. GameObject\Monster</Filter>
+      <Filter>02. GameObject\05. Monster</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Player.h">
-      <Filter>02. GameObject\Player</Filter>
+      <Filter>02. GameObject\04. Player</Filter>
     </ClInclude>
     <ClInclude Include="..\public\PartObject.h">
-      <Filter>02. GameObject\Player\PartObject</Filter>
+      <Filter>02. GameObject\04. Player\PartObject</Filter>
     </ClInclude>
     <ClInclude Include="..\public\PartObject_Body.h">
-      <Filter>02. GameObject\Player\PartObject\Body</Filter>
+      <Filter>02. GameObject\04. Player\PartObject\Body</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Map.h">
-      <Filter>02. GameObject\Map</Filter>
+      <Filter>02. GameObject\03. Map</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Dungeon_1.h">
-      <Filter>02. GameObject\Map\Stage_Dungeon_1</Filter>
+      <Filter>02. GameObject\03. Map\Stage_Dungeon_1</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Dungeon_2.h">
-      <Filter>02. GameObject\Map\Stage_Dungeon_2</Filter>
+      <Filter>02. GameObject\03. Map\Stage_Dungeon_2</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Tighnari_Body.h">
-      <Filter>02. GameObject\Player\PartObject\Body\Tighnari</Filter>
+      <Filter>02. GameObject\04. Player\PartObject\Body\Tighnari</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Nilou_Body.h">
-      <Filter>02. GameObject\Player\PartObject\Body\Nilou</Filter>
+      <Filter>02. GameObject\04. Player\PartObject\Body\Nilou</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Yae_Body.h">
-      <Filter>02. GameObject\Player\PartObject\Body\Yae</Filter>
+      <Filter>02. GameObject\04. Player\PartObject\Body\Yae</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Wanderer_Body.h">
-      <Filter>02. GameObject\Player\PartObject\Body\Wanderer</Filter>
+      <Filter>02. GameObject\04. Player\PartObject\Body\Wanderer</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Weapon.h">
-      <Filter>02. GameObject\Player\PartObject\Weapon</Filter>
+      <Filter>02. GameObject\04. Player\PartObject\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Weapon_Ayus.h">
-      <Filter>02. GameObject\Player\PartObject\Weapon\Tighnari</Filter>
+      <Filter>02. GameObject\04. Player\PartObject\Weapon\Tighnari</Filter>
     </ClInclude>
     <ClInclude Include="..\public\StateRun.h">
       <Filter>96. Utility\00. State\State\Run</Filter>
@@ -370,13 +388,13 @@
       <Filter>96. Utility\00. State\State\Jump</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Weapon_Regalis.h">
-      <Filter>02. GameObject\Player\PartObject\Weapon\Nilou</Filter>
+      <Filter>02. GameObject\04. Player\PartObject\Weapon\Nilou</Filter>
     </ClInclude>
     <ClInclude Include="..\public\SkillObj.h">
-      <Filter>02. GameObject\Player\PartObject\SkillObj</Filter>
+      <Filter>02. GameObject\04. Player\PartObject\SkillObj</Filter>
     </ClInclude>
     <ClInclude Include="..\public\SkillObj_Gohei.h">
-      <Filter>02. GameObject\Player\PartObject\SkillObj\Gohei</Filter>
+      <Filter>02. GameObject\04. Player\PartObject\SkillObj\Gohei</Filter>
     </ClInclude>
     <ClInclude Include="..\public\StateFly.h">
       <Filter>96. Utility\00. State\State\Fly</Filter>
@@ -388,10 +406,10 @@
       <Filter>96. Utility\00. State\State\FallGround</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Weapon_Alaya.h">
-      <Filter>02. GameObject\Player\PartObject\Weapon\Wanderer</Filter>
+      <Filter>02. GameObject\04. Player\PartObject\Weapon\Wanderer</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Weapon_Narukami.h">
-      <Filter>02. GameObject\Player\PartObject\Weapon\Yae</Filter>
+      <Filter>02. GameObject\04. Player\PartObject\Weapon\Yae</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Command.h">
       <Filter>96. Utility\01. Command\Commend</Filter>
@@ -403,34 +421,34 @@
       <Filter>96. Utility\01. Command\Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Slime.h">
-      <Filter>02. GameObject\Monster\Slime</Filter>
+      <Filter>02. GameObject\05. Monster\Slime</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Slime_Large.h">
-      <Filter>02. GameObject\Monster\Slime\Large</Filter>
+      <Filter>02. GameObject\05. Monster\Slime\Large</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Slime_Large_Fire.h">
-      <Filter>02. GameObject\Monster\Slime\Large\Fire</Filter>
+      <Filter>02. GameObject\05. Monster\Slime\Large\Fire</Filter>
     </ClInclude>
     <ClInclude Include="..\public\SceneObj.h">
-      <Filter>02. GameObject\SceneObj</Filter>
+      <Filter>02. GameObject\07. SceneObj</Filter>
     </ClInclude>
     <ClInclude Include="..\public\TreasureBox.h">
-      <Filter>02. GameObject\SceneObj\TreasureBox</Filter>
+      <Filter>02. GameObject\07. SceneObj\TreasureBox</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Slime_Large_Water.h">
-      <Filter>02. GameObject\Monster\Slime\Large\Water</Filter>
+      <Filter>02. GameObject\05. Monster\Slime\Large\Water</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Slime_Mid_Fire.h">
-      <Filter>02. GameObject\Monster\Slime\Mid\FIre</Filter>
+      <Filter>02. GameObject\05. Monster\Slime\Mid\FIre</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Slime_Mid.h">
-      <Filter>02. GameObject\Monster\Slime\Mid</Filter>
+      <Filter>02. GameObject\05. Monster\Slime\Mid</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Slime_Mid_Water.h">
-      <Filter>02. GameObject\Monster\Slime\Mid\Water</Filter>
+      <Filter>02. GameObject\05. Monster\Slime\Mid\Water</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Slime_Root.h">
-      <Filter>02. GameObject\Monster\Slime\AI</Filter>
+      <Filter>02. GameObject\05. Monster\Slime\AI</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Selector.h">
       <Filter>96. Utility\02. AI\Node\Selector</Filter>
@@ -445,46 +463,70 @@
       <Filter>96. Utility\02. AI\Node\Action</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Hili.h">
-      <Filter>02. GameObject\Monster\hili</Filter>
+      <Filter>02. GameObject\05. Monster\hili</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Hili_Fire.h">
-      <Filter>02. GameObject\Monster\hili\Fire</Filter>
+      <Filter>02. GameObject\05. Monster\hili\Fire</Filter>
     </ClInclude>
     <ClInclude Include="..\public\BT_Hili_CrossBow.h">
-      <Filter>02. GameObject\Monster\hili\AI\CrossBow</Filter>
+      <Filter>02. GameObject\05. Monster\hili\AI\CrossBow</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\BT_Hili.h">
-      <Filter>02. GameObject\Monster\hili\AI</Filter>
+      <Filter>02. GameObject\05. Monster\hili\AI</Filter>
     </ClInclude>
     <ClInclude Include="..\public\BT_Hili_Club.h">
-      <Filter>02. GameObject\Monster\hili\AI\Clue</Filter>
+      <Filter>02. GameObject\05. Monster\hili\AI\Clue</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Hili_Weapon.h">
-      <Filter>02. GameObject\Monster\hili\Weapon</Filter>
+      <Filter>02. GameObject\05. Monster\hili\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Hili_Weapon_Club.h">
-      <Filter>02. GameObject\Monster\hili\Weapon\Club</Filter>
+      <Filter>02. GameObject\05. Monster\hili\Weapon\Club</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Hili_Weapon_Crossbow.h">
-      <Filter>02. GameObject\Monster\hili\Weapon\Crossbow</Filter>
+      <Filter>02. GameObject\05. Monster\hili\Weapon\Crossbow</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Hili_Electric.h">
-      <Filter>02. GameObject\Monster\hili\Electric</Filter>
+      <Filter>02. GameObject\05. Monster\hili\Electric</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Stage_Boss_Level.h">
       <Filter>01.Level\02. Stage_Boss</Filter>
     </ClInclude>
     <ClInclude Include="..\public\GoldenHouse.h">
-      <Filter>02. GameObject\Map\Stage_Boss</Filter>
+      <Filter>02. GameObject\03. Map\Stage_Boss</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Boss.h">
-      <Filter>02. GameObject\Boss</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Body_Tartaglia.h">
-      <Filter>02. GameObject\Boss\PartObject\Body</Filter>
+      <Filter>02. GameObject\06. Boss</Filter>
     </ClInclude>
     <ClInclude Include="..\public\BT_Tartaglia.h">
-      <Filter>02. GameObject\Boss\AI\Tartaglia</Filter>
+      <Filter>02. GameObject\06. Boss\AI\Tartaglia</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Body_Tartaglia.h">
+      <Filter>02. GameObject\06. Boss\PartObject\Body\Tartaglia</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Body_EvilEye.h">
+      <Filter>02. GameObject\06. Boss\PartObject\Body\EvilEye</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Boss_Body.h">
+      <Filter>02. GameObject\06. Boss\PartObject\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BT_EvilEye.h">
+      <Filter>02. GameObject\06. Boss\AI\EvilEye</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BT_Boss.h">
+      <Filter>02. GameObject\06. Boss\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Body_Harbinger.h">
+      <Filter>02. GameObject\06. Boss\PartObject\Body\Harbinger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BT_Harbinger.h">
+      <Filter>02. GameObject\06. Boss\AI\Harbinger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\DefaultCamera.h">
+      <Filter>02. GameObject\01. Camera\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\CutCamera.h">
+      <Filter>02. GameObject\01. Camera\Cut</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -507,52 +549,49 @@
       <Filter>01.Level\01. GamePlay</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Background.cpp">
-      <Filter>02. GameObject\Background</Filter>
+      <Filter>02. GameObject\00. Background</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Terrain.cpp">
-      <Filter>02. GameObject\Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\DefaultCamera.cpp">
-      <Filter>02. GameObject\Camera</Filter>
+      <Filter>02. GameObject\02. Terrain</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Monster.cpp">
-      <Filter>02. GameObject\Monster</Filter>
+      <Filter>02. GameObject\05. Monster</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Player.cpp">
-      <Filter>02. GameObject\Player</Filter>
+      <Filter>02. GameObject\04. Player</Filter>
     </ClCompile>
     <ClCompile Include="..\private\PartObject.cpp">
-      <Filter>02. GameObject\Player\PartObject</Filter>
+      <Filter>02. GameObject\04. Player\PartObject</Filter>
     </ClCompile>
     <ClCompile Include="..\private\PartObject_Body.cpp">
-      <Filter>02. GameObject\Player\PartObject\Body</Filter>
+      <Filter>02. GameObject\04. Player\PartObject\Body</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Map.cpp">
-      <Filter>02. GameObject\Map</Filter>
+      <Filter>02. GameObject\03. Map</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Dungeon_1.cpp">
-      <Filter>02. GameObject\Map\Stage_Dungeon_1</Filter>
+      <Filter>02. GameObject\03. Map\Stage_Dungeon_1</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Dungeon_2.cpp">
-      <Filter>02. GameObject\Map\Stage_Dungeon_2</Filter>
+      <Filter>02. GameObject\03. Map\Stage_Dungeon_2</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Tighnari_Body.cpp">
-      <Filter>02. GameObject\Player\PartObject\Body\Tighnari</Filter>
+      <Filter>02. GameObject\04. Player\PartObject\Body\Tighnari</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Nilou_Body.cpp">
-      <Filter>02. GameObject\Player\PartObject\Body\Nilou</Filter>
+      <Filter>02. GameObject\04. Player\PartObject\Body\Nilou</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Yae_Body.cpp">
-      <Filter>02. GameObject\Player\PartObject\Body\Yae</Filter>
+      <Filter>02. GameObject\04. Player\PartObject\Body\Yae</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Wanderer_Body.cpp">
-      <Filter>02. GameObject\Player\PartObject\Body\Wanderer</Filter>
+      <Filter>02. GameObject\04. Player\PartObject\Body\Wanderer</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Weapon.cpp">
-      <Filter>02. GameObject\Player\PartObject\Weapon</Filter>
+      <Filter>02. GameObject\04. Player\PartObject\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Weapon_Ayus.cpp">
-      <Filter>02. GameObject\Player\PartObject\Weapon\Tighnari</Filter>
+      <Filter>02. GameObject\04. Player\PartObject\Weapon\Tighnari</Filter>
     </ClCompile>
     <ClCompile Include="..\private\StateRun.cpp">
       <Filter>96. Utility\00. State\State\Run</Filter>
@@ -591,13 +630,13 @@
       <Filter>96. Utility\00. State\State\Jump</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Weapon_Regalis.cpp">
-      <Filter>02. GameObject\Player\PartObject\Weapon\Nilou</Filter>
+      <Filter>02. GameObject\04. Player\PartObject\Weapon\Nilou</Filter>
     </ClCompile>
     <ClCompile Include="..\private\SkillObj.cpp">
-      <Filter>02. GameObject\Player\PartObject\SkillObj</Filter>
+      <Filter>02. GameObject\04. Player\PartObject\SkillObj</Filter>
     </ClCompile>
     <ClCompile Include="..\private\SkillObj_Gohei.cpp">
-      <Filter>02. GameObject\Player\PartObject\SkillObj\Gohei</Filter>
+      <Filter>02. GameObject\04. Player\PartObject\SkillObj\Gohei</Filter>
     </ClCompile>
     <ClCompile Include="..\private\StateFly.cpp">
       <Filter>96. Utility\00. State\State\Fly</Filter>
@@ -609,10 +648,10 @@
       <Filter>96. Utility\00. State\State\FallGround</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Weapon_Alaya.cpp">
-      <Filter>02. GameObject\Player\PartObject\Weapon\Wanderer</Filter>
+      <Filter>02. GameObject\04. Player\PartObject\Weapon\Wanderer</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Weapon_Narukami.cpp">
-      <Filter>02. GameObject\Player\PartObject\Weapon\Yae</Filter>
+      <Filter>02. GameObject\04. Player\PartObject\Weapon\Yae</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Command.cpp">
       <Filter>96. Utility\01. Command\Commend</Filter>
@@ -624,34 +663,34 @@
       <Filter>96. Utility\01. Command\Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Slime.cpp">
-      <Filter>02. GameObject\Monster\Slime</Filter>
+      <Filter>02. GameObject\05. Monster\Slime</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Slime_Large.cpp">
-      <Filter>02. GameObject\Monster\Slime\Large</Filter>
+      <Filter>02. GameObject\05. Monster\Slime\Large</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Slime_Large_Fire.cpp">
-      <Filter>02. GameObject\Monster\Slime\Large\Fire</Filter>
+      <Filter>02. GameObject\05. Monster\Slime\Large\Fire</Filter>
     </ClCompile>
     <ClCompile Include="..\private\SceneObj.cpp">
-      <Filter>02. GameObject\SceneObj</Filter>
+      <Filter>02. GameObject\07. SceneObj</Filter>
     </ClCompile>
     <ClCompile Include="..\private\TreasureBox.cpp">
-      <Filter>02. GameObject\SceneObj\TreasureBox</Filter>
+      <Filter>02. GameObject\07. SceneObj\TreasureBox</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Slime_Large_Water.cpp">
-      <Filter>02. GameObject\Monster\Slime\Large\Water</Filter>
+      <Filter>02. GameObject\05. Monster\Slime\Large\Water</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Slime_Mid_Fire.cpp">
-      <Filter>02. GameObject\Monster\Slime\Mid\FIre</Filter>
+      <Filter>02. GameObject\05. Monster\Slime\Mid\FIre</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Slime_Mid.cpp">
-      <Filter>02. GameObject\Monster\Slime\Mid</Filter>
+      <Filter>02. GameObject\05. Monster\Slime\Mid</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Slime_Mid_Water.cpp">
-      <Filter>02. GameObject\Monster\Slime\Mid\Water</Filter>
+      <Filter>02. GameObject\05. Monster\Slime\Mid\Water</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Slime_Root.cpp">
-      <Filter>02. GameObject\Monster\Slime\AI</Filter>
+      <Filter>02. GameObject\05. Monster\Slime\AI</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Selector.cpp">
       <Filter>96. Utility\02. AI\Node\Selector</Filter>
@@ -665,47 +704,71 @@
     <ClCompile Include="..\private\Action.cpp">
       <Filter>96. Utility\02. AI\Node\Action</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Hili.cpp">
-      <Filter>02. GameObject\Monster\hili</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Hili_Fire.cpp">
-      <Filter>02. GameObject\Monster\hili\Fire</Filter>
+      <Filter>02. GameObject\05. Monster\hili\Fire</Filter>
     </ClCompile>
     <ClCompile Include="..\private\BT_Hili_CrossBow.cpp">
-      <Filter>02. GameObject\Monster\hili\AI\CrossBow</Filter>
+      <Filter>02. GameObject\05. Monster\hili\AI\CrossBow</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\BT_Hili.cpp">
-      <Filter>02. GameObject\Monster\hili\AI</Filter>
+      <Filter>02. GameObject\05. Monster\hili\AI</Filter>
     </ClCompile>
     <ClCompile Include="..\private\BT_Hili_Club.cpp">
-      <Filter>02. GameObject\Monster\hili\AI\Clue</Filter>
+      <Filter>02. GameObject\05. Monster\hili\AI\Clue</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Hili_Weapon.cpp">
-      <Filter>02. GameObject\Monster\hili\Weapon</Filter>
+      <Filter>02. GameObject\05. Monster\hili\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Hili_Weapon_Club.cpp">
-      <Filter>02. GameObject\Monster\hili\Weapon\Club</Filter>
+      <Filter>02. GameObject\05. Monster\hili\Weapon\Club</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Hili_Weapon_Crossbow.cpp">
-      <Filter>02. GameObject\Monster\hili\Weapon\Crossbow</Filter>
+      <Filter>02. GameObject\05. Monster\hili\Weapon\Crossbow</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Hili_Electric.cpp">
-      <Filter>02. GameObject\Monster\hili\Electric</Filter>
+      <Filter>02. GameObject\05. Monster\hili\Electric</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Stage_Boss_Level.cpp">
       <Filter>01.Level\02. Stage_Boss</Filter>
     </ClCompile>
     <ClCompile Include="..\private\GoldenHouse.cpp">
-      <Filter>02. GameObject\Map\Stage_Boss</Filter>
+      <Filter>02. GameObject\03. Map\Stage_Boss</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Boss.cpp">
-      <Filter>02. GameObject\Boss</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Body_Tartaglia.cpp">
-      <Filter>02. GameObject\Boss\PartObject\Body</Filter>
+      <Filter>02. GameObject\06. Boss</Filter>
     </ClCompile>
     <ClCompile Include="..\private\BT_Tartaglia.cpp">
-      <Filter>02. GameObject\Boss\AI\Tartaglia</Filter>
+      <Filter>02. GameObject\06. Boss\AI\Tartaglia</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Hili.cpp">
+      <Filter>02. GameObject\05. Monster\hili</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Body_Tartaglia.cpp">
+      <Filter>02. GameObject\06. Boss\PartObject\Body\Tartaglia</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Body_EvilEye.cpp">
+      <Filter>02. GameObject\06. Boss\PartObject\Body\EvilEye</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boss_Body.cpp">
+      <Filter>02. GameObject\06. Boss\PartObject\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BT_EvilEye.cpp">
+      <Filter>02. GameObject\06. Boss\AI\EvilEye</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BT_Boss.cpp">
+      <Filter>02. GameObject\06. Boss\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Body_Harbinger.cpp">
+      <Filter>02. GameObject\06. Boss\PartObject\Body\Harbinger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BT_Harbinger.cpp">
+      <Filter>02. GameObject\06. Boss\AI\Harbinger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\DefaultCamera.cpp">
+      <Filter>02. GameObject\01. Camera\Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\CutCamera.cpp">
+      <Filter>02. GameObject\01. Camera\Cut</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

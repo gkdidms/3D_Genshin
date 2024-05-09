@@ -38,7 +38,7 @@ void CTreasureBox::Tick(const _float& fTimeDelta)
 	{
 		if (m_pGameInstance->GetKeyState(DIK_F) == CInput_Device::TAP)
 		{
-			m_pModelCom->Set_Animation(CModel::ANIM_DESC{ 0, false, false, false });
+			m_pModelCom->Set_Animation(CModel::ANIM_DESC{ 1, false, false, false });
 		}
 	}
 

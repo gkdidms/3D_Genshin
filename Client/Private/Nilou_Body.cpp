@@ -26,6 +26,14 @@ HRESULT CNilou_Body::Initialize(void* pArg)
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
+
+	strcpy_s(m_Info.szPlayerbleName, "닐루");
+	m_Info.m_fMaxHp = 15184.f;
+	m_Info.m_fHp = m_Info.m_fMaxHp;
+	m_Info.m_fAtk = 229.f;
+	m_Info.m_fDef = 728.f;
+	m_Info.eElementalType = WATER;
+
 	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ 54, true, true, false });
 	return S_OK;
 }
@@ -43,14 +51,18 @@ void CNilou_Body::Tick(const _float& fTimeDelta)
 
 	m_pModelCom->Play_Animation(fTimeDelta, &m_PlayerMovePos);
 
+	_matrix MoveMatrix = XMLoadFloat4x4(&m_PlayerMovePos);
 	// 해당 상태일때 이동 값이 0이면 이전 프레임의 이동값을 가져옮
 	if ((*m_pState == PLAYER_SPRINT_TO_RUN || *m_pState == PLAYER_SPRINT_START) && m_PlayerMovePos.m[3][2] <= 0.f)
 	{
-		_matrix MoveMatrix = XMLoadFloat4x4(&m_PlayerMovePos);
 		m_pModelCom->Bind_AnimSpeed(&MoveMatrix);
 
 		XMStoreFloat4x4(&m_PlayerMovePos, MoveMatrix);
 	}
+
+	__super::Move_Pos(fTimeDelta, &MoveMatrix);
+
+	XMStoreFloat4x4(&m_PlayerMovePos, MoveMatrix);
 }
 
 void CNilou_Body::Late_Tick(const _float& fTimeDelta)
@@ -198,8 +210,24 @@ void CNilou_Body::Change_Animation(const _float& fTimeDelta)
 	}
 	case PLAYER_RUN:
 	{
-		m_iAnim = 44;
-		m_IsLoop = true;
+		if (*m_pHill != CPlayer::HILL_END)
+		{
+			if (*m_pHill == CPlayer::HILL_UP)
+			{
+				m_iAnim = 48;
+				m_IsLoop = true;
+			}
+			else if (*m_pHill == CPlayer::HILL_DOWN)
+			{
+				m_iAnim = 45;
+				m_IsLoop = true;
+			}
+		}
+		else
+		{
+			m_iAnim = 44;
+			m_IsLoop = true;
+		}
 		break;
 	}
 	case PLAYER_RUN_STOP:
@@ -251,6 +279,66 @@ void CNilou_Body::Change_Animation(const _float& fTimeDelta)
 		m_IsLoop = false;
 		break;
 	}
+	case PLAYER_FALL_GROUND_H:
+	{
+		m_iAnim = 24;
+		m_IsLoop = false;
+		break;
+	}
+	case PLAYER_FALL_GROUND_L:
+	{
+		m_iAnim = 25;
+		m_IsLoop = false;
+		break;
+	}
+	case PLAYER_FALL_GROUND_FOR_RUN:
+	{
+		m_iAnim = 26;
+		m_IsLoop = false;
+
+		// PLAYER_FALL_GROUND_FOR BSH -?>27
+		break;
+	}
+	case PLAYER_FALL_GROUND_FOR_SPRINT:
+	{
+		m_iAnim = 28;
+		m_IsLoop = false;
+		break;
+	}
+	case PLAYER_FALL_ATTACK_LOOP: // 떨어짐
+	{
+		m_iAnim = 21;
+		m_IsLoop = true;
+		m_IsLinearSpeed = true;
+		break;
+	}
+	case PLAYER_FLY_START:
+	{
+		m_iAnim = 32;
+		m_IsLoop = false;
+		break;
+	}
+	case PLAYER_FLY_NORMAL:
+	{
+		m_iAnim = 30;
+		m_IsLoop = true;
+		m_IsLinearSpeed = true;
+		break;
+	}
+	case PLAYER_FLY_TURN_L:
+	{
+		m_iAnim = 33;
+		m_IsLoop = true;
+		m_IsLinearSpeed = true;
+		break;
+	}
+	case PLAYER_FLY_TURN_R:
+	{
+		m_iAnim = 34;
+		m_IsLoop = true;
+		m_IsLinearSpeed = true;
+		break;
+	}
 	case PLAYER_IDLE:
 	{
 		m_iAnim = 54;
@@ -260,7 +348,7 @@ void CNilou_Body::Change_Animation(const _float& fTimeDelta)
 	}
 	case PLAYER_IDLE_PUT_AWAY:
 	{
-		m_iAnim = 55;
+		m_iAnim = 55; // 56
 		m_IsLoop = true;
 		m_IsLinear = false;
 		break;

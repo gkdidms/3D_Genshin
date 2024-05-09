@@ -27,6 +27,11 @@ public:
     virtual HRESULT Render() override;
 
 protected:
+    virtual void Turn(_float4x4* OrbitMatrix, _fvector vAxis, const _float& fTimeDelta);
+    virtual void Rotation(_float4x4* OrbitMatrix, _fvector vAxis, _float fRadian);
+    virtual void Zoom(const _float& fTimeDelta);
+
+protected:
     _float m_fFovY;
     _float m_fAspect;
     _float m_fNear;

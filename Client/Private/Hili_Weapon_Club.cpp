@@ -46,8 +46,6 @@ void CHili_Weapon_Club::Tick(const _float& fTimeDelta)
 
 void CHili_Weapon_Club::Late_Tick(const _float& fTimeDelta)
 {
-
-
 	m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONBLENDER, this);
 }
 

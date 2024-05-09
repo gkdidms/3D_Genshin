@@ -31,7 +31,8 @@ public:
    
 public:
     const _float4x4* Get_CameraLook() const { return m_pModelCom->Get_BoneCombinedTransformationMatrix("CameraLook"); }
-    
+    const CModel* Get_Model() { return m_pModelCom; }
+
 public:
     virtual HRESULT Initialize_Prototype();
     virtual HRESULT Initialize(void* pArg);

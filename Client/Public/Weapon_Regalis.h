@@ -14,6 +14,9 @@ private:
     virtual ~CWeapon_Regalis() = default;
 
 public:
+    CCollider* Get_Collider() { return m_pColliderCom; }
+
+public:
     virtual HRESULT Initialize_Prototype() override;
     virtual HRESULT Initialize(void* pArg) override;
     virtual void Priority_Tick(const _float& fTimeDelta) override;

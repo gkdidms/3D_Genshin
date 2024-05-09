@@ -1,14 +1,15 @@
 #include "Body_Tartaglia.h"
 
 #include "Boss.h"
+#include "BT_Tartaglia.h"
 
 CBody_Tartaglia::CBody_Tartaglia(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-    : CPartObject_Body{ pDevice, pContext }
+    : CBoss_Body{ pDevice, pContext }
 {
 }
 
 CBody_Tartaglia::CBody_Tartaglia(const CBody_Tartaglia& rhs)
-    : CPartObject_Body { rhs }
+    : CBoss_Body{ rhs }
 {
 }
 
@@ -25,7 +26,10 @@ HRESULT CBody_Tartaglia::Initialize(void* pArg)
     if (FAILED(Add_Components()))
         return E_FAIL;
 
-   
+    m_Info.fMaxHp = { 146125.f };
+    m_Info.fHp = { 146125.f };
+    m_Info.fMaxDefendHp = { 6125.f };
+    m_Info.fDefendHp = { 6125.f };
 
     return S_OK;
 }
@@ -36,8 +40,53 @@ void CBody_Tartaglia::Priority_Tick(const _float& fTimeDelta)
 
 void CBody_Tartaglia::Tick(const _float& fTimeDelta)
 {
-    _float4x4 MoveMatrix;
-    m_pModelCom->Play_Animation(fTimeDelta, &MoveMatrix);
+    Change_Animation();
+
+    m_pModelCom->Play_Animation(fTimeDelta, &m_PlayerMovePos);
+
+    //Extra_Attack일때 이동 값 수정 
+    if (*m_pState == CBoss::BOSS_BLADE_EXTRA_ATTACK)
+    {
+        m_fCurrentTime += fTimeDelta;
+
+        if (m_fTime > m_fCurrentTime)
+        {
+            // 플레이어 위치와 보스의 위치가 가깝다면 이동 끝
+            _vector vTargetPos = XMLoadFloat4x4(m_pTargetMatrix).r[3];
+            _vector vBossPos = XMLoadFloat4x4(m_pParentMatrix).r[3];
+
+            _vector vDistance = vTargetPos - vBossPos;
+            
+            _float fDistance = sqrtf(XMVectorGetX(vDistance) * XMVectorGetX(vDistance) + XMVectorGetY(vDistance) * XMVectorGetY(vDistance) + XMVectorGetZ(vDistance) * XMVectorGetZ(vDistance));
+
+            _matrix MoveMatrix = XMMatrixIdentity();
+
+            if (fDistance > 0.3f)
+                MoveMatrix.r[3] = XMVectorSet(0.f, 0.f, m_fLongDistanceSpeed  * fTimeDelta * -1.f, 1.f);
+
+            XMStoreFloat4x4(&m_PlayerMovePos, MoveMatrix);
+        }
+    }
+    else m_fCurrentTime = 0.f;
+
+    //Power_Attack
+    if (*m_pState == CBoss::BOSS_BOW_POWER_ATTACK_BS)
+    {
+        _matrix MoveMatrix = XMMatrixIdentity();
+        MoveMatrix.r[3] = XMVectorSet(0.f, 0.f, m_fLongDistanceSpeed * fTimeDelta, 1.f);
+
+        XMStoreFloat4x4(&m_PlayerMovePos, MoveMatrix);
+    }
+
+    //Rush
+    // 러쉬할때 이동하는게 아니라 러쉬 자세를 취하고 이동해야 함.  -> 이펙트 배우면 수정
+    if (*m_pState == CBoss::BOSS_RUSH_BS)
+    {
+        _matrix MoveMatrix = XMMatrixIdentity();
+        MoveMatrix.r[3] = XMVectorSet(0.f, 0.f, m_fLongDistanceSpeed * fTimeDelta * -1.f, 1.f);
+        XMStoreFloat4x4(&m_PlayerMovePos, MoveMatrix);
+    }
+    
 }
 
 void CBody_Tartaglia::Late_Tick(const _float& fTimeDelta)
@@ -68,13 +117,7 @@ HRESULT CBody_Tartaglia::Add_Components()
 
 HRESULT CBody_Tartaglia::Bind_ResourceData()
 {
-    if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_pWorldMatrix)))
-        return E_FAIL;
-
-    if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(CPipeLine::D3DTS_VIEW))))
-        return E_FAIL;
-
-    if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(CPipeLine::D3DTS_PROJ))))
+    if (FAILED(__super::Bind_ResourceData()))
         return E_FAIL;
 
     return S_OK;
@@ -87,6 +130,12 @@ void CBody_Tartaglia::Change_Animation()
 
     switch (*m_pState)
     {
+    case CBoss::BOSS_IDLE:
+    {
+        iAnim = 26;
+        isLoop = true;
+        break;
+    }
     case CBoss::BOSS_BOW_IDLE:
     {
         iAnim = 26;
@@ -183,6 +232,18 @@ void CBody_Tartaglia::Change_Animation()
         isLoop = true;
         break;
     }
+    case CBoss::BOSS_RUSH_BS:
+    {
+        iAnim = 34;
+        isLoop = false;
+        break;
+    }
+    case CBoss::BOSS_RUSH_AS:
+    {
+        iAnim = 32;
+        isLoop = false;
+        break;
+    }
     case CBoss::BOSS_DEFEND_1:
     {
         iAnim = 0;
@@ -255,6 +316,30 @@ void CBody_Tartaglia::Change_Animation()
         isLoop = false;
         break;
     }
+    case CBoss::BOSS_WALK_R:
+    {
+        iAnim = 37;
+        isLoop = false;
+        break;
+    }
+    case CBoss::BOSS_WALK_L:
+    {
+        iAnim = 36;
+        isLoop = false;
+        break;
+    }
+    case CBoss::BOSS_WALK_R_To_L:
+    {
+        iAnim = 39;
+        isLoop = false;
+        break;
+    }
+    case CBoss::BOSS_WALK_L_TO_R:
+    {
+        iAnim = 38;
+        isLoop = false;
+        break;
+    }
     case CBoss::BOSS_DIE:
     {
         break;
@@ -266,6 +351,8 @@ void CBody_Tartaglia::Change_Animation()
     default:
         break;
     }
+
+    m_pModelCom->Set_Animation(CModel::ANIM_DESC{ iAnim, isLoop, true, true });
 }
 
 CBody_Tartaglia* CBody_Tartaglia::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

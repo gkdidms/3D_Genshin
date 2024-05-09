@@ -22,6 +22,7 @@ HRESULT CWeapon::Initialize(void* pArg)
 	WEAPON_DESC* pDesc = (WEAPON_DESC*)pArg;
 	m_pSocketMatrix = pDesc->pHandCombinedTransformationMatrix;
 	m_pBackMatrix = pDesc->pBackCombinedTransformationMatrix;
+	m_WeaponType = pDesc->eWeaponType;
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;

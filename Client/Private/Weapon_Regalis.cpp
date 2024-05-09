@@ -46,9 +46,7 @@ void CWeapon_Regalis::Tick(const _float& fTimeDelta)
 		|| *m_pState == PLAYER_ELEMENTAL_2
 		|| *m_pState == PLAYER_ELEMENTAL_2_END
 		|| *m_pState == PLAYER_ELEMENTAL_3
-		|| *m_pState == PLAYER_ELEMENTAL_3_END
-		|| *m_pState == PLAYER_ELEMENTAL_BURST
-		|| *m_pState == PLAYER_ELEMENTAL_BURST_END)
+		|| *m_pState == PLAYER_ELEMENTAL_3_END)
 	{
 		SocketMatrix = XMLoadFloat4x4(m_pSocketMatrix);
 	}

@@ -29,6 +29,13 @@ HRESULT CWanderer_Body::Initialize(void* pArg)
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
+	strcpy_s(m_Info.szPlayerbleName, "¹æ¶ûÀÚ");
+	m_Info.m_fMaxHp = 10164.f;
+	m_Info.m_fHp = m_Info.m_fMaxHp;
+	m_Info.m_fAtk = 327.f;
+	m_Info.m_fDef = 607.f;
+	m_Info.eElementalType = ANEMO;
+
 	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ 80, true, true, false });
 	return S_OK;
 }

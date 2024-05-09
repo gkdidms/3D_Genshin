@@ -6,16 +6,21 @@ class CWeapon :
     public CPartObject
 {
 public:
+    enum WEAPON_TYPE { WEAPON_SWORD, WEAPON_BOW, WEAPON_CATALYSE, WEAPON_END };
     typedef struct tWeaponDesc : public CPartObject::PART_DESC{
         const _float4x4* pHandCombinedTransformationMatrix;
         const _float4x4* pBackCombinedTransformationMatrix;
-    
+        WEAPON_TYPE eWeaponType;
     }WEAPON_DESC;
+
 
 protected:
     CWeapon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
     CWeapon(const CWeapon& rhs);
     virtual ~CWeapon() = default;
+
+public:
+    WEAPON_TYPE Get_WeaponType() { return m_WeaponType; }
 
 public:
     virtual HRESULT Initialize_Prototype();
@@ -30,6 +35,8 @@ protected:
     const _float4x4* m_pBackMatrix = { nullptr };
 
     _bool m_isHide = { false };
+
+    WEAPON_TYPE m_WeaponType = { WEAPON_END };
 
 protected:
     virtual HRESULT Add_Components() = 0;

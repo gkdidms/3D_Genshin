@@ -49,6 +49,60 @@ void CCamera::Late_Tick(const _float& fTimeDelta)
 {
 }
 
+
+void CCamera::Turn(_float4x4* OrbitMatrix, _fvector vAxis, const _float& fTimeDelta)
+{
+	_matrix SubMatrix = XMLoadFloat4x4(OrbitMatrix);
+	_vector		vRight = SubMatrix.r[0];
+	_vector		vUp = SubMatrix.r[1];
+	_vector		vLook = SubMatrix.r[2];
+
+	_matrix		RotationMatrix = XMMatrixRotationAxis(vAxis, XMConvertToRadians(45.f) * fTimeDelta);
+
+	vRight = XMVector3TransformNormal(vRight, RotationMatrix);
+	vUp = XMVector3TransformNormal(vUp, RotationMatrix);
+	vLook = XMVector3TransformNormal(vLook, RotationMatrix);
+
+	SubMatrix.r[0] = vRight;
+	SubMatrix.r[1] = vUp;
+	SubMatrix.r[2] = vLook;
+
+	XMStoreFloat4x4(OrbitMatrix, SubMatrix);
+}
+
+void CCamera::Rotation(_float4x4* OrbitMatrix, _fvector vAxis, _float fRadian)
+{
+	_matrix SubMatrix = XMLoadFloat4x4(OrbitMatrix);
+	_vector		vRight = XMVectorSet(1.f, 0.f, 0.f, 0.f);
+	_vector		vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+	_vector		vLook = XMVectorSet(0.f, 0.f, 1.f, 0.f);
+
+	_matrix		RotationMatrix = XMMatrixRotationAxis(vAxis, fRadian);
+
+	vRight = XMVector3TransformNormal(vRight, RotationMatrix);
+	vUp = XMVector3TransformNormal(vUp, RotationMatrix);
+	vLook = XMVector3TransformNormal(vLook, RotationMatrix);
+
+	SubMatrix.r[0] = vRight;
+	SubMatrix.r[1] = vUp;
+	SubMatrix.r[2] = vLook;
+
+	XMStoreFloat4x4(OrbitMatrix, SubMatrix);
+}
+
+void CCamera::Zoom(const _float& fTimeDelta)
+{
+	_vector vDirect = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	_vector vCamPos = m_pGameInstance->Get_CamPosition();
+	if (fTimeDelta < 0)
+		vCamPos -= vDirect;
+	else if (fTimeDelta > 0)
+		vCamPos += vDirect;
+
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vCamPos);
+
+}
+
 HRESULT CCamera::Render()
 {
 	return S_OK;

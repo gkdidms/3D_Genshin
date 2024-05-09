@@ -1,6 +1,6 @@
 #pragma once
 
-#include "PartObject_Body.h"
+#include "Boss_Body.h"
 
 BEGIN(Engine)
 class CShader;
@@ -8,15 +8,9 @@ class CModel;
 END
 
 BEGIN(Client)
-class CBody_Tartaglia :
-    public CPartObject_Body
+class CBody_Tartaglia : // ¹°¿ø¼Ò
+    public CBoss_Body
 {
-public:
-    typedef struct tTartagliaInfo {
-        _float fMaxHp = { 146125.f };
-        _float fHp = { 146125.f };
-    }TARTAGLIA_INFO;
-
 private:
     CBody_Tartaglia(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
     CBody_Tartaglia(const CBody_Tartaglia& rhs);
@@ -31,12 +25,16 @@ public:
     virtual HRESULT Render() override;
 
 private:
-    TARTAGLIA_INFO m_Info;
+    _float m_fTime = { 1.5f };
+    _float m_fCurrentTime = { 0.f };
+
+private:
+    _float m_fLongDistanceSpeed = { 50.f };
 
 private:
     virtual HRESULT Add_Components() override;
     virtual HRESULT Bind_ResourceData() override;
-    virtual void Change_Animation();
+    virtual void Change_Animation() override;
     
 public:
     static CBody_Tartaglia* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

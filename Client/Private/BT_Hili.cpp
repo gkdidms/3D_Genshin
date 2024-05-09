@@ -194,16 +194,12 @@ CNode::NODE_STATE CBT_Hili::CheckLookPlayer()
 		_vector vHiliPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 		_vector vHiliLook = XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK));
 
-		_vector vDesc = XMVector3Normalize(vTargetPos - vHiliPos);
-		_float fDot = XMVectorGetX(XMVector3Dot(vDesc, vHiliLook));
-
-		_float fAngle = XMConvertToDegrees(acosf(fDot));
-
-		if (fAngle < vLookAngle * 0.5f)
+		if (AngleOfView(vLookAngle, vTargetPos, vHiliPos, vHiliLook))
 		{
 			m_isDiscovered = true;
 			return CNode::SUCCESS;
 		}
+
 		return CNode::FAILURE;
 	}
 	else m_pTransformCom->LookAt(XMLoadFloat4x4(m_pTargetMatrix).r[3]);

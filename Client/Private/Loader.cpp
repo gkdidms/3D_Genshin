@@ -3,7 +3,7 @@
 #include "GameInstance.h"
 
 #include "DefaultCamera.h"
-#include "Terrain.h"
+#include "CutCamera.h"
 
 #include "Player.h"
 #include "Tighnari_Body.h"
@@ -35,6 +35,8 @@
 
 #include "Boss.h"
 #include "Body_Tartaglia.h"
+#include "Body_EvilEye.h"
+#include "Body_Harbinger.h"
 
 #include "TreasureBox.h"
 
@@ -135,8 +137,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Hili_Electric", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Monster/Hili_Electric/Hili_Electric.fbx", PreTransformMatrix, "../../Data/Hili_Electric.dat"))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Hili_Weapon_Club", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Monster/Weapon/Club/Club.fbx", PreTransformMatrix, "../../Data/Hili_Club.dat"))))
-		return E_FAIL;
+
 
 	lstrcpy(m_szLoadingText, TEXT("씬 오브젝트를(을) 로딩 중 입니다."));
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_TreasureBox", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SceneObj/TreasureBox/TreasureBox.fbx", PreTransformMatrix, "../../Data/TreasureBox.dat"))))
@@ -151,6 +152,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Narukami", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Narukami/Narukami.fbx", PreTransformMatrix, "../../Data/Weapon_Narukami.dat"))))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Regalis", CModel::Create(m_pDevice, m_pContext,  "../Bin/Resources/Models/Weapon/Regalis/Regalis.fbx", PreTransformMatrix, "../../Data/Weapon_Regalis.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Hili_Weapon_Club", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Monster/Weapon/Club/Club.fbx", PreTransformMatrix, "../../Data/Hili_Club.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Hili_Weapon_CrossBow", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Monster/Weapon/CrossBow/CrossBow.fbx", PreTransformMatrix, "../../Data/Hili_CrossBow.dat"))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("스킬 오브젝트 모델를(을) 로딩 중 입니다."));
@@ -188,7 +193,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Camera", CDefaultCamera::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Terrain", CTerrain::Create(m_pDevice, m_pContext))))
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_CutCamera", CCutCamera::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Player", CPlayer::Create(m_pDevice, m_pContext))))
@@ -278,7 +283,10 @@ HRESULT CLoader::Loading_For_Stage_Boss()
 	lstrcpy(m_szLoadingText, TEXT("몬스터를(을) 로딩 중 입니다."));
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Boss_Tartaglia", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Boss/Tarta/Tartaglia.fbx", PreTransformMatrix, "../../Data/Boss_Tartaglia.dat"))))
 		return E_FAIL;
-
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Boss_EvilEye", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Boss/Eye/EvilEye.fbx", PreTransformMatrix, "../../Data/Boss_EvilEye.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Boss_Harbinger", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Boss/Harbinger/Harbinger.fbx", PreTransformMatrix, "../../Data/Boss_Harbinger.dat"))))
+		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("무기 모델를(을) 로딩 중 입니다."));
 	PreTransformMatrix = XMMatrixIdentity();
@@ -330,7 +338,16 @@ HRESULT CLoader::Loading_For_Stage_Boss()
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Boss_Tartaglia", CBody_Tartaglia::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Boss_EvilEye", CBody_EvilEye::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Boss_Harbinger", CBody_EvilEye::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Camera", CDefaultCamera::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_CutCamera", CCutCamera::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Player", CPlayer::Create(m_pDevice, m_pContext))))

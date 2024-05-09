@@ -31,6 +31,14 @@ private:
 
 public:
     const _float4x4* Get_PlayerCameraLook() const { return m_pCameraLook; }
+    _uint Get_PlayerState() { return m_iState; }
+    _bool Get_BossSign() { return m_isBossSign; }
+
+public:
+    _uint Get_CurrentWeapon();
+    CCollider* Get_SwordCollider();
+    ELEMENTAL_TYPE Get_CurrentPlayerbleElemental();
+
 
 public:
     HRESULT Initialize_Prototype();
@@ -59,6 +67,8 @@ private: // 상태에 따른 bool값
     _bool m_isDrop = { false }; // 떨어지는 중인지
 
     HILL_TYPE m_eHill = { HILL_END }; // 계단인지
+
+    _bool m_isBossSign = { false }; // 보스 (타탈) 단류가 부착되었는지 확인.
 
 private:
     _int m_iPlayerNavigationIndex = { 0 };

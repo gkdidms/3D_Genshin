@@ -5,11 +5,13 @@
 #include "State_Manager.h"
 #include "Wanderer_Body.h"
 
+#include "Weapon.h"
 #include "Weapon_Ayus.h"
+#include "Weapon_Regalis.h"
 
 #include "SkillObj.h"
 
-#include "DefaultCamera.h"
+#include "CutCamera.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject { pDevice, pContext },
@@ -23,6 +25,21 @@ CPlayer::CPlayer(const CPlayer& rhs)
 	m_pState_Manager{ rhs.m_pState_Manager }
 {
 	Safe_AddRef(m_pState_Manager);
+}
+
+_uint CPlayer::Get_CurrentWeapon()
+{
+	return dynamic_cast<CWeapon*>(m_PartObject[m_CurrentPlayerble][PART_WEAPON])->Get_WeaponType();
+}
+
+CCollider* CPlayer::Get_SwordCollider()
+{
+	return dynamic_cast<CWeapon_Regalis*>(m_PartObject[m_CurrentPlayerble][PART_WEAPON])->Get_Collider();
+}
+
+ELEMENTAL_TYPE CPlayer::Get_CurrentPlayerbleElemental()
+{
+	return dynamic_cast<CPartObject_Body*>(m_PartObject[m_CurrentPlayerble][PART_BODY])->Get_PlayerbleElemental();
 }
 
 HRESULT CPlayer::Initialize_Prototype()
@@ -253,13 +270,15 @@ void CPlayer::Check_State(const _float& fTimeDelta)
 		m_isJump = true;
 
 	// 원소폭팔 사용 시 카메라 제어 
+	// 원소 스킬 사용 시 플레이어 원래 위치로 회전시키기 
 	if (m_iState == PLAYER_ELEMENTAL_BURST)
 	{
-		dynamic_cast<CDefaultCamera*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, TEXT("Layer_Camera"), 0))->isEB(true, m_CurrentPlayerble);
+		m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(90.f));
+		dynamic_cast<CCutCamera*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, TEXT("Layer_Camera"), 1))->isCutScene(true, m_CurrentPlayerble);
 	}
 	else if (m_iState == PLAYER_ELEMENTAL_BURST_END)
 	{
-		dynamic_cast<CDefaultCamera*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, TEXT("Layer_Camera"), 0))->isEB(false);
+		dynamic_cast<CCutCamera*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, TEXT("Layer_Camera"), 1))->isCutScene(false);
 	}
 }
 
@@ -337,6 +356,7 @@ HRESULT CPlayer::Ready_Weapons()
 	if (nullptr == WeaponDesc.pBackCombinedTransformationMatrix)
 		return E_FAIL;
 
+	WeaponDesc.eWeaponType = CWeapon::WEAPON_BOW;
 	CGameObject* pGameObject = dynamic_cast<CPartObject*>(m_pGameInstance->Clone_Object(L"Prototype_GameObject_Weapon_Ayus", &WeaponDesc));
 	if (nullptr == pGameObject)
 		return E_FAIL;
@@ -351,6 +371,7 @@ HRESULT CPlayer::Ready_Weapons()
 	if (nullptr == WeaponDesc.pHandCombinedTransformationMatrix)
 		return E_FAIL;
 
+	WeaponDesc.eWeaponType = CWeapon::WEAPON_CATALYSE;
 	pGameObject = dynamic_cast<CPartObject*>(m_pGameInstance->Clone_Object(L"Prototype_GameObject_Weapon_Narukami", &WeaponDesc));
 	if (nullptr == pGameObject)
 		return E_FAIL;
@@ -364,7 +385,7 @@ HRESULT CPlayer::Ready_Weapons()
 	WeaponDesc.pHandCombinedTransformationMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("PRIVATE_WeaponRootSword");
 	if (nullptr == WeaponDesc.pHandCombinedTransformationMatrix)
 		return E_FAIL;
-
+	WeaponDesc.eWeaponType = CWeapon::WEAPON_CATALYSE;
 	pGameObject = dynamic_cast<CPartObject*>(m_pGameInstance->Clone_Object(L"Prototype_GameObject_Weapon_Alaya", &WeaponDesc));
 	if (nullptr == pGameObject)
 		return E_FAIL;
@@ -383,6 +404,7 @@ HRESULT CPlayer::Ready_Weapons()
 	if (nullptr == WeaponDesc.pBackCombinedTransformationMatrix)
 		return E_FAIL;
 
+	WeaponDesc.eWeaponType = CWeapon::WEAPON_SWORD;
 	pGameObject = dynamic_cast<CPartObject*>(m_pGameInstance->Clone_Object(L"Prototype_GameObject_Weapon_Regalis", &WeaponDesc));
 	if (nullptr == pGameObject)
 		return E_FAIL;

@@ -16,6 +16,7 @@ public:
     enum PAGE_STATE { ONE_PAGE, TWO_PAGE, FINAL_PAGE, PAGE_END };
     enum PLAYER_PART { PART_BODY, PART_WEAPON, PART_WEAPON_SUB, PART_END };
     enum BOSS_STATE {
+        BOSS_IDLE,
         BOSS_BOW_IDLE,
         BOSS_BLADE_IDEL,
         BOSS_BOW_COMBO_ATTACK,
@@ -32,6 +33,8 @@ public:
         BOSS_BOW_RANGE_ATTACK_AS,
         BOSS_BOW_RANGE_ATTACK_LOOP_1,
         BOSS_BOW_RANGE_ATTACK_LOOP_2,
+        BOSS_RUSH_BS,
+        BOSS_RUSH_AS,
         BOSS_DEFEND_1,
         BOSS_DEFEND_2,
         BOSS_DEFEND_3,
@@ -42,8 +45,20 @@ public:
         BOSS_BLADE_NORMAL_ATTACK_2,
         BOSS_BLADE_NORMAL_ATTACK_3,
         BOSS_BLADE_NORMAL_ATTACK_4,
+        BOSS_DUALBLADE_STRIKE_ATTACK_BS,
+        BOSS_DUALBLADE_STRIKE_ATTACK_AS,
+        BOSS_DUALBLADE_STRIKE_ATTACK_LOOP,
+        BOSS_DUALBLADE_SWEEP_ATTACK_L,
+        BOSS_DUALBLADE_SWEEP_ATTACK_R,
+        BOSS_DUALBLADE_HIRAISHIN_BS,
+        BOSS_DUALBLADE_HIRAISHIN_AS,
+        BOSS_DUALBLADE_HIRAISHIN_LOOP,
         BOSS_HIT_H,
         BOSS_HIT_L,
+        BOSS_WALK_R,
+        BOSS_WALK_L,
+        BOSS_WALK_R_To_L,
+        BOSS_WALK_L_TO_R,
         BOSS_DIE,
         BOSS_END
     };
@@ -67,7 +82,12 @@ public:
     virtual HRESULT Render() override;
 
 private:
+    CCollider* m_pColliderCom = { nullptr };
     CNavigation* m_pNavigationCom = { nullptr };
+
+    const _float4x4* m_pTargetMatrix;
+
+    class CBT_Boss* m_pBT[PAGE_END];
 
 private:
     vector<class CGameObject*> m_PartObject[PAGE_END];
@@ -76,11 +96,11 @@ private:
     _uint m_CurrentState = { BOSS_END };
     _int m_iBossNavigationIndex = { -1 };
 
-
 private:
     HRESULT Add_Components();
     HRESULT Ready_Body();
     HRESULT Ready_Weapon();
+    HRESULT Ready_Object();
 
 public:
     static CBoss* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
