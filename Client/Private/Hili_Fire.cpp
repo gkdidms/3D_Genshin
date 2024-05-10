@@ -46,9 +46,11 @@ void CHili_Fire::Tick(const _float& fTimeDelta)
 	Change_Animation(fTimeDelta);
 
 	_float4x4 MoveMatrix;
+	XMStoreFloat4x4(&MoveMatrix, XMMatrixIdentity());
 	m_pModelCom->Play_Animation(fTimeDelta, &MoveMatrix);
 
 	XMStoreFloat4x4(&MoveMatrix, XMLoadFloat4x4(&MoveMatrix) * -1.f);
+
 	m_pTransformCom->Go_Run(XMLoadFloat4x4(&MoveMatrix), m_pNavigation);
 
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
@@ -72,7 +74,10 @@ HRESULT CHili_Fire::Render()
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
+#ifdef _DEBUG
 	m_pColliderCom->Render();
+#endif // _DEBUG
+
 	return S_OK;
 }
 

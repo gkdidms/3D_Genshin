@@ -148,6 +148,11 @@ CGameObject* CGameInstance::Get_GameObject(_uint iLevelIndex, const wstring strL
 	return m_pGameObject_Manager->Get_GameObject(iLevelIndex, strLayerTag, iIndex);
 }
 
+vector<CGameObject*> CGameInstance::Get_GameObjects(_uint iLevelIndex, const wstring strLayerTag)
+{
+	return m_pGameObject_Manager->Get_GameObjects(iLevelIndex, strLayerTag);
+}
+
 void CGameInstance::Add_Renderer(CRenderer::RENDERER_STATE eRenderState, CGameObject* pGameObject)
 {
 	m_pRenderer->Add_Renderer(eRenderState, pGameObject);

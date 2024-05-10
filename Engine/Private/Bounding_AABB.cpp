@@ -45,6 +45,7 @@ _bool CBounding_AABB::Intersect(CCollider::TYPE eTargetType, CBounding* pTargetB
 	{
 		BoundingBox* pDesc = static_cast<BoundingBox*>(pTargetBounding->Get_Desc());
 		isColl = m_pBoundingBox->Intersects(*pDesc);
+		
 		break;
 	}
 	case Engine::CCollider::COLLIDER_OBB:
@@ -63,7 +64,6 @@ _bool CBounding_AABB::Intersect(CCollider::TYPE eTargetType, CBounding* pTargetB
 
 	return isColl;
 }
-
 #ifdef _DEBUG
 HRESULT CBounding_AABB::Render(PrimitiveBatch<VertexPositionColor>* pBatch)
 {

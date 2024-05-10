@@ -2,6 +2,8 @@
 
 #include "GameInstance.h"
 
+#include "Weapon.h"
+
 #include "Selector.h"
 #include "Sequence.h"
 #include "Action.h"
@@ -93,15 +95,27 @@ CNode::NODE_STATE CBT_Hili::CheckHit()
 
 CNode::NODE_STATE CBT_Hili::Hit()
 {
-	//충돌하면 히트
-	//*m_pState = CHili::HILL_HIT;
-	CCollider* pTargetColl = dynamic_cast<CCollider*>(m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, L"Layer_Player", L"Com_Collider"));
-	if (m_pColliderCom->Intersect(pTargetColl))
-	{
-		*m_pState = CHili::HILI_HIT;
-		m_pInfo->fHP -= 10.f;
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, TEXT("Layer_Player"), 0));
 
-		return CNode::SUCCESS;
+	// 플레이어가 공격중인가?
+	if (false == pPlayer->isAttack())
+		return CNode::FAILURE;
+
+	// 플레이어가 근거리인가? 원거리인가?
+	// 플레이어가 근거리라면 무기 콜라이더 사용
+	// 플레이어가 원거리라면 이펙트 사용
+	if (pPlayer->Get_CurrentWeapon() == CWeapon::WEAPON_SWORD)
+	{
+		//근거리 (소드)
+		if (m_pColliderCom->Intersect(pPlayer->Get_SwordCollider()))
+		{
+			*m_pState = CHili::HILI_HIT;
+			return CNode::SUCCESS;
+		}
+	}
+	else
+	{
+		//원거리
 	}
 
 	return CNode::FAILURE;
@@ -109,10 +123,10 @@ CNode::NODE_STATE CBT_Hili::Hit()
 
 CNode::NODE_STATE CBT_Hili::CheckAttack()
 {
-	if (*m_pState != CHili::HILL_ATTACK)
+	if (*m_pState != CHili::HILI_NORMAL_ATK)
 		return CNode::SUCCESS;
 
-	if (m_pModelCom->Get_Animation_Finished(14))
+	if (m_pModelCom->Get_Animation_Finished())
 		return CNode::SUCCESS;
 
 	return CNode::RUNNING;
@@ -163,7 +177,7 @@ CNode::NODE_STATE CBT_Hili::CheckAttackTime()
 
 CNode::NODE_STATE CBT_Hili::Attack()
 {
-	*m_pState = CHili::HILL_ATTACK;
+	*m_pState = CHili::HILI_NORMAL_ATK;
 
 	m_isAttack = true;
 
@@ -180,8 +194,13 @@ CNode::NODE_STATE CBT_Hili::CheckDetect()
 
 	if (fDistance <= m_iDetectRange)
 		return CNode::SUCCESS;
+	else if (fDistance > m_iDetectRange)
+	{
+		m_isDiscovered = false;
+		return CNode::FAILURE;
+	}
 
-	return CNode::FAILURE;
+	return CNode::SUCCESS;
 }
 
 CNode::NODE_STATE CBT_Hili::CheckLookPlayer()

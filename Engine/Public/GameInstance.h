@@ -39,6 +39,7 @@ public: // 게임오브젝트 매니저
     void Clear_Object(_uint iLevelIndex);
     class CComponent* Get_GameObject_Component(_uint iLevelIndex, const wstring strLayerTag, const wstring strComponentTag, _uint iIndex = 0);
     class CGameObject* Get_GameObject(_uint iLevelIndex, const wstring strLayerTag, _uint iIndex);
+    vector<CGameObject*> Get_GameObjects(_uint iLevelIndex, const wstring strLayerTag);
 
 public: // 렌더러
     void Add_Renderer(CRenderer::RENDERER_STATE eRenderState, class CGameObject* pGameObject);

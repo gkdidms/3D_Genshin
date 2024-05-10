@@ -38,7 +38,7 @@ void CSlime_Large_Fire::Tick(const _float& fTimeDelta)
 	_float4x4 MoveMatrix;
 	m_pModelCom->Play_Animation(fTimeDelta, &MoveMatrix);
 
-	m_pTransformCom->Go_Run(XMLoadFloat4x4(&MoveMatrix), m_pNavigation);
+	//m_pTransformCom->Go_Run(XMLoadFloat4x4(&MoveMatrix), m_pNavigation);
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 }
 

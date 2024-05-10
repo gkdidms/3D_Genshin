@@ -22,6 +22,7 @@ public:
 
 public:
     class CGameObject* Get_Objecte(_uint iIndex);
+    vector<class CGameObject*> Get_Objects() { return m_vecObjects; }
 
 private:
     vector<class CGameObject*> m_vecObjects;

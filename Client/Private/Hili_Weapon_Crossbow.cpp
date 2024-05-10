@@ -25,6 +25,9 @@ HRESULT CHili_Weapon_Crossbow::Initialize(void* pArg)
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
+	m_pTransformCom->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), XMConvertToRadians(-90.f));
+	//m_pTransformCom->Turn(XMVectorSet(0.f, 0.f, 0.f, 0.f), 2.f);
+
 	return S_OK;
 }
 
@@ -46,8 +49,6 @@ void CHili_Weapon_Crossbow::Tick(const _float& fTimeDelta)
 
 void CHili_Weapon_Crossbow::Late_Tick(const _float& fTimeDelta)
 {
-
-
 	m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONBLENDER, this);
 }
 
@@ -56,7 +57,9 @@ HRESULT CHili_Weapon_Crossbow::Render()
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
+#ifdef _DEBUG
 	m_pColliderCom->Render();
+#endif // _DEBUG
 
 	return S_OK;
 }

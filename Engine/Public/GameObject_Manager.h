@@ -25,6 +25,7 @@ public:
 public:
     class CComponent* Get_GameObject_Component(_uint iLevelIndex, const wstring strLayerTag, const wstring strComponentTag, _uint iIndex);
     class CGameObject* Get_GameObject(_uint iLevelIndex, const wstring strLayerTag, _uint iIndex);
+    vector<CGameObject*> Get_GameObjects(_uint iLevelIndex, const wstring strLayerTag);
 
 private:
     map<const wstring, class CGameObject*> m_pPrototypes;

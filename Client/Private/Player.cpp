@@ -9,6 +9,8 @@
 #include "Weapon_Ayus.h"
 #include "Weapon_Regalis.h"
 
+#include "Hili.h"
+
 #include "SkillObj.h"
 
 #include "CutCamera.h"
@@ -99,10 +101,18 @@ void CPlayer::Tick(const _float& fTimeDelta)
 
 	_vector vPos;
 	_float4x4 RootMatrix;
+	
+	
 
-	dynamic_cast<CPartObject*>(m_PartObject[m_CurrentPlayerble][PART_BODY])->Set_PlayerPos(&RootMatrix);
-	XMStoreFloat4x4(&RootMatrix, XMLoadFloat4x4(&RootMatrix) * -1.f);
-	_bool isMove = m_pTransformCom->Go_Run(XMLoadFloat4x4(&RootMatrix), m_pNavigationCom);
+	_bool isMove = true;
+
+	if (!Check_Coll(fTimeDelta))
+	{
+		dynamic_cast<CPartObject*>(m_PartObject[m_CurrentPlayerble][PART_BODY])->Set_PlayerPos(&RootMatrix);
+		XMStoreFloat4x4(&RootMatrix, XMLoadFloat4x4(&RootMatrix) * -1.f);
+		isMove = m_pTransformCom->Go_Run(XMLoadFloat4x4(&RootMatrix), m_pNavigationCom);
+	}
+
 
 	SetUp_CellType(isMove);
 	SetUp_OnTerrain();
@@ -114,6 +124,8 @@ void CPlayer::Late_Tick(const _float& fTimeDelta)
 {
 	for (auto& pObject : m_PartObject[m_CurrentPlayerble])
 		pObject->Late_Tick(fTimeDelta);
+
+
 
 	m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONBLENDER, this);
 }
@@ -250,6 +262,35 @@ void CPlayer::SetUp_CellType(_bool isMove)
 		m_eHill = HILL_END;
 }
 
+_bool CPlayer::Check_Coll(const _float& fTimeDelta)
+{
+	// 콜라이더 충돌하고 있는지 확인하기
+
+	vector<CGameObject*> Monsters = m_pGameInstance->Get_GameObjects(LEVEL_GAMEPLAY, TEXT("Layer_Monster"));
+
+	for (auto& pMonster : Monsters)
+	{
+		CMonster* pObj = dynamic_cast<CMonster*>(pMonster);
+		if (m_pColliderCom->Intersect(pObj->Get_Coll()))
+		{
+			//충돌 시 법선벡터 구하기
+			CTransform* pTargetTransform = dynamic_cast<CTransform*>(pMonster->Get_Component(L"Com_Transform"));
+
+			_vector vNormal = XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_POSITION) - pTargetTransform->Get_State(CTransform::STATE_POSITION));
+
+			//투영 벡터
+			_vector vProjection = XMVectorGetX(XMVector3Dot(vNormal, m_pTransformCom->Get_State(CTransform::STATE_LOOK) * -1.f)) * vNormal;
+			
+			_vector vSliding = XMVector3Normalize(vProjection - pTargetTransform->Get_State(CTransform::STATE_LOOK));
+
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_pTransformCom->Get_State(CTransform::STATE_POSITION) + XMVectorSetW(vSliding, 0.f));
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void CPlayer::Check_State(const _float& fTimeDelta)
 {
 	// 상태 패턴 업데이트
@@ -260,6 +301,17 @@ void CPlayer::Check_State(const _float& fTimeDelta)
 		m_isElementalAir = true;
 	else if (m_CurrentPlayerble == PLAYER_WANDERER && (m_iState == PLAYER_ELEMENTAL_END || m_iState == PLAYER_FALL_GROUND_L))
 		m_isElementalAir = false;
+
+	// Attack 체크
+	m_isAttack = m_iState == PLAYER_ATTACK_1
+		|| m_iState == PLAYER_ATTACK_2
+		|| m_iState == PLAYER_ATTACK_3
+		|| m_iState == PLAYER_ATTACK_4
+		|| m_iState == PLAYER_ELEMENTAL_1
+		|| m_iState == PLAYER_ELEMENTAL_2
+		|| m_iState == PLAYER_ELEMENTAL_3
+		|| m_iState == PLAYER_ELEMENTAL_SPEC
+		|| m_iState == PLAYER_ELEMENTAL_BURST_END;
 
 	// fly 체크
 	if (m_iState == PLAYER_FLY_START)

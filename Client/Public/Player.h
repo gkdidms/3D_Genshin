@@ -33,6 +33,7 @@ public:
     const _float4x4* Get_PlayerCameraLook() const { return m_pCameraLook; }
     _uint Get_PlayerState() { return m_iState; }
     _bool Get_BossSign() { return m_isBossSign; }
+    _bool isAttack() { return m_isAttack; }
 
 public:
     _uint Get_CurrentWeapon();
@@ -65,6 +66,7 @@ private: // 상태에 따른 bool값
     _bool m_isFly = { false }; // 날고 있는지
     _bool m_isJump = { false }; // 점프중인지
     _bool m_isDrop = { false }; // 떨어지는 중인지
+    _bool m_isAttack = { false }; // 공격중인지
 
     HILL_TYPE m_eHill = { HILL_END }; // 계단인지
 
@@ -91,6 +93,7 @@ private:
     void Check_State(const _float& fTimeDelta);
     void Input_Key(const _float& fTimeDelta);
     void SetUp_CellType(_bool isMove);
+    _bool Check_Coll(const _float& fTimeDelta);
 
 
 public:

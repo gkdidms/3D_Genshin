@@ -51,6 +51,8 @@ void CHili::Tick(const _float& fTimeDelta)
 void CHili::Late_Tick(const _float& fTimeDelta)
 {
 	m_pWeapon->Late_Tick(fTimeDelta);
+
+	Check_Coll();
 }
 
 HRESULT CHili::Render()
@@ -96,9 +98,21 @@ void CHili::Change_Animation(const _float& fTimeDelta)
 		isLoop = true;
 		break;
 	}
-	case CHili::HILL_ATTACK:
+	case CHili::HILI_NORMAL_ATK:
 	{
 		iAnim = m_Weapon == HILI_WEAPON_CLUB ? 14 : 29;
+		isLoop = false;
+		break;
+	}
+	case CHili::HILI_THUMP_ATK:
+	{
+		iAnim =  21;
+		isLoop = false;
+		break;
+	}
+	case CHili::HILI_TRIPLE_ATK:
+	{
+		iAnim = 22;
 		isLoop = false;
 		break;
 	}
@@ -131,6 +145,23 @@ void CHili::Change_Animation(const _float& fTimeDelta)
 		iAnim = m_Weapon == HILI_WEAPON_CLUB ? 23 : 39;
 		isLoop = true;
 		break;
+
+	case HILI_BORN:
+	{
+		iAnim = 0;
+		isLoop = false;
+		break;
+	}
+	case HILI_TAUNT_1:
+	{
+		iAnim = 18;
+		isLoop = false;
+		break;
+	}
+	case HILI_TAUNT_2:
+		iAnim = 19;
+		isLoop = false;
+		break;
 	case CHili::HILI_END:
 		break;
 	default:
@@ -153,7 +184,7 @@ HRESULT CHili::Ready_Object()
 
 	CHili_Weapon::HILI_WEAPON_DESC Desc{};
 	Desc.pTargetCombinedTransformationMatrix = m_pTransformCom->Get_WorldFloat4x4();
-	Desc.pHandCombinedTransformationMatrix = m_pModelCom->Get_BoneCombinedTransformationMatrix("WeaponR");
+	Desc.pHandCombinedTransformationMatrix = m_pModelCom->Get_BoneCombinedTransformationMatrix("Multi_Right");
 
 	if (m_Weapon == CHili::HILI_WEAPON_CLUB)
 	{
@@ -178,9 +209,26 @@ HRESULT CHili::Ready_Object()
 	return S_OK;
 }
 
+void CHili::Check_Coll()
+{
+	
+	CCollider* pPlayerColl =  dynamic_cast<CCollider*>( m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, TEXT("Layer_Player"), TEXT("Com_Collider")));
+	
+	if (m_pColliderCom->Intersect(pPlayerColl))
+	{
+		m_isColl = true;
+
+		return;
+	}
+
+	m_isColl = false;
+}
+
 void CHili::Free()
 {
 	__super::Free();
 
 	Safe_Release(m_pWeapon);
 }
+
+

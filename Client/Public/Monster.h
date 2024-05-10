@@ -27,6 +27,9 @@ protected:
     virtual ~CMonster() = default;
 
 public:
+    CCollider* Get_Coll() { return m_pColliderCom; }
+
+public:
     HRESULT Initialize_Prototype() override;
     HRESULT Initialize(void* pArg) override;
     void Priority_Tick(const _float& fTimeDelta) override;

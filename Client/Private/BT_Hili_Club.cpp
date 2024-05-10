@@ -2,6 +2,9 @@
 
 #include "GameInstance.h"
 
+#include "Player.h"
+#include "Weapon.h"
+
 #include "Selector.h"
 #include "Sequence.h"
 #include "Action.h"
@@ -51,6 +54,34 @@ CNode::NODE_STATE CBT_Hili_Club::Death()
 	return __super::Death();
 }
 
+CNode::NODE_STATE CBT_Hili_Club::CheckBone()
+{
+	if (*m_pState != CHili::HILI_BORN && *m_pState != CHili::HILI_TAUNT_1 && *m_pState != CHili::HILI_TAUNT_2)
+		return CNode::FAILURE;
+
+	if (m_pModelCom->Get_Animation_Finished())
+		return CNode::SUCCESS;
+
+	return CNode::RUNNING;
+}
+
+CNode::NODE_STATE CBT_Hili_Club::CheckTaunt()
+{
+	if (*m_pState == CHili::HILI_TAUNT_1 || *m_pState == CHili::HILI_TAUNT_2)
+		return CNode::FAILURE;
+
+	return CNode::SUCCESS;
+}
+
+CNode::NODE_STATE CBT_Hili_Club::Taunt()
+{
+	_uint iResult = Random(2);
+
+	*m_pState = iResult == 0 ? CHili::HILI_TAUNT_1 : CHili::HILI_TAUNT_2;
+
+	return CNode::SUCCESS;
+}
+
 CNode::NODE_STATE CBT_Hili_Club::CheckHit()
 {
 	if (*m_pState != CHili::HILI_HIT)
@@ -69,11 +100,14 @@ CNode::NODE_STATE CBT_Hili_Club::Hit()
 
 CNode::NODE_STATE CBT_Hili_Club::CheckAttack()
 {
-	if (*m_pState != CHili::HILL_ATTACK)
+	if (*m_pState != CHili::HILI_NORMAL_ATK && *m_pState != CHili::HILI_THUMP_ATK && *m_pState != CHili::HILI_TRIPLE_ATK)
 		return CNode::SUCCESS;
 
-	if (m_pModelCom->Get_Animation_Finished(14))
+	if (m_pModelCom->Get_Animation_Finished())
+	{
+		//m_isAttack = false;
 		return CNode::SUCCESS;
+	}
 
 	return CNode::RUNNING;
 }
@@ -93,9 +127,49 @@ CNode::NODE_STATE CBT_Hili_Club::CheckAttackTime()
 	return __super::CheckAttackTime();
 }
 
-CNode::NODE_STATE CBT_Hili_Club::Attack()
+CNode::NODE_STATE CBT_Hili_Club::SelectAttack()
 {
-	return __super::Attack();
+	if (!m_isAttack)
+	{
+		m_Skill = SKILL(Random(3));
+
+		m_isAttack = true;
+	}
+
+	return CNode::SUCCESS;
+}
+
+CNode::NODE_STATE CBT_Hili_Club::Normal_Attack()
+{
+	if (m_Skill == HILI_NORMAL_ATK)
+	{
+		*m_pState = CHili::HILI_NORMAL_ATK;
+		return CNode::SUCCESS;
+	}
+		
+	return CNode::FAILURE;
+}
+
+CNode::NODE_STATE CBT_Hili_Club::Thump_Attack()
+{
+	if (m_Skill == HILI_THUMP_ATK)
+	{
+		*m_pState = CHili::HILI_THUMP_ATK;
+		return CNode::SUCCESS;
+	}
+
+	return CNode::FAILURE;
+}
+
+CNode::NODE_STATE CBT_Hili_Club::Triple_Attack()
+{
+	if (m_Skill == HILI_TRIPLE_ATK)
+	{
+		*m_pState = CHili::HILI_TRIPLE_ATK;
+		return CNode::SUCCESS;
+	}
+		
+	return CNode::FAILURE;
 }
 
 CNode::NODE_STATE CBT_Hili_Club::CheckDetect()
@@ -105,12 +179,34 @@ CNode::NODE_STATE CBT_Hili_Club::CheckDetect()
 
 CNode::NODE_STATE CBT_Hili_Club::CheckLookPlayer()
 {
-	return __super::CheckLookPlayer();
+	if (!m_isDiscovered)
+	{
+		_float vLookAngle = { 100.f };
+
+		_vector vTargetPos = XMLoadFloat4x4(m_pTargetMatrix).r[3];
+		_vector vHiliPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		_vector vHiliLook = XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK));
+
+		if (AngleOfView(vLookAngle, vTargetPos, vHiliPos, vHiliLook))
+		{
+			m_isDiscovered = true;
+			*m_pState = CHili::HILI_BORN; // ¹ß°ß 
+			return CNode::SUCCESS;
+		}
+
+		return CNode::FAILURE;
+	}
+	else m_pTransformCom->LookAt(XMLoadFloat4x4(m_pTargetMatrix).r[3]);
+
+	return CNode::SUCCESS;
 }
 
 CNode::NODE_STATE CBT_Hili_Club::MoveToPlayer()
 {
-	return __super::MoveToPlayer();
+	if (*m_pState != CHili::HILI_BORN)
+		*m_pState = CHili::HILI_RUN;
+
+	return CNode::SUCCESS;
 }
 
 CNode::NODE_STATE CBT_Hili_Club::MoveToPrePlace()
@@ -132,6 +228,11 @@ void CBT_Hili_Club::Ready_Node()
 	pDeathSeq->Add_Children(CAction::Create(bind(&CBT_Hili_Club::CheckDeath, this)));
 	pDeathSeq->Add_Children(CAction::Create(bind(&CBT_Hili_Club::Death, this)));
 
+	CSequence* pTauntSeq = CSequence::Create();
+	pTauntSeq->Add_Children(CAction::Create(bind(&CBT_Hili_Club::CheckBone, this)));
+	pTauntSeq->Add_Children(CAction::Create(bind(&CBT_Hili_Club::CheckTaunt, this)));
+	pTauntSeq->Add_Children(CAction::Create(bind(&CBT_Hili_Club::Taunt, this)));
+
 	CSequence* pHitSeq = CSequence::Create();
 	pHitSeq->Add_Children(CAction::Create(bind(&CBT_Hili_Club::CheckHit, this)));
 	pHitSeq->Add_Children(CAction::Create(bind(&CBT_Hili_Club::Hit, this)));
@@ -141,7 +242,14 @@ void CBT_Hili_Club::Ready_Node()
 	pActionSeq->Add_Children(CAction::Create(bind(&CBT_Hili_Club::CheckDiscoverToPlayer, this)));
 	pActionSeq->Add_Children(CAction::Create(bind(&CBT_Hili_Club::CheckRangePlayer, this)));
 	pActionSeq->Add_Children(CAction::Create(bind(&CBT_Hili_Club::CheckAttackTime, this)));
-	pActionSeq->Add_Children(CAction::Create(bind(&CBT_Hili_Club::Attack, this)));
+	pActionSeq->Add_Children(CAction::Create(bind(&CBT_Hili_Club::SelectAttack, this)));
+
+	CSelector* pActionSeletor = CSelector::Create();
+	pActionSeletor->Add_Children(CAction::Create(bind(&CBT_Hili_Club::Normal_Attack, this)));
+	pActionSeletor->Add_Children(CAction::Create(bind(&CBT_Hili_Club::Thump_Attack, this)));
+	pActionSeletor->Add_Children(CAction::Create(bind(&CBT_Hili_Club::Triple_Attack, this)));
+
+	pActionSeq->Add_Children(pActionSeletor);
 
 	CSequence* pDetectSeq = CSequence::Create();
 	pDetectSeq->Add_Children(CAction::Create(bind(&CBT_Hili_Club::CheckDetect, this)));
@@ -153,6 +261,7 @@ void CBT_Hili_Club::Ready_Node()
 	pPreSeq->Add_Children(CAction::Create(bind(&CBT_Hili_Club::StandBy, this)));
 
 	pSelector->Add_Children(pDeathSeq);
+	pSelector->Add_Children(pTauntSeq);
 	pSelector->Add_Children(pHitSeq);
 	pSelector->Add_Children(pActionSeq);
 	pSelector->Add_Children(pDetectSeq);

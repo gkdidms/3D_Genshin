@@ -5,6 +5,13 @@ BEGIN(Client)
 class CBT_Hili_Club :
     public CBT_Hili
 {
+public:
+	enum SKILL {
+		HILI_NORMAL_ATK,
+		HILI_THUMP_ATK,
+		HILI_TRIPLE_ATK,
+		SKILL_END
+	};
 private:
     CBT_Hili_Club();
     virtual ~CBT_Hili_Club() = default;
@@ -15,8 +22,15 @@ public:
 	virtual CNode::NODE_STATE Evaluate() override;
 
 private:
+	SKILL m_Skill = { SKILL_END };
+
+private:
 	virtual CNode::NODE_STATE CheckDeath() override;
 	virtual CNode::NODE_STATE Death() override;
+
+	virtual CNode::NODE_STATE CheckBone();
+	virtual CNode::NODE_STATE CheckTaunt();
+	virtual CNode::NODE_STATE Taunt();
 
 	virtual CNode::NODE_STATE CheckHit() override;
 	virtual CNode::NODE_STATE Hit() override;
@@ -25,7 +39,11 @@ private:
 	virtual CNode::NODE_STATE CheckDiscoverToPlayer() override;
 	virtual CNode::NODE_STATE CheckRangePlayer() override;
 	virtual CNode::NODE_STATE CheckAttackTime() override;
-	virtual CNode::NODE_STATE Attack() override;
+	CNode::NODE_STATE SelectAttack();
+
+	CNode::NODE_STATE Normal_Attack();
+	CNode::NODE_STATE Thump_Attack();
+	CNode::NODE_STATE Triple_Attack();
 
 	virtual CNode::NODE_STATE CheckDetect() override;
 	virtual CNode::NODE_STATE CheckLookPlayer() override;

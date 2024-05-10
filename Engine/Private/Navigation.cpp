@@ -268,7 +268,7 @@ _bool CNavigation::isMove(_fvector vMovePos)
                     m_iCurrentIndex = iNeighborsIndex;
                     return true;
                 }
-                    
+
             }
         }
         else
@@ -288,11 +288,10 @@ _bool CNavigation::isLook(_fvector vLook)
 
     _vector vCross = XMVector3Normalize(XMVector3Cross(vAB, vCA));
 
-    _float fAngle = XMVectorGetX(XMVector3Dot(vLook, vCross));
+    _float fAngle = XMConvertToDegrees( XMVectorGetX(XMVector3Dot(vLook, vCross)));
     
-    return fAngle < 0.f;
+    return fAngle < 90.f;
 }
-
 
 void CNavigation::Free()
 {

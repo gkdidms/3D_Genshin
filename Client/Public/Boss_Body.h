@@ -43,6 +43,7 @@ protected:
     virtual HRESULT Bind_ResourceData();
     virtual void Change_Animation();
 
+
 public:
     virtual void Free() override;
 };

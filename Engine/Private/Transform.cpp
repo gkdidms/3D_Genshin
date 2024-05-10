@@ -1,5 +1,8 @@
 #include "Transform.h"
 
+#include "GameInstance.h"
+
+#include "GameObject.h"
 #include "Shader.h"
 #include "Navigation.h"
 
@@ -74,7 +77,9 @@ _bool CTransform::Go_Run(const _matrix vMoveMatrix, CNavigation* pNavigationCom)
 	_vector vPos = XMVectorSetW(XMVector3TransformCoord(vMoveMatrix.r[3], Get_WorldMatrix()), 1.f);
 
 	if (nullptr == pNavigationCom ? false : !pNavigationCom->isMove(vPos))
+	{
 		return false;
+	}
 
 	if (pNavigationCom->Get_OptionType() == CCell::OPTION_FLY && pNavigationCom->isLook(XMVector3Normalize(Get_State(STATE_LOOK))))
 		return false;

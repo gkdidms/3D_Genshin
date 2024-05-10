@@ -41,7 +41,9 @@ void CHili_Weapon_Club::Tick(const _float& fTimeDelta)
 	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
 
 	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * SocketMatrix * XMLoadFloat4x4(m_TargetMatrix));
-	m_pColliderCom->Tick(XMLoadFloat4x4(&m_WorldMatrix));
+	
+	_matrix CollMatrix = m_pTransformCom->Get_WorldMatrix() * XMMatrixRotationX(XMConvertToRadians(-90.f)) * SocketMatrix * XMLoadFloat4x4(m_TargetMatrix);
+	m_pColliderCom->Tick(CollMatrix);
 }
 
 void CHili_Weapon_Club::Late_Tick(const _float& fTimeDelta)
@@ -54,7 +56,9 @@ HRESULT CHili_Weapon_Club::Render()
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
+#ifdef _DEBUG
 	m_pColliderCom->Render();
+#endif // _DEBUG
 
 	return S_OK;
 }

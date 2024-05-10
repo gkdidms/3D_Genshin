@@ -10,7 +10,12 @@ public:
 
     enum HILI_STATE {
         HILI_IDLE,
-        HILL_ATTACK,
+        HILI_BORN,
+        HILI_TAUNT_1,
+        HILI_TAUNT_2,
+        HILI_NORMAL_ATK,
+        HILI_THUMP_ATK,
+        HILI_TRIPLE_ATK,
         HILI_HIT,
         HILI_DIE,
         HILI_RUN,
@@ -52,11 +57,15 @@ protected:
 
     virtual HRESULT Ready_Object();
 
+    virtual void Check_Coll();
+
 protected:
     HILI_STATE m_CurrentState = { HILI_END };
     HILI_WEAPON_TYPE m_Weapon = { HILI_WEAPON_END };
     class CHili_Weapon* m_pWeapon = { nullptr };
     HILI_INFO m_Info;
+
+    _bool m_isColl = { false };
 
 protected:
     class CBT_Hili* m_pBT = { nullptr };

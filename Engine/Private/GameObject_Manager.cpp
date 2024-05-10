@@ -135,6 +135,16 @@ CGameObject* CGameObject_Manager::Get_GameObject(_uint iLevelIndex, const wstrin
 	return pLayer->Get_Objecte(iIndex);
 }
 
+vector<CGameObject*> CGameObject_Manager::Get_GameObjects(_uint iLevelIndex, const wstring strLayerTag)
+{
+	CLayer* pLayer = Find_Layer(iLevelIndex, strLayerTag);
+
+	if (nullptr == pLayer)
+		return vector<CGameObject*>();
+
+	return pLayer->Get_Objects();
+}
+
 CGameObject* CGameObject_Manager::Find_GameObject_Prototype(const wstring strGameObjectTag)
 {
 	auto pPrototype = m_pPrototypes.find(strGameObjectTag);

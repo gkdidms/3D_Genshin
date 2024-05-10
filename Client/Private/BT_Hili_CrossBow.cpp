@@ -16,7 +16,9 @@ HRESULT CBT_Hili_CrossBow::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_iAttackRange = { 10.f };
-	m_iDetectRange = { 15.f };
+	m_iDetectRange = { 13.f };
+
+	m_fAttackDelay = { 5.f };
 
 	return S_OK;
 }
@@ -55,7 +57,7 @@ CNode::NODE_STATE CBT_Hili_CrossBow::CheckHit()
 	if (*m_pState != CHili::HILI_HIT)
 		return CNode::SUCCESS;
 
-	if (m_pModelCom->Get_Animation_Finished(31) || m_pModelCom->Get_Animation_Finished(32))
+	if (m_pModelCom->Get_Animation_Finished())
 		return CNode::SUCCESS;
 
 	return CNode::RUNNING;
@@ -68,10 +70,10 @@ CNode::NODE_STATE CBT_Hili_CrossBow::Hit()
 
 CNode::NODE_STATE CBT_Hili_CrossBow::CheckAttack()
 {
-	if (*m_pState != CHili::HILL_ATTACK)
+	if (*m_pState != CHili::HILI_NORMAL_ATK)
 		return CNode::SUCCESS;
 
-	if (m_pModelCom->Get_Animation_Finished(29))
+	if (m_pModelCom->Get_Animation_Finished())
 		return CNode::SUCCESS;
 
 	return CNode::RUNNING;
@@ -117,18 +119,14 @@ CNode::NODE_STATE CBT_Hili_CrossBow::MoveToPlayer()
 	_vector vDistance = vPrePos - vCurrentPos;
 	_float fDistance = sqrtf(XMVectorGetX(vDistance) * XMVectorGetX(vDistance) + XMVectorGetY(vDistance) * XMVectorGetY(vDistance) + XMVectorGetZ(vDistance) * XMVectorGetZ(vDistance));
 
-	if (fDistance <= m_iDetectRange)
-	{
-		*m_pState = CHili::HILI_WALK_BACK;
-		
-		return CNode::SUCCESS;
-	}
-	else
+	if (fDistance <= m_iDetectRange && fDistance > m_iAttackRange)
 	{
 		*m_pState = CHili::HILI_RUN;
 
 		return CNode::SUCCESS;
 	}
+
+	return CNode::FAILURE;
 }
 
 CNode::NODE_STATE CBT_Hili_CrossBow::MoveToPrePlace()
