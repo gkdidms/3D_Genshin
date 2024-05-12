@@ -31,6 +31,8 @@ HRESULT CBody_Tartaglia::Initialize(void* pArg)
     m_Info.fMaxDefendHp = { 6125.f };
     m_Info.fDefendHp = { 6125.f };
 
+    m_fLongDistanceSpeed = 50.f;
+
     return S_OK;
 }
 

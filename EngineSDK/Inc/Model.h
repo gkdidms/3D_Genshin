@@ -38,6 +38,9 @@ public:
     void Bind_AnimSpeed(_matrix* MoveMatrix) { *MoveMatrix = XMLoadFloat4x4(&m_vAnimSpeed); }
 
 public:
+    void Anim_Reset() { m_tAnimDesc.iCurrentAnimIndex = 0; } // 애니메이션 인덱스 리셋용... 
+
+public:
     HRESULT Initialize_Prototype(const _char* szModelFilePath, _fmatrix PreTransformMatrix, const _char* szBinaryFilePath);
     HRESULT Initialize(void* pArv) override;
     void Render(_uint iMeshIndex);

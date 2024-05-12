@@ -274,6 +274,39 @@
     <Filter Include="02. GameObject\01. Camera\Cut">
       <UniqueIdentifier>{3ac5df8a-5d51-4ead-b7f7-21d4416980f3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. SceneObj\CheckPoint">
+      <UniqueIdentifier>{b8a25590-2168-4689-afd1-b7e2b9e81ab8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. SceneObj\Gate">
+      <UniqueIdentifier>{5c76dd34-4d1c-4faa-9f82-50322efdbd9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. SceneObj\WindField">
+      <UniqueIdentifier>{b0e56f0d-d94d-412f-8655-fd2c5ed7e4f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. SceneObj\FireCore">
+      <UniqueIdentifier>{88b8535a-475e-4752-bd79-12fe1b71b54c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. UI">
+      <UniqueIdentifier>{87b4cb48-3772-4f4a-bb60-151e25a31ff0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Monster\Brute">
+      <UniqueIdentifier>{411ac565-5d28-4fd5-b591-af10ea17a012}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. Boss\PartObject\Weapon">
+      <UniqueIdentifier>{bcda914c-2460-417a-b1fb-779e0ad02940}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. Boss\PartObject\Weapon\Harbinger">
+      <UniqueIdentifier>{7076bcbc-fa2d-4e54-949e-0da668f9a13f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. Boss\PartObject\Weapon\Harbinger\Blade">
+      <UniqueIdentifier>{1441dffd-0510-41c6-97e1-b202f83dd326}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. Boss\PartObject\Weapon\Harbinger\Bow">
+      <UniqueIdentifier>{cd1296e5-4bc2-4f1b-833a-2a7e4a7cfeba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. Boss\PartObject\Weapon\Harbinger\DualBlade">
+      <UniqueIdentifier>{875ad60d-3072-4911-a924-939f49ca448b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">
@@ -528,6 +561,33 @@
     <ClInclude Include="..\public\CutCamera.h">
       <Filter>02. GameObject\01. Camera\Cut</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\CheckPoint.h">
+      <Filter>02. GameObject\07. SceneObj\CheckPoint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\DungeonGate.h">
+      <Filter>02. GameObject\07. SceneObj\Gate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\WindField.h">
+      <Filter>02. GameObject\07. SceneObj\WindField</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\FireCore.h">
+      <Filter>02. GameObject\07. SceneObj\FireCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UI.h">
+      <Filter>02. GameObject\08. UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Brute.h">
+      <Filter>02. GameObject\05. Monster\Brute</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Harbinger_Blade.h">
+      <Filter>02. GameObject\06. Boss\PartObject\Weapon\Harbinger\Blade</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Harbinger_Bow.h">
+      <Filter>02. GameObject\06. Boss\PartObject\Weapon\Harbinger\Bow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Harbinger_DualBlade.h">
+      <Filter>02. GameObject\06. Boss\PartObject\Weapon\Harbinger\DualBlade</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -769,6 +829,33 @@
     </ClCompile>
     <ClCompile Include="..\private\CutCamera.cpp">
       <Filter>02. GameObject\01. Camera\Cut</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\CheckPoint.cpp">
+      <Filter>02. GameObject\07. SceneObj\CheckPoint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\DungeonGate.cpp">
+      <Filter>02. GameObject\07. SceneObj\Gate</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\WindField.cpp">
+      <Filter>02. GameObject\07. SceneObj\WindField</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\FireCore.cpp">
+      <Filter>02. GameObject\07. SceneObj\FireCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UI.cpp">
+      <Filter>02. GameObject\08. UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Brute.cpp">
+      <Filter>02. GameObject\05. Monster\Brute</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Harbinger_Blade.cpp">
+      <Filter>02. GameObject\06. Boss\PartObject\Weapon\Harbinger\Blade</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Harbinger_Bow.cpp">
+      <Filter>02. GameObject\06. Boss\PartObject\Weapon\Harbinger\Bow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Harbinger_DualBlade.cpp">
+      <Filter>02. GameObject\06. Boss\PartObject\Weapon\Harbinger\DualBlade</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

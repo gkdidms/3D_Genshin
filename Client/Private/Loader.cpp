@@ -38,7 +38,15 @@
 #include "Body_EvilEye.h"
 #include "Body_Harbinger.h"
 
+#include "Harbinger_Blade.h"
+#include "Harbinger_Bow.h"
+#include "Harbinger_DualBlade.h"
+
 #include "TreasureBox.h"
+#include "CheckPoint.h"
+#include "DungeonGate.h"
+#include "WindField.h"
+#include "FireCore.h"
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pContext{pContext}, m_pDevice{pDevice} , m_pGameInstance{ CGameInstance::GetInstance() }
@@ -141,6 +149,18 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	lstrcpy(m_szLoadingText, TEXT("씬 오브젝트를(을) 로딩 중 입니다."));
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_TreasureBox", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SceneObj/TreasureBox/TreasureBox.fbx", PreTransformMatrix, "../../Data/TreasureBox.dat"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_CheckPoint", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SceneObj/CheckPoint/CheckPoint.fbx", PreTransformMatrix, "../../Data/SceneObj_CheckPoint.dat"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_DungeonGate", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SceneObj/Gate/DungeonGate.fbx", PreTransformMatrix, "../../Data/SceneObj_Gate.dat"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_WindField", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SceneObj/WindField/WindField.fbx", PreTransformMatrix, "../../Data/SceneObj_WindField.dat"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_FireCore", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SceneObj/FireCore/FireCore.fbx", PreTransformMatrix, "../../Data/SceneObj_FireCore.dat"))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("무기 모델를(을) 로딩 중 입니다."));
@@ -247,6 +267,18 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_SceneObj_TreasureBox", CTreasureBox::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_SceneObj_CheckPoint", CCheckPoint::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_SceneObj_DungeonGate", CDungeonGate::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_SceneObj_FireCore", CFireCore::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_SceneObj_WindField", CWindField::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Monster_Hili_Fire", CHili_Fire::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
@@ -289,6 +321,14 @@ HRESULT CLoader::Loading_For_Stage_Boss()
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("무기 모델를(을) 로딩 중 입니다."));
+	PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Harbinger_Blade", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Harbinger_Blade/Blade.fbx", PreTransformMatrix, "../../Data/Harbinger_Blade.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Harbinger_Bow", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Harbinger_Bow/Bow.fbx", PreTransformMatrix, "../../Data/Harbinger_Bow.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Harbinger_DualBlade", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Harbinger_DualBlade/DualBlade.fbx", PreTransformMatrix, "../../Data/Harbinger_DualBlade.dat"))))
+		return E_FAIL;
+
 	PreTransformMatrix = XMMatrixIdentity();
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Ayus", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Ayus/Ayus.fbx", PreTransformMatrix, "../../Data/Weapon_Ayus.dat"))))
 		return E_FAIL;
@@ -298,6 +338,8 @@ HRESULT CLoader::Loading_For_Stage_Boss()
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Regalis", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Regalis/Regalis.fbx", PreTransformMatrix, "../../Data/Weapon_Regalis.dat"))))
 		return E_FAIL;
+
+
 
 
 	lstrcpy(m_szLoadingText, TEXT("맵 모델를(을) 로딩 중 입니다."));
@@ -341,7 +383,7 @@ HRESULT CLoader::Loading_For_Stage_Boss()
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Boss_EvilEye", CBody_EvilEye::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Boss_Harbinger", CBody_EvilEye::Create(m_pDevice, m_pContext))))
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Boss_Harbinger", CBody_Harbinger::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Camera", CDefaultCamera::Create(m_pDevice, m_pContext))))
@@ -375,6 +417,15 @@ HRESULT CLoader::Loading_For_Stage_Boss()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Weapon_Regalis", CWeapon_Regalis::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Harbinger_Blade", CHarbinger_Blade::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Harbinger_Bow", CHarbinger_Blade::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Harbinger_DualBlade", CHarbinger_Blade::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));

@@ -31,12 +31,12 @@ CPlayer::CPlayer(const CPlayer& rhs)
 
 _uint CPlayer::Get_CurrentWeapon()
 {
-	return dynamic_cast<CWeapon*>(m_PartObject[m_CurrentPlayerble][PART_WEAPON])->Get_WeaponType();
+	return dynamic_cast<CWeapon*>(m_PartObject[m_CurrentPlayerble][PART_WEAPON_BLADE])->Get_WeaponType();
 }
 
 CCollider* CPlayer::Get_SwordCollider()
 {
-	return dynamic_cast<CWeapon_Regalis*>(m_PartObject[m_CurrentPlayerble][PART_WEAPON])->Get_Collider();
+	return dynamic_cast<CWeapon_Regalis*>(m_PartObject[m_CurrentPlayerble][PART_WEAPON_BLADE])->Get_Collider();
 }
 
 ELEMENTAL_TYPE CPlayer::Get_CurrentPlayerbleElemental()

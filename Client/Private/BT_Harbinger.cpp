@@ -4,6 +4,10 @@
 
 #include "Weapon.h"
 
+#include "Sequence.h"
+#include "Selector.h"
+#include "Action.h"
+
 CBT_Harbinger::CBT_Harbinger()
 {
 }
@@ -16,11 +20,18 @@ HRESULT CBT_Harbinger::Initialize(void* pArg)
 	if (FAILED(Ready_Node()))
 		return E_FAIL;
 
+	m_fDelayTime = { 3.f };
+
 	return S_OK;
 }
 
 void CBT_Harbinger::Tick(const _float& fTimeDelta)
 {
+	if (!m_isAttack)
+		m_fCurrentTime += fTimeDelta;
+	else if (m_Skill == SKILL_BOW_NORMAL || m_Skill == SKILL_DUALBLADE_NORMAL_2) // 공격중이고 활 일반 공격 중이면 저장함 
+		m_fCurrentRunTime += fTimeDelta;
+
 	this->Evaluate();
 }
 
@@ -31,6 +42,56 @@ CNode::NODE_STATE CBT_Harbinger::Evaluate()
 
 HRESULT CBT_Harbinger::Ready_Node()
 {
+	//Death
+	CSequence* pDeath = CSequence::Create();
+	pDeath->Add_Children(CAction::Create(bind(&CBT_Harbinger::Death, this)));
+
+	//Hit
+	CSequence* pHit = CSequence::Create();
+	pHit->Add_Children(CAction::Create(bind(&CBT_Harbinger::Check_Hit, this)));
+	pHit->Add_Children(CAction::Create(bind(&CBT_Harbinger::Check_Intersect, this)));
+	pHit->Add_Children(CAction::Create(bind(&CBT_Harbinger::Hit, this)));
+
+	//Attack
+	CSequence* pAttack = CSequence::Create();
+	pAttack->Add_Children(CAction::Create(bind(&CBT_Harbinger::Check_Attack_Deley, this)));
+	pAttack->Add_Children(CAction::Create(bind(&CBT_Harbinger::Check_Attack_Range, this)));
+	pAttack->Add_Children(CAction::Create(bind(&CBT_Harbinger::Check_MeleeAtk, this)));
+	pAttack->Add_Children(CAction::Create(bind(&CBT_Harbinger::Check_RangeAtk, this)));
+
+	CSelector* pAttackSelect = CSelector::Create();
+	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Harbinger::Bow_Cover_Attack, this)));
+	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Harbinger::Bow_Normal_Attack, this)));
+	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Harbinger::Bow_Power_Attack, this)));
+	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Harbinger::Blade_Range_Attack, this)));
+	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Harbinger::Blade_Normal_Attack, this)));
+	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Harbinger::Blade_Extra_Attack, this)));
+	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Harbinger::DualBlade_Cycle_Attack, this)));
+	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Harbinger::DualBlade_Normal_1, this)));
+	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Harbinger::DualBlade_Normal_2, this)));
+	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Harbinger::DualBlade_Strike, this)));
+	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Harbinger::DualBlade_Sweep, this)));
+	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Harbinger::DualBlade_Hiraishin, this)));
+	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Harbinger::Normal_Attack, this)));
+
+	pAttack->Add_Children(pAttackSelect);
+
+	CSequence* pWalk = CSequence::Create();
+	pWalk->Add_Children(CAction::Create(bind(&CBT_Harbinger::Check_Teleport, this)));
+	pWalk->Add_Children(CAction::Create(bind(&CBT_Harbinger::Teleport, this)));
+
+	CSequence* pUndo = CSequence::Create();
+	pUndo->Add_Children(CAction::Create(bind(&CBT_Harbinger::Standby, this)));
+
+	CSelector* pRootSelector = CSelector::Create();
+	pRootSelector->Add_Children(pDeath);
+	pRootSelector->Add_Children(pHit);
+	pRootSelector->Add_Children(pAttack);
+	pRootSelector->Add_Children(pWalk);
+	pRootSelector->Add_Children(pUndo);
+
+	m_pRootNode = pRootSelector;
+
 	return S_OK;
 }
 
@@ -95,91 +156,13 @@ CNode::NODE_STATE CBT_Harbinger::Hit()
 	return CNode::SUCCESS;
 }
 
-CNode::NODE_STATE CBT_Harbinger::Check_Defend()
-{
-	//일정 확률로 나옴
-	_uint iProbability = 80;
-	_uint RandomNumber = Random(100);
-
-	//이미 방어하고 있는 상태가 아니라면 20% 확률로 hit
-	if (!m_pInfo->isDefend && RandomNumber > iProbability)
-		return CNode::FAILURE;
-
-	// 플레이어가 일반공격을 햇는지 체크
-	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, L"Layer_Player", 0));
-	_uint eWeaponType = pPlayer->Get_CurrentWeapon();
-
-	if ((pPlayer->Get_PlayerState() == PLAYER_ATTACK_1
-		|| pPlayer->Get_PlayerState() == PLAYER_ATTACK_2
-		|| pPlayer->Get_PlayerState() == PLAYER_ATTACK_3
-		|| pPlayer->Get_PlayerState() == PLAYER_ATTACK_4) && eWeaponType == CWeapon::WEAPON_SWORD)
-	{
-		iProbability = 90;
-
-		RandomNumber = Random(100);
-
-		// 90% 확률로 방어 / 10% 확률로 카운터
-		m_pInfo->isDefend = RandomNumber <= iProbability ? true : false;
-
-		return CNode::SUCCESS;
-	}
-
-	return CNode::FAILURE;
-}
-
-CNode::NODE_STATE CBT_Harbinger::Defend()
-{
-	if (!m_pInfo->isDefend) return CNode::FAILURE;
-
-	//방어막
-	*m_pState = CBoss::BOSS_DEFEND_1;
-
-	return CNode::SUCCESS;
-}
-
-CNode::NODE_STATE CBT_Harbinger::Attack_Defend()
-{
-	// 확률적으로 카운터
-	*m_pState = CBoss::BOSS_DEFEND_ATTACK_1;
-
-	return CNode::SUCCESS;
-}
-
 CNode::NODE_STATE CBT_Harbinger::Check_Attack_Deley()
 {
-	if (m_isFirst)
+	
+	if (!m_isAttack)
 	{
-		m_Skill = SKILL_DUALBLADE_STRIKE;
-		m_isFirst = false;
-		m_pTransformCom->LookAt(XMLoadFloat4x4(m_pTargetMatrix).r[3]);
-
-		return CNode::SUCCESS;
-	}
-	else
-	{
-		if (!m_isAttack && m_fDelayTime < m_fCurrentTime)
+		if (m_fDelayTime < m_fCurrentTime)
 		{
-			CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, L"Layer_Player", 0));
-
-			_vector vTarget = XMLoadFloat4x4(m_pTargetMatrix).r[3];
-			_vector vCurrentPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-			_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-
-			if (Check_Rear_ToPlayer())
-			{
-				//몬스터가 플레이어 뒤에 있다면??
-				m_Skill = SKILL_DUALBLADE_SWEEP;
-			}
-			else if (pPlayer->Get_BossSign())
-			{
-				//단류 표식이 되어있다면 단류가 있어야만 사용 가능한 스킬들 사용
-
-			}
-			else
-			{
-				m_Skill = SKILL(Random(SKILL_END));
-			}
-
 			m_fCurrentTime = 0.f;
 			m_pTransformCom->LookAt(XMLoadFloat4x4(m_pTargetMatrix).r[3]);
 
@@ -187,40 +170,310 @@ CNode::NODE_STATE CBT_Harbinger::Check_Attack_Deley()
 
 			return CNode::SUCCESS;
 		}
+		m_isWalkStop = true;
+		return CNode::FAILURE;
+	}
+
+	return CNode::SUCCESS;
+}
+
+CNode::NODE_STATE CBT_Harbinger::Check_Attack_Range() // 원거리인가 근거리인가?
+{
+	if (m_isAttack)
+		return CNode::SUCCESS;
+
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, L"Layer_Player", 0));
+	_float fDistance = Distance(XMLoadFloat4x4(m_pTargetMatrix), XMLoadFloat4x4(m_pTransformCom->Get_WorldFloat4x4()));
+
+	if (fDistance < m_fMeleeAtkRange)
+	{
+		m_RangeType = MELEE;
+		return CNode::SUCCESS;
+	}
+	else {
+		m_RangeType = RANGE;
+		return CNode::SUCCESS;
+	}
+		
+
+	return CNode::FAILURE;
+}
+
+CNode::NODE_STATE CBT_Harbinger::Check_MeleeAtk()	// 너무 가까우면 근거리 공격을 하거나 뒤로 이동하거나 
+{
+	if (m_RangeType == RANGE)
+		return CNode::SUCCESS;
+
+	if (m_isAttack)
+		return CNode::SUCCESS;
+
+	_uint iResult = Random(100);
+
+	if (iResult < m_iTeleportPer) // 뒤로 이동하는걸로
+		return CNode::FAILURE;
+
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, L"Layer_Player", 0));
+
+	//근거리 공격
+	if (Check_Rear_ToPlayer())
+	{
+		//몬스터가 플레이어 뒤에 있다면??
+		m_Skill = SKILL_DUALBLADE_SWEEP;
+	}
+	else if (pPlayer->Get_BossSign())
+	{
+		//단류 표식이 되어있다면 단류가 있어야만 사용 가능한 스킬들 사용
+	}
+	else
+	{
+		_uint iSkillNum = Random(7);
+
+		switch (iSkillNum)
+		{
+		case 0:
+			m_Skill = SKILL_BLADE_EXTRA;
+			break;
+		case 1:
+			m_Skill = SKILL_BLADE_NORMAL;
+			break;
+		case 2:
+			m_Skill = SKILL_BLADE_RANGE;
+			break;
+		case 3:
+			m_Skill = SKILL_DUALBLADE_NORMAL_1;
+			break;
+		case 4:
+			m_Skill = SKILL_DUALBLADE_CYCLE;
+			break;
+		case 5:
+			m_Skill = SKILL_DUALBLADE_STRIKE;
+			break;
+		case 6:
+			m_Skill = SKILL_NORMAL;
+			break;
+		default:
+			break;
+		}
+	}
+
+	return CNode::SUCCESS;
+}
+
+CNode::NODE_STATE CBT_Harbinger::Check_RangeAtk()	// 가까이 이동하거나 원거리 공격을 하거나 둘 중 하나
+{
+	if (m_RangeType == MELEE)
+		return CNode::SUCCESS;
+
+	if (m_isAttack)
+		return CNode::SUCCESS;
+
+	_uint iResult = Random(100);
+
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, L"Layer_Player", 0));
+
+	if (iResult < m_iTeleportPer) // 걷기로 빠짐
+		return CNode::FAILURE;
+
+	if (pPlayer->Get_BossSign())
+	{
+		//단류 표식이 되어있다면?
+	}
+	else
+	{
+		_uint iSkillNum = Random(8);
+
+		switch (iSkillNum)
+		{
+		case 0:
+			m_Skill = SKILL_BOW_COVER;
+			break;
+		case 1:
+			m_Skill = SKILL_BOW_NORMAL;
+			break;
+		case 2:
+			m_Skill = SKILL_BOW_POWER;
+			break;
+		case 3:
+			m_Skill = SKILL_BLADE_RANGE;
+			break;
+		case 4:
+			m_Skill = SKILL_DUALBLADE_NORMAL_1;
+			break;
+		case 5:
+			m_Skill = SKILL_DUALBLADE_NORMAL_2;
+			break;
+		case 6:
+			m_Skill = SKILL_DUALBLADE_CYCLE;
+			break;
+		case 7:
+			m_Skill = SKILL_DUALBLADE_HIRAISHIN;
+			break;
+		default:
+			break;
+		}
+	}
+
+	return CNode::SUCCESS;
+}
+
+_bool CBT_Harbinger::Check_Rear_ToPlayer()
+{
+	// 플레이어의 뒤를 봤을때 공격 해야함.
+
+	_vector vTargetLook = XMVector3Normalize(XMLoadFloat4x4(m_pTargetMatrix).r[2]);
+	_vector vLook = XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK));
+	
+	_float vAngle = XMConvertToDegrees(XMVectorGetX(XMVector3Dot(vTargetLook, vLook)));
+
+	if (vAngle < 0.f)
+		return vAngle > -45.f;
+	else
+		return vAngle < 45.f;
+}
+
+CNode::NODE_STATE CBT_Harbinger::Bow_Cover_Attack() //화살비
+{
+	if (m_isAttack && *m_pState == CBoss::BOSS_BOW_COVER_ATTACK)
+	{
+		if (m_pModelCom->Get_Animation_Finished())
+		{
+			// 끝나면
+			m_isAttack = false;
+
+			return CNode::SUCCESS;
+		}
+
+		return CNode::RUNNING;
+	}
+
+	if (m_Skill == SKILL_BOW_COVER)
+	{
+		*m_pState = CBoss::BOSS_BOW_COVER_ATTACK;
+		m_isAttack = true;
+
+		return CNode::SUCCESS;
 	}
 
 	return CNode::FAILURE;
 }
 
-_bool CBT_Harbinger::Check_Rear_ToPlayer()
+CNode::NODE_STATE CBT_Harbinger::Bow_Normal_Attack() // 일반공격 / 최대 3번까지 가능
 {
-	_vector vTarget = XMLoadFloat4x4(m_pTargetMatrix).r[3];
-	_vector vCurrentPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	if (m_isAttack && *m_pState == CBoss::BOSS_BOW_NORMAL_ATTACK_BS)
+	{
+		if (m_fBowNormalTime < m_fCurrentRunTime)
+		{
+			m_pTransformCom->LookAt(XMLoadFloat4x4(m_pTargetMatrix).r[3]);
 
-	return !AngleOfView(180.f, vTarget, vCurrentPos, vLook);
+			++m_iCurrentAttackCount;
+
+			if (m_iAttackCount > m_iCurrentAttackCount)
+			{
+				m_pModelCom->Anim_Reset();
+			}
+		}
+		if (m_pModelCom->Get_Animation_Finished())
+		{
+			m_fCurrentRunTime = 0.f;
+			m_iCurrentAttackCount = 0;
+			m_isAttack = false;
+
+			return CNode::SUCCESS;
+		}
+
+		return CNode::RUNNING;
+	}
+
+	if (m_Skill == SKILL_BOW_NORMAL)
+	{
+		m_iAttackCount = Random(3);
+		*m_pState = CBoss::BOSS_BOW_NORMAL_ATTACK_BS;
+		m_isAttack = true;
+
+		return CNode::SUCCESS;
+	}
+
+	return CNode::FAILURE;
 }
 
-CNode::NODE_STATE CBT_Harbinger::Bow_Cover_Attack()
+CNode::NODE_STATE CBT_Harbinger::Bow_Power_Attack() // 고래 소환 
 {
-	return CNode::NODE_STATE();
+	if (m_isAttack && *m_pState == CBoss::BOSS_BOW_POWER_ATTACK)
+	{
+		if (m_pModelCom->Get_Animation_Finished())
+		{
+			m_isAttack = false;
+			
+			return CNode::SUCCESS;
+		}
+
+		return CNode::RUNNING;
+	}
+
+	if (m_Skill == SKILL_BOW_POWER)
+	{
+		*m_pState = CBoss::BOSS_BOW_POWER_ATTACK;
+		m_isAttack = true;
+
+		return CNode::SUCCESS;
+	}
+
+	return CNode::FAILURE;
 }
 
-CNode::NODE_STATE CBT_Harbinger::Bow_Power_Attack()
+CNode::NODE_STATE CBT_Harbinger::Blade_Range_Attack() // 물 분출 (물이 튀어오름)
 {
-	return CNode::NODE_STATE();
+	if (m_isAttack && *m_pState == CBoss::BOSS_BLADE_RANGE_ATTACK)
+	{
+		if (m_pModelCom->Get_Animation_Finished())
+		{
+			m_isAttack = false;
+
+			return CNode::SUCCESS;
+		}
+
+		return CNode::RUNNING;
+	}
+
+	if (m_Skill == SKILL_BLADE_RANGE)
+	{
+		*m_pState = CBoss::BOSS_BLADE_RANGE_ATTACK;
+		m_isAttack = true;
+
+		return CNode::SUCCESS;
+	}
+	return CNode::FAILURE;
 }
 
-CNode::NODE_STATE CBT_Harbinger::Blade_Range_Attack()
+CNode::NODE_STATE CBT_Harbinger::Blade_Normal_Attack()
 {
-	return CNode::NODE_STATE();
+	if (m_isAttack && *m_pState == CBoss::BOSS_BLADE_NORMAL_ATTACK_1)
+	{
+		if (m_pModelCom->Get_Animation_Finished())
+		{
+			m_isAttack = false;
+
+			return CNode::SUCCESS;
+		}
+
+		return CNode::RUNNING;
+	}
+
+	if (m_Skill == SKILL_BLADE_NORMAL)
+	{
+		*m_pState = CBoss::BOSS_BLADE_NORMAL_ATTACK_1;
+		m_isAttack = true;
+
+		return CNode::SUCCESS;
+	}
+	return CNode::FAILURE;
 }
 
-CNode::NODE_STATE CBT_Harbinger::Blade_Extra_Attack()
+CNode::NODE_STATE CBT_Harbinger::Blade_Extra_Attack() //평타
 {
 	if (m_isAttack && m_Skill == SKILL_BLADE_EXTRA)
 	{
-		if (*m_pState == CBoss::BOSS_BLADE_EXTRA_ATTACK && m_pModelCom->Get_Animation_Finished(5))
+		if (*m_pState == CBoss::BOSS_BLADE_EXTRA_ATTACK && m_pModelCom->Get_Animation_Finished())
 		{
 			m_isAttack = false;
 			return CNode::SUCCESS;
@@ -241,20 +494,99 @@ CNode::NODE_STATE CBT_Harbinger::Blade_Extra_Attack()
 	return CNode::FAILURE;
 }
 
-CNode::NODE_STATE CBT_Harbinger::DualBlade_Cycle_Attack()
+CNode::NODE_STATE CBT_Harbinger::DualBlade_Cycle_Attack() // 번개 칼날 
 {
-	return CNode::NODE_STATE();
+	if (m_isAttack && m_Skill == SKILL_DUALBLADE_CYCLE)
+	{
+		if (m_pModelCom->Get_Animation_Finished())
+		{
+			m_isAttack = false;
+
+			return CNode::SUCCESS;
+		}
+
+		return CNode::RUNNING;
+	}
+
+	if (m_Skill == SKILL_DUALBLADE_CYCLE)
+	{
+		m_isAttack = true;
+		*m_pState = CBoss::BOSS_DUALBLADE_CYCLE_ATTACK;
+		return CNode::SUCCESS;
+	}
+	return CNode::FAILURE;
+}
+
+CNode::NODE_STATE CBT_Harbinger::DualBlade_Normal_1() // 번개창
+{
+	if (m_isAttack && m_Skill == SKILL_DUALBLADE_NORMAL_1)
+	{
+		if (m_pModelCom->Get_Animation_Finished())
+		{
+			m_isAttack = false;
+
+			return CNode::SUCCESS;
+		}
+
+		return CNode::RUNNING;
+	}
+
+	if (m_Skill == SKILL_DUALBLADE_NORMAL_1)
+	{
+		*m_pState = CBoss::BOSS_DUALBLADE_NORMAL_ATTACK_1;
+		m_isAttack = true;
+
+		return CNode::SUCCESS;
+	}
+
+	return CNode::FAILURE;
+}
+
+CNode::NODE_STATE CBT_Harbinger::DualBlade_Normal_2() // 돌진 3~5번 돌진을 한다.
+{
+	if (m_isAttack && m_Skill == SKILL_DUALBLADE_NORMAL_2)
+	{
+		if (m_fSkritTime < m_fCurrentRunTime)
+		{
+			++m_iCurrentAttackCount;
+
+			if (m_iAttackCount > m_iCurrentAttackCount)
+			{
+				m_pTransformCom->LookAt(XMLoadFloat4x4(m_pTargetMatrix).r[3]);
+				m_pModelCom->Anim_Reset();
+
+				return CNode::SUCCESS;
+			}
+
+			if (m_pModelCom->Get_Animation_Finished())
+			{
+				m_fCurrentRunTime = 0.f;
+				m_iCurrentAttackCount = 0;
+				m_isAttack = false;
+
+				return CNode::SUCCESS;
+			}
+		}
+		return CNode::RUNNING;
+	}
+
+	if (m_Skill == SKILL_DUALBLADE_NORMAL_1)
+	{
+		m_iAttackCount = Random(5);
+		*m_pState = CBoss::BOSS_DUALBLADE_NORMAL_ATTACK_2;
+		m_isAttack = true;
+
+		return CNode::SUCCESS;
+	}
+
+	return CNode::FAILURE;
 }
 
 CNode::NODE_STATE CBT_Harbinger::DualBlade_Strike()
 {
 	if (m_isAttack && m_Skill == SKILL_DUALBLADE_STRIKE)
 	{
-		if (*m_pState == CBoss::BOSS_DUALBLADE_STRIKE_ATTACK_BS && m_pModelCom->Get_Animation_Finished())
-			*m_pState = CBoss::BOSS_DUALBLADE_STRIKE_ATTACK_LOOP;
-		else if (*m_pState == CBoss::BOSS_DUALBLADE_STRIKE_ATTACK_LOOP && m_pModelCom->Get_LoopAnimation_Finished())
-			*m_pState = CBoss::BOSS_DUALBLADE_STRIKE_ATTACK_AS;
-		else if (*m_pState == CBoss::BOSS_DUALBLADE_STRIKE_ATTACK_AS && m_pModelCom->Get_Animation_Finished())
+		if (*m_pState == CBoss::BOSS_DUALBLADE_STRIKE_ATTACK && m_pModelCom->Get_Animation_Finished())
 		{
 			m_isAttack = false;
 			return CNode::SUCCESS;
@@ -266,7 +598,7 @@ CNode::NODE_STATE CBT_Harbinger::DualBlade_Strike()
 	if (m_Skill == SKILL_DUALBLADE_STRIKE)
 	{
 		m_isAttack = true;
-		*m_pState = CBoss::BOSS_DUALBLADE_STRIKE_ATTACK_BS;
+		*m_pState = CBoss::BOSS_DUALBLADE_STRIKE_ATTACK;
 
 		return CNode::SUCCESS;
 	}
@@ -274,11 +606,11 @@ CNode::NODE_STATE CBT_Harbinger::DualBlade_Strike()
 	return CNode::FAILURE;
 }
 
-CNode::NODE_STATE CBT_Harbinger::DualBlade_Sweep()
+CNode::NODE_STATE CBT_Harbinger::DualBlade_Sweep() // 뒷치기
 {
 	if (m_isAttack && m_Skill == SKILL_DUALBLADE_SWEEP)
 	{
-		if ((*m_pState == CBoss::BOSS_DUALBLADE_SWEEP_ATTACK_L || *m_pState == CBoss::BOSS_DUALBLADE_SWEEP_ATTACK_R) && m_pModelCom->Get_Animation_Finished())
+		if (m_pModelCom->Get_Animation_Finished())
 		{
 			m_isAttack = false;
 			return CNode::SUCCESS;
@@ -312,17 +644,18 @@ CNode::NODE_STATE CBT_Harbinger::DualBlade_Sweep()
 	return CNode::FAILURE;
 }
 
-CNode::NODE_STATE CBT_Harbinger::DualBlade_Hiraishin()
+CNode::NODE_STATE CBT_Harbinger::DualBlade_Hiraishin() // 번개창 낙하
 {
 	if (m_isAttack && m_Skill == SKILL_DUALBLADE_HIRAISHIN)
 	{
 		if (*m_pState == CBoss::BOSS_DUALBLADE_HIRAISHIN_BS && m_pModelCom->Get_Animation_Finished())
-			*m_pState = CBoss::BOSS_DUALBLADE_HIRAISHIN_LOOP;
-		else if (*m_pState == CBoss::BOSS_DUALBLADE_HIRAISHIN_LOOP && m_pModelCom->Get_LoopAnimation_Finished())
+		{
 			*m_pState = CBoss::BOSS_DUALBLADE_HIRAISHIN_AS;
+		}
 		else if (*m_pState == CBoss::BOSS_DUALBLADE_HIRAISHIN_AS && m_pModelCom->Get_Animation_Finished())
 		{
 			m_isAttack = false;
+
 			return CNode::SUCCESS;
 		}
 		return CNode::RUNNING;
@@ -338,59 +671,57 @@ CNode::NODE_STATE CBT_Harbinger::DualBlade_Hiraishin()
 	return CNode::FAILURE;
 }
 
-CNode::NODE_STATE CBT_Harbinger::Normal_Attack()
+CNode::NODE_STATE CBT_Harbinger::Normal_Attack() // 3단 콤보 
 {
+	if (m_isAttack && m_Skill == SKILL_NORMAL)
+	{
+		if (m_pModelCom->Get_Animation_Finished())
+		{
+			m_isAttack = false;
+			return CNode::SUCCESS;
+		}
+
+		return CNode::RUNNING;
+	}
+
+	if (m_Skill == SKILL_NORMAL)
+	{
+		m_isAttack = true;
+		*m_pState = CBoss::BOSS_HARBINGER_NORMAL_ATTACK;
+
+		return CNode::FAILURE;
+	}
 	return CNode::NODE_STATE();
 }
 
-CNode::NODE_STATE CBT_Harbinger::Check_Walk()
+//순간 이동도 있고 걷기도 있는데 이 둘을 어떻게 분리할것인가..?
+CNode::NODE_STATE CBT_Harbinger::Check_Teleport()
 {
 	if (m_isWalkStop) return CNode::FAILURE;
 
-	if (*m_pState != CBoss::BOSS_WALK_L
-		&& *m_pState != CBoss::BOSS_WALK_R
-		&& *m_pState != CBoss::BOSS_WALK_L_TO_R
-		&& *m_pState != CBoss::BOSS_WALK_R_To_L)
+	if (*m_pState != CBoss::BOSS_MOVE_BACK
+		&& *m_pState != CBoss::BOSS_MOVE_FORWARD)
 		return CNode::SUCCESS;
 
 	if (m_pModelCom->Get_Animation_Finished())
-		return CNode::SUCCESS;
+	{
+		m_isAttack = false;
+		return CNode::FAILURE;
+	}
+		
 
 	return CNode::RUNNING;
 }
 
-CNode::NODE_STATE CBT_Harbinger::Walk()
+CNode::NODE_STATE CBT_Harbinger::Teleport()
 {
-	if (*m_pState == CBoss::BOSS_WALK_L && m_pModelCom->Get_Animation_Finished())
-		*m_pState = CBoss::BOSS_WALK_L_TO_R;
-	else if (*m_pState == CBoss::BOSS_WALK_R && m_pModelCom->Get_Animation_Finished())
-		*m_pState = CBoss::BOSS_WALK_R_To_L;
-	else if (*m_pState == CBoss::BOSS_WALK_L_TO_R && m_pModelCom->Get_Animation_Finished())
-		*m_pState = CBoss::BOSS_WALK_R;
-	else if (*m_pState == CBoss::BOSS_WALK_R_To_L && m_pModelCom->Get_Animation_Finished())
-		*m_pState = CBoss::BOSS_WALK_L;
+	// 순간이동
+	if (m_RangeType == RANGE)
+		*m_pState = CBoss::BOSS_MOVE_FORWARD;
+	else if (m_RangeType == MELEE)
+		*m_pState = CBoss::BOSS_MOVE_BACK;
 
-	if (*m_pState != CBoss::BOSS_WALK_L
-		&& *m_pState != CBoss::BOSS_WALK_R
-		&& *m_pState != CBoss::BOSS_WALK_L_TO_R
-		&& *m_pState != CBoss::BOSS_WALK_R_To_L)
-	{
-		m_pTransformCom->LookAt(XMLoadFloat4x4(m_pTargetMatrix).r[3]);
-
-		_vector vTargetPos = XMLoadFloat4x4(m_pTargetMatrix).r[3];
-		_vector vHiliPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-		_vector vHiliLook = XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK));
-
-		_vector vDesc = XMVector3Normalize(vTargetPos - vHiliPos);
-		_float fDot = XMVectorGetX(XMVector3Dot(vDesc, vHiliLook));
-
-		if (fDot > 0)
-			*m_pState = CBoss::BOSS_WALK_R;
-		else if (fDot == 0)
-			return CNode::FAILURE;
-		else if (fDot < 0)
-			*m_pState = CBoss::BOSS_WALK_L;
-	}
+	m_isAttack = true;
 
 	return CNode::SUCCESS;
 }

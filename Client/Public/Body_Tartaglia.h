@@ -29,7 +29,7 @@ private:
     _float m_fCurrentTime = { 0.f };
 
 private:
-    _float m_fLongDistanceSpeed = { 50.f };
+
 
 private:
     virtual HRESULT Add_Components() override;

@@ -19,7 +19,7 @@ void CLogo_Level::Tick(const _float& fTimeDelta)
 
     if (GetAsyncKeyState(VK_RETURN))
     {
-        m_pGameInstance->Open_Level(LEVEL_LOADING, CLoading_Level::Create(LEVEL_GAMEPLAY, m_pDevice, m_pContext));
+        m_pGameInstance->Open_Level(LEVEL_LOADING, CLoading_Level::Create(LEVEL_STAGE_BOSS, m_pDevice, m_pContext));
     }
 }
 

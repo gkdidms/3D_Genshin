@@ -13,6 +13,8 @@
 #include "Body_EvilEye.h"
 #include "Body_Harbinger.h"
 
+#include "Harbinger_Blade.h"
+
 
 CBoss::CBoss(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CGameObject{ pDevice, pContext }
@@ -75,10 +77,19 @@ void CBoss::Tick(const _float& fTimeDelta)
         PartObject->Tick(fTimeDelta);
     }
 
+    CBoss_Body* pCurrentBody = dynamic_cast<CBoss_Body*>(m_PartObject[m_CurrentPage][PART_BODY]);
     _float4x4 RootMatrix;
-    dynamic_cast<CPartObject*>(m_PartObject[m_CurrentPage][PART_BODY])->Set_PlayerPos(&RootMatrix);
-    XMStoreFloat4x4(&RootMatrix, XMLoadFloat4x4(&RootMatrix) * -1.f);
-    _bool isMove = m_pTransformCom->Go_Run(XMLoadFloat4x4(&RootMatrix), m_pNavigationCom);
+    pCurrentBody->Set_PlayerPos(&RootMatrix);
+
+    if (pCurrentBody->isMovePos())
+    {
+        m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMLoadFloat4x4(&RootMatrix).r[3]);
+    }
+    else
+    {
+        XMStoreFloat4x4(&RootMatrix, XMLoadFloat4x4(&RootMatrix) * -1.f);
+        m_pTransformCom->Go_Run(XMLoadFloat4x4(&RootMatrix), m_pNavigationCom);
+    }
 
     m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 }
@@ -105,7 +116,9 @@ HRESULT CBoss::Render()
             return E_FAIL;
     }
 
+#ifdef _DEBUG
     m_pColliderCom->Render();
+#endif // _DEBUG
 
     return S_OK;
 }
@@ -167,6 +180,7 @@ HRESULT CBoss::Ready_Body()
     pGameObject = m_pGameInstance->Clone_Object(L"Prototype_GameObject_Boss_Harbinger", &Desc);
     if (nullptr == pGameObject)
         return E_FAIL;
+
     m_PartObject[FINAL_PAGE].emplace_back(pGameObject);
 
     return S_OK;
@@ -174,6 +188,47 @@ HRESULT CBoss::Ready_Body()
 
 HRESULT CBoss::Ready_Weapon()
 {
+    CGameObject* pWeaponObject = { nullptr };
+    CComponent* pComponent = { nullptr };
+    CWeapon::WEAPON_DESC Desc{};
+
+    //Final_Page
+    pComponent = m_PartObject[FINAL_PAGE][PART_BODY]->Get_Component(TEXT("Com_Model"));
+    Desc.eWeaponType = CWeapon::WEAPON_SWORD;
+    Desc.pHandCombinedTransformationMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("WeaponR");
+    Desc.pParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
+    Desc.pState = &m_CurrentState;
+
+    pWeaponObject = m_pGameInstance->Clone_Object(L"Prototype_GameObject_Harbinger_Blade", &Desc);
+    if (nullptr == pWeaponObject)
+        return E_FAIL;
+
+    m_PartObject[FINAL_PAGE].emplace_back(pWeaponObject);
+
+    pComponent = m_PartObject[FINAL_PAGE][PART_BODY]->Get_Component(TEXT("Com_Model"));
+    Desc.eWeaponType = CWeapon::WEAPON_BOW;
+    Desc.pHandCombinedTransformationMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("WeaponR");
+    Desc.pParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
+    Desc.pState = &m_CurrentState;
+
+    pWeaponObject = m_pGameInstance->Clone_Object(L"Prototype_GameObject_Harbinger_Bow", &Desc);
+    if (nullptr == pWeaponObject)
+        return E_FAIL;
+
+    m_PartObject[FINAL_PAGE].emplace_back(pWeaponObject);
+
+    pComponent = m_PartObject[FINAL_PAGE][PART_BODY]->Get_Component(TEXT("Com_Model"));
+    Desc.eWeaponType = CWeapon::WEAPON_SWORD;
+    Desc.pHandCombinedTransformationMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("WeaponR");
+    Desc.pParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
+    Desc.pState = &m_CurrentState;
+
+    pWeaponObject = m_pGameInstance->Clone_Object(L"Prototype_GameObject_Harbinger_DualBlade", &Desc);
+    if (nullptr == pWeaponObject)
+        return E_FAIL;
+
+    m_PartObject[FINAL_PAGE].emplace_back(pWeaponObject);
+
     return S_OK;
 }
 
@@ -209,7 +264,7 @@ HRESULT CBoss::Ready_Object()
     if (nullptr == m_pBT[TWO_PAGE])
         return E_FAIL;
 
-    CBoss_Body* pHarbinger = dynamic_cast<CBoss_Body*>(m_PartObject[TWO_PAGE][PART_BODY]);
+    CBoss_Body* pHarbinger = dynamic_cast<CBoss_Body*>(m_PartObject[FINAL_PAGE][PART_BODY]);
     CBT_Boss::BT_BOSS_DESC Harbinger{};
     Harbinger.pModel = pHarbinger->Get_Model();
     Harbinger.pCollider = m_pColliderCom;
@@ -218,9 +273,9 @@ HRESULT CBoss::Ready_Object()
     Harbinger.pTargetMatrix = m_pTargetMatrix;
     Harbinger.pTransform = m_pTransformCom;
 
-    m_pBT[TWO_PAGE] = CBT_Harbinger::Create(&Harbinger);
+    m_pBT[FINAL_PAGE] = CBT_Harbinger::Create(&Harbinger);
 
-    if (nullptr == m_pBT[TWO_PAGE])
+    if (nullptr == m_pBT[FINAL_PAGE])
 
         return E_FAIL;
     return S_OK;

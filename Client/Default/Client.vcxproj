@@ -161,6 +161,7 @@
     <ClInclude Include="..\public\Body_Harbinger.h" />
     <ClInclude Include="..\public\Body_Tartaglia.h" />
     <ClInclude Include="..\public\Boss.h" />
+    <ClInclude Include="..\public\Brute.h" />
     <ClInclude Include="..\public\BT_Boss.h" />
     <ClInclude Include="..\public\BT_EvilEye.h" />
     <ClInclude Include="..\public\BT_Harbinger.h" />
@@ -168,15 +169,21 @@
     <ClInclude Include="..\public\BT_Hili_Club.h" />
     <ClInclude Include="..\public\BT_Hili_CrossBow.h" />
     <ClInclude Include="..\public\BT_Tartaglia.h" />
+    <ClInclude Include="..\public\CheckPoint.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\public\Command.h" />
     <ClInclude Include="..\public\Command_Manager.h" />
     <ClInclude Include="..\public\Command_ATT.h" />
     <ClInclude Include="..\public\CutCamera.h" />
     <ClInclude Include="..\public\DefaultCamera.h" />
+    <ClInclude Include="..\public\DungeonGate.h" />
     <ClInclude Include="..\public\Dungeon_1.h" />
     <ClInclude Include="..\Public\Dungeon_2.h" />
+    <ClInclude Include="..\public\FireCore.h" />
     <ClInclude Include="..\public\GoldenHouse.h" />
+    <ClInclude Include="..\public\Harbinger_Blade.h" />
+    <ClInclude Include="..\Public\Harbinger_Bow.h" />
+    <ClInclude Include="..\Public\Harbinger_DualBlade.h" />
     <ClInclude Include="..\public\Hili.h" />
     <ClInclude Include="..\Public\Hili_Electric.h" />
     <ClInclude Include="..\public\Hili_Fire.h" />
@@ -217,6 +224,7 @@
     <ClInclude Include="..\public\StateFly.h" />
     <ClInclude Include="..\public\StateJump.h" />
     <ClInclude Include="..\public\TreasureBox.h" />
+    <ClInclude Include="..\public\UI.h" />
     <ClInclude Include="..\public\Weapon_Alaya.h" />
     <ClInclude Include="..\public\Weapon_Ayus.h" />
     <ClInclude Include="..\public\PartObject_Body.h" />
@@ -234,6 +242,7 @@
     <ClInclude Include="..\Public\Wanderer_Body.h" />
     <ClInclude Include="..\public\Weapon_Narukami.h" />
     <ClInclude Include="..\public\Weapon_Regalis.h" />
+    <ClInclude Include="..\public\WindField.h" />
     <ClInclude Include="..\Public\Yae_Body.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
@@ -247,6 +256,7 @@
     <ClCompile Include="..\private\Body_Harbinger.cpp" />
     <ClCompile Include="..\private\Body_Tartaglia.cpp" />
     <ClCompile Include="..\private\Boss.cpp" />
+    <ClCompile Include="..\private\Brute.cpp" />
     <ClCompile Include="..\private\BT_Boss.cpp" />
     <ClCompile Include="..\private\BT_EvilEye.cpp" />
     <ClCompile Include="..\private\BT_Harbinger.cpp" />
@@ -254,14 +264,20 @@
     <ClCompile Include="..\private\BT_Hili_Club.cpp" />
     <ClCompile Include="..\private\BT_Hili_CrossBow.cpp" />
     <ClCompile Include="..\private\BT_Tartaglia.cpp" />
+    <ClCompile Include="..\private\CheckPoint.cpp" />
     <ClCompile Include="..\private\Command.cpp" />
     <ClCompile Include="..\private\Command_Manager.cpp" />
     <ClCompile Include="..\private\Command_ATT.cpp" />
     <ClCompile Include="..\private\CutCamera.cpp" />
     <ClCompile Include="..\private\DefaultCamera.cpp" />
+    <ClCompile Include="..\private\DungeonGate.cpp" />
     <ClCompile Include="..\private\Dungeon_1.cpp" />
     <ClCompile Include="..\Private\Dungeon_2.cpp" />
+    <ClCompile Include="..\private\FireCore.cpp" />
     <ClCompile Include="..\private\GoldenHouse.cpp" />
+    <ClCompile Include="..\private\Harbinger_Blade.cpp" />
+    <ClCompile Include="..\Private\Harbinger_Bow.cpp" />
+    <ClCompile Include="..\Private\Harbinger_DualBlade.cpp" />
     <ClCompile Include="..\private\Hili.cpp" />
     <ClCompile Include="..\Private\Hili_Electric.cpp" />
     <ClCompile Include="..\private\Hili_Fire.cpp" />
@@ -302,6 +318,7 @@
     <ClCompile Include="..\private\StateFly.cpp" />
     <ClCompile Include="..\private\StateJump.cpp" />
     <ClCompile Include="..\private\TreasureBox.cpp" />
+    <ClCompile Include="..\private\UI.cpp" />
     <ClCompile Include="..\private\Weapon_Alaya.cpp" />
     <ClCompile Include="..\private\Weapon_Ayus.cpp" />
     <ClCompile Include="..\private\PartObject_Body.cpp" />
@@ -319,6 +336,7 @@
     <ClCompile Include="..\Private\Wanderer_Body.cpp" />
     <ClCompile Include="..\private\Weapon_Narukami.cpp" />
     <ClCompile Include="..\private\Weapon_Regalis.cpp" />
+    <ClCompile Include="..\private\WindField.cpp" />
     <ClCompile Include="..\Private\Yae_Body.cpp" />
     <ClCompile Include="Client.cpp" />
   </ItemGroup>

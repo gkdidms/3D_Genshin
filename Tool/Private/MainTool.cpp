@@ -81,8 +81,13 @@ HRESULT CMainTool::Ready_Level_For_Main()
         return E_FAIL;
     if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_TreasureBox_Big", CModel::Create(m_pDevice, m_pContext, "../../Client/Bin/Resources/Models/SceneObj/TreasureBox_Big/TreasureBox_Big.fbx", PreTransformMatrix, "../../Data/TreasureBox_Big.dat"))))
         return E_FAIL;
-
-    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_WindField", CModel::Create(m_pDevice, m_pContext, "../../Client/Bin/Resources/Models/SceneObj/WindFleid/WindField.fbx", PreTransformMatrix, "../../Data/WindField.dat"))))
+    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_ChecKPoint", CModel::Create(m_pDevice, m_pContext, "../../Client/Bin/Resources/Models/SceneObj/CheckPoint/CheckPoint.fbx", PreTransformMatrix, "../../Data/SceneObj_CheckPoint.dat"))))
+        return E_FAIL;
+    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_WindField", CModel::Create(m_pDevice, m_pContext, "../../Client/Bin/Resources/Models/SceneObj/WindFleid/WindFleid.fbx", PreTransformMatrix, "../../Data/SceneObj_WindField.dat"))))
+        return E_FAIL;
+    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_FireCore", CModel::Create(m_pDevice, m_pContext, "../../Client/Bin/Resources/Models/SceneObj/FireCore/FireCore.fbx", PreTransformMatrix, "../../Data/SceneObj_FireCore.dat"))))
+        return E_FAIL;
+    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_DungeonGate", CModel::Create(m_pDevice, m_pContext, "../../Client/Bin/Resources/Models/SceneObj/Gate/DungeonGate.fbx", PreTransformMatrix, "../../Data/SceneObj_Gate.dat"))))
         return E_FAIL;
 
     if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Hili_Fire", CModel::Create(m_pDevice, m_pContext, "../../Client/Bin/Resources/Models/Monster/Hili_Fire/Hili_Fire.fbx", PreTransformMatrix, "../../Data/Hili_Fire.dat"))))

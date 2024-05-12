@@ -23,18 +23,21 @@ HRESULT CTool_Object_Manager::Initialize()
 {
 	m_CloneDesc[OBJECT_SCENE] = {
 		
-		CLONE_DESC { 0, "Slime_Fire_Large", L"Prototype_Component_Model_Slime_Fire", L"Com_Slime_Fire", true},
-		CLONE_DESC { 1, "Slime_Water_Large", L"Prototype_Component_Model_Slime_Water", L"Com_Slime_Water", true},
-		CLONE_DESC { 2, "Slime_Fire_Mid", L"Prototype_Component_Model_Slime_Fire", L"Com_Slime_Fire", true},
-		CLONE_DESC { 3, "Slime_Water_Mid", L"Prototype_Component_Model_Slime_Water", L"Com_Slime_Water", true},
-		CLONE_DESC { 4, "TreasureBox", L"Prototype_Component_Model_TreasureBox", L"Com_TreasureBox", true},
-		CLONE_DESC { 5, "TreasureBox_Big", L"Prototype_Component_Model_TreasureBox_Big", L"Com_TreasureBox", true},
-		CLONE_DESC { 6, "WindField", L"Prototype_Component_Model_WindField", L"Com_WindField", true},
-		CLONE_DESC { 7, "Hili_Fire_Bow", L"Prototype_Component_Model_Hili_Fire", L"Com_Hili_Fire", true},
-		CLONE_DESC { 8, "Hili_Fire_Club", L"Prototype_Component_Model_Hili_Fire", L"Com_Hili_Fire", true},
-		CLONE_DESC { 9, "Hili_Electric_Bow", L"Prototype_Component_Model_Hili_Electric", L"Com_Hili_Electric", true},
-		CLONE_DESC { 10, "Hili_Electric_Club", L"Prototype_Component_Model_Hili_Electric", L"Com_Hili_Electric", true},
-		CLONE_DESC { 11, "Boss_Tartaglia", L"Prototype_Component_Model_Boss_Tarta", L"Com_Boss_Tarta", true},
+		CLONE_DESC { 0, "Slime_Fire_Large", L"Prototype_Component_Model_Slime_Fire", L"Com_Monster", true},
+		CLONE_DESC { 1, "Slime_Water_Large", L"Prototype_Component_Model_Slime_Water", L"Com_Monster", true},
+		CLONE_DESC { 2, "Slime_Fire_Mid", L"Prototype_Component_Model_Slime_Fire", L"Com_Monster", true},
+		CLONE_DESC { 3, "Slime_Water_Mid", L"Prototype_Component_Model_Slime_Water", L"Com_Monster", true},
+		CLONE_DESC { 4, "TreasureBox", L"Prototype_Component_Model_TreasureBox", L"Com_SceneObject", true},
+		CLONE_DESC { 5, "TreasureBox_Big", L"Prototype_Component_Model_TreasureBox_Big", L"Com_SceneObject", true},
+		CLONE_DESC { 6, "WindField", L"Prototype_Component_Model_WindField", L"Com_SceneObject", false},
+		CLONE_DESC { 7, "Hili_Fire_Bow", L"Prototype_Component_Model_Hili_Fire", L"Com_Monster", true},
+		CLONE_DESC { 8, "Hili_Fire_Club", L"Prototype_Component_Model_Hili_Fire", L"Com_Monster", true},
+		CLONE_DESC { 9, "Hili_Electric_Bow", L"Prototype_Component_Model_Hili_Electric", L"Com_Monster", true},
+		CLONE_DESC { 10, "Hili_Electric_Club", L"Prototype_Component_Model_Hili_Electric", L"Com_Monster", true},
+		CLONE_DESC { 11, "Boss_Tartaglia", L"Prototype_Component_Model_Boss_Tarta", L"Com_Boss", true},
+		CLONE_DESC { 12, "CheckPoint", L"Prototype_Component_Model_ChecKPoint", L"Com_SceneObject", false},
+		CLONE_DESC { 13, "FireCore", L"Prototype_Component_Model_FireCore", L"Com_SceneObject", true},
+		CLONE_DESC { 14, "DungeonGate", L"Prototype_Component_Model_DungeonGate", L"Com_SceneObject", true},
 	};
 
 	m_CloneDesc[OBJECT_DUNGEON] = {

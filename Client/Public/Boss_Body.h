@@ -20,6 +20,7 @@ public:
 
 public:
     TARTAGLIA_INFO* Get_Info() { return &m_Info; }
+    _bool isMovePos() { return m_isMovePos; } // 위치 자체를 이동해야 하는가?
 
 protected:
     CBoss_Body(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -37,6 +38,11 @@ public:
 protected:
     const _float4x4* m_pTargetMatrix = { nullptr };
     TARTAGLIA_INFO m_Info;
+
+    _bool m_isMovePos = { false };
+
+    _float m_fLongDistanceSpeed = { 0.f }; // 돌진 시 속도
+    _int m_iPreState = { -1 };
 
 protected:
     virtual HRESULT Add_Components();

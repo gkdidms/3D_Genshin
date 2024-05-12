@@ -58,7 +58,9 @@ HRESULT CTreasureBox::Render()
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
+#ifdef _DEBUG
 	m_pColliderCom->Render();
+#endif // _DEBUG
 
 	return S_OK;
 }

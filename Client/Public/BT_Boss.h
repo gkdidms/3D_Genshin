@@ -16,7 +16,7 @@ class CBT_Boss abstract:
 {
 public:
 	typedef struct tBTEvilEyeDesc {
-		const CModel* pModel;
+		CModel* pModel;
 		CCollider* pCollider;
 		CTransform* pTransform;
 		_uint* pState;
@@ -38,7 +38,7 @@ protected:
 	CNode* m_pRootNode = { nullptr };
 	_uint* m_pState = { nullptr };
 	CBoss_Body::TARTAGLIA_INFO* m_pInfo = { nullptr };
-	const CModel* m_pModelCom = { nullptr };
+	CModel* m_pModelCom = { nullptr };
 	CCollider* m_pColliderCom = { nullptr };
 	CTransform* m_pTransformCom = { nullptr };
 	const _float4x4* m_pTargetMatrix = { nullptr };
