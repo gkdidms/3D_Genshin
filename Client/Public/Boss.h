@@ -14,7 +14,7 @@ class CBoss :
 {
 public:
     enum PAGE_STATE { ONE_PAGE, TWO_PAGE, FINAL_PAGE, PAGE_END };
-    enum PLAYER_PART { PART_BODY, PART_WEAPON_BLADE, PART_WEAPON_BOW, PART_WEAPON_DUALBLADE, PART_END };
+    enum PLAYER_PART { PART_BODY, PART_WEAPON_BLADE_R, PART_WEAPON_BLADE_L, PART_WEAPON_BOW, PART_WEAPON_DUALBLADE, PART_END };
     enum BOSS_STATE {
         BOSS_IDLE,
         BOSS_BOW_IDLE,
@@ -104,7 +104,7 @@ private:
 private:
     vector<class CGameObject*> m_PartObject[PAGE_END];
 
-    PAGE_STATE m_CurrentPage = { FINAL_PAGE };
+    PAGE_STATE m_CurrentPage = { TWO_PAGE };
     _uint m_CurrentState = { BOSS_END };
     _int m_iBossNavigationIndex = { -1 };
 

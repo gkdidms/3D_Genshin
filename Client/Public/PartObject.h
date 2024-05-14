@@ -32,6 +32,7 @@ public:
 public:
     const _float4x4* Get_CameraLook() const { return m_pModelCom->Get_BoneCombinedTransformationMatrix("CameraLook"); }
     CModel* Get_Model() { return m_pModelCom; }
+    CCollider* Get_Collider() { return m_pColliderCom; }
 
 public:
     virtual HRESULT Initialize_Prototype();
@@ -42,10 +43,11 @@ public:
     virtual HRESULT Render();
 
 protected:
-    class CState_Manager* m_pState_Manager = { nullptr };
+    class CStateManager* m_pStateManager = { nullptr };
     CShader* m_pShaderCom = { nullptr };
     CModel* m_pModelCom = { nullptr };
-   
+    CCollider* m_pColliderCom = { nullptr };
+
     _float4x4 m_pWorldMatrix;
 
 protected:

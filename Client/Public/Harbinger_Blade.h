@@ -1,10 +1,16 @@
 #pragma once
 #include "Weapon.h"
 
+BEGIN(Engine)
+class CModel;
+END
+
 BEGIN(Client)
 class CHarbinger_Blade :
     public CWeapon
 {
+public:
+    
 private:
     CHarbinger_Blade(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
     CHarbinger_Blade(const CHarbinger_Blade& rhs);

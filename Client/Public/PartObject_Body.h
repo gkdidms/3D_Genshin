@@ -10,7 +10,6 @@ public:
     typedef struct tBodyDesc : public CPartObject::PART_DESC
     {
         const _uint* pDirState;
-        const _bool* pFly;
         const CPlayer::HILL_TYPE* pHill;
     }BODY_DESC; 
 
@@ -42,21 +41,24 @@ public:
 
 protected:
     const _uint* m_pDirState = { nullptr };
-    const _bool* m_pFly = { nullptr };
     const CPlayer::HILL_TYPE* m_pHill = { nullptr };
 
     BODY_INFO m_Info;
 
 protected:
     _bool m_IsFinished = { false };
+    _int m_PreState = { -1 };
 
-
+    // 루프 애니메이션을 작동하지 않는 플레이어의 속도
+    // Player.cpp에서 * -1.f을 곱해주기 때문에 부호를 반대로 작성해야 함.
 protected:
     _float m_fRunSpeed = { 5.f };
     _float m_fSprintSpeed = { 80.f };
 
     _float m_fFlySpeed = { 2.f };
     _float m_fFallDropSpeed = { 10.f };
+
+    _float m_fWindSpeed = { -8.f };
 
 protected:
     virtual HRESULT Add_Components() = 0;

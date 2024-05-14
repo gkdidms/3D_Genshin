@@ -28,6 +28,8 @@ HRESULT CBody_EvilEye::Initialize(void* pArg)
     m_Info.fMaxHp = { 146125.f };
     m_Info.fHp = { 146125.f };
 
+    m_fLongDistanceSpeed = { 50.f };
+
 	return S_OK;
 }
 
@@ -40,11 +42,60 @@ void CBody_EvilEye::Tick(const _float& fTimeDelta)
 	Change_Animation();
 
 	m_pModelCom->Play_Animation(fTimeDelta, &m_PlayerMovePos);
+
+    //BOSS_DUALBLADE_HIRAISHIN_BS 사용 시 플레이어의 좌표를 저장해서 BOSS_DUALBLADE_HIRAISHIN_AS때 해당 좌표로 넘어감
+    if (*m_pState == CBoss::BOSS_DUALBLADE_HIRAISHIN_BS && *m_pState != m_iPreState)
+    {
+        XMStoreFloat4x4(&m_MoveToTargetMatrix, XMLoadFloat4x4(m_pTargetMatrix));
+    }
+    else if (*m_pState == CBoss::BOSS_DUALBLADE_HIRAISHIN_LOOP)
+    {
+        m_isMovePos = true;
+        m_PlayerMovePos = m_MoveToTargetMatrix;
+    }
+    else m_isMovePos = false;
+
+    //Extra_Attack일때 이동 값 수정 
+    if (*m_pState == CBoss::BOSS_BLADE_EXTRA_ATTACK)
+    {
+        m_fCurrentTime += fTimeDelta;
+
+        if (m_fTime > m_fCurrentTime)
+        {
+            // 플레이어 위치와 보스의 위치가 가깝다면 이동 끝
+            _vector vTargetPos = XMLoadFloat4x4(m_pTargetMatrix).r[3];
+            _vector vBossPos = XMLoadFloat4x4(m_pParentMatrix).r[3];
+
+            _vector vDistance = vTargetPos - vBossPos;
+
+            _float fDistance = sqrtf(XMVectorGetX(vDistance) * XMVectorGetX(vDistance) + XMVectorGetY(vDistance) * XMVectorGetY(vDistance) + XMVectorGetZ(vDistance) * XMVectorGetZ(vDistance));
+
+            _matrix MoveMatrix = XMMatrixIdentity();
+
+            if (fDistance > 0.3f)
+                MoveMatrix.r[3] = XMVectorSet(0.f, 0.f, m_fLongDistanceSpeed * fTimeDelta * -1.f, 1.f);
+
+            XMStoreFloat4x4(&m_PlayerMovePos, MoveMatrix);
+        }
+    }
+    else m_fCurrentTime = 0.f;
+
+    //Rush
+    // 러쉬할때 이동하는게 아니라 러쉬 자세를 취하고 이동해야 함.  -> 이펙트 배우면 수정
+    if (*m_pState == CBoss::BOSS_DUALBLADE_STRIKE_ATTACK_LOOP || *m_pState == CBoss::BOSS_RUSH_BS)
+    {
+        _matrix MoveMatrix = XMMatrixIdentity();
+        MoveMatrix.r[3] = XMVectorSet(0.f, 0.f, m_fLongDistanceSpeed * fTimeDelta * -1.f, 1.f);
+        XMStoreFloat4x4(&m_PlayerMovePos, MoveMatrix);
+    }
 }
 
 void CBody_EvilEye::Late_Tick(const _float& fTimeDelta)
 {
 	XMStoreFloat4x4(&m_pWorldMatrix, m_pTransformCom->Get_WorldMatrix() * XMLoadFloat4x4(m_pParentMatrix));
+
+    if (*m_pState != m_iPreState)
+        m_iPreState = *m_pState;
 
 	m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONBLENDER, this);
 }

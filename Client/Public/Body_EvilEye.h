@@ -17,6 +17,12 @@ public:
     virtual HRESULT Render() override;
 
 private:
+    _float4x4 m_MoveToTargetMatrix = {};
+
+    _float m_fTime = { 1.5f };
+    _float m_fCurrentTime = { 0.f };
+
+private:
     virtual HRESULT Add_Components() override;
     virtual HRESULT Bind_ResourceData() override;
     virtual void Change_Animation();

@@ -38,6 +38,10 @@ HRESULT CTool_Object_Manager::Initialize()
 		CLONE_DESC { 12, "CheckPoint", L"Prototype_Component_Model_ChecKPoint", L"Com_SceneObject", false},
 		CLONE_DESC { 13, "FireCore", L"Prototype_Component_Model_FireCore", L"Com_SceneObject", true},
 		CLONE_DESC { 14, "DungeonGate", L"Prototype_Component_Model_DungeonGate", L"Com_SceneObject", true},
+		CLONE_DESC { 15, "Operator", L"Prototype_Component_Model_Operator", L"Com_SceneObject", true},
+		CLONE_DESC { 16, "Plane", L"Prototype_Component_Model_Plane", L"Com_SceneObject", false},
+		CLONE_DESC { 17, "MovePlane", L"Prototype_Component_Model_Plane", L"Com_SceneObject", false},
+		CLONE_DESC { 18, "ThornWall", L"Prototype_Component_Model_ThornWall", L"Com_SceneObject", false},
 	};
 
 	m_CloneDesc[OBJECT_DUNGEON] = {

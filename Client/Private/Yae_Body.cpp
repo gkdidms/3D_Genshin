@@ -1,7 +1,9 @@
 #include "Yae_Body.h"
 
 #include "GameInstance.h"
-#include "State_Manager.h"
+#include "StateManager.h"
+
+#include "SkillObj.h"
 
 CYae_Body::CYae_Body(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject_Body{ pDevice, pContext } 
@@ -46,7 +48,7 @@ void CYae_Body::Tick(const _float& fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	if (m_pModelCom->Get_Animation_Finished())
-		*m_pState = m_pState_Manager->Exit(PLAYER_STATE(*m_pState));
+		*m_pState = m_pStateManager->Exit(PLAYER_STATE(*m_pState));
 
 	Change_Animation(fTimeDelta);
 
@@ -63,10 +65,15 @@ void CYae_Body::Tick(const _float& fTimeDelta)
 
 	__super::Move_Pos(fTimeDelta, &MoveMatrix);
 	XMStoreFloat4x4(&m_PlayerMovePos, MoveMatrix);
+
+	Create_Object();// 스킬 오브젝트 생성
 }
 
 void CYae_Body::Late_Tick(const _float& fTimeDelta)
 {
+	if (*m_pState != m_PreState)
+		m_PreState = *m_pState;
+
 	XMStoreFloat4x4(&m_pWorldMatrix, m_pTransformCom->Get_WorldMatrix() * XMLoadFloat4x4(m_pParentMatrix));
 
 	m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONBLENDER, this);
@@ -332,6 +339,37 @@ void CYae_Body::Change_Animation(const _float& fTimeDelta)
 
 	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ m_iAnim, m_IsLoop, m_IsLinear, m_IsLinearSpeed });
 
+}
+
+HRESULT CYae_Body::Create_Object()
+{
+	if (*m_pState == m_PreState)
+		return S_OK;
+
+	// E 스킬 사용 시 
+	_bool isElementalArt = *m_pState == PLAYER_ELEMENTAL_1_END
+		|| *m_pState == PLAYER_ELEMENTAL_2_END
+		|| *m_pState == PLAYER_ELEMENTAL_3_END;
+
+	if (isElementalArt)
+	{
+		CSkillObj::SKILLOBJ_DESC Desc = {};
+		Desc.pParentMatrix = m_pParentMatrix;
+		if(FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_SkillObj_FoxTower"), TEXT("Layer_SKillObj"), &Desc)))
+			return E_FAIL;
+	}
+
+	_bool isAtk = *m_pState == PLAYER_ATTACK_1 || *m_pState == PLAYER_ATTACK_2 || *m_pState == PLAYER_ATTACK_3;
+
+	if (isAtk)
+	{
+		CSkillObj::SKILLOBJ_DESC Desc = {};
+		Desc.pParentMatrix = &m_pWorldMatrix;
+		Desc.pState = m_pState;
+
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_SkillObj_BlackFox"), TEXT("Layer_SKillObj"), &Desc)))
+			return E_FAIL;
+	}
 }
 
 CYae_Body* CYae_Body::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

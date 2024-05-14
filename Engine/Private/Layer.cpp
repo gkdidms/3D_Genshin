@@ -19,8 +19,17 @@ void CLayer::Priority_Tick(const _float& fTimeDelta)
 
 void CLayer::Tick(const _float& fTimeDelta)
 {
-	for (auto& iter : m_vecObjects)
-		iter->Tick(fTimeDelta);
+	for (auto iter = m_vecObjects.begin(); iter < m_vecObjects.end();)
+	{
+		(*iter)->Tick(fTimeDelta);
+
+		if ((*iter)->Get_Dead())
+		{
+			Safe_Release(*iter);
+			iter = m_vecObjects.erase(iter);
+		}
+		else ++iter;
+	}
 }
 
 void CLayer::Late_Tick(const _float& fTimeDelta)

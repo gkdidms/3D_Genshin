@@ -22,7 +22,7 @@ private:
     virtual ~CCutCamera() = default;
 
 public: // ¿ø¼ÒÆøÆÈ
-    void isCutScene(_bool isCutScene, CPlayer::PLAYERBLE_TYPE ePlayerble = CPlayer::PLAYER_TYPE_END);
+    void isCutScene(_bool isCutScene, _uint ePlayerble = CPlayer::PLAYER_TYPE_END);
 
 public:
     virtual HRESULT Initialize_Prototype() override;
@@ -42,7 +42,7 @@ private:
     _float4 m_vFocus = {};
 
 private: // ¿ø¼Ò½ºÅ³
-    CPlayer::PLAYERBLE_TYPE m_ePlayerble = { CPlayer::PLAYER_TYPE_END };
+    _uint m_ePlayerble = { CPlayer::PLAYER_TYPE_END };
     _bool m_isCutScene = { false };
 
     _float fEBTime = { 0.f };

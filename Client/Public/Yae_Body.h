@@ -23,6 +23,9 @@ private:
     virtual HRESULT Bind_ResourceData() override;
     virtual void Change_Animation(const _float& fTimeDelta) override;
 
+private:
+    HRESULT Create_Object();
+
 public:
     static CYae_Body* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
     virtual CGameObject* Clone(void* pArg) override;

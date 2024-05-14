@@ -19,6 +19,9 @@ public:
     virtual HRESULT Render() override;
 
 private:
+    class CStateManager* m_pStateManager = { nullptr };
+
+private:
     virtual HRESULT Add_Components() override;
     virtual HRESULT Bind_ResourceData() override;
     virtual void Change_Animation(const _float& fTimeDelta) override;

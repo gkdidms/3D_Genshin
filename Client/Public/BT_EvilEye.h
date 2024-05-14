@@ -18,6 +18,7 @@ public:
 		SKILL_END
 	};
 
+
 private:
 	CBT_EvilEye();
 	virtual ~CBT_EvilEye() = default;
@@ -29,6 +30,13 @@ public:
 
 private:
 	SKILL m_Skill = { SKILL_END };
+	CBT_Boss::RANGE_TYPE m_RangeType = { RANGE_END };
+
+private:
+	_float m_fNormalTime = { 3.f };
+	_float m_fCurrentRunTime = { false };
+
+	_float m_fMeleeAtkRange = { 3.f };
 
 private:
 	HRESULT Ready_Node();
@@ -48,8 +56,12 @@ private:
 
 	//공격 sequence
 	CNode::NODE_STATE Check_Attack_Deley();
+	CNode::NODE_STATE Check_Attack_Range();
+	CNode::NODE_STATE Check_Melee_Attack();
+	CNode::NODE_STATE Check_Range_Attack();
 	_bool Check_Rear_ToPlayer();
 	//공격 selector
+	CNode::NODE_STATE Rush_Move();
 	CNode::NODE_STATE Blade_Extra_Attack();
 	CNode::NODE_STATE Blade_Normal_Attack();
 	CNode::NODE_STATE DualBlade_Strike();

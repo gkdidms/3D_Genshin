@@ -1,24 +1,27 @@
 #include "StateElementalArt_Nilou.h"
 
 #include "GameInstance.h"
-#include "State_Manager.h"
+#include "StateManager.h"
 
 CStateElementalArt_Nilou::CStateElementalArt_Nilou()
 {
 }
 
-PLAYER_STATE CStateElementalArt_Nilou::Enter(class CState_Manager& pStateManager, PLAYER_STATE CurrentState)
+PLAYER_STATE CStateElementalArt_Nilou::Enter(class CStateManager& pStateManager, PLAYER_STATE CurrentState)
 {
+	m_fTime = { 0.f };
+	m_fCurrentTime = { 0.f };
+
 	m_iElementalArtCount++;
 	return PLAYER_ELEMENTAL_1;
 }
 
-PLAYER_STATE CStateElementalArt_Nilou::Update(const _float& fTimeDelta, CState_Manager& pStateManager, PLAYER_STATE CurrentState)
+PLAYER_STATE CStateElementalArt_Nilou::Update(const _float& fTimeDelta, CStateManager& pStateManager, PLAYER_STATE CurrentState)
 {
 	m_fTime += fTimeDelta;
-	m_iCurrentTime += fTimeDelta;
+	m_fCurrentTime += fTimeDelta;
 
-	if (m_iCurrentTime > m_fFinishTime)
+	if (m_fCurrentTime > m_fFinishTime)
 		m_isFinished = true;
 
 	if (m_isFinished)
@@ -75,7 +78,7 @@ PLAYER_STATE CStateElementalArt_Nilou::Update(const _float& fTimeDelta, CState_M
 	return eState;
 }
 
-PLAYER_STATE CStateElementalArt_Nilou::Exit(CState_Manager& pStateManager, PLAYER_STATE CurrentState)
+PLAYER_STATE CStateElementalArt_Nilou::Exit(CStateManager& pStateManager, PLAYER_STATE CurrentState)
 {
 	if (CurrentState == PLAYER_ELEMENTAL_1)
 		return PLAYER_ELEMENTAL_1_END;

@@ -21,7 +21,9 @@ void CGameObject_Manager::Priority_Tick(const _float& fTimeDelta)
 	for (int i = 0; i < m_iMaxLevel; ++i)
 	{
 		for (auto Pair : m_pLayers[i])
+		{
 			Pair.second->Priority_Tick(fTimeDelta);
+		}
 	}
 }
 

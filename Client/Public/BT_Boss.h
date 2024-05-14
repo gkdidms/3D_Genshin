@@ -24,6 +24,8 @@ public:
 		const _float4x4* pTargetMatrix;
 	}BT_BOSS_DESC;
 
+	enum RANGE_TYPE { RANGE, MELEE, RANGE_END };
+
 protected:
 	CBT_Boss();
 	virtual ~CBT_Boss() = default;
@@ -46,7 +48,7 @@ protected:
 protected:
 	_bool m_isAttack = { false };
 	_bool m_isFirst = { true };
-	_bool m_isWalkStop = { false };
+	_bool m_isWalkStop = { true };
 
 protected:
 	_uint m_iBladeNormalAttackMax = { 0 };

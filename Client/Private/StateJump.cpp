@@ -1,13 +1,14 @@
 #include "StateJump.h"
 
-#include "State_Manager.h"
+#include "GameInstance.h"
+#include "StateManager.h"
 
 CStateJump::CStateJump()
 	: CState{}
 {
 }
 
-PLAYER_STATE CStateJump::Enter(class CState_Manager& pStateManager, PLAYER_STATE CurrentState)
+PLAYER_STATE CStateJump::Enter(class CStateManager& pStateManager, PLAYER_STATE CurrentState)
 {
 	if (CurrentState == PLAYER_IDLE)
 		return PLAYER_JUMP;
@@ -19,12 +20,17 @@ PLAYER_STATE CStateJump::Enter(class CState_Manager& pStateManager, PLAYER_STATE
 	return PLAYER_JUMP;
 }
 
-PLAYER_STATE CStateJump::Update(const _float& fTimeDelta, CState_Manager& pStateManager, PLAYER_STATE CurrentState)
+PLAYER_STATE CStateJump::Update(const _float& fTimeDelta, CStateManager& pStateManager, PLAYER_STATE CurrentState)
 {
+	if (m_pGameInstance->GetKeyState(DIK_SPACE))
+	{
+		if (pStateManager.isCollWIndField())
+			return pStateManager.Set_CurrentState(CStateManager::STATE_TYPE_FLY);
+	}
 	return CurrentState;
 }
 
-PLAYER_STATE CStateJump::Exit(CState_Manager& pStateManager, PLAYER_STATE CurrentState)
+PLAYER_STATE CStateJump::Exit(CStateManager& pStateManager, PLAYER_STATE CurrentState)
 {
 	PLAYER_STATE eState{ CurrentState };
 
@@ -49,7 +55,7 @@ PLAYER_STATE CStateJump::Exit(CState_Manager& pStateManager, PLAYER_STATE Curren
 	return __super::ToIdle(pStateManager, CurrentState);
 }
 
-PLAYER_STATE CStateJump::ToIdle(CState_Manager& pStateManager, PLAYER_STATE CurrentState)
+PLAYER_STATE CStateJump::ToIdle(CStateManager& pStateManager, PLAYER_STATE CurrentState)
 {
 	if (CurrentState == PLAYER_FALL_GROUND_H)
 	{
@@ -59,18 +65,18 @@ PLAYER_STATE CStateJump::ToIdle(CState_Manager& pStateManager, PLAYER_STATE Curr
 	return CurrentState;
 }
 
-PLAYER_STATE CStateJump::ToRun(CState_Manager& pStateManager, PLAYER_STATE CurrentState)
+PLAYER_STATE CStateJump::ToRun(CStateManager& pStateManager, PLAYER_STATE CurrentState)
 {
 	if (CurrentState == PLAYER_FALL_GROUND_FOR_RUN)
-		return pStateManager.Set_CurrentState(CState_Manager::STATE_TYPE_RUN, PLAYER_JUMP_FOR_RUN);
+		return pStateManager.Set_CurrentState(CStateManager::STATE_TYPE_RUN, PLAYER_JUMP_FOR_RUN);
 
 	return CurrentState;
 }
 
-PLAYER_STATE CStateJump::ToSprint(CState_Manager& pStateManager, PLAYER_STATE CurrentState)
+PLAYER_STATE CStateJump::ToSprint(CStateManager& pStateManager, PLAYER_STATE CurrentState)
 {
 	if (CurrentState == PLAYER_FALL_GROUND_FOR_SPRINT)
-		return pStateManager.Set_CurrentState(CState_Manager::STATE_TYPE_SPRINT, PLAYER_JUMP_FOR_SPRINT);
+		return pStateManager.Set_CurrentState(CStateManager::STATE_TYPE_SPRINT, PLAYER_JUMP_FOR_SPRINT);
 
 	return CurrentState;
 }

@@ -34,6 +34,8 @@ void CBT_EvilEye::Tick(const _float& fTimeDelta)
 {
 	if (!m_isAttack)
 		m_fCurrentTime += fTimeDelta;
+	else if (m_isAttack && m_Skill == SKILL_BLADE_NORMAL)
+		m_fCurrentRunTime += fTimeDelta;
 
 	this->Evaluate();
 }
@@ -73,8 +75,12 @@ HRESULT CBT_EvilEye::Ready_Node()
 	CSequence* pAttack = CSequence::Create();
 	//pAttack->Add_Children(CAction::Create(bind(&CBT_Tartaglia::Check_Attack, this)));
 	pAttack->Add_Children(CAction::Create(bind(&CBT_EvilEye::Check_Attack_Deley, this)));
+	pAttack->Add_Children(CAction::Create(bind(&CBT_EvilEye::Check_Attack_Range, this)));
+	pAttack->Add_Children(CAction::Create(bind(&CBT_EvilEye::Check_Melee_Attack, this)));
+	pAttack->Add_Children(CAction::Create(bind(&CBT_EvilEye::Check_Range_Attack, this)));
 
 	CSelector* pAttackSelect = CSelector::Create();
+	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_EvilEye::Rush_Move, this)));
 	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_EvilEye::DualBlade_Sweep, this)));
 	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_EvilEye::DualBlade_Hiraishin, this)));
 	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_EvilEye::DualBlade_Strike, this)));
@@ -225,39 +231,128 @@ CNode::NODE_STATE CBT_EvilEye::Check_Attack_Deley()
 	}
 	else
 	{
-		if (!m_isAttack && m_fDelayTime < m_fCurrentTime)
+		if (!m_isAttack)
 		{
-			CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, L"Layer_Player", 0));
-			
-			_vector vTarget = XMLoadFloat4x4(m_pTargetMatrix).r[3];
-			_vector vCurrentPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-			_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-
-			if (Check_Rear_ToPlayer())
+			if (m_fDelayTime < m_fCurrentTime)
 			{
-				//몬스터가 플레이어 뒤에 있다면??
-				m_Skill = SKILL_DUALBLADE_SWEEP;
+				CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, L"Layer_Player", 0));
+
+				if (Check_Rear_ToPlayer())
+				{
+					//몬스터가 플레이어 뒤에 있다면??
+					m_Skill = SKILL_DUALBLADE_SWEEP;
+				}
+				else if (pPlayer->Get_BossSign())
+				{
+					//단류 표식이 되어있다면 단류가 있어야만 사용 가능한 스킬들 사용
+
+				}
+				else
+				{
+					m_Skill = SKILL(Random(SKILL_END));
+				}
+
+				m_fCurrentTime = 0.f;
+				m_pTransformCom->LookAt(XMLoadFloat4x4(m_pTargetMatrix).r[3]);
+
+				m_isWalkStop = false;
+
+				return CNode::SUCCESS;
 			}
-			else if (pPlayer->Get_BossSign())
-			{
-				//단류 표식이 되어있다면 단류가 있어야만 사용 가능한 스킬들 사용
-
-			}
-			else
-			{
-				m_Skill = SKILL(Random(SKILL_END));
-			}
-
-			m_fCurrentTime = 0.f;
-			m_pTransformCom->LookAt(XMLoadFloat4x4(m_pTargetMatrix).r[3]);
-
-			m_isWalkStop = false;
-
-			return CNode::SUCCESS;
+			return CNode::FAILURE;
 		}
 	}
 
-	return CNode::FAILURE;
+	return CNode::SUCCESS;
+}
+
+CNode::NODE_STATE CBT_EvilEye::Check_Attack_Range()
+{
+	if (m_isAttack)
+		return CNode::SUCCESS;
+
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, L"Layer_Player", 0));
+	_float fDistance = Distance(XMLoadFloat4x4(m_pTargetMatrix), XMLoadFloat4x4(m_pTransformCom->Get_WorldFloat4x4()));
+
+	if (fDistance < m_fMeleeAtkRange)
+	{
+		m_RangeType = MELEE;
+		return CNode::SUCCESS;
+	}
+	else {
+		m_RangeType = RANGE;
+		return CNode::SUCCESS;
+	}
+
+	return CNode::SUCCESS;
+}
+
+CNode::NODE_STATE CBT_EvilEye::Check_Melee_Attack()
+{
+	if (m_isAttack)
+		return CNode::SUCCESS;
+
+	if (m_RangeType == RANGE)
+		return CNode::SUCCESS;
+
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, L"Layer_Player", 0));
+
+	//근거리 공격
+	if (Check_Rear_ToPlayer())
+	{
+		//몬스터가 플레이어 뒤에 있다면??
+		m_Skill = SKILL_DUALBLADE_SWEEP;
+	}
+	else if (pPlayer->Get_BossSign())
+	{
+		//단류 표식이 되어있다면 단류가 있어야만 사용 가능한 스킬들 사용
+	}
+	else
+	{
+		m_Skill = SKILL_BLADE_NORMAL;
+	}
+
+	return CNode::SUCCESS;
+}
+
+CNode::NODE_STATE CBT_EvilEye::Check_Range_Attack()
+{
+	if (m_isAttack)
+		return CNode::SUCCESS;
+
+	if (m_RangeType == MELEE)
+		return CNode::SUCCESS;
+
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, L"Layer_Player", 0));
+
+	if (pPlayer->Get_BossSign())
+	{
+		//단류 표식이 되어있다면?
+	}
+	else
+	{
+		_uint iSkillNum = Random(4);
+
+		switch (iSkillNum)
+		{
+		case 0:
+			m_Skill = SKILL_RUSH;
+			break;
+		case 1:
+			m_Skill = SKILL_BLADE_EXTRA;
+			break;
+		case 2:
+			m_Skill = SKILL_DUALBLADE_STRIKE;
+			break;
+		case 3:
+			m_Skill = SKILL_DUALBLADE_HIRAISHIN;
+			break;
+		default:
+			break;
+		}
+	}
+
+	return CNode::SUCCESS;
 }
 
 //몬스터가 플레이어 뒤에 있는지 확인
@@ -265,9 +360,42 @@ _bool CBT_EvilEye::Check_Rear_ToPlayer()
 {
 	_vector vTarget = XMLoadFloat4x4(m_pTargetMatrix).r[3];
 	_vector vCurrentPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	_vector vLook = XMLoadFloat4x4(m_pTargetMatrix).r[2];
 
-	return !AngleOfView(180.f, vTarget, vCurrentPos, vLook);
+	return !AngleOfView(180.f, vCurrentPos, vTarget, vLook);
+}
+
+CNode::NODE_STATE CBT_EvilEye::Rush_Move()
+{
+	if (m_isAttack && m_Skill == SKILL_RUSH)
+	{
+		if (*m_pState == CBoss::BOSS_RUSH_BS && m_pModelCom->Get_Animation_Finished())
+		{
+			*m_pState = CBoss::BOSS_RUSH_AS;
+		}
+		else if (*m_pState == CBoss::BOSS_RUSH_AS && m_pModelCom->Get_Animation_Finished())
+		{
+			m_Skill = SKILL_END;
+			m_isAttack = false;
+
+			return CNode::SUCCESS;
+		}
+
+		return CNode::RUNNING;
+	}
+
+	//대쉬
+	if (m_Skill == SKILL_RUSH)
+	{
+		m_pTransformCom->LookAt(XMLoadFloat4x4(m_pTargetMatrix).r[3]);
+
+		*m_pState = CBoss::BOSS_RUSH_BS;
+
+		m_isAttack = true;
+		return CNode::SUCCESS;
+	}
+
+	return CNode::FAILURE;
 }
 
 CNode::NODE_STATE CBT_EvilEye::Blade_Extra_Attack()
@@ -299,42 +427,39 @@ CNode::NODE_STATE CBT_EvilEye::Blade_Normal_Attack() // 끊어서 이어줘야 함.
 {
 	if (m_isAttack && m_Skill == SKILL_BLADE_NORMAL)
 	{
-		if (m_iBladeNormalAttackMax <= m_iBladeNormalAttackMaxCount)
+		if (m_fNormalTime < m_fCurrentRunTime)
 		{
-			m_isAttack = false;
-			m_iBladeNormalAttackMax = 0;
+			++m_iBladeNormalAttackMaxCount;
 
-			return CNode::SUCCESS;
-		}
-		else {
-			if (*m_pState == CBoss::BOSS_BLADE_NORMAL_ATTACK_1 && m_pModelCom->Get_Animation_Finished(6))
+			if (m_iBladeNormalAttackMax > m_iBladeNormalAttackMaxCount)
 			{
-				*m_pState = CBoss::BOSS_BLADE_NORMAL_ATTACK_2;
-				m_iBladeNormalAttackMaxCount++;
+				if (*m_pState == CBoss::BOSS_BLADE_NORMAL_ATTACK_1)
+					*m_pState = CBoss::BOSS_BLADE_NORMAL_ATTACK_2;
+				else if (*m_pState == CBoss::BOSS_BLADE_NORMAL_ATTACK_2)
+					*m_pState = CBoss::BOSS_BLADE_NORMAL_ATTACK_3;
+				else if (*m_pState == CBoss::BOSS_BLADE_NORMAL_ATTACK_3)
+					*m_pState = CBoss::BOSS_BLADE_NORMAL_ATTACK_4;
+				else if (*m_pState == CBoss::BOSS_BLADE_NORMAL_ATTACK_4)
+					*m_pState = CBoss::BOSS_BLADE_NORMAL_ATTACK_1;
+
+				return CNode::SUCCESS;
 			}
-			else if (*m_pState == CBoss::BOSS_BLADE_NORMAL_ATTACK_2 && m_pModelCom->Get_Animation_Finished(7))
+
+			if (m_pModelCom->Get_Animation_Finished())
 			{
-				*m_pState = CBoss::BOSS_BLADE_NORMAL_ATTACK_3;
-				m_iBladeNormalAttackMaxCount++;
-			}
-			else if (*m_pState == CBoss::BOSS_BLADE_NORMAL_ATTACK_3 && m_pModelCom->Get_Animation_Finished(8))
-			{
-				*m_pState = CBoss::BOSS_BLADE_NORMAL_ATTACK_4;
-				m_iBladeNormalAttackMaxCount++;
-			}
-			else if (*m_pState == CBoss::BOSS_BLADE_NORMAL_ATTACK_4 && m_pModelCom->Get_Animation_Finished(9))
-			{
-				*m_pState = CBoss::BOSS_BLADE_NORMAL_ATTACK_1;
-				m_iBladeNormalAttackMaxCount++;
+				m_isAttack = false;
+				m_iBladeNormalAttackMaxCount = 0;
+				m_fCurrentRunTime = 0.f;
+
+				return CNode::SUCCESS;
 			}
 		}
-
 		return CNode::RUNNING;
 	}
 
 	if (m_Skill == SKILL_BLADE_NORMAL)
 	{
-		m_iBladeNormalAttackMax = Random(6);
+		m_iBladeNormalAttackMax = Random(4);
 		*m_pState = CBoss::BOSS_BLADE_NORMAL_ATTACK_1;
 
 		return CNode::SUCCESS;
@@ -350,9 +475,18 @@ CNode::NODE_STATE CBT_EvilEye::DualBlade_Strike() // 돌진 찌르기 3~5
 		if (*m_pState == CBoss::BOSS_DUALBLADE_STRIKE_ATTACK_BS && m_pModelCom->Get_Animation_Finished())
 			*m_pState = CBoss::BOSS_DUALBLADE_STRIKE_ATTACK_LOOP;
 		else if (*m_pState == CBoss::BOSS_DUALBLADE_STRIKE_ATTACK_LOOP && m_pModelCom->Get_LoopAnimation_Finished())
-			*m_pState = CBoss::BOSS_DUALBLADE_STRIKE_ATTACK_AS;
+		{
+			m_pTransformCom->LookAt(XMLoadFloat4x4(m_pTargetMatrix).r[3]);
+			++m_iCurrentAttackCount;
+			
+			if (m_iAttackCount <= m_iCurrentAttackCount)
+			{
+				*m_pState = CBoss::BOSS_DUALBLADE_STRIKE_ATTACK_AS;
+			}
+		}
 		else if (*m_pState == CBoss::BOSS_DUALBLADE_STRIKE_ATTACK_AS && m_pModelCom->Get_Animation_Finished())
 		{
+			m_iCurrentAttackCount = 0; // 초기화
 			m_isAttack = false;
 			return CNode::SUCCESS;
 		}
@@ -362,6 +496,7 @@ CNode::NODE_STATE CBT_EvilEye::DualBlade_Strike() // 돌진 찌르기 3~5
 
 	if (m_Skill == SKILL_DUALBLADE_STRIKE)
 	{
+		m_iAttackCount = Random(2) + 3;
 		m_isAttack = true;
 		*m_pState = CBoss::BOSS_DUALBLADE_STRIKE_ATTACK_BS;
 

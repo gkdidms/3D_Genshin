@@ -34,57 +34,6 @@
     <Filter Include="96. Utility">
       <UniqueIdentifier>{4ca56d1b-0058-40da-afc7-a78bec2b1926}</UniqueIdentifier>
     </Filter>
-    <Filter Include="96. Utility\00. State">
-      <UniqueIdentifier>{3d7b9044-ab80-4d47-852e-f5c2259b19d6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\00. State\State">
-      <UniqueIdentifier>{f7ba46d1-5f11-4b7a-8601-28e92005e65f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\00. State\State\Run">
-      <UniqueIdentifier>{7d3fe171-eafa-466f-8939-de080f53dd8e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\00. State\State\Sprint">
-      <UniqueIdentifier>{d7823bbb-870e-468e-b9bb-b33a5d70fcc4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\00. State\State\Idle">
-      <UniqueIdentifier>{9d64cac8-81a9-422a-ab75-58bd9d5f8c7f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\00. State\State\Attack">
-      <UniqueIdentifier>{c4ad7558-884f-43bd-84e0-1942a49fc08d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\00. State\State\ElementalArt">
-      <UniqueIdentifier>{75f25e71-12aa-4dad-af53-0f10fba785bc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\00. State\State\ElementalArt\Wanderer">
-      <UniqueIdentifier>{c9ca96a4-de52-4d22-9192-25074f8792d1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\00. State\State\ElementalArt\Tighnari">
-      <UniqueIdentifier>{02408b8d-e9da-4e76-9e6e-c843a3db1598}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\00. State\State\ElementalArt\Yae">
-      <UniqueIdentifier>{95525f62-d88a-4e26-8e87-dcf4a649ceb7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\00. State\State\ElementalArt\Nilou">
-      <UniqueIdentifier>{b8b5f337-dc0a-4b2e-91de-0019ce6f638a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\00. State\State\ElementalBurst">
-      <UniqueIdentifier>{83d7e4e1-91b9-42ff-9336-c0aaadf3bc78}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\00. State\State\Jump">
-      <UniqueIdentifier>{eb5dee08-fb86-4490-b40f-0ef6b3bbb10c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\00. State\State\Fly">
-      <UniqueIdentifier>{9efae588-f1fd-40f3-8c27-344b2715aecc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\00. State\State\FallAttack">
-      <UniqueIdentifier>{14b1739a-7377-48cc-9b5e-134dce0d3093}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\00. State\State\FallGround">
-      <UniqueIdentifier>{40e0de77-380c-40aa-856d-66e5419bfa2e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\00. State\Manager">
-      <UniqueIdentifier>{0b7a281c-0d37-44cb-bc74-d475b25901b6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="96. Utility\01. Command">
       <UniqueIdentifier>{2602ebfe-664d-44c0-993d-d84b32ea7fdf}</UniqueIdentifier>
     </Filter>
@@ -174,9 +123,6 @@
     </Filter>
     <Filter Include="02. GameObject\04. Player\PartObject\SkillObj">
       <UniqueIdentifier>{40cc5667-558a-49ed-9dc4-a683fa48fda5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\04. Player\PartObject\SkillObj\Gohei">
-      <UniqueIdentifier>{78f8c0b6-1739-4aa4-b702-8b702dfd36ba}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\05. Monster">
       <UniqueIdentifier>{7c37b1ac-82c3-4464-a7fc-34ad85b263f0}</UniqueIdentifier>
@@ -301,11 +247,98 @@
     <Filter Include="02. GameObject\06. Boss\PartObject\Weapon\Harbinger\Blade">
       <UniqueIdentifier>{1441dffd-0510-41c6-97e1-b202f83dd326}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\06. Boss\PartObject\Weapon\Harbinger\DualBlade">
+      <UniqueIdentifier>{875ad60d-3072-4911-a924-939f49ca448b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. SceneObj\Operator">
+      <UniqueIdentifier>{fc81587a-d1b1-4b4b-958c-ae256d300bea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. Boss\PartObject\Weapon\Blade">
+      <UniqueIdentifier>{3955e0d8-fc61-4f73-b4c1-5bf566f8e30a}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObject\06. Boss\PartObject\Weapon\Harbinger\Bow">
       <UniqueIdentifier>{cd1296e5-4bc2-4f1b-833a-2a7e4a7cfeba}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\06. Boss\PartObject\Weapon\Harbinger\DualBlade">
-      <UniqueIdentifier>{875ad60d-3072-4911-a924-939f49ca448b}</UniqueIdentifier>
+    <Filter Include="02. GameObject\06. Boss\PartObject\Weapon\Bow">
+      <UniqueIdentifier>{c182543e-3180-461d-9b05-e1430456f082}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. Boss\PartObject\Weapon\DualBlade">
+      <UniqueIdentifier>{92275bc6-5b92-4dbe-ac79-c1e64890a757}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. SceneObj\ThornWall">
+      <UniqueIdentifier>{7fe89996-88c4-4f19-9968-c6c2254cb1f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. SceneObj\Plane">
+      <UniqueIdentifier>{cee00d38-29f4-4455-95e1-51d69a32b6fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\PartObject\Flycloak">
+      <UniqueIdentifier>{2068690a-8952-4dd9-bcd2-ed8eccacc189}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\PartObject\SkillObj\Yae">
+      <UniqueIdentifier>{5a3479be-b974-462a-bb0a-f637abf0be92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\PartObject\SkillObj\Yae\Gohei">
+      <UniqueIdentifier>{78f8c0b6-1739-4aa4-b702-8b702dfd36ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\PartObject\SkillObj\Yae\BlackFox">
+      <UniqueIdentifier>{dc61bc54-0b11-4730-b447-07e731b5145a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\PartObject\SkillObj\Yae\FoxTail_Burst">
+      <UniqueIdentifier>{3a1d7ffc-01d0-482e-a959-4fd95d53a128}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\PartObject\SkillObj\Yae\FoxTower">
+      <UniqueIdentifier>{85f840c4-931e-4203-9c18-ca22c2e65247}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\State">
+      <UniqueIdentifier>{3d7b9044-ab80-4d47-852e-f5c2259b19d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\State\State">
+      <UniqueIdentifier>{f7ba46d1-5f11-4b7a-8601-28e92005e65f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\State\State\Run">
+      <UniqueIdentifier>{7d3fe171-eafa-466f-8939-de080f53dd8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\State\State\Sprint">
+      <UniqueIdentifier>{d7823bbb-870e-468e-b9bb-b33a5d70fcc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\State\State\Idle">
+      <UniqueIdentifier>{9d64cac8-81a9-422a-ab75-58bd9d5f8c7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\State\State\Attack">
+      <UniqueIdentifier>{c4ad7558-884f-43bd-84e0-1942a49fc08d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\State\State\ElementalArt">
+      <UniqueIdentifier>{75f25e71-12aa-4dad-af53-0f10fba785bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\State\State\ElementalArt\Wanderer">
+      <UniqueIdentifier>{c9ca96a4-de52-4d22-9192-25074f8792d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\State\State\ElementalArt\Tighnari">
+      <UniqueIdentifier>{02408b8d-e9da-4e76-9e6e-c843a3db1598}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\State\State\ElementalArt\Yae">
+      <UniqueIdentifier>{95525f62-d88a-4e26-8e87-dcf4a649ceb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\State\State\ElementalArt\Nilou">
+      <UniqueIdentifier>{b8b5f337-dc0a-4b2e-91de-0019ce6f638a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\State\State\ElementalBurst">
+      <UniqueIdentifier>{83d7e4e1-91b9-42ff-9336-c0aaadf3bc78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\State\State\Jump">
+      <UniqueIdentifier>{eb5dee08-fb86-4490-b40f-0ef6b3bbb10c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\State\State\Fly">
+      <UniqueIdentifier>{9efae588-f1fd-40f3-8c27-344b2715aecc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\State\State\FallAttack">
+      <UniqueIdentifier>{14b1739a-7377-48cc-9b5e-134dce0d3093}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\State\State\FallGround">
+      <UniqueIdentifier>{40e0de77-380c-40aa-856d-66e5419bfa2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\State\Manager">
+      <UniqueIdentifier>{0b7a281c-0d37-44cb-bc74-d475b25901b6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -385,40 +418,40 @@
       <Filter>02. GameObject\04. Player\PartObject\Weapon\Tighnari</Filter>
     </ClInclude>
     <ClInclude Include="..\public\StateRun.h">
-      <Filter>96. Utility\00. State\State\Run</Filter>
+      <Filter>02. GameObject\04. Player\State\State\Run</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\State_Manager.h">
-      <Filter>96. Utility\00. State\Manager</Filter>
+    <ClInclude Include="..\public\StateManager.h">
+      <Filter>02. GameObject\04. Player\State\Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\StateSprint.h">
-      <Filter>96. Utility\00. State\State\Sprint</Filter>
+      <Filter>02. GameObject\04. Player\State\State\Sprint</Filter>
     </ClInclude>
     <ClInclude Include="..\public\StateIdle.h">
-      <Filter>96. Utility\00. State\State\Idle</Filter>
+      <Filter>02. GameObject\04. Player\State\State\Idle</Filter>
     </ClInclude>
     <ClInclude Include="..\public\StateElementalArt_Wanderer.h">
-      <Filter>96. Utility\00. State\State\ElementalArt\Wanderer</Filter>
+      <Filter>02. GameObject\04. Player\State\State\ElementalArt\Wanderer</Filter>
     </ClInclude>
     <ClInclude Include="..\public\StateElementalBurst.h">
-      <Filter>96. Utility\00. State\State\ElementalBurst</Filter>
+      <Filter>02. GameObject\04. Player\State\State\ElementalBurst</Filter>
     </ClInclude>
     <ClInclude Include="..\public\StateElementalArt_Tighanri.h">
-      <Filter>96. Utility\00. State\State\ElementalArt\Tighnari</Filter>
+      <Filter>02. GameObject\04. Player\State\State\ElementalArt\Tighnari</Filter>
     </ClInclude>
     <ClInclude Include="..\public\StateAttack.h">
-      <Filter>96. Utility\00. State\State\Attack</Filter>
+      <Filter>02. GameObject\04. Player\State\State\Attack</Filter>
     </ClInclude>
     <ClInclude Include="..\public\StateElementalArt_Yae.h">
-      <Filter>96. Utility\00. State\State\ElementalArt\Yae</Filter>
+      <Filter>02. GameObject\04. Player\State\State\ElementalArt\Yae</Filter>
     </ClInclude>
     <ClInclude Include="..\public\State.h">
-      <Filter>96. Utility\00. State\State</Filter>
+      <Filter>02. GameObject\04. Player\State\State</Filter>
     </ClInclude>
     <ClInclude Include="..\public\StateElementalArt_Nilou.h">
-      <Filter>96. Utility\00. State\State\ElementalArt\Nilou</Filter>
+      <Filter>02. GameObject\04. Player\State\State\ElementalArt\Nilou</Filter>
     </ClInclude>
     <ClInclude Include="..\public\StateJump.h">
-      <Filter>96. Utility\00. State\State\Jump</Filter>
+      <Filter>02. GameObject\04. Player\State\State\Jump</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Weapon_Regalis.h">
       <Filter>02. GameObject\04. Player\PartObject\Weapon\Nilou</Filter>
@@ -426,17 +459,17 @@
     <ClInclude Include="..\public\SkillObj.h">
       <Filter>02. GameObject\04. Player\PartObject\SkillObj</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\SkillObj_Gohei.h">
-      <Filter>02. GameObject\04. Player\PartObject\SkillObj\Gohei</Filter>
+    <ClInclude Include="..\public\Gohei.h">
+      <Filter>02. GameObject\04. Player\PartObject\SkillObj\Yae\Gohei</Filter>
     </ClInclude>
     <ClInclude Include="..\public\StateFly.h">
-      <Filter>96. Utility\00. State\State\Fly</Filter>
+      <Filter>02. GameObject\04. Player\State\State\Fly</Filter>
     </ClInclude>
     <ClInclude Include="..\public\StateFallAttack.h">
-      <Filter>96. Utility\00. State\State\FallAttack</Filter>
+      <Filter>02. GameObject\04. Player\State\State\FallAttack</Filter>
     </ClInclude>
     <ClInclude Include="..\public\StateFallGround.h">
-      <Filter>96. Utility\00. State\State\FallGround</Filter>
+      <Filter>02. GameObject\04. Player\State\State\FallGround</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Weapon_Alaya.h">
       <Filter>02. GameObject\04. Player\PartObject\Weapon\Wanderer</Filter>
@@ -588,6 +621,39 @@
     <ClInclude Include="..\Public\Harbinger_DualBlade.h">
       <Filter>02. GameObject\06. Boss\PartObject\Weapon\Harbinger\DualBlade</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Operator.h">
+      <Filter>02. GameObject\07. SceneObj\Operator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Tartaglia_Blade.h">
+      <Filter>02. GameObject\06. Boss\PartObject\Weapon\Blade</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Tartaglia_Bow.h">
+      <Filter>02. GameObject\06. Boss\PartObject\Weapon\Bow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Tartaglia_DualBlade.h">
+      <Filter>02. GameObject\06. Boss\PartObject\Weapon\DualBlade</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ThornWall.h">
+      <Filter>02. GameObject\07. SceneObj\ThornWall</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Plane.h">
+      <Filter>02. GameObject\07. SceneObj\Plane</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Flycloak.h">
+      <Filter>02. GameObject\04. Player\PartObject\Flycloak</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BlackFox.h">
+      <Filter>02. GameObject\04. Player\PartObject\SkillObj\Yae\BlackFox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\FoxTail_Burst.h">
+      <Filter>02. GameObject\04. Player\PartObject\SkillObj\Yae\FoxTail_Burst</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\FoxTower.h">
+      <Filter>02. GameObject\04. Player\PartObject\SkillObj\Yae\FoxTower</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\StateElementalArt.h">
+      <Filter>02. GameObject\04. Player\State\State\ElementalArt</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -654,40 +720,40 @@
       <Filter>02. GameObject\04. Player\PartObject\Weapon\Tighnari</Filter>
     </ClCompile>
     <ClCompile Include="..\private\StateRun.cpp">
-      <Filter>96. Utility\00. State\State\Run</Filter>
+      <Filter>02. GameObject\04. Player\State\State\Run</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\State_Manager.cpp">
-      <Filter>96. Utility\00. State\Manager</Filter>
+    <ClCompile Include="..\private\StateManager.cpp">
+      <Filter>02. GameObject\04. Player\State\Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\StateSprint.cpp">
-      <Filter>96. Utility\00. State\State\Sprint</Filter>
+      <Filter>02. GameObject\04. Player\State\State\Sprint</Filter>
     </ClCompile>
     <ClCompile Include="..\private\StateIdle.cpp">
-      <Filter>96. Utility\00. State\State\Idle</Filter>
+      <Filter>02. GameObject\04. Player\State\State\Idle</Filter>
     </ClCompile>
     <ClCompile Include="..\private\StateElementalArt_Wanderer.cpp">
-      <Filter>96. Utility\00. State\State\ElementalArt\Wanderer</Filter>
+      <Filter>02. GameObject\04. Player\State\State\ElementalArt\Wanderer</Filter>
     </ClCompile>
     <ClCompile Include="..\private\StateElementalBurst.cpp">
-      <Filter>96. Utility\00. State\State\ElementalBurst</Filter>
+      <Filter>02. GameObject\04. Player\State\State\ElementalBurst</Filter>
     </ClCompile>
     <ClCompile Include="..\private\StateElementalArt_Tighanri.cpp">
-      <Filter>96. Utility\00. State\State\ElementalArt\Tighnari</Filter>
+      <Filter>02. GameObject\04. Player\State\State\ElementalArt\Tighnari</Filter>
     </ClCompile>
     <ClCompile Include="..\private\StateAttack.cpp">
-      <Filter>96. Utility\00. State\State\Attack</Filter>
+      <Filter>02. GameObject\04. Player\State\State\Attack</Filter>
     </ClCompile>
     <ClCompile Include="..\private\StateElementalArt_Yae.cpp">
-      <Filter>96. Utility\00. State\State\ElementalArt\Yae</Filter>
+      <Filter>02. GameObject\04. Player\State\State\ElementalArt\Yae</Filter>
     </ClCompile>
     <ClCompile Include="..\private\State.cpp">
-      <Filter>96. Utility\00. State\State</Filter>
+      <Filter>02. GameObject\04. Player\State\State</Filter>
     </ClCompile>
     <ClCompile Include="..\private\StateElementalArt_Nilou.cpp">
-      <Filter>96. Utility\00. State\State\ElementalArt\Nilou</Filter>
+      <Filter>02. GameObject\04. Player\State\State\ElementalArt\Nilou</Filter>
     </ClCompile>
     <ClCompile Include="..\private\StateJump.cpp">
-      <Filter>96. Utility\00. State\State\Jump</Filter>
+      <Filter>02. GameObject\04. Player\State\State\Jump</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Weapon_Regalis.cpp">
       <Filter>02. GameObject\04. Player\PartObject\Weapon\Nilou</Filter>
@@ -695,17 +761,17 @@
     <ClCompile Include="..\private\SkillObj.cpp">
       <Filter>02. GameObject\04. Player\PartObject\SkillObj</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\SkillObj_Gohei.cpp">
-      <Filter>02. GameObject\04. Player\PartObject\SkillObj\Gohei</Filter>
+    <ClCompile Include="..\private\Gohei.cpp">
+      <Filter>02. GameObject\04. Player\PartObject\SkillObj\Yae\Gohei</Filter>
     </ClCompile>
     <ClCompile Include="..\private\StateFly.cpp">
-      <Filter>96. Utility\00. State\State\Fly</Filter>
+      <Filter>02. GameObject\04. Player\State\State\Fly</Filter>
     </ClCompile>
     <ClCompile Include="..\private\StateFallAttack.cpp">
-      <Filter>96. Utility\00. State\State\FallAttack</Filter>
+      <Filter>02. GameObject\04. Player\State\State\FallAttack</Filter>
     </ClCompile>
     <ClCompile Include="..\private\StateFallGround.cpp">
-      <Filter>96. Utility\00. State\State\FallGround</Filter>
+      <Filter>02. GameObject\04. Player\State\State\FallGround</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Weapon_Alaya.cpp">
       <Filter>02. GameObject\04. Player\PartObject\Weapon\Wanderer</Filter>
@@ -856,6 +922,39 @@
     </ClCompile>
     <ClCompile Include="..\Private\Harbinger_DualBlade.cpp">
       <Filter>02. GameObject\06. Boss\PartObject\Weapon\Harbinger\DualBlade</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Operator.cpp">
+      <Filter>02. GameObject\07. SceneObj\Operator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Tartaglia_Blade.cpp">
+      <Filter>02. GameObject\06. Boss\PartObject\Weapon\Blade</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Tartaglia_Bow.cpp">
+      <Filter>02. GameObject\06. Boss\PartObject\Weapon\Bow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Tartaglia_DualBlade.cpp">
+      <Filter>02. GameObject\06. Boss\PartObject\Weapon\DualBlade</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ThornWall.cpp">
+      <Filter>02. GameObject\07. SceneObj\ThornWall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Plane.cpp">
+      <Filter>02. GameObject\07. SceneObj\Plane</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Flycloak.cpp">
+      <Filter>02. GameObject\04. Player\PartObject\Flycloak</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BlackFox.cpp">
+      <Filter>02. GameObject\04. Player\PartObject\SkillObj\Yae\BlackFox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\FoxTail_Burst.cpp">
+      <Filter>02. GameObject\04. Player\PartObject\SkillObj\Yae\FoxTail_Burst</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\FoxTower.cpp">
+      <Filter>02. GameObject\04. Player\PartObject\SkillObj\Yae\FoxTower</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StateElementalArt.cpp">
+      <Filter>02. GameObject\04. Player\State\State\ElementalArt</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

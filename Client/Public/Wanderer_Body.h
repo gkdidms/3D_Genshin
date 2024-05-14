@@ -5,11 +5,6 @@ BEGIN(Client)
 class CWanderer_Body :
     public CPartObject_Body
 {   
-public:
-    typedef struct tWandererDesc : public CPartObject_Body::BODY_DESC {
-        const _bool* isElementalAir;
-    }WANDERER_DESC;
-
 private:
     CWanderer_Body(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
     CWanderer_Body(const CWanderer_Body& rhs);
@@ -25,8 +20,6 @@ public:
 
 
 private:
-    const _bool* m_pElementalAir = { nullptr };
-
     _float m_fAirSpeed = { 5.f };
     _float m_fAirDropSpeed = { 15.f };
     _float m_fAirStartTime = { 0.f };

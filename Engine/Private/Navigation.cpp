@@ -293,6 +293,18 @@ _bool CNavigation::isLook(_fvector vLook)
     return fAngle < 90.f;
 }
 
+_bool CNavigation::isFlyCell(_fvector vLook)
+{
+    _vector vAB = m_Cells[m_iCurrentIndex]->Get_Point(CCell::POINT_B) - m_Cells[m_iCurrentIndex]->Get_Point(CCell::POINT_A);
+    _vector vCA = m_Cells[m_iCurrentIndex]->Get_Point(CCell::POINT_C) - m_Cells[m_iCurrentIndex]->Get_Point(CCell::POINT_A);
+
+    _vector vCross = XMVector3Normalize(XMVector3Cross(vAB, vCA));
+
+    _float fAngle = XMConvertToDegrees(XMVectorGetX(XMVector3Dot(vLook, vCross)));
+
+    return fAngle > 90.f;
+}
+
 void CNavigation::Free()
 {
     __super::Free();

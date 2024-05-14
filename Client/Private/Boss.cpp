@@ -14,6 +14,7 @@
 #include "Body_Harbinger.h"
 
 #include "Harbinger_Blade.h"
+#include "Tartaglia_Blade.h"
 
 
 CBoss::CBoss(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -65,6 +66,23 @@ void CBoss::Priority_Tick(const _float& fTimeDelta)
 
 void CBoss::Tick(const _float& fTimeDelta)
 {
+    if (m_pGameInstance->GetKeyState(DIK_0) == CInput_Device::TAP)
+    {
+        m_CurrentPage = ONE_PAGE;
+        m_CurrentState = PLAYER_IDLE;
+    }
+    else if (m_pGameInstance->GetKeyState(DIK_9) == CInput_Device::TAP)
+    {
+        m_CurrentPage = TWO_PAGE;
+        m_CurrentState = PLAYER_IDLE;
+    }
+    else if (m_pGameInstance->GetKeyState(DIK_8) == CInput_Device::TAP)
+    {
+        m_CurrentPage = FINAL_PAGE;
+        m_CurrentState = PLAYER_IDLE;
+    }
+        
+
     if (m_CurrentState == BOSS_DIE && m_CurrentPage == ONE_PAGE)
         m_CurrentPage = TWO_PAGE;
     else if (m_CurrentState == BOSS_DIE && m_CurrentPage == TWO_PAGE)
@@ -188,9 +206,87 @@ HRESULT CBoss::Ready_Body()
 
 HRESULT CBoss::Ready_Weapon()
 {
-    CGameObject* pWeaponObject = { nullptr };
     CComponent* pComponent = { nullptr };
     CWeapon::WEAPON_DESC Desc{};
+
+    //One_Page
+    CTartaglia_Blade::TARTAGLIA_BLADE_DESC TartaBladeDesc{};
+    pComponent = m_PartObject[ONE_PAGE][PART_BODY]->Get_Component(TEXT("Com_Model"));
+    TartaBladeDesc.eWeaponType = CWeapon::WEAPON_SWORD;
+    TartaBladeDesc.pHandCombinedTransformationMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("WeaponR");
+    TartaBladeDesc.pParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
+    TartaBladeDesc.pState = &m_CurrentState;
+    TartaBladeDesc.eElementalType = WATER;
+
+    CGameObject* pWaterBladeR = m_pGameInstance->Clone_Object(L"Prototype_GameObject_Tartaglia_Blade", &TartaBladeDesc);
+    if (nullptr == pWaterBladeR)
+        return E_FAIL;
+
+    m_PartObject[ONE_PAGE].emplace_back(pWaterBladeR);
+
+    pComponent = m_PartObject[ONE_PAGE][PART_BODY]->Get_Component(TEXT("Com_Model"));
+    TartaBladeDesc.eWeaponType = CWeapon::WEAPON_SWORD;
+    TartaBladeDesc.pHandCombinedTransformationMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("WeaponL");
+    TartaBladeDesc.pParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
+    TartaBladeDesc.pState = &m_CurrentState;
+    TartaBladeDesc.eElementalType = WATER;
+
+    CGameObject* pWaterBladeL = m_pGameInstance->Clone_Object(L"Prototype_GameObject_Tartaglia_Blade", &TartaBladeDesc);
+    if (nullptr == pWaterBladeL)
+        return E_FAIL;
+
+    m_PartObject[ONE_PAGE].emplace_back(pWaterBladeL);
+
+    pComponent = m_PartObject[ONE_PAGE][PART_BODY]->Get_Component(TEXT("Com_Model"));
+    Desc.eWeaponType = CWeapon::WEAPON_BOW;
+    Desc.pHandCombinedTransformationMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("WeaponL");
+    Desc.pParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
+    Desc.pState = &m_CurrentState;
+
+    CGameObject* pBow = m_pGameInstance->Clone_Object(L"Prototype_GameObject_Tartaglia_Bow", &Desc);
+    if (nullptr == pBow)
+        return E_FAIL;
+
+    m_PartObject[ONE_PAGE].emplace_back(pBow);
+
+    //TWO_PAGE
+    pComponent = m_PartObject[TWO_PAGE][PART_BODY]->Get_Component(TEXT("Com_Model"));
+    TartaBladeDesc.eWeaponType = CWeapon::WEAPON_SWORD;
+    TartaBladeDesc.pHandCombinedTransformationMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("WeaponR");
+    TartaBladeDesc.pParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
+    TartaBladeDesc.pState = &m_CurrentState;
+    TartaBladeDesc.eElementalType = ELECTRIC;
+
+    CGameObject* pElectricBladeR = m_pGameInstance->Clone_Object(L"Prototype_GameObject_Tartaglia_Blade", &TartaBladeDesc);
+    if (nullptr == pElectricBladeR)
+        return E_FAIL;
+
+    m_PartObject[TWO_PAGE].emplace_back(pElectricBladeR);
+
+    pComponent = m_PartObject[TWO_PAGE][PART_BODY]->Get_Component(TEXT("Com_Model"));
+    TartaBladeDesc.eWeaponType = CWeapon::WEAPON_SWORD;
+    TartaBladeDesc.pHandCombinedTransformationMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("WeaponL");
+    TartaBladeDesc.pParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
+    TartaBladeDesc.pState = &m_CurrentState;
+    TartaBladeDesc.eElementalType = ELECTRIC;
+
+    CGameObject* pElectricBladeL = m_pGameInstance->Clone_Object(L"Prototype_GameObject_Tartaglia_Blade", &TartaBladeDesc);
+    if (nullptr == pElectricBladeL)
+        return E_FAIL;
+
+    m_PartObject[TWO_PAGE].emplace_back(pElectricBladeL);
+
+    pComponent = m_PartObject[TWO_PAGE][PART_BODY]->Get_Component(TEXT("Com_Model"));
+    Desc.eWeaponType = CWeapon::WEAPON_SWORD;
+    Desc.pHandCombinedTransformationMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("WeaponR");
+    Desc.pParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
+    Desc.pState = &m_CurrentState;
+
+    CGameObject* pDualBlade = m_pGameInstance->Clone_Object(L"Prototype_GameObject_Tartaglia_DualBlade", &Desc);
+    if (nullptr == pDualBlade)
+        return E_FAIL;
+
+    m_PartObject[TWO_PAGE].emplace_back(pDualBlade);
 
     //Final_Page
     pComponent = m_PartObject[FINAL_PAGE][PART_BODY]->Get_Component(TEXT("Com_Model"));
@@ -199,23 +295,35 @@ HRESULT CBoss::Ready_Weapon()
     Desc.pParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
     Desc.pState = &m_CurrentState;
 
-    pWeaponObject = m_pGameInstance->Clone_Object(L"Prototype_GameObject_Harbinger_Blade", &Desc);
-    if (nullptr == pWeaponObject)
+    CGameObject* pHarbingerBladeR= m_pGameInstance->Clone_Object(L"Prototype_GameObject_Harbinger_Blade", &Desc);
+    if (nullptr == pHarbingerBladeR)
         return E_FAIL;
 
-    m_PartObject[FINAL_PAGE].emplace_back(pWeaponObject);
+    m_PartObject[FINAL_PAGE].emplace_back(pHarbingerBladeR);
 
     pComponent = m_PartObject[FINAL_PAGE][PART_BODY]->Get_Component(TEXT("Com_Model"));
-    Desc.eWeaponType = CWeapon::WEAPON_BOW;
-    Desc.pHandCombinedTransformationMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("WeaponR");
+    Desc.eWeaponType = CWeapon::WEAPON_SWORD;
+    Desc.pHandCombinedTransformationMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("WeaponL");
     Desc.pParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
     Desc.pState = &m_CurrentState;
 
-    pWeaponObject = m_pGameInstance->Clone_Object(L"Prototype_GameObject_Harbinger_Bow", &Desc);
-    if (nullptr == pWeaponObject)
+    CGameObject* pHarbingerBladeL = m_pGameInstance->Clone_Object(L"Prototype_GameObject_Harbinger_Blade", &Desc);
+    if (nullptr == pHarbingerBladeL)
         return E_FAIL;
 
-    m_PartObject[FINAL_PAGE].emplace_back(pWeaponObject);
+    m_PartObject[FINAL_PAGE].emplace_back(pHarbingerBladeL);
+
+    pComponent = m_PartObject[FINAL_PAGE][PART_BODY]->Get_Component(TEXT("Com_Model"));
+    Desc.eWeaponType = CWeapon::WEAPON_BOW;
+    Desc.pHandCombinedTransformationMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("WeaponL");
+    Desc.pParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
+    Desc.pState = &m_CurrentState;
+
+    CGameObject* pHarbingerBow = m_pGameInstance->Clone_Object(L"Prototype_GameObject_Harbinger_Bow", &Desc);
+    if (nullptr == pHarbingerBow)
+        return E_FAIL;
+
+    m_PartObject[FINAL_PAGE].emplace_back(pHarbingerBow);
 
     pComponent = m_PartObject[FINAL_PAGE][PART_BODY]->Get_Component(TEXT("Com_Model"));
     Desc.eWeaponType = CWeapon::WEAPON_SWORD;
@@ -223,11 +331,11 @@ HRESULT CBoss::Ready_Weapon()
     Desc.pParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
     Desc.pState = &m_CurrentState;
 
-    pWeaponObject = m_pGameInstance->Clone_Object(L"Prototype_GameObject_Harbinger_DualBlade", &Desc);
-    if (nullptr == pWeaponObject)
+    CGameObject* pHarbingerDualBlade = m_pGameInstance->Clone_Object(L"Prototype_GameObject_Harbinger_DualBlade", &Desc);
+    if (nullptr == pHarbingerDualBlade)
         return E_FAIL;
 
-    m_PartObject[FINAL_PAGE].emplace_back(pWeaponObject);
+    m_PartObject[FINAL_PAGE].emplace_back(pHarbingerDualBlade);
 
     return S_OK;
 }

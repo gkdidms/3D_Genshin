@@ -1,6 +1,6 @@
 #include "StateElementalArt_Wanderer.h"
 
-#include "State_Manager.h"
+#include "StateManager.h"
 #include "GameInstance.h"
 
 CStateElementalArt_Wanderer::CStateElementalArt_Wanderer()
@@ -8,15 +8,18 @@ CStateElementalArt_Wanderer::CStateElementalArt_Wanderer()
 {
 }
 
-PLAYER_STATE CStateElementalArt_Wanderer::Enter(class CState_Manager& pStateManager, PLAYER_STATE CurrentState)
+PLAYER_STATE CStateElementalArt_Wanderer::Enter(class CStateManager& pStateManager, PLAYER_STATE CurrentState)
 {
+	m_fCurrentTime = { 0.f };
+	m_fTime = { 0.f };
+
 	return PLAYER_ELEMENTAL_START;
 }
 
-PLAYER_STATE CStateElementalArt_Wanderer::Update(const _float& fTimeDelta, CState_Manager& pStateManager, PLAYER_STATE CurrentState)
+PLAYER_STATE CStateElementalArt_Wanderer::Update(const _float& fTimeDelta, CStateManager& pStateManager, PLAYER_STATE CurrentState)
 {
 	if (CurrentState == PLAYER_FALL_ATTACK_LOOP && m_pGameInstance->GetKeyState(DIK_SPACE) == CInput_Device::TAP)
-		return pStateManager.Set_CurrentState(CState_Manager::STATE_TYPE_FLY);
+		return pStateManager.Set_CurrentState(CStateManager::STATE_TYPE_FLY);
 
 	if (CurrentState == PLAYER_ELEMENTAL_END || CurrentState == PLAYER_ELEMENTAL_START || CurrentState == PLAYER_FALL_ATTACK_LOOP) // 종료 시점이라면 키 입력 불가능
 		return CurrentState;
@@ -27,13 +30,13 @@ PLAYER_STATE CStateElementalArt_Wanderer::Update(const _float& fTimeDelta, CStat
 
 	//지속 시간이 끝나면
 	if (m_fCurrentTime > m_fFinishTime)
-		return PLAYER_FALL_ATTACK_LOOP;
+		return pStateManager.Set_CurrentState(CStateManager::STATE_TYPE_FALL_ATTACK, PLAYER_ELEMENTAL_END);
 
 	if (m_fTime < m_fAttackTime)
 		return CurrentState;
 
 	if (m_pGameInstance->GetKeyState(DIK_Q) == CInput_Device::TAP)
-		return pStateManager.Set_CurrentState(CState_Manager::STATE_TYPE_ELEMNETALBURST);
+		return pStateManager.Set_CurrentState(CStateManager::STATE_TYPE_ELEMNETALBURST);
 
 	if ((CurrentState == PLAYER_ELEMENTAL_UP || CurrentState == PLAYER_ELEMENTAL_UP_START) && m_pGameInstance->GetKeyState(DIK_SPACE) == CInput_Device::NONE)
 		return PLAYER_IDLE;
@@ -82,7 +85,7 @@ PLAYER_STATE CStateElementalArt_Wanderer::Update(const _float& fTimeDelta, CStat
 	return CurrentState;
 }
 
-PLAYER_STATE CStateElementalArt_Wanderer::Exit(CState_Manager& pStateManager, PLAYER_STATE CurrentState)
+PLAYER_STATE CStateElementalArt_Wanderer::Exit(CStateManager& pStateManager, PLAYER_STATE CurrentState)
 {
 	if (CurrentState == PLAYER_RUN)
 		return PLAYER_RUN;
@@ -104,7 +107,7 @@ PLAYER_STATE CStateElementalArt_Wanderer::Exit(CState_Manager& pStateManager, PL
 		return PLAYER_RUN;
 
 	if (CurrentState == PLAYER_ELEMENTAL_END)
-		return pStateManager.Set_CurrentState(CState_Manager::STATE_TYPE_IDEL);
+		return pStateManager.Set_CurrentState(CStateManager::STATE_TYPE_IDEL);
 
 	return PLAYER_FALL_ATTACK_LOOP;
 }

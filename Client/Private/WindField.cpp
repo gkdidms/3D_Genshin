@@ -1,15 +1,21 @@
 #include "WindField.h"
 
 #include "GameInstance.h"
+#include "StateManager.h"
+#include "Player.h"
 
 CWindField::CWindField(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CSceneObj{ pDevice, pContext }
+	: CSceneObj{ pDevice, pContext },
+	m_pStateManager{ CStateManager::GetInstance() }
 {
+	Safe_AddRef(m_pStateManager);
 }
 
 CWindField::CWindField(const CWindField& rhs)
-	: CSceneObj{ rhs }
+	: CSceneObj{ rhs },
+	m_pStateManager{ rhs.m_pStateManager }
 {
+	Safe_AddRef(m_pStateManager);
 }
 
 HRESULT CWindField::Initialize_Prototype()
@@ -31,6 +37,10 @@ void CWindField::Priority_Tick(const _float& fTimeDelta)
 
 void CWindField::Tick(const _float& fTimeDelta)
 {
+	CCollider* pTargetCollider =  dynamic_cast<CCollider*>(m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, TEXT("Layer_Player"), TEXT("Com_Collider", 0)));
+
+	m_pStateManager->Set_CollWindField(m_pColliderCom->Intersect(pTargetCollider));
+
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 }
 
@@ -41,8 +51,20 @@ void CWindField::Late_Tick(const _float& fTimeDelta)
 
 HRESULT CWindField::Render()
 {
-	if (FAILED(__super::Render()))
+	if (FAILED(Bind_ResourceData()))
 		return E_FAIL;
+
+	_uint iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (int i = 0; i < iNumMeshes; ++i)
+	{
+		//if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_Texture", i, aiTextureType_DIFFUSE)))
+		//	continue;
+		m_pModelCom->Bind_Material(m_pShaderCom, "g_Texture", i, aiTextureType_DIFFUSE);
+
+		m_pShaderCom->Begin(1);
+		m_pModelCom->Render(i);
+	}
 
 #ifdef _DEBUG
 	m_pColliderCom->Render();
@@ -62,7 +84,7 @@ HRESULT CWindField::Add_Components()
 	CBounding_AABB::BOUNDING_AABB_DESC Desc{};
 
 	Desc.eType = CCollider::COLLIDER_AABB;
-	Desc.vExtents = _float3(0.6f, 0.5f, 0.6f);
+	Desc.vExtents = _float3(3.f, 100.f, 3.f);
 	Desc.vCenter = _float3(0.f, Desc.vExtents.y, 0.f);
 
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Collider", L"Com_Collider", reinterpret_cast<CComponent**>(&m_pColliderCom), &Desc)))
@@ -112,4 +134,6 @@ CGameObject* CWindField::Clone(void* pArg)
 void CWindField::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pStateManager);
 }

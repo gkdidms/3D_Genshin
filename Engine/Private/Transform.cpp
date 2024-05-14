@@ -81,7 +81,7 @@ _bool CTransform::Go_Run(const _matrix vMoveMatrix, CNavigation* pNavigationCom)
 		return false;
 	}
 
-	if (pNavigationCom->Get_OptionType() == CCell::OPTION_FLY && pNavigationCom->isLook(XMVector3Normalize(Get_State(STATE_LOOK))))
+	if (pNavigationCom->Get_OptionType() == CCell::OPTION_FLY && pNavigationCom->isFlyCell(XMVector3Normalize(Get_State(STATE_LOOK))))
 		return false;
 		
 	Set_State(CTransform::STATE_POSITION, vPos);

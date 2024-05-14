@@ -50,8 +50,19 @@ void CCheckPoint::Late_Tick(const _float& fTimeDelta)
 
 HRESULT CCheckPoint::Render()
 {
-	if (FAILED(__super::Render()))
+	if (FAILED(Bind_ResourceData()))
 		return E_FAIL;
+
+	_uint iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (int i = 0; i < iNumMeshes; ++i)
+	{
+		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_Texture", i, aiTextureType_DIFFUSE)))
+			continue;
+
+		m_pShaderCom->Begin(1);
+		m_pModelCom->Render(i);
+	}
 
 #ifdef _DEBUG
 	m_pColliderCom->Render();

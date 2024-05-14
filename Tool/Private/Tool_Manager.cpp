@@ -198,12 +198,23 @@ void CTool_Manager::Window_Object()
         ImGui::EndListBox();
     }
 
+
+
     if (ImGui::Button("Remove"))
     {
         m_pObject_Manager->Remove_Object(m_iCurrentPickingObjectIndex);
-        m_iCurrentPickingObjectIndex--;
+        m_iCurrentPickingObjectIndex = m_pObject_Manager->Get_Objects().size() - 1;
         if (m_pObject_Manager->Get_Objects().size() <= 0)
+        {
             m_iCurrentPickingObjectIndex = -1;
+            ZeroMemory(m_pObjectMatrix, sizeof(_matrix));
+        }
+        else {
+            vector<CTool_Object*> Objects = m_pObject_Manager->Get_Objects();
+            _matrix ObjectMatrix = Objects[m_iCurrentPickingObjectIndex]->m_pTransformCom->Get_WorldMatrix();
+
+            memcpy(&m_pObjectMatrix, &ObjectMatrix, sizeof(_matrix));
+        }
     }
 
     ImGui::Text(ImGuizmo::IsOver(ImGuizmo::TRANSLATE) ? "Over translate gizmo" : "");

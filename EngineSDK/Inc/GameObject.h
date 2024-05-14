@@ -21,6 +21,9 @@ public:
     class CTransform* m_pTransformCom = { nullptr };
 
 public:
+    _bool Get_Dead() { return m_isDead; }
+
+public:
     virtual HRESULT Initialize_Prototype();
     virtual HRESULT Initialize(void* pArg);
     virtual void Priority_Tick(const _float& fTimeDelta);
@@ -38,6 +41,9 @@ protected:
 
 protected:
     map<const wstring, class CComponent*> m_Components;
+
+protected:
+    _bool m_isDead = { false };
 
 protected:
     HRESULT Add_Component(_uint iLevelIndex, const wstring strComponentPrototypeTag, const wstring strComponentTag, class CComponent** pComponent, void* pArg = nullptr);

@@ -1,7 +1,7 @@
 #include "Weapon_Alaya.h"
 
 #include "GameInstance.h"
-#include "State_Manager.h"
+#include "StateManager.h"
 
 CWeapon_Alaya::CWeapon_Alaya(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CWeapon{ pDevice, pContext }

@@ -16,7 +16,10 @@
 #include "Weapon_Regalis.h"
 #include "Weapon_Narukami.h"
 
-#include "SkillObj_Gohei.h"
+#include "Gohei.h"
+#include "BlackFox.h"
+#include "FoxTail_Burst.h"
+#include "FoxTower.h"
 
 #include "Dungeon_1.h"
 #include "Dungeon_2.h"
@@ -41,12 +44,20 @@
 #include "Harbinger_Blade.h"
 #include "Harbinger_Bow.h"
 #include "Harbinger_DualBlade.h"
+#include "Tartaglia_Blade.h"
+#include "Tartaglia_Bow.h"
+#include "Tartaglia_DualBlade.h"
 
 #include "TreasureBox.h"
 #include "CheckPoint.h"
 #include "DungeonGate.h"
 #include "WindField.h"
 #include "FireCore.h"
+#include "Operator.h"
+#include "Plane.h"
+#include "ThornWall.h"
+
+#include "Flycloak.h"
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pContext{pContext}, m_pDevice{pDevice} , m_pGameInstance{ CGameInstance::GetInstance() }
@@ -163,6 +174,29 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_FireCore", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SceneObj/FireCore/FireCore.fbx", PreTransformMatrix, "../../Data/SceneObj_FireCore.dat"))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Operator", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SceneObj/Operator/Operator.fbx", PreTransformMatrix, "../../Data/SceneObj_Operator.dat"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_ThornWall", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SceneObj/ThornWall/ThornWall.fbx", PreTransformMatrix, "../../Data/SceneObj_ThornWall.dat"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Plane", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SceneObj/Plane/Plane.fbx", PreTransformMatrix, "../../Data/SceneObj_Plane.dat"))))
+		return E_FAIL;
+
+	lstrcpy(m_szLoadingText, TEXT("스킬 오브젝트 모델를(을) 로딩 중 입니다."));
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_BlackFox", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SkillObj/Yae/BlackFox/BlackFox.fbx", PreTransformMatrix, "../../Data/SkillObj_BlackFox.dat"))))
+		return E_FAIL;
+	PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Gohei", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SkillObj/Yae/Gohei/Gohei.fbx", PreTransformMatrix, "../../Data/SkillObj_Gohei.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_FoxTail_Burst", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SkillObj/Yae/FoxTail_Burst/FoxTail_Burst.fbx", PreTransformMatrix, "../../Data/SkillObj_FoxTail_Burst.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_FoxTower_1", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SkillObj/Yae/FoxTower_1/FoxTower_1.fbx", PreTransformMatrix, "../../Data/SkillObj_FoxTower_1.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_FoxTower_2", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SkillObj/Yae/FoxTower_2/FoxTower_2.fbx", PreTransformMatrix, "../../Data/SkillObj_FoxTower_2.dat"))))
+		return E_FAIL;
+
+
 	lstrcpy(m_szLoadingText, TEXT("무기 모델를(을) 로딩 중 입니다."));
 	PreTransformMatrix = XMMatrixIdentity();
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Ayus", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Ayus/Ayus.fbx", PreTransformMatrix, "../../Data/Weapon_Ayus.dat"))))
@@ -179,8 +213,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Hili_Weapon_CrossBow", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Monster/Weapon/CrossBow/CrossBow.fbx", PreTransformMatrix, "../../Data/Hili_CrossBow.dat"))))
 		return E_FAIL;
 
-	lstrcpy(m_szLoadingText, TEXT("스킬 오브젝트 모델를(을) 로딩 중 입니다."));
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Gohei", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SkillObj/Yae_Gohei/Gohei.fbx", PreTransformMatrix, "../../Data/SkillObj_Gohei.dat"))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Flycloak", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Flycloak/Flycloak.fbx", PreTransformMatrix, "../../Data/Flycloak.dat"))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("맵 모델를(을) 로딩 중 입니다."));
@@ -249,7 +282,16 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Map_Dungeon_2", CDungeon_2::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_SkillObj_Gohei", CSkillObj_Gohei::Create(m_pDevice, m_pContext))))
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_SkillObj_Gohei", CGohei::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_SkillObj_BlackFox", CBlackFox::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_SkillObj_FoxTail_Burst", CFoxTail_Burst::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_SkillObj_FoxTower", CFoxTower::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Monster_Slime_Fire_Large", CSlime_Large_Fire::Create(m_pDevice, m_pContext))))
@@ -276,7 +318,16 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_SceneObj_FireCore", CFireCore::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_SceneObj_Operator", COperator::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_SceneObj_WindField", CWindField::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_SceneObj_ThornWall", CThornWall::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_SceneObj_Plane", CPlane::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Monster_Hili_Fire", CHili_Fire::Create(m_pDevice, m_pContext))))
@@ -289,6 +340,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Monster_Hili_Weapon_Crossbow", CHili_Weapon_Crossbow::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Flycloak", CFlycloak::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
@@ -327,6 +381,14 @@ HRESULT CLoader::Loading_For_Stage_Boss()
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Harbinger_Bow", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Harbinger_Bow/Bow.fbx", PreTransformMatrix, "../../Data/Harbinger_Bow.dat"))))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Harbinger_DualBlade", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Harbinger_DualBlade/DualBlade.fbx", PreTransformMatrix, "../../Data/Harbinger_DualBlade.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Tartaglia_Blade_Water", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Tartaglia_Blade_Water/Water_Blade.fbx", PreTransformMatrix, "../../Data/Tartaglia_Water_Blade.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Tartaglia_Blade_Electric", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Tartaglia_Blade_Electric/Electric_Blade.fbx", PreTransformMatrix, "../../Data/Tartaglia_Electric_Blade.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Tartaglia_Bow", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Tartaglia_Bow/Bow.fbx", PreTransformMatrix, "../../Data/Tartaglia_Bow.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Tartaglia_DualBlade", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Tartaglia_DualBlade/DualBlade.fbx", PreTransformMatrix, "../../Data/Tartaglia_DualBlade.dat"))))
 		return E_FAIL;
 
 	PreTransformMatrix = XMMatrixIdentity();
@@ -422,11 +484,21 @@ HRESULT CLoader::Loading_For_Stage_Boss()
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Harbinger_Blade", CHarbinger_Blade::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Harbinger_Bow", CHarbinger_Blade::Create(m_pDevice, m_pContext))))
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Harbinger_Bow", CHarbinger_Bow::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Harbinger_DualBlade", CHarbinger_Blade::Create(m_pDevice, m_pContext))))
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Harbinger_DualBlade", CHarbinger_DualBlade::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Tartaglia_Blade", CTartaglia_Blade::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Tartaglia_Bow", CTartaglia_Bow::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Tartaglia_DualBlade", CTartaglia_DualBlade::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
 	m_isFinished = true;

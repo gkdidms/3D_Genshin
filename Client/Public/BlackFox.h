@@ -1,12 +1,14 @@
 #pragma once
 #include "SkillObj.h"
-class CSkillObj_Gohei :
+
+BEGIN(Client)
+class CBlackFox :
     public CSkillObj
 {
 private:
-    CSkillObj_Gohei(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-    CSkillObj_Gohei(const CSkillObj_Gohei& rhs);
-    virtual ~CSkillObj_Gohei() = default;
+    CBlackFox(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+    CBlackFox(const CBlackFox& rhs);
+    virtual ~CBlackFox() = default;
 
 public:
     virtual HRESULT Initialize_Prototype();
@@ -22,8 +24,9 @@ private:
     void Change_Animation(const _float& fTimeDelta) override;
 
 public:
-    static CSkillObj_Gohei* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+    static CBlackFox* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
     virtual CGameObject* Clone(void* pArg) override;
     virtual void Free() override;
 };
 
+END

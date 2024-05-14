@@ -1,7 +1,7 @@
 #include "Tighnari_Body.h"
 
 #include "GameInstance.h"
-#include "State_Manager.h"
+#include "StateManager.h"
 
 CTighnari_Body::CTighnari_Body(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject_Body{ pDevice, pContext } 
@@ -45,7 +45,7 @@ void CTighnari_Body::Tick(const _float& fTimeDelta)
 {
 	if (m_pModelCom->Get_Animation_Finished())
 	{
-		*m_pState = m_pState_Manager->Exit(PLAYER_STATE(*m_pState));
+		*m_pState = m_pStateManager->Exit(PLAYER_STATE(*m_pState));
 	}
 
 	Change_Animation(fTimeDelta);

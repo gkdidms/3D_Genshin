@@ -89,6 +89,12 @@ HRESULT CMainTool::Ready_Level_For_Main()
         return E_FAIL;
     if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_DungeonGate", CModel::Create(m_pDevice, m_pContext, "../../Client/Bin/Resources/Models/SceneObj/Gate/DungeonGate.fbx", PreTransformMatrix, "../../Data/SceneObj_Gate.dat"))))
         return E_FAIL;
+    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Operator", CModel::Create(m_pDevice, m_pContext, "../../Client/Bin/Resources/Models/SceneObj/Operator/Operator.fbx", PreTransformMatrix, "../../Data/SceneObj_Operator.dat"))))
+        return E_FAIL;
+    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Plane", CModel::Create(m_pDevice, m_pContext, "../../Client/Bin/Resources/Models/SceneObj/Plane/Plane.fbx", PreTransformMatrix, "../../Data/SceneObj_Plane.dat"))))
+        return E_FAIL;
+    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_ThornWall", CModel::Create(m_pDevice, m_pContext, "../../Client/Bin/Resources/Models/SceneObj/ThornWall/ThornWall.fbx", PreTransformMatrix, "../../Data/SceneObj_ThornWall.dat"))))
+        return E_FAIL;
 
     if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Model_Hili_Fire", CModel::Create(m_pDevice, m_pContext, "../../Client/Bin/Resources/Models/Monster/Hili_Fire/Hili_Fire.fbx", PreTransformMatrix, "../../Data/Hili_Fire.dat"))))
         return E_FAIL;

@@ -1,6 +1,6 @@
 #include "StateFallGround.h"
 
-#include "State_Manager.h"
+#include "StateManager.h"
 #include "GameInstance.h"
 
 CStateFallGround::CStateFallGround()
@@ -8,32 +8,29 @@ CStateFallGround::CStateFallGround()
 {
 }
 
-PLAYER_STATE CStateFallGround::Enter(class CState_Manager& pStateManager, PLAYER_STATE CurrentState)
+PLAYER_STATE CStateFallGround::Enter(class CStateManager& pStateManager, PLAYER_STATE CurrentState)
 {
-	if (m_pGameInstance->GetKeyState(DIK_W) == CInput_Device::HOLD
-		|| m_pGameInstance->GetKeyState(DIK_A) == CInput_Device::HOLD
-		|| m_pGameInstance->GetKeyState(DIK_S) == CInput_Device::HOLD
-		|| m_pGameInstance->GetKeyState(DIK_D) == CInput_Device::HOLD)
+	if (Check_Move())
 		return PLAYER_FALL_GROUND_FOR_RUN;
-	
+
 	return PLAYER_FALL_GROUND_H;
 }
 
-PLAYER_STATE CStateFallGround::Update(const _float& fTimeDelta, CState_Manager& pStateManager, PLAYER_STATE CurrentState)
+PLAYER_STATE CStateFallGround::Update(const _float& fTimeDelta, CStateManager& pStateManager, PLAYER_STATE CurrentState)
 {
 	return CurrentState;
 }
 
-PLAYER_STATE CStateFallGround::Exit(CState_Manager& pStateManager, PLAYER_STATE CurrentState)
+PLAYER_STATE CStateFallGround::Exit(CStateManager& pStateManager, PLAYER_STATE CurrentState)
 {
 	if (CurrentState == PLAYER_FALL_GROUND_FOR_RUN)
-		return pStateManager.Set_CurrentState(CState_Manager::STATE_TYPE_RUN, CurrentState);
+		return pStateManager.Set_CurrentState(CStateManager::STATE_TYPE_RUN, CurrentState);
 
 	else if (CurrentState == PLAYER_FALL_GROUND_FOR_SPRINT)
-		return pStateManager.Set_CurrentState(CState_Manager::STATE_TYPE_SPRINT, CurrentState);
+		return pStateManager.Set_CurrentState(CStateManager::STATE_TYPE_SPRINT, CurrentState);
 
 	else if (CurrentState == PLAYER_FALL_GROUND_H)
-		return pStateManager.Set_CurrentState(CState_Manager::STATE_TYPE_IDEL);
+		return pStateManager.Set_CurrentState(CStateManager::STATE_TYPE_IDEL);
 
 	return PLAYER_FALL_GROUND_FOR_RUN;
 }

@@ -319,16 +319,11 @@ CNode::NODE_STATE CBT_Harbinger::Check_RangeAtk()	// 가까이 이동하거나 원거리 공
 _bool CBT_Harbinger::Check_Rear_ToPlayer()
 {
 	// 플레이어의 뒤를 봤을때 공격 해야함.
+	_vector vTarget = XMLoadFloat4x4(m_pTargetMatrix).r[3];
+	_vector vCurrentPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	_vector vLook = XMLoadFloat4x4(m_pTargetMatrix).r[2];
 
-	_vector vTargetLook = XMVector3Normalize(XMLoadFloat4x4(m_pTargetMatrix).r[2]);
-	_vector vLook = XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK));
-	
-	_float vAngle = XMConvertToDegrees(XMVectorGetX(XMVector3Dot(vTargetLook, vLook)));
-
-	if (vAngle < 0.f)
-		return vAngle > -45.f;
-	else
-		return vAngle < 45.f;
+	return !AngleOfView(180.f, vCurrentPos, vTarget, vLook);
 }
 
 CNode::NODE_STATE CBT_Harbinger::Bow_Cover_Attack() //화살비

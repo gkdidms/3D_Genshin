@@ -24,7 +24,7 @@ HRESULT CHarbinger_Bow::Initialize(void* pArg)
 
 	if (FAILED(Add_Components()))
 		return E_FAIL;
-	
+
 	return S_OK;
 }
 
@@ -40,7 +40,7 @@ void CHarbinger_Bow::Late_Tick(const _float& fTimeDelta)
 {
 	_matrix		SocketMatrix = XMMatrixIdentity();
 
-	m_isHide = !(*m_pState == CBoss::BOSS_BLADE_EXTRA_ATTACK || *m_pState == CBoss::BOSS_BLADE_RANGE_ATTACK || *m_pState == CBoss::BOSS_BOW_NORMAL_ATTACK_BS);
+	m_isHide = !(*m_pState == CBoss::BOSS_BOW_COVER_ATTACK || *m_pState == CBoss::BOSS_BOW_POWER_ATTACK || *m_pState == CBoss::BOSS_BOW_NORMAL_ATTACK_BS);
 	if (!m_isHide)
 	{
 		SocketMatrix = XMLoadFloat4x4(m_pSocketMatrix);

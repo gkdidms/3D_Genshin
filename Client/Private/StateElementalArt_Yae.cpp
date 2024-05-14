@@ -1,20 +1,22 @@
 #include "StateElementalArt_Yae.h"
 
 #include "GameInstance.h"
-#include "State_Manager.h"
+#include "StateManager.h"
 
 CStateElementalArt_Yae::CStateElementalArt_Yae()
 {
 }
 
-PLAYER_STATE CStateElementalArt_Yae::Enter(class CState_Manager& pStateManager, PLAYER_STATE CurrentState)
+PLAYER_STATE CStateElementalArt_Yae::Enter(class CStateManager& pStateManager, PLAYER_STATE CurrentState)
 {
+	m_fTime = { 0.f };
+
 	m_iSkillCount++;
 
 	return PLAYER_ELEMENTAL_1;
 }
 
-PLAYER_STATE CStateElementalArt_Yae::Update(const _float& fTimeDelta, CState_Manager& pStateManager, PLAYER_STATE CurrentState)
+PLAYER_STATE CStateElementalArt_Yae::Update(const _float& fTimeDelta, CStateManager& pStateManager, PLAYER_STATE CurrentState)
 {
 	m_fTime += fTimeDelta;
 
@@ -28,7 +30,7 @@ PLAYER_STATE CStateElementalArt_Yae::Update(const _float& fTimeDelta, CState_Man
 		|| m_pGameInstance->GetKeyState(DIK_S) == CInput_Device::HOLD
 		|| m_pGameInstance->GetKeyState(DIK_D) == CInput_Device::HOLD
 		&& (CurrentState == PLAYER_ELEMENTAL_1_END || CurrentState == PLAYER_ELEMENTAL_2_END))
-		return pStateManager.Set_CurrentState(CState_Manager::STATE_TYPE_RUN);
+		return pStateManager.Set_CurrentState(CStateManager::STATE_TYPE_RUN);
 
 	if (m_pGameInstance->GetKeyState(DIK_E) == CInput_Device::TAP && (CurrentState == PLAYER_ELEMENTAL_1_END || CurrentState == PLAYER_ELEMENTAL_2_END))
 	{
@@ -50,19 +52,19 @@ PLAYER_STATE CStateElementalArt_Yae::Update(const _float& fTimeDelta, CState_Man
 	return CurrentState;
 }
 
-PLAYER_STATE CStateElementalArt_Yae::Exit(CState_Manager& pStateManager, PLAYER_STATE CurrentState)
+PLAYER_STATE CStateElementalArt_Yae::Exit(CStateManager& pStateManager, PLAYER_STATE CurrentState)
 {
 	if (CurrentState == PLAYER_ELEMENTAL_1)
 		return PLAYER_ELEMENTAL_1_END;
 
 	if (CurrentState == PLAYER_ELEMENTAL_1_END)
-		return pStateManager.Set_CurrentState(CState_Manager::STATE_TYPE_IDEL);
+		return pStateManager.Set_CurrentState(CStateManager::STATE_TYPE_IDEL);
 
 	if (CurrentState == PLAYER_ELEMENTAL_2)
 		return PLAYER_ELEMENTAL_2_END;
 
 	if (CurrentState == PLAYER_ELEMENTAL_2_END)
-		return pStateManager.Set_CurrentState(CState_Manager::STATE_TYPE_IDEL);
+		return pStateManager.Set_CurrentState(CStateManager::STATE_TYPE_IDEL);
 
 	return PLAYER_ELEMENTAL_END;
 }

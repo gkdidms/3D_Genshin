@@ -23,8 +23,6 @@ public:
 		SKILL_END
     };
 
-	enum RANGE_TYPE { RANGE, MELEE, RANGE_END };
-
 private:
     CBT_Harbinger();
     virtual ~CBT_Harbinger() = default;
@@ -36,7 +34,7 @@ public:
 
 private:
     SKILL m_Skill = { SKILL_END };
-	RANGE_TYPE m_RangeType = { RANGE_END };
+	CBT_Boss::RANGE_TYPE m_RangeType = { RANGE_END };
 
 private:
 	_float m_fBowNormalTime = { 1.f };

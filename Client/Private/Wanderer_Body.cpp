@@ -1,7 +1,7 @@
 #include "Wanderer_Body.h"
 
 #include "GameInstance.h"
-#include "State_Manager.h"
+#include "StateManager.h"
 
 CWanderer_Body::CWanderer_Body(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject_Body{ pDevice, pContext } 
@@ -20,9 +20,6 @@ HRESULT CWanderer_Body::Initialize_Prototype()
 
 HRESULT CWanderer_Body::Initialize(void* pArg)
 {
-	WANDERER_DESC* pDesc = (WANDERER_DESC*)pArg;
-	m_pElementalAir = pDesc->isElementalAir;
-
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -47,7 +44,7 @@ void CWanderer_Body::Priority_Tick(const _float& fTimeDelta)
 void CWanderer_Body::Tick(const _float& fTimeDelta)
 {
 	if (m_pModelCom->Get_Animation_Finished())
-		*m_pState = m_pState_Manager->Exit(PLAYER_STATE(*m_pState));
+		*m_pState = m_pStateManager->Exit(PLAYER_STATE(*m_pState));
 
 	Change_Animation(fTimeDelta);
 
@@ -62,7 +59,7 @@ void CWanderer_Body::Tick(const _float& fTimeDelta)
 	}
 
 	// 방랑자 원소스킬 사용 중 이동 값
-	if (*m_pElementalAir && (*m_pState == PLAYER_RUN_START || *m_pState == PLAYER_RUN))
+	if (m_pStateManager->isElementalArt() && (*m_pState == PLAYER_RUN_START || *m_pState == PLAYER_RUN))
 		MoveMatrix.r[3] = XMVectorSet(0.f, 0.f, m_fRunSpeed * fTimeDelta * -1.f, 1.f);
 		
 
@@ -101,7 +98,7 @@ HRESULT CWanderer_Body::Render()
 
 	for (int i = 0; i < iNumMeshes; ++i)
 	{
-		if (*m_pElementalAir && m_pModelCom->IsFindMesh(i, "Hat"))
+		if (m_pStateManager->isElementalArt() && m_pModelCom->IsFindMesh(i, "Hat"))
 			continue;
 
 		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
@@ -143,26 +140,27 @@ HRESULT CWanderer_Body::Bind_ResourceData()
 
 void CWanderer_Body::Change_Animation(const _float& fTimeDelta)
 {
-	m_IsLinearSpeed = false;
+	_bool isAir = m_pStateManager->isElementalArt();
 
+	m_IsLinearSpeed = false;
 	m_IsLinear = true;
 	switch (*m_pState)
 	{
 	case PLAYER_ATTACK_1:
 	{
-		m_iAnim = *m_pElementalAir ? 35: 0;
+		m_iAnim = isAir ? 35: 0;
 		m_IsLoop = false;
 		break;
 	}
 	case PLAYER_ATTACK_2:
 	{
-		m_iAnim = *m_pElementalAir ? 36: 1;
+		m_iAnim = isAir ? 36: 1;
 		m_IsLoop = false;
 		break;
 	}
 	case PLAYER_ATTACK_3:
 	{
-		m_iAnim = *m_pElementalAir ? 37: 2;
+		m_iAnim = isAir ? 37: 2;
 		m_IsLoop = false;
 		break;
 	}
@@ -188,20 +186,20 @@ void CWanderer_Body::Change_Animation(const _float& fTimeDelta)
 	}
 	case PLAYER_ELEMENTAL_BURST:
 	{
-		m_iAnim = *m_pElementalAir ? 39: 38;
+		m_iAnim = isAir ? 39: 38;
 		m_IsLoop = false;
 		break;
 	}
 	case PLAYER_ELEMENTAL_BURST_END:
 	{
-		m_iAnim = *m_pElementalAir ? 40 : 41;
+		m_iAnim = isAir ? 40 : 41;
 		m_IsLoop = false;
 		m_IsLinear = false;
 		break;
 	}
 	case PLAYER_RUN_START:
 	{
-		if (*m_pElementalAir)
+		if (isAir)
 		{
 			if (*m_pDirState == CPlayer::DIR_STRIGHT)
 			{
@@ -233,7 +231,7 @@ void CWanderer_Body::Change_Animation(const _float& fTimeDelta)
 	}
 	case PLAYER_RUN:
 	{
-		if (*m_pElementalAir)
+		if (isAir)
 		{
 			if (*m_pDirState == CPlayer::DIR_STRIGHT)
 			{
@@ -279,7 +277,7 @@ void CWanderer_Body::Change_Animation(const _float& fTimeDelta)
 	}
 	case PLAYER_RUN_STOP:
 	{
-		if (*m_pElementalAir)
+		if (isAir)
 		{
 			if (*m_pDirState == CPlayer::DIR_STRIGHT)
 			{
@@ -427,7 +425,7 @@ void CWanderer_Body::Change_Animation(const _float& fTimeDelta)
 	}
 	case PLAYER_IDLE:
 	{
-		m_iAnim = *m_pElementalAir ? 34 : 80;
+		m_iAnim = isAir ? 34 : 80;
 
 		m_IsLoop = true;
 		// m_IsLinear = false;

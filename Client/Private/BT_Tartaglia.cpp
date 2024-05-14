@@ -269,15 +269,15 @@ CNode::NODE_STATE CBT_Tartaglia::Check_Attack_Deley()
 						m_Skill = SKILL(Random(SKILL_BLADE_EXTRA));
 				}
 
-				m_isAttack = true;
 				m_fCurrentTime = 0.f;
 				m_pTransformCom->LookAt(XMLoadFloat4x4(m_pTargetMatrix).r[3]);
 
-				m_isWalkStop = false;
+				m_isWalkStop = true;
 
 				return CNode::SUCCESS;
 			}
 
+			m_isWalkStop = false;
 			return CNode::FAILURE;
 		}
 	}
@@ -311,6 +311,7 @@ CNode::NODE_STATE CBT_Tartaglia::Rush_Move()
 
 		*m_pState = CBoss::BOSS_RUSH_BS;
 
+		m_isAttack = true;
 		return CNode::SUCCESS;
 	}
 	return CNode::FAILURE;
@@ -333,6 +334,7 @@ CNode::NODE_STATE CBT_Tartaglia::Bow_ComboAttack() // 단류 표식
 	if (m_Skill == SKILL_BOW_COMBO)
 	{
 		*m_pState = CBoss::BOSS_BOW_COMBO_ATTACK;
+		m_isAttack = true;
 		return CNode::SUCCESS;
 	}
 	
@@ -373,6 +375,7 @@ CNode::NODE_STATE CBT_Tartaglia::Bow_CoverAttack() // 단류 표식이 있을 경우에만 
 	{
 		*m_pState = CBoss::BOSS_BOW_COVER_ATTACK_BS;
 		m_iAttackCount = Random(4) + 4;
+		m_isAttack = true;
 
 		return CNode::SUCCESS;
 	}
@@ -414,6 +417,7 @@ CNode::NODE_STATE CBT_Tartaglia::Bow_NormalAttack() // 단류 일반 공격 (6번 정도)
 		*m_pState = CBoss::BOSS_BOW_NORMAL_ATTACK_BS;
 
 		m_iAttackCount = Random(5) + 3;
+		m_isAttack = true;
 
 		return CNode::SUCCESS;
 	}
@@ -441,6 +445,7 @@ CNode::NODE_STATE CBT_Tartaglia::Bow_PowerAttack() // 고래 소환, 단류 표식
 	if (m_Skill == SKILL_BOW_POWER)
 	{
 		*m_pState = CBoss::BOSS_BOW_POWER_ATTACK_BS;
+		m_isAttack = true;
 
 		return CNode::SUCCESS;
 	}
@@ -489,6 +494,7 @@ CNode::NODE_STATE CBT_Tartaglia::Bow_RangeAttack() //파도 소환 3~5
 		*m_pState = CBoss::BOSS_BOW_RANGE_ATTACK_BS;
 
 		m_iAttackCount = 3 + Random(2);
+		m_isAttack = true;
 
 		return CNode::SUCCESS;
 	}
@@ -513,6 +519,7 @@ CNode::NODE_STATE CBT_Tartaglia::Blade_ExtraAttack() // 잘 안씀 - 플레이어 앞으�
 	if (m_Skill == SKILL_BLADE_EXTRA)
 	{
 		*m_pState = CBoss::BOSS_BLADE_EXTRA_ATTACK;
+		m_isAttack = true;
 
 		return CNode::SUCCESS;
 	}

@@ -11,6 +11,8 @@
 
 #include "Hili.h"
 #include "FireCore.h"
+#include "CheckPoint.h"
+#include "Plane.h"
 
 
 CGamePlay_Level::CGamePlay_Level(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -183,6 +185,63 @@ HRESULT CGamePlay_Level::Ready_Object(const char* strName, _matrix WorldMatrix, 
 		XMStoreFloat4x4(&Desc.WorldMatrix, WorldMatrix);
 
 		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_SceneObj_DungeonGate", L"Layer_SceneObj", &Desc)))
+			return E_FAIL;
+	}
+	else if (string(strName).find("CheckPoint") != string::npos)
+	{
+		CCheckPoint::CHECKPOINT_DESC Desc{};
+
+		Desc.pTargetMatrix = dynamic_cast<CTransform*>(m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, L"Layer_Player", L"Com_Transform"))->Get_WorldFloat4x4();
+		XMStoreFloat4x4(&Desc.WorldMatrix, WorldMatrix);
+
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_SceneObj_CheckPoint", L"Layer_SceneObj", &Desc)))
+			return E_FAIL;
+	}
+	else if (string(strName).find("Operator") != string::npos)
+	{
+		CSceneObj::SCENEOBJ_DESC Desc{};
+
+		XMStoreFloat4x4(&Desc.WorldMatrix, WorldMatrix);
+
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_SceneObj_Operator", L"Layer_SceneObj", &Desc)))
+			return E_FAIL;
+	}
+	else if (string(strName).find("WindField") != string::npos)
+	{
+		CSceneObj::SCENEOBJ_DESC Desc{};
+
+		XMStoreFloat4x4(&Desc.WorldMatrix, WorldMatrix);
+
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_SceneObj_WindField", L"Layer_SceneObj", &Desc)))
+			return E_FAIL;
+	}
+	else if (string(strName).find("ThornWall") != string::npos)
+	{
+		CSceneObj::SCENEOBJ_DESC Desc{};
+
+		XMStoreFloat4x4(&Desc.WorldMatrix, WorldMatrix);
+
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_SceneObj_ThornWall", L"Layer_SceneObj", &Desc)))
+			return E_FAIL;
+	}
+	else if (string(strName).find("MovePlane") != string::npos)
+	{
+		CPlane::PLANE_DESC Desc{};
+
+		XMStoreFloat4x4(&Desc.WorldMatrix, WorldMatrix);
+		Desc.isMove = true;
+
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_SceneObj_Plane", L"Layer_SceneObj", &Desc)))
+			return E_FAIL;
+	}
+	else if (string(strName).find("Plane") != string::npos)
+	{
+		CPlane::PLANE_DESC Desc{};
+
+		XMStoreFloat4x4(&Desc.WorldMatrix, WorldMatrix);
+		Desc.isMove = false;
+
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_SceneObj_Plane", L"Layer_SceneObj", &Desc)))
 			return E_FAIL;
 	}
 	else if (string(strName).find("Hili_Fire") != string::npos)

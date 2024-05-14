@@ -18,6 +18,9 @@ public:
     virtual void Late_Tick(const _float& fTimeDelta) override;
     virtual HRESULT Render() override;
 
+public:
+    _bool m_isFinal = { false };
+
 private:
     virtual HRESULT Add_Components();
     virtual HRESULT Bind_ResourceData();

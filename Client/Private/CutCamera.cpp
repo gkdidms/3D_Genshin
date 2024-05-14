@@ -88,7 +88,7 @@ HRESULT CCutCamera::Render()
 	return S_OK;
 }
 
-void CCutCamera::isCutScene(_bool isCutScene, CPlayer::PLAYERBLE_TYPE ePlayerble)
+void CCutCamera::isCutScene(_bool isCutScene, _uint ePlayerble)
 {
 	if (m_ePlayerble == ePlayerble)
 		return;
