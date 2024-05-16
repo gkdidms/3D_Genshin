@@ -24,6 +24,10 @@ public:
 
 public:
     _bool Intersect(CCollider* pTargetCollider);
+    void Compute_Rank(_char strRank, _char strTargetRank, 
+        class CTransform* pTransform, class CTransform* pTargetTransform, 
+        class CNavigation* pNavigation, class CNavigation* pTargetNavigation,
+        const float& fTimeDelta);
 
 #ifdef _DEBUG
 public:

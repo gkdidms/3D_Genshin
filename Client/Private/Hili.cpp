@@ -41,6 +41,7 @@ HRESULT CHili::Initialize(void* pArg)
 
 void CHili::Priority_Tick(const _float& fTimeDelta)
 {
+	__super::Priority_Tick(fTimeDelta);
 }
 
 void CHili::Tick(const _float& fTimeDelta)
@@ -51,8 +52,6 @@ void CHili::Tick(const _float& fTimeDelta)
 void CHili::Late_Tick(const _float& fTimeDelta)
 {
 	m_pWeapon->Late_Tick(fTimeDelta);
-
-	Check_Coll();
 }
 
 HRESULT CHili::Render()
@@ -96,36 +95,46 @@ void CHili::Change_Animation(const _float& fTimeDelta)
 		isLinearSpeed = false;
 		iAnim = m_Weapon == HILI_WEAPON_CLUB ? 16 : 37;
 		isLoop = true;
+
+		m_strStateRank = 'D';
 		break;
 	}
 	case CHili::HILI_NORMAL_ATK:
 	{
 		iAnim = m_Weapon == HILI_WEAPON_CLUB ? 14 : 29;
 		isLoop = false;
+
+		m_strStateRank = 'B';
 		break;
 	}
 	case CHili::HILI_THUMP_ATK:
 	{
 		iAnim =  21;
 		isLoop = false;
+		m_strStateRank = 'B';
 		break;
 	}
 	case CHili::HILI_TRIPLE_ATK:
 	{
 		iAnim = 22;
 		isLoop = false;
+		m_strStateRank = 'B';
 		break;
 	}
 	case CHili::HILI_HIT:
 	{
 		iAnim = m_Weapon == HILI_WEAPON_CLUB ? 9 : 31;
 		isLoop = false;
+
+		m_strStateRank = 'D';
 		break;
 	}
 	case CHili::HILI_RUN:
 	{
 		iAnim = m_Weapon == HILI_WEAPON_CLUB ? 15 : 38;
 		isLoop = true;
+
+		m_strStateRank = 'B';
 		break;
 	}
 	case CHili::HILI_DIE:
@@ -133,34 +142,41 @@ void CHili::Change_Animation(const _float& fTimeDelta)
 		isLinearSpeed = false;
 		iAnim = m_Weapon == HILI_WEAPON_CLUB ? 3 : 43;
 		isLoop = true;
+		m_strStateRank = 'A';
 		break;
 	}
 	case CHili::HILI_WALK_FORWARD:
 		isLinearSpeed = true;
 		iAnim = m_Weapon == HILI_WEAPON_CLUB ? 24 : 40;
 		isLoop = true;
+
+		m_strStateRank = 'C';
 		break;
 	case CHili::HILI_WALK_BACK:
 		isLinearSpeed = true;
 		iAnim = m_Weapon == HILI_WEAPON_CLUB ? 23 : 39;
 		isLoop = true;
+		m_strStateRank = 'C';
 		break;
 
 	case HILI_BORN:
 	{
 		iAnim = 0;
 		isLoop = false;
+		m_strStateRank = 'D';
 		break;
 	}
 	case HILI_TAUNT_1:
 	{
 		iAnim = 18;
 		isLoop = false;
+		m_strStateRank = 'D';
 		break;
 	}
 	case HILI_TAUNT_2:
 		iAnim = 19;
 		isLoop = false;
+		m_strStateRank = 'D';
 		break;
 	case CHili::HILI_END:
 		break;
@@ -209,19 +225,26 @@ HRESULT CHili::Ready_Object()
 	return S_OK;
 }
 
-void CHili::Check_Coll()
+//void CHili::Check_Coll()
+//{
+//	
+//	CCollider* pPlayerColl =  dynamic_cast<CCollider*>( m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, TEXT("Layer_Player"), TEXT("Com_Collider")));
+//	
+//	if (m_pColliderCom->Intersect(pPlayerColl))
+//	{
+//		m_isColl = true;
+//
+//		return;
+//	}
+//
+//	m_isColl = false;
+//}
+
+void CHili::SetUp_OnTerrain(const _float& fTimeDelta)
 {
-	
-	CCollider* pPlayerColl =  dynamic_cast<CCollider*>( m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, TEXT("Layer_Player"), TEXT("Com_Collider")));
-	
-	if (m_pColliderCom->Intersect(pPlayerColl))
-	{
-		m_isColl = true;
-
-		return;
-	}
-
-	m_isColl = false;
+	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	vPos = XMVectorSetY(vPos, m_pNavigation->Compute_Height(vPos));
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 }
 
 void CHili::Free()
@@ -230,5 +253,7 @@ void CHili::Free()
 
 	Safe_Release(m_pWeapon);
 }
+
+
 
 

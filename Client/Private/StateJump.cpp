@@ -24,7 +24,7 @@ PLAYER_STATE CStateJump::Update(const _float& fTimeDelta, CStateManager& pStateM
 {
 	if (m_pGameInstance->GetKeyState(DIK_SPACE))
 	{
-		if (pStateManager.isCollWIndField())
+		if (pStateManager.isCollWindField())
 			return pStateManager.Set_CurrentState(CStateManager::STATE_TYPE_FLY);
 	}
 	return CurrentState;

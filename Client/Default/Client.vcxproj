@@ -180,6 +180,7 @@
     <ClInclude Include="..\public\Dungeon_1.h" />
     <ClInclude Include="..\Public\Dungeon_2.h" />
     <ClInclude Include="..\public\FireCore.h" />
+    <ClInclude Include="..\public\FlowerArrow.h" />
     <ClInclude Include="..\public\Flycloak.h" />
     <ClInclude Include="..\public\FoxTower.h" />
     <ClInclude Include="..\public\GoldenHouse.h" />
@@ -193,6 +194,7 @@
     <ClInclude Include="..\public\Hili_Weapon_Club.h" />
     <ClInclude Include="..\Public\Hili_Weapon_Crossbow.h" />
     <ClInclude Include="..\public\Boss_Body.h" />
+    <ClInclude Include="..\public\KasaRing.h" />
     <ClInclude Include="..\public\Node.h" />
     <ClInclude Include="..\public\Operator.h" />
     <ClInclude Include="..\public\Plane.h" />
@@ -285,6 +287,7 @@
     <ClCompile Include="..\private\Dungeon_1.cpp" />
     <ClCompile Include="..\Private\Dungeon_2.cpp" />
     <ClCompile Include="..\private\FireCore.cpp" />
+    <ClCompile Include="..\private\FlowerArrow.cpp" />
     <ClCompile Include="..\private\Flycloak.cpp" />
     <ClCompile Include="..\private\FoxTower.cpp" />
     <ClCompile Include="..\private\GoldenHouse.cpp" />
@@ -298,6 +301,7 @@
     <ClCompile Include="..\private\Hili_Weapon_Club.cpp" />
     <ClCompile Include="..\Private\Hili_Weapon_Crossbow.cpp" />
     <ClCompile Include="..\private\Boss_Body.cpp" />
+    <ClCompile Include="..\private\KasaRing.cpp" />
     <ClCompile Include="..\private\Node.cpp" />
     <ClCompile Include="..\private\Operator.cpp" />
     <ClCompile Include="..\private\Plane.cpp" />

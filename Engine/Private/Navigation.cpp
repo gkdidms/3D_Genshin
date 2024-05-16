@@ -68,7 +68,7 @@ void CNavigation::Tick()
 {
 }
 
-_int CNavigation::Find_Index(POINT ptMouse, _fvector vTargetPos, _fvector vTargetRayDir, _fmatrix WorldMatirx)
+_int CNavigation::Find_Index(POINT ptMouse, _fvector vTargetPos, _fvector vTargetRayDir, _fmatrix WorldMatirx, _int* pIndex)
 {
     // 스케일 값
     // 뷰포트 -> 투영
@@ -105,8 +105,8 @@ _int CNavigation::Find_Index(POINT ptMouse, _fvector vTargetPos, _fvector vTarge
     vRayPos = XMVector3TransformCoord(vRayPos, matWorld);
     vRayDir = XMVector3Normalize(XMVector3TransformCoord(vRayDir, matWorld));
 
-	_ulong	dwVtxIdx[3]{};
 	_float	fDist(0.f);
+    _uint iIndex = 0;
 	for (auto& pCell : m_Cells)
 	{
 		if (Intersects(vTargetPos,
@@ -116,8 +116,14 @@ _int CNavigation::Find_Index(POINT ptMouse, _fvector vTargetPos, _fvector vTarge
 			pCell->Get_Point(CCell::POINT_C),
 			fDist))
 		{
+            if (nullptr != pIndex)
+            {
+                *pIndex = iIndex;
+            }
+
 			return pCell->Get_Index();
 		}
+        ++iIndex;
 	}
 
 	return -1;
@@ -159,6 +165,22 @@ HRESULT CNavigation::Render()
     }
 
     return S_OK;
+}
+
+_bool CNavigation::isRemove(_int iIndex)
+{
+    for (auto iter = m_Cells.begin(); iter != m_Cells.end();)
+    {
+        if ((*iter)->Get_Index() == iIndex)
+        {
+            Safe_Release(*iter);
+            m_Cells.erase(iter);
+
+            return true;
+        }
+        else ++iter;
+    }
+    return false;
 }
 #endif // _DEBUG
 

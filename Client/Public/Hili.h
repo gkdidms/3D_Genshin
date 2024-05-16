@@ -56,16 +56,13 @@ protected:
     virtual void Change_Animation(const _float& fTimeDelta);
 
     virtual HRESULT Ready_Object();
-
-    virtual void Check_Coll();
+    void SetUp_OnTerrain(const _float& fTimeDelta);
 
 protected:
     HILI_STATE m_CurrentState = { HILI_END };
     HILI_WEAPON_TYPE m_Weapon = { HILI_WEAPON_END };
     class CHili_Weapon* m_pWeapon = { nullptr };
     HILI_INFO m_Info;
-
-    _bool m_isColl = { false };
 
 protected:
     class CBT_Hili* m_pBT = { nullptr };

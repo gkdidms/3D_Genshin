@@ -33,12 +33,11 @@ public:
     const _float4x4* Get_PlayerCameraLook() const { return m_pCameraLook; }
     _uint Get_PlayerState() { return m_iState; }
     _bool Get_BossSign() { return m_isBossSign; }
-    _bool isFly();
     _bool isAttack();
 
 public:
-    void Set_Fly();
     void Set_PlayerMove(_vector vMoveSpeed);
+    void Set_Coll(_bool isColl) { m_isColl = isColl; }
 
 public:
     _uint Get_CurrentWeapon();
@@ -73,6 +72,7 @@ private:
 
 private: 
     _bool m_isBossSign = { false }; // 보스 (타탈) 단류가 부착되었는지 확인.
+    _bool m_isColl = { false };
 
     _float m_fJumpDurationTime = { 0.2f };
     _float m_fJumpCurrentTime = { 0.f };
@@ -89,13 +89,13 @@ private:
     HRESULT Ready_Weapons();
     HRESULT Ready_SkillObjs();
     HRESULT Ready_Flycloak();
+    void Ready_PlayerStateRank();
 
 private:
     void Change_Playerble();
     void Check_State(const _float& fTimeDelta);
     void Input_Key(const _float& fTimeDelta);
     void SetUp_CellType(_bool isMove);
-    _bool Check_Coll(const _float& fTimeDelta);
 
 
 public:

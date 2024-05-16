@@ -53,6 +53,7 @@ namespace Client {
         PLAYER_FLY_TURN_R,
         PLAYER_HILL_UP,
         PLAYER_HILL_DOWN,
+        PLAYER_HIT,
         PLAYER_END
     };
 

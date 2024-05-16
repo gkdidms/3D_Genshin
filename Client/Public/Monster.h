@@ -51,6 +51,7 @@ protected:
 protected:
     _int m_iMonsterNavigationIndex = { 0 };
     const _float4x4* m_pTargetMatrix = { nullptr };
+    _bool m_isColl = { false };
     
 public:
     virtual void Free() override;

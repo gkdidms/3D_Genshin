@@ -16,7 +16,8 @@ public:
 
 public:
     _bool Picking_OnTerrain(_fvector vMouseCurserPos, class CTransform* pTransformCom, class CVIBuffer_Terrain* pTerrainVIBuffer, const _ulong& dwCntX, const _ulong& dwCntZ, _float3* vWorldMouse);
-    _bool Picking_OnMesh(_fvector vMouseCurserPos, class CTransform* pTransformCom, class CMesh* pMeshBuffer, const _ulong& dwCntVertices, _float3* vWorldMouse);
+    //_bool Picking_OnMesh(_fvector vMouseCurserPos, class CTransform* pTransformCom, class CMesh* pMeshBuffer, const _ulong& dwCntVertices, _float3* vWorldMouse);
+    
 
 private:
     class CGameInstance* m_pGameInstance = { nullptr };

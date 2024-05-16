@@ -78,6 +78,32 @@ _bool CCollider::Intersect(CCollider* pTargetCollider)
 	return m_isColl = m_pCurrentBounding->Intersect(pTargetCollider->m_ColliderType, pTargetCollider->m_pCurrentBounding);
 }
 
+void CCollider::Compute_Rank(_char strRank, _char strTargetRank, CTransform* pTransform, CTransform* pTargetTransform, class CNavigation* pNavigation, class CNavigation* pTargetNavigation, const float& fTimeDelta)
+{
+	_matrix MoveMatrix = XMMatrixIdentity();
+
+	_vector vPos = pTransform->Get_State(CTransform::STATE_POSITION);
+	_vector vTargetPos = pTargetTransform->Get_State(CTransform::STATE_POSITION);
+
+	// A < B = true; 아스키코드로 비교함.
+	if (strRank < strTargetRank)
+	{
+		//타켓이 B라면
+		_vector vSour = XMVector3Normalize(vTargetPos - vPos);
+
+		vTargetPos += vSour * 3.f * fTimeDelta;
+		pTargetTransform->Go_Coll(vTargetPos, pTargetNavigation);
+	}
+	else
+	{
+		// 주체 객체가 B이거나 같으면
+		_vector vSour = XMVector3Normalize(vPos - vTargetPos);
+
+		vPos += vSour * 3.f * fTimeDelta;
+		pTransform->Go_Coll(vPos, pNavigation);
+	}
+}
+
 #ifdef _DEBUG
 HRESULT CCollider::Render()
 {

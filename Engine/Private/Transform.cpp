@@ -72,7 +72,7 @@ HRESULT CTransform::Bind_ShaderMatrix(CShader* pShader, const _char* pConstantNa
 	return pShader->Bind_Matrix(pConstantName, &m_matWorld);
 }
 
-_bool CTransform::Go_Run(const _matrix vMoveMatrix, CNavigation* pNavigationCom)
+_bool CTransform::Go_Run(const _matrix vMoveMatrix, CNavigation* pNavigationCom, _bool isFlyMove)
 {
 	_vector vPos = XMVectorSetW(XMVector3TransformCoord(vMoveMatrix.r[3], Get_WorldMatrix()), 1.f);
 
@@ -81,18 +81,30 @@ _bool CTransform::Go_Run(const _matrix vMoveMatrix, CNavigation* pNavigationCom)
 		return false;
 	}
 
-	if (pNavigationCom->Get_OptionType() == CCell::OPTION_FLY && pNavigationCom->isFlyCell(XMVector3Normalize(Get_State(STATE_LOOK))))
+	if (pNavigationCom->Get_OptionType() == CCell::OPTION_FLY && pNavigationCom->isFlyCell(XMVector3Normalize(Get_State(STATE_LOOK))) && !isFlyMove)
 		return false;
 		
 	Set_State(CTransform::STATE_POSITION, vPos);
 	return true;
 }
 
+_bool CTransform::Go_Coll(const _fvector vMovePos, class CNavigation* pNavigationCom)
+{
+	if (nullptr == pNavigationCom ? false : !pNavigationCom->isMove(vMovePos))
+		return false;
+
+	if (pNavigationCom->Get_OptionType() == CCell::OPTION_FLY && pNavigationCom->isFlyCell(XMVector3Normalize(Get_State(STATE_LOOK))))
+		return false;
+
+
+	Set_State(STATE_POSITION, vMovePos);
+}
+
 void CTransform::Go_Straight(const _float& fTimeDelta)
 {
 	_vector vPosition = Get_State(STATE_POSITION);
 	_vector vLook = Get_State(STATE_LOOK);
-	
+
 	vPosition += XMVector3Normalize(vLook) * m_fSpeedPerSec * fTimeDelta;
 
 

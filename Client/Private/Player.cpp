@@ -13,6 +13,7 @@
 
 #include "SkillObj.h"
 #include "Flycloak.h"
+#include "KasaRing.h"
 
 #include "CutCamera.h"
 
@@ -30,20 +31,9 @@ CPlayer::CPlayer(const CPlayer& rhs)
 	Safe_AddRef(m_pStateManager);
 }
 
-_bool CPlayer::isFly()
-{
-	return m_pStateManager->isFly();
-}
-
 _bool CPlayer::isAttack()
 {
 	return m_pStateManager->isAttack();
-}
-
-void CPlayer::Set_Fly()
-{
-	//나는 상태로 변경
-	m_pStateManager->Set_CurrentState(CStateManager::STATE_TYPE_FLY);
 }
 
 void CPlayer::Set_PlayerMove(_vector vMoveSpeed)
@@ -138,13 +128,16 @@ void CPlayer::Tick(const _float& fTimeDelta)
 	_float4x4 RootMatrix;
 	
 	_bool isMove = true;
-
-	dynamic_cast<CPartObject*>(m_PartObject[m_CurrentPlayerble][PART_BODY])->Set_PlayerPos(&RootMatrix);
-	XMStoreFloat4x4(&RootMatrix, XMLoadFloat4x4(&RootMatrix) * -1.f);
-	isMove = m_pTransformCom->Go_Run(XMLoadFloat4x4(&RootMatrix), m_pNavigationCom);
-
+	
+	if (!m_isColl)
+	{
+		dynamic_cast<CPartObject*>(m_PartObject[m_CurrentPlayerble][PART_BODY])->Set_PlayerPos(&RootMatrix);
+		XMStoreFloat4x4(&RootMatrix, XMLoadFloat4x4(&RootMatrix) * -1.f);
+		isMove = m_pTransformCom->Go_Run(XMLoadFloat4x4(&RootMatrix), m_pNavigationCom, m_pStateManager->isFly());
+	}
 	SetUp_CellType(isMove);
 	SetUp_OnTerrain(fTimeDelta);
+	Ready_PlayerStateRank();
 
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 }
@@ -155,6 +148,8 @@ void CPlayer::Late_Tick(const _float& fTimeDelta)
 		pObject->Late_Tick(fTimeDelta);
 
 	m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONBLENDER, this);
+
+	m_isColl = false; // 초기화
 }
 
 HRESULT CPlayer::Render()
@@ -273,7 +268,7 @@ void CPlayer::SetUp_CellType(_bool isMove)
 		if (fHeight > XMVectorGetY(vPos))
 			return;*/
 
-		if (m_iState != PLAYER_FALL_ATTACK_LOOP && !m_pStateManager->isFly())
+		if (m_iState != PLAYER_FALL_ATTACK_LOOP && !m_pStateManager->isFly() && !m_pStateManager->isJump())
 		{
 			m_iState = m_pStateManager->Set_CurrentState(CStateManager::STATE_TYPE_FALL_ATTACK);
 		}
@@ -288,34 +283,34 @@ void CPlayer::SetUp_CellType(_bool isMove)
 		m_eHill = HILL_END;
 }
 
-_bool CPlayer::Check_Coll(const _float& fTimeDelta)
-{
-	// 콜라이더 충돌하고 있는지 확인하기
-
-	vector<CGameObject*> Monsters = m_pGameInstance->Get_GameObjects(LEVEL_GAMEPLAY, TEXT("Layer_Monster"));
-
-	for (auto& pMonster : Monsters)
-	{
-		CMonster* pObj = dynamic_cast<CMonster*>(pMonster);
-		if (m_pColliderCom->Intersect(pObj->Get_Coll()))
-		{
-			//충돌 시 법선벡터 구하기
-			CTransform* pTargetTransform = dynamic_cast<CTransform*>(pMonster->Get_Component(L"Com_Transform"));
-
-			_vector vNormal = XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_POSITION) - pTargetTransform->Get_State(CTransform::STATE_POSITION));
-
-			//투영 벡터
-			_vector vProjection = XMVectorGetX(XMVector3Dot(vNormal, m_pTransformCom->Get_State(CTransform::STATE_LOOK) * -1.f)) * vNormal;
-			
-			_vector vSliding = XMVector3Normalize(vProjection - pTargetTransform->Get_State(CTransform::STATE_LOOK));
-
-			m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_pTransformCom->Get_State(CTransform::STATE_POSITION) + XMVectorSetW(vSliding, 0.f));
-			return true;
-		}
-	}
-
-	return false;
-}
+//_bool CPlayer::Check_Coll(const _float& fTimeDelta)
+//{
+//	// 콜라이더 충돌하고 있는지 확인하기
+//
+//	vector<CGameObject*> Monsters = m_pGameInstance->Get_GameObjects(LEVEL_GAMEPLAY, TEXT("Layer_Monster"));
+//
+//	for (auto& pMonster : Monsters)
+//	{
+//		CMonster* pObj = dynamic_cast<CMonster*>(pMonster);
+//		if (m_pColliderCom->Intersect(pObj->Get_Coll()))
+//		{
+//			//충돌 시 법선벡터 구하기
+//			CTransform* pTargetTransform = dynamic_cast<CTransform*>(pMonster->Get_Component(L"Com_Transform"));
+//
+//			_vector vNormal = XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_POSITION) - pTargetTransform->Get_State(CTransform::STATE_POSITION));
+//
+//			//투영 벡터
+//			_vector vProjection = XMVectorGetX(XMVector3Dot(vNormal, m_pTransformCom->Get_State(CTransform::STATE_LOOK) * -1.f)) * vNormal;
+//			
+//			_vector vSliding = XMVector3Normalize(vProjection - pTargetTransform->Get_State(CTransform::STATE_LOOK));
+//
+//			m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_pTransformCom->Get_State(CTransform::STATE_POSITION) + XMVectorSetW(vSliding, 0.f));
+//			return true;
+//		}
+//	}
+//
+//	return false;
+//}
 
 void CPlayer::Check_State(const _float& fTimeDelta)
 {
@@ -490,6 +485,23 @@ HRESULT CPlayer::Ready_SkillObjs()
 
 	m_PartObject[PLAYER_YAE].emplace_back(pGameObject);
 
+
+	//Wanderer
+	pComponent = m_PartObject[PLAYER_WANDERER][PART_BODY]->Get_Component(L"Com_Model");
+	if (nullptr == pComponent)
+		return E_FAIL;
+
+	SKillObjDesc.pHandCombinedTransformationMatrix = dynamic_cast<CModel*>(pComponent)->Get_BoneCombinedTransformationMatrix("_HatRootB_CB_A01");
+	if (nullptr == SKillObjDesc.pHandCombinedTransformationMatrix)
+		return E_FAIL;
+
+	pGameObject = m_pGameInstance->Clone_Object(L"Prototype_GameObject_SkillObj_KasaRing", &SKillObjDesc);
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	m_PartObject[PLAYER_WANDERER].emplace_back(pGameObject);
+
+
 	return S_OK;
 }
 
@@ -556,6 +568,155 @@ HRESULT CPlayer::Ready_Flycloak()
 	m_PartObject[PLAYER_YAE].emplace_back(pFlycloak);
 
 	return S_OK;
+}
+
+void CPlayer::Ready_PlayerStateRank() // 플레이어 상태에 따른 등급 정의
+{
+	switch (m_iState)
+	{
+	case Client::PLAYER_IDLE:
+		m_strStateRank = 'D';
+		break;
+	case Client::PLAYER_ATTACK_IDLE:
+		m_strStateRank = 'D';
+		break;
+	case Client::PLAYER_IDLE_PUT_AWAY:
+		m_strStateRank = 'D';
+		break;
+	case Client::PLAYER_RUN_START:
+		m_strStateRank = 'B';
+		break;
+	case Client::PLAYER_RUN:
+		m_strStateRank = 'B';
+		break;
+	case Client::PLAYER_RUN_STOP:
+		m_strStateRank = 'B';
+		break;
+	case Client::PLAYER_SPRINT_START:
+		m_strStateRank = 'A';
+		break;
+	case Client::PLAYER_SPRINT:
+		m_strStateRank = 'A';
+		break;
+	case Client::PLAYER_SPRINT_TO_RUN:
+		m_strStateRank = 'A';
+		break;
+	case Client::PLAYER_SPRINT_STOP:
+		m_strStateRank = 'A';
+		break;
+	case Client::PLAYER_ATTACK_1:
+		m_strStateRank = 'C';
+		break;
+	case Client::PLAYER_ATTACK_2:
+		m_strStateRank = 'C';
+		break;
+	case Client::PLAYER_ATTACK_3:
+		m_strStateRank = 'C';
+		break;
+	case Client::PLAYER_ATTACK_4:
+		m_strStateRank = 'C';
+		break;
+	case Client::PALYER_ATTACK_SPEC:
+		m_strStateRank = 'C';
+		break;
+	case Client::PLAYER_ATTACK_END:
+		m_strStateRank = 'C';
+		break;
+	case Client::PLAYER_ELEMENTAL_START:
+		m_strStateRank = 'C';
+		break;
+	case Client::PLAYER_ELEMENTAL_1:
+		m_strStateRank = 'C';
+		break;
+	case Client::PLAYER_ELEMENTAL_2:
+		m_strStateRank = 'C';
+		break;
+	case Client::PLAYER_ELEMENTAL_3:
+		m_strStateRank = 'C';
+		break;
+	case Client::PLAYER_ELEMENTAL_SPEC:
+		m_strStateRank = 'C';
+		break;
+	case Client::PLAYER_ELEMENTAL_1_END:
+		m_strStateRank = 'C';
+		break;
+	case Client::PLAYER_ELEMENTAL_2_END:
+		m_strStateRank = 'C';
+		break;
+	case Client::PLAYER_ELEMENTAL_3_END:
+		m_strStateRank = 'C';
+		break;
+	case Client::PLAYER_ELEMENTAL_SPEC_END:
+		m_strStateRank = 'C';
+		break;
+	case Client::PLAYER_ELEMENTAL_UP_START:
+		m_strStateRank = 'C';
+		break;
+	case Client::PLAYER_ELEMENTAL_UP:
+		m_strStateRank = 'C';
+		break;
+	case Client::PLAYER_ELEMENTAL_END:
+		m_strStateRank = 'C';
+		break;
+	case Client::PLAYER_ELEMENTAL_BURST:
+		m_strStateRank = 'C';
+		break;
+	case Client::PLAYER_ELEMENTAL_BURST_END:
+		m_strStateRank = 'C';
+		break;
+	case Client::PLAYER_JUMP:
+		m_strStateRank = 'B';
+		break;
+	case Client::PLAYER_JUMP_FOR_RUN:
+		m_strStateRank = 'B';
+		break;
+	case Client::PLAYER_JUMP_FOR_SPRINT:
+		m_strStateRank = 'B';
+		break;
+	case Client::PLAYER_FALL_GROUND_H:
+		m_strStateRank = 'D';
+		break;
+	case Client::PLAYER_FALL_GROUND_L:
+		m_strStateRank = 'D';
+		break;
+	case Client::PLAYER_FALL_GROUND_FOR_RUN:
+		m_strStateRank = 'D';
+		break;
+	case Client::PLAYER_FALL_GROUND_FOR_SPRINT:
+		m_strStateRank = 'A';
+		break;
+	case Client::PLAYER_FALL_ATTACK_START:
+		m_strStateRank = 'C';
+		break;
+	case Client::PLAYER_FALL_ATTACK_LOOP:
+		m_strStateRank = 'C';
+		break;
+	case Client::PLAYER_FALL_ATTACK_END:
+		m_strStateRank = 'C';
+		break;
+	case Client::PLAYER_FLY_START:
+		m_strStateRank = 'B';
+		break;
+	case Client::PLAYER_FLY_NORMAL:
+		m_strStateRank = 'B';
+		break;
+	case Client::PLAYER_FLY_TURN_L:
+		m_strStateRank = 'B';
+		break;
+	case Client::PLAYER_FLY_TURN_R:
+		m_strStateRank = 'B';
+		break;
+	case Client::PLAYER_HILL_UP:
+		m_strStateRank = 'B';
+		break;
+	case Client::PLAYER_HILL_DOWN:
+		m_strStateRank = 'B';
+		break;
+	case Client::PLAYER_END:
+		break;
+	default:
+		break;
+	}
 }
 
 void CPlayer::Input_Key(const _float& fTimeDelta)

@@ -156,10 +156,14 @@ HRESULT CTool_Object_Manager::Cell_Save(const _char* pFileName)
 
 	vector<CTool_Dungeon::TOOL_CELL_DESC> Cells = dynamic_cast<CTool_Dungeon*>(m_Terrains[0])->Get_Cells();
 
-	for (int i = 0; i < Cells.size(); ++i)
+	for (size_t i = 0; i < Cells.size(); ++i)
 	{
-		if (!SamePoint(Cells[i].Points))
+		_bool isResult = Check_SameCells(i, Cells[i].Points, Cells);
+
+		if (isResult || !SamePoint(Cells[i].Points))
+		{
 			Cells.erase(Cells.begin() + i);
+		}
 	}
 
 	_uint NumCells = Cells.size();
@@ -202,6 +206,7 @@ HRESULT CTool_Object_Manager::Cell_Load(const _char* pFileName)
 
 		ifs.read((_char*)tDesc.Points, sizeof(_float3) * 3);
 		ifs.read((_char*)&tDesc.iOption, sizeof(_int));
+		tDesc.iIndex = i;
 
 		SortCell(tDesc.Points);
 		Cells.emplace_back(tDesc);
@@ -242,7 +247,33 @@ _bool CTool_Object_Manager::SamePoint(_float3* Points)
 
 	return true;
 }
+_bool CTool_Object_Manager::Check_SameCells(_int iIndex, _float3* vPoint, vector<CTool_Dungeon::TOOL_CELL_DESC> Cells)
+{
+	for (size_t i = 0; i < Cells.size(); ++i)
+	{
+		if (i == iIndex)
+			continue;
 
+		_uint iCount = 0;
+		_bool isResult[3] = { false, false, false };
+		for (auto& CellPoint : Cells[i].Points)
+		{
+			if (XMVector3Equal(XMLoadFloat3(&vPoint[0]), XMLoadFloat3(&CellPoint))
+				|| XMVector3Equal(XMLoadFloat3(&vPoint[1]), XMLoadFloat3(&CellPoint))
+				|| XMVector3Equal(XMLoadFloat3(&vPoint[2]), XMLoadFloat3(&CellPoint)))
+			{
+				isResult[iCount] = true;
+			}
+
+			iCount++;
+		}
+
+		if (isResult[0] && isResult[1] && isResult[2])
+			return true;
+	}
+
+	return false;
+}
 HRESULT CTool_Object_Manager::Save(const _char* pFileName)
 {
 	char pFilePath[MAX_PATH] = "../../Data/Stage/";
@@ -273,8 +304,6 @@ HRESULT CTool_Object_Manager::Save(const _char* pFileName)
 
 		const _float4x4* WorldMatrix = pDungeon->m_pTransformCom->Get_WorldFloat4x4();
 		ofs.write((_char*)WorldMatrix, sizeof(_float4x4));
-
-
 	}
 
 	_uint iNumObjects = m_Objects.size();

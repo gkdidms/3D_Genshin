@@ -59,7 +59,7 @@ void CTool_Terrain::Late_Tick(const _float& fTimeDelta)
 
 HRESULT CTool_Terrain::Render()
 {
-	if (m_pTool_Manager->Is_ShowTerrain())
+	if (m_pTool_Manager->IsShowTerrain())
 		return S_OK;
 
 	if (FAILED(Bind_ResouceData()))

@@ -48,7 +48,8 @@ public:
     HRESULT Bind_ShaderMatrix(class CShader* pShader, const _char* strConstantName);
 
 public:
-    _bool Go_Run(const _matrix vMoveMatrix, class CNavigation* pNavigationCom);
+    _bool Go_Run(const _matrix vMoveMatrix, class CNavigation* pNavigationCom, _bool isFlyMove = false);
+    _bool Go_Coll(const _fvector vMovePos, class CNavigation* pNavigationCom);
     void Go_Straight(const _float& fTimeDelta);
     void Go_Backwork(const _float& fTimeDelta);
     void Go_Left(const _float& fTimeDelta);

@@ -102,13 +102,13 @@ void CCutCamera::isCutScene(_bool isCutScene, _uint ePlayerble)
 	{
 	case Client::CPlayer::PLAYER_TIGHNARI:
 	{
-		Rotation(&m_OrbitMatrix, XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-35.f));
-		Turn(&m_OrbitMatrix, XMVectorSet(1.f, 0.f, 0.f, 0.f), -1.f);
+		Rotation(&m_OrbitMatrix, XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-30.f));
+		Turn(&m_OrbitMatrix, XMVectorSet(1.f, 0.f, 0.0f, 0.f), -1.f);
 
 		_vector CamZoom = XMVectorSet(0.25f, 1.3f, 0.f, 1.f);
 		m_pTransformCom->LookAt(CamZoom);
 
-		m_fFovY = 0.15;
+		m_fFovY = 0.18;
 		break;
 	}
 	case Client::CPlayer::PLAYER_NILOU:

@@ -23,6 +23,7 @@ public:
     {
         _float3 Points[3];
         _int iOption;
+        _int iIndex;
     }TOOL_CELL_DESC;
 
 private:
@@ -71,7 +72,9 @@ private:
     void Get_MousePos_On_Dungeon();
     void Picking_PlayerPos();
     void Picking_Cell();
+
     void Check_Point(_float3* vPoint);
+    _bool isRemove();
 
 public:
     static CTool_Dungeon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

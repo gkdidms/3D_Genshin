@@ -51,7 +51,7 @@ public:
 
 public:
     void Set_CollWindField(_bool isColl) { m_isCollWindField = isColl; }
-    _bool isCollWIndField() { return m_isCollWindField; }
+    _bool isCollWindField() { return m_isCollWindField; }
 
 public:
     HRESULT Initialize(void* pArg);

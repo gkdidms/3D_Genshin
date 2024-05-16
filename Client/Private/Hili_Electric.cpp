@@ -59,9 +59,7 @@ void CHili_Electric::Tick(const _float& fTimeDelta)
 
 void CHili_Electric::Late_Tick(const _float& fTimeDelta)
 {
-	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	vPos = XMVectorSetY(vPos, m_pNavigation->Compute_Height(vPos));
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+	SetUp_OnTerrain(fTimeDelta);
 
 	m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONBLENDER, this);
 

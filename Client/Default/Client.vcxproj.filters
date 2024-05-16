@@ -340,6 +340,12 @@
     <Filter Include="02. GameObject\04. Player\State\Manager">
       <UniqueIdentifier>{0b7a281c-0d37-44cb-bc74-d475b25901b6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\04. Player\PartObject\SkillObj\Tighnari">
+      <UniqueIdentifier>{0056f485-9caa-4a17-bfbd-35383fbcbd0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\PartObject\SkillObj\Wanderer">
+      <UniqueIdentifier>{716e5138-240e-427b-aac6-39345f84a3bc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">
@@ -654,6 +660,12 @@
     <ClInclude Include="..\public\StateElementalArt.h">
       <Filter>02. GameObject\04. Player\State\State\ElementalArt</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\FlowerArrow.h">
+      <Filter>02. GameObject\04. Player\PartObject\SkillObj\Tighnari</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\KasaRing.h">
+      <Filter>02. GameObject\04. Player\PartObject\SkillObj\Wanderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -955,6 +967,12 @@
     </ClCompile>
     <ClCompile Include="..\private\StateElementalArt.cpp">
       <Filter>02. GameObject\04. Player\State\State\ElementalArt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\FlowerArrow.cpp">
+      <Filter>02. GameObject\04. Player\PartObject\SkillObj\Tighnari</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\KasaRing.cpp">
+      <Filter>02. GameObject\04. Player\PartObject\SkillObj\Wanderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

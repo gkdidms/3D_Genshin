@@ -63,12 +63,17 @@ void CTool_Dungeon::Priority_Tick(const _float& fTimeDelta)
 
 void CTool_Dungeon::Tick(const _float& fTimeDelta)
 {
-	if (m_pTool_Manager->Is_PickingWithDungeon() && m_pGameInstance->GetMouseState(DIM_RB) == CInput_Device::TAP)
+	if (m_pTool_Manager->IsPickingWithDungeon() && m_pGameInstance->GetMouseState(DIM_RB) == CInput_Device::TAP)
 		Get_MousePos_On_Dungeon();
-	if (m_pTool_Manager->Is_PickingCell() && m_pGameInstance->GetMouseState(DIM_RB) == CInput_Device::TAP)
+	if (m_pTool_Manager->IsPickingCell() && m_pGameInstance->GetMouseState(DIM_RB) == CInput_Device::TAP)
 		Picking_Cell();
-	if (m_pTool_Manager->Is_PickingPlayer() && m_pGameInstance->GetMouseState(DIM_RB) == CInput_Device::TAP)
+	if (m_pTool_Manager->IsPickingPlayer() && m_pGameInstance->GetMouseState(DIM_RB) == CInput_Device::TAP)
 		Picking_PlayerPos();
+	if (m_pTool_Manager->isCellRemove() && m_pGameInstance->GetMouseState(DIM_RB) == CInput_Device::TAP)
+	{
+		isRemove();
+	}
+		
 
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(m_pTool_Manager->Get_DungeonDegree()));
 
@@ -198,6 +203,7 @@ void CTool_Dungeon::Picking_Cell()
 			TOOL_CELL_DESC tDesc{};
 			memcpy(tDesc.Points, m_Points, sizeof(_float3) * 3);
 			tDesc.iOption = m_pTool_Manager->Get_CellOption();
+			tDesc.iIndex = m_Cells.size();
 			m_Cells.emplace_back(tDesc);
 
 			m_iPointCount = 0;
@@ -205,6 +211,8 @@ void CTool_Dungeon::Picking_Cell()
 		}
 	}
 }
+
+
 
 void CTool_Dungeon::Check_Point(_float3* vPoint)
 {
@@ -252,6 +260,36 @@ void CTool_Dungeon::Check_Point(_float3* vPoint)
 			}
 		}
 	}
+}
+
+_bool CTool_Dungeon::isRemove()
+{
+	_int iIndex = { -1 };
+	_int iVecterIndex = { 0 };
+	_bool isSuccess = { false };
+
+	_vector vMousePos = m_pGameInstance->Picking(&isSuccess);
+
+	if (isSuccess)
+	{
+		POINT ptMouse;
+		GetCursorPos(&ptMouse);
+		ScreenToClient(g_hWnd, &ptMouse);
+		iIndex = m_pNavigationCom->Find_Index(ptMouse, vMousePos, m_pGameInstance->Get_RayDir(), m_pTransformCom->Get_WorldMatrix(), &iVecterIndex);
+	}
+	else
+		return false;
+	//¼¿ Áö¿ì±â
+	if (iIndex != -1 && m_pNavigationCom->isRemove(iIndex))
+	{
+		if (m_Cells[iVecterIndex].iIndex == iIndex)
+		{
+			m_Cells.erase(m_Cells.begin() + iVecterIndex);
+
+			return true;
+		}
+	}
+	return false;
 }
 
 CTool_Dungeon* CTool_Dungeon::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

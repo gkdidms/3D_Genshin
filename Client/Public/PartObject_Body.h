@@ -59,6 +59,7 @@ protected:
     _float m_fFallDropSpeed = { 10.f };
 
     _float m_fWindSpeed = { -8.f };
+    _float m_fStartSpeed = { 0.f };
 
 protected:
     virtual HRESULT Add_Components() = 0;

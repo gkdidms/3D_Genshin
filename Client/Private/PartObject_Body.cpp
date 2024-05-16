@@ -69,11 +69,21 @@ HRESULT CPartObject_Body::Render()
 
 void CPartObject_Body::Move_Pos(const _float& fTimeDelta, _matrix* MoveMatrix)
 {
-	// 플레이어가 날고 있고, 윈드필더를 타고 있지 않을때
-	if (m_pStateManager->isFly() && *m_pState != PLAYER_FLY_START)
+
+	if (m_pStateManager->isFly())
 	{
-		if (m_pStateManager->isCollWIndField())
+		if (*m_pState == PLAYER_FLY_START)
 		{
+			m_fStartSpeed -= 0.02f;
+			//스타트일때 
+			MoveMatrix->r[3] = XMVectorSet(0.f, m_fStartSpeed * fTimeDelta, 0.f, 1.f);
+			return;
+		}
+
+		if (m_pStateManager->isCollWindField())
+		{
+			m_fStartSpeed = { 0.f };
+
 			MoveMatrix->r[3] = XMVectorSet(0.f, m_fWindSpeed * fTimeDelta, 0.f, 1.f);
 
 			if (*m_pDirState == CPlayer::DIR_STRIGHT)
@@ -85,6 +95,8 @@ void CPartObject_Body::Move_Pos(const _float& fTimeDelta, _matrix* MoveMatrix)
 
 			return;
 		}
+
+		// 플레이어가 날고 있고, 윈드필더를 타고 있지 않을때
 
 		if (*m_pDirState == CPlayer::DIR_STRIGHT)
 			MoveMatrix->r[3] = XMVectorSet(0.f, m_fFlySpeed * fTimeDelta, m_fFlySpeed * fTimeDelta * -1.f, 1.f);

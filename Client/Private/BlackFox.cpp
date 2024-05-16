@@ -24,12 +24,12 @@ HRESULT CBlackFox::Initialize(void* pArg)
 		return E_FAIL;
 
 	_uint iAnim = { 0 };
-	if (*m_pState == PLAYER_ATTACK_1)
-		iAnim = 0;
-	else if (*m_pState == PLAYER_ATTACK_2)
-		iAnim = 1;
-	else if (*m_pState == PLAYER_ATTACK_3)
-		iAnim = 2;
+	//if (*m_pState == PLAYER_ATTACK_1)
+	//	iAnim = 0;
+	//else if (*m_pState == PLAYER_ATTACK_2)
+	//	iAnim = 1;
+	//else if (*m_pState == PLAYER_ATTACK_3)
+	//	iAnim = 2;
 
 	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ iAnim, false, false, false });
 

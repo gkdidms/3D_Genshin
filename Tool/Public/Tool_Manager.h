@@ -37,11 +37,12 @@ public:
     _uint Get_CreateMonsterIndex() { return m_iCreateMonsterIndex; }
     _float Get_DungeonDegree() { return m_fDungeonDegree; }
     _float3 Get_DungeonPos() { return m_fDungeonPos; }
-    _bool Is_ShowTerrain() { return IsShowTerrain; }
-    _bool Is_PickingWithDungeon() { return IsPickingWithDungeon; }
-    _bool Is_PickingCell() { return m_isNavigationPicking; }
-    _bool Is_PickingPlayer() { return m_isPlayerPosPicking; }
+    _bool IsShowTerrain() { return m_isShowTerrain; }
+    _bool IsPickingWithDungeon() { return m_isPickingWithDungeon; }
+    _bool IsPickingCell() { return m_isNavigationPicking; }
+    _bool IsPickingPlayer() { return m_isPlayerPosPicking; }
     _int Get_CellOption() { return m_iNavigationOption; }
+    _bool isCellRemove() { return m_isCellRemove; }
 
 public:
     void Set_DungeonPos(_vector vPos) { XMStoreFloat3(&m_fDungeonPos, vPos); }
@@ -82,17 +83,18 @@ private:
     char m_szNavigationFileName[MAX_PATH];
     _bool IsNewFile = { false };
 
-    _bool IsShowSaveModal = { false };
-    _bool IsShowLoadModal = { false };
-    _bool IsShowNavigationSaveModal = { false };
-    _bool IsShowNavigationLoadModal = { false };
-    _bool IsShowTerrain = { false };
+    _bool m_isShowSaveModal = { false };
+    _bool m_isShowLoadModal = { false };
+    _bool m_isShowNavigationSaveModal = { false };
+    _bool m_isShowNavigationLoadModal = { false };
+    _bool m_isShowTerrain = { false };
 
-    _bool IsPickingWithDungeon = { false };
+    _bool m_isPickingWithDungeon = { false };
 
 private: // Navigation
     _bool m_isNavigationPicking = { false };
     _int m_iNavigationOption = { 0 };
+    _bool m_isCellRemove = { false };
 
 private:
     _bool m_isPlayerPosPicking = { false };

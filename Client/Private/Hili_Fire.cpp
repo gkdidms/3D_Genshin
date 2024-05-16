@@ -38,6 +38,7 @@ HRESULT CHili_Fire::Initialize(void* pArg)
 
 void CHili_Fire::Priority_Tick(const _float& fTimeDelta)
 {
+	__super::Priority_Tick(fTimeDelta);
 }
 
 void CHili_Fire::Tick(const _float& fTimeDelta)
@@ -49,10 +50,11 @@ void CHili_Fire::Tick(const _float& fTimeDelta)
 	XMStoreFloat4x4(&MoveMatrix, XMMatrixIdentity());
 	m_pModelCom->Play_Animation(fTimeDelta, &MoveMatrix);
 
-	XMStoreFloat4x4(&MoveMatrix, XMLoadFloat4x4(&MoveMatrix) * -1.f);
-
-	m_pTransformCom->Go_Run(XMLoadFloat4x4(&MoveMatrix), m_pNavigation);
-
+	if (!m_isColl)
+	{
+		XMStoreFloat4x4(&MoveMatrix, XMLoadFloat4x4(&MoveMatrix) * -1.f);
+		m_pTransformCom->Go_Run(XMLoadFloat4x4(&MoveMatrix), m_pNavigation);
+	}
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 
 	__super::Tick(fTimeDelta);
@@ -60,9 +62,7 @@ void CHili_Fire::Tick(const _float& fTimeDelta)
 
 void CHili_Fire::Late_Tick(const _float& fTimeDelta)
 {
-	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	vPos = XMVectorSetY(vPos, m_pNavigation->Compute_Height(vPos));
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+	SetUp_OnTerrain(fTimeDelta);
 
 	m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONBLENDER, this);
 

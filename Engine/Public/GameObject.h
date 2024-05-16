@@ -22,6 +22,7 @@ public:
 
 public:
     _bool Get_Dead() { return m_isDead; }
+    _char Get_StateRank() { return m_strStateRank; }
 
 public:
     virtual HRESULT Initialize_Prototype();
@@ -44,6 +45,7 @@ protected:
 
 protected:
     _bool m_isDead = { false };
+    _char m_strStateRank = { 'F' }; // 객체의 현재 상태 등급
 
 protected:
     HRESULT Add_Component(_uint iLevelIndex, const wstring strComponentPrototypeTag, const wstring strComponentTag, class CComponent** pComponent, void* pArg = nullptr);

@@ -2,6 +2,7 @@
 #include "Base.h"
 
 #include "Tool_Defines.h"
+#include "Tool_Dungeon.h"
 
 BEGIN(Engine)
 class CGameInstance;
@@ -9,6 +10,7 @@ class CGameObject;
 END
 
 BEGIN(Tool)
+
 class CTool_Object_Manager :
     public CBase
 {
@@ -72,6 +74,8 @@ private:
 private:
     void SortCell(_float3* Points);
     _bool SamePoint(_float3* Points);
+    _bool Check_SameCells(_int iIndex, _float3* vPoint, vector<CTool_Dungeon::TOOL_CELL_DESC> Cells);
+
 public:
     void Release_Object();
     virtual void Free();

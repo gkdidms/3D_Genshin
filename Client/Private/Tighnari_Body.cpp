@@ -3,6 +3,8 @@
 #include "GameInstance.h"
 #include "StateManager.h"
 
+#include "FlowerArrow.h"
+
 CTighnari_Body::CTighnari_Body(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject_Body{ pDevice, pContext } 
 {
@@ -64,10 +66,16 @@ void CTighnari_Body::Tick(const _float& fTimeDelta)
 
 	__super::Move_Pos(fTimeDelta, &MoveMatrix);
 	XMStoreFloat4x4(&m_PlayerMovePos, MoveMatrix);
+
+	if (FAILED(Create_Object()))
+		return;
 }
 
 void CTighnari_Body::Late_Tick(const _float& fTimeDelta)
 {
+	if (*m_pState == m_PreState)
+		m_PreState = *m_pState;
+
 	XMStoreFloat4x4(&m_pWorldMatrix, m_pTransformCom->Get_WorldMatrix() * XMLoadFloat4x4(m_pParentMatrix));
 
 	m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONBLENDER, this);
@@ -326,6 +334,27 @@ void CTighnari_Body::Change_Animation(const _float& fTimeDelta)
 	}
 
 	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ m_iAnim, m_IsLoop, m_IsLinear, m_IsLinearSpeed });
+}
+
+HRESULT CTighnari_Body::Create_Object()
+{
+	if (*m_pState == m_PreState)
+		return S_OK;
+
+	if (*m_pState == PLAYER_ELEMENTAL_BURST)
+	{
+		CSkillObj::SKILLOBJ_DESC SkillObjDesc{};
+		SkillObjDesc.pParentMatrix = m_pParentMatrix;
+		SkillObjDesc.pState = m_pState;
+		SkillObjDesc.pHandCombinedTransformationMatrix = m_pModelCom->Get_BoneCombinedTransformationMatrix("PRIVATE_RHand");
+		if (nullptr == SkillObjDesc.pHandCombinedTransformationMatrix)
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_SkillObj_FlowerArrow", L"Layer_SkillObj", &SkillObjDesc)))
+			return E_FAIL;
+	}
+
+	return S_OK;
 }
 
 CTighnari_Body* CTighnari_Body::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

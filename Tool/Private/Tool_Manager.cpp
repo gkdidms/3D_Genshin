@@ -87,7 +87,7 @@ void CTool_Manager::Window_Terrain()
 {
     ImGui::Begin("Terrain");
 
-    ImGui::Checkbox("Terrain Render Off", &IsShowTerrain);
+    ImGui::Checkbox("Terrain Render Off", &m_isShowTerrain);
     ImGui::Text("Terrain Scale");
     ImGui::SliderFloat("Terrain Width", &fScaleTerrainX, 0.1f, 10.f);
     ImGui::SliderFloat("Terrain Height", &fScaleTerrainZ, 0.1f, 10.f);
@@ -141,7 +141,7 @@ void CTool_Manager::Window_Object()
     ImGui::Begin("Object");
 
     ImGui::Checkbox("Terrain Picking", &mTerrainPicking);
-    ImGui::Checkbox("Mesh Picking", &IsPickingWithDungeon);
+    ImGui::Checkbox("Mesh Picking", &m_isPickingWithDungeon);
 
     ImGui::NewLine();
     ImGui::Text("Picking MousePos : PlayerPos");
@@ -255,10 +255,10 @@ void CTool_Manager::Window_MainBar() // 상태바 윈도우
 
     if (ImGui::BeginMenu("File"))
     {
-        ImGui::MenuItem("FileOpen", nullptr, &IsShowLoadModal);// FileLoad
-        ImGui::MenuItem("FileSave", nullptr, &IsShowSaveModal);// FileSave
-        ImGui::MenuItem("NavigationOpen", nullptr, &IsShowNavigationLoadModal);// NavigationLoad
-        ImGui::MenuItem("NavigationSave", nullptr, &IsShowNavigationSaveModal);// NavigationSave
+        ImGui::MenuItem("FileOpen", nullptr, &m_isShowLoadModal);// FileLoad
+        ImGui::MenuItem("FileSave", nullptr, &m_isShowSaveModal);// FileSave
+        ImGui::MenuItem("NavigationOpen", nullptr, &m_isShowNavigationLoadModal);// NavigationLoad
+        ImGui::MenuItem("NavigationSave", nullptr, &m_isShowNavigationSaveModal);// NavigationSave
 
         ImGui::EndMenu();
     }
@@ -270,6 +270,7 @@ void CTool_Manager::Window_Navigation() // 내비게이션 윈도우
     ImGui::Begin("Navigation");
 
     ImGui::Checkbox("Navigation Picking", &m_isNavigationPicking);
+    ImGui::Checkbox("Cell Remove Picking", &m_isCellRemove);
     ImGui::RadioButton("None", &m_iNavigationOption, 0); ImGui::SameLine();
     ImGui::RadioButton("Stairs", &m_iNavigationOption, 1); ImGui::SameLine();
     ImGui::RadioButton("Fly", &m_iNavigationOption, 2); ImGui::SameLine();
@@ -279,7 +280,7 @@ void CTool_Manager::Window_Navigation() // 내비게이션 윈도우
 
 void CTool_Manager::Modal_Save() // 파일 저장
 {
-    if (IsShowSaveModal)
+    if (m_isShowSaveModal)
         ImGui::OpenPopup("SaveFile");
     if (ImGui::BeginPopupModal("SaveFile", NULL, ImGuiWindowFlags_MenuBar))
     {
@@ -311,13 +312,13 @@ void CTool_Manager::Modal_Save() // 파일 저장
 
             Bind_FileName();
             ImGui::CloseCurrentPopup();            
-            IsShowSaveModal = false;
+            m_isShowSaveModal = false;
         }
         ImGui::SameLine();
         if (ImGui::Button("Close"))
         {
             ImGui::CloseCurrentPopup();
-            IsShowSaveModal = false;
+            m_isShowSaveModal = false;
         }
 
         ImGui::EndPopup();
@@ -326,7 +327,7 @@ void CTool_Manager::Modal_Save() // 파일 저장
 
 void CTool_Manager::Modal_Load() // 파일 로드
 {
-    if (IsShowLoadModal)
+    if (m_isShowLoadModal)
         ImGui::OpenPopup("LoadFile");
     if (ImGui::BeginPopupModal("LoadFile", NULL, ImGuiWindowFlags_MenuBar))
     {
@@ -352,13 +353,13 @@ void CTool_Manager::Modal_Load() // 파일 로드
             m_pObject_Manager->Load(m_FileName[m_iLoadFileIndex].c_str());
 
             ImGui::CloseCurrentPopup();
-            IsShowLoadModal = false;
+            m_isShowLoadModal = false;
         }
         ImGui::SameLine();
         if (ImGui::Button("Close"))
         {
             ImGui::CloseCurrentPopup();
-            IsShowLoadModal = false;
+            m_isShowLoadModal = false;
         }
 
         ImGui::EndPopup();
@@ -367,7 +368,7 @@ void CTool_Manager::Modal_Load() // 파일 로드
 
 void CTool_Manager::Modal_NavigationSave() // 내비게이션 파일 저장 
 {
-    if (IsShowNavigationSaveModal)
+    if (m_isShowNavigationSaveModal)
         ImGui::OpenPopup("SaveNavigationFile");
 
     if (ImGui::BeginPopupModal("SaveNavigationFile", NULL, ImGuiWindowFlags_MenuBar))
@@ -400,13 +401,13 @@ void CTool_Manager::Modal_NavigationSave() // 내비게이션 파일 저장
 
             Bind_NavigationFileName();
             ImGui::CloseCurrentPopup();
-            IsShowNavigationSaveModal = false;
+            m_isShowNavigationSaveModal = false;
         }
         ImGui::SameLine();
         if (ImGui::Button("Close"))
         {
             ImGui::CloseCurrentPopup();
-            IsShowNavigationSaveModal = false;
+            m_isShowNavigationSaveModal = false;
         }
 
         ImGui::EndPopup();
@@ -415,7 +416,7 @@ void CTool_Manager::Modal_NavigationSave() // 내비게이션 파일 저장
 
 void CTool_Manager::Modal_NavigationLoad() // 내비게이션 파일 로드
 {
-    if (IsShowNavigationLoadModal)
+    if (m_isShowNavigationLoadModal)
         ImGui::OpenPopup("LoadNavigationFile");
 
     if (ImGui::BeginPopupModal("LoadNavigationFile", NULL, ImGuiWindowFlags_MenuBar))
@@ -442,13 +443,13 @@ void CTool_Manager::Modal_NavigationLoad() // 내비게이션 파일 로드
             m_pObject_Manager->Cell_Load(m_NavigationFileName[m_iLoadNavigationFileIndex].c_str());
 
             ImGui::CloseCurrentPopup();
-            IsShowNavigationLoadModal = false;
+            m_isShowNavigationLoadModal = false;
         }
         ImGui::SameLine();
         if (ImGui::Button("Close"))
         {
             ImGui::CloseCurrentPopup();
-            IsShowNavigationLoadModal = false;
+            m_isShowNavigationLoadModal = false;
         }
 
         ImGui::EndPopup();
