@@ -31,6 +31,9 @@ protected:
 	virtual ~CBT_Boss() = default;
 
 public:
+	virtual _bool isStrikeSkill() { return false; }
+
+public:
 	virtual HRESULT Initialize(void* pArg);
 	virtual void Tick(const _float& fTimeDelta);
 	virtual virtual CNode::NODE_STATE Evaluate() override;

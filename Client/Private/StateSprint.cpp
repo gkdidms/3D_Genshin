@@ -26,7 +26,7 @@ PLAYER_STATE CStateSprint::Update(const _float& fTimeDelta, class CStateManager&
 	{
 		m_fCurrentTime += fTimeDelta;
 
-		if (m_fDurationTime <= m_fCurrentTime && Check_Move())
+		if (m_fDuration <= m_fCurrentTime && Check_Move())
 			return 	pStateManager.Set_CurrentState(CStateManager::STATE_TYPE_RUN);
 
 		return eState;
@@ -37,6 +37,8 @@ PLAYER_STATE CStateSprint::Update(const _float& fTimeDelta, class CStateManager&
 
 	if ((eState = ToAttack(pStateManager, CurrentState)) != CurrentState)
 		return eState;
+
+	if ((eState = __super::ToExtraAttack(pStateManager, CurrentState)) != CurrentState) return eState;
 
 	if ((eState = ToElementalArt(pStateManager, CurrentState)) != CurrentState)
 		return eState;
@@ -87,7 +89,7 @@ PLAYER_STATE CStateSprint::ToIdle(CStateManager& pStateManager, PLAYER_STATE Cur
 PLAYER_STATE CStateSprint::ToRun(CStateManager& pStateManager, PLAYER_STATE CurrentState)
 {
 	if (CurrentState == PLAYER_SPRINT_TO_RUN)
-		return __super::ToRun(pStateManager, CurrentState);
+		return pStateManager.Set_CurrentState(CStateManager::STATE_TYPE_RUN, CurrentState);
 
 	return CurrentState;
 }
@@ -118,10 +120,8 @@ PLAYER_STATE CStateSprint::ToSprint(CStateManager& pStateManager, PLAYER_STATE C
 
 PLAYER_STATE CStateSprint::ToJump(CStateManager& pStateManager, PLAYER_STATE CurrentState)
 {
-	if (CurrentState == PLAYER_SPRINT)
-		return __super::ToJump(pStateManager, CurrentState);
 
-	return CurrentState;
+	return __super::ToJump(pStateManager, CurrentState);
 }
 
 PLAYER_STATE CStateSprint::ToAttack(CStateManager& pStateManager, PLAYER_STATE CurrentState)

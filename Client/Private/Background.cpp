@@ -2,6 +2,8 @@
 
 #include "GameInstance.h"
 
+#include "LoadingBar.h"
+
 CBackground::CBackground(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject{pDevice, pContext}
 {
@@ -31,7 +33,7 @@ HRESULT CBackground::Initialize(void* pArg)
 	m_fY = g_iWinSizeY >> 1;
 
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f, 1.f));
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.9f, 1.f));
 
 	XMStoreFloat4x4(&m_matView, XMMatrixIdentity());
 	XMStoreFloat4x4(&m_matProj, XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.0f));
@@ -59,6 +61,9 @@ HRESULT CBackground::Render()
 
 	m_pShaderCom->Begin(0);
 	m_pVIBufferCom->Render();
+
+	if (FAILED(m_pLoadingBar->Render()))
+		return E_FAIL;
 	
 	return S_OK;
 }
@@ -75,6 +80,10 @@ HRESULT CBackground::Add_Components()
 
 	m_pTextureCom = dynamic_cast<CTexture*>(m_pGameInstance->Add_Component_Clone(LEVEL_STATIC, L"Prototype_Component_Texture_Loading", nullptr));
 	if (nullptr == m_pTextureCom)
+		return E_FAIL;
+
+	m_pLoadingBar = dynamic_cast<CLoadingBar*>(m_pGameInstance->Clone_Object(L"Prototype_GameObject_LoadingBar", nullptr));
+	if (nullptr == m_pLoadingBar)
 		return E_FAIL;
 
 	return S_OK;
@@ -124,4 +133,5 @@ void CBackground::Free()
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pTextureCom);
+	Safe_Release(m_pLoadingBar);
 }

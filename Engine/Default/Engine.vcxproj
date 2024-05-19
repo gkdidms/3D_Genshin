@@ -109,6 +109,9 @@
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Cell.hlsl" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Bin\ShaderFiles\Engine_Shader_Defines.hlsli" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

@@ -3,6 +3,8 @@
 #include "GameInstance.h"
 #include "Component.h"
 
+_int CGameObject::g_iObjectIndex = { 0 };
+
 CGameObject::CGameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice {pDevice},
 	m_pContext {pContext},
@@ -38,6 +40,8 @@ HRESULT CGameObject::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_Components.emplace(L"Com_Transform", m_pTransformCom);
+
+	m_iIndex = g_iObjectIndex++;
 
 	return S_OK;
 }

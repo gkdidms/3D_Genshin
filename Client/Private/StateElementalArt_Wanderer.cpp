@@ -32,7 +32,7 @@ PLAYER_STATE CStateElementalArt_Wanderer::Update(const _float& fTimeDelta, CStat
 	if (m_fCurrentTime > m_fFinishTime)
 		return pStateManager.Set_CurrentState(CStateManager::STATE_TYPE_FALL_ATTACK, PLAYER_ELEMENTAL_END);
 
-	if (m_fTime < m_fAttackTime)
+	if (m_fTime < m_fDuration)
 		return CurrentState;
 
 	if (m_pGameInstance->GetKeyState(DIK_Q) == CInput_Device::TAP)

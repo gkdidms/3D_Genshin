@@ -26,7 +26,7 @@ HRESULT CBT_Hili_CrossBow::Initialize(void* pArg)
 void CBT_Hili_CrossBow::Tick(const _float& fTimeDelta)
 {
 	if (m_isAttack)
-		m_fAttackTime += fTimeDelta;
+		m_fDuration += fTimeDelta;
 
 	this->Evaluate();
 }

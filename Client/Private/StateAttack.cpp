@@ -3,14 +3,15 @@
 #include "GameInstance.h"
 #include "StateManager.h"
 
+_uint CStateAttack::m_iAttackCount = { 0 };
+_float CStateAttack::m_iAttackTime = { 0.f };
+
 CStateAttack::CStateAttack()
 {
 }
 
 PLAYER_STATE CStateAttack::Enter(class CStateManager& pStateManager, PLAYER_STATE CurrentState)
 {
-	m_fTime = { 0.f };
-
 	m_iMaxAttack = pStateManager.Get_Playerble() == CPlayer::PLAYER_NILOU || pStateManager.Get_Playerble() == CPlayer::PLAYER_TIGHNARI ? 4 : 3;
 
 	return PLAYER_ATTACK_1;
@@ -18,16 +19,17 @@ PLAYER_STATE CStateAttack::Enter(class CStateManager& pStateManager, PLAYER_STAT
 
 PLAYER_STATE CStateAttack::Update(const _float& fTimeDelta, CStateManager& pStateManager, PLAYER_STATE CurrentState)
 {
+	PLAYER_STATE eState{ CurrentState };
+
 	m_fTime += fTimeDelta;
 
-	if (m_fTime < m_fAttackTime)
+	if (m_fTime < m_fDuration)
 		return CurrentState;
 
-	if (m_pGameInstance->GetKeyState(DIK_W) == CInput_Device::HOLD
-		|| m_pGameInstance->GetKeyState(DIK_S) == CInput_Device::HOLD
-		|| m_pGameInstance->GetKeyState(DIK_A) == CInput_Device::HOLD
-		|| m_pGameInstance->GetKeyState(DIK_D) == CInput_Device::HOLD)
+	if (Check_Move())
 		return pStateManager.Set_CurrentState(CStateManager::STATE_TYPE_RUN);
+
+	if ((eState = __super::ToExtraAttack(pStateManager, CurrentState)) != CurrentState) return eState;
 
 	if (PLAYER_IDLE_PUT_AWAY == CurrentState) // attack -> idle »çÀÌ°ª
 		return CurrentState;

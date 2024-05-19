@@ -18,8 +18,9 @@ public:
     virtual PLAYER_STATE Exit(class CStateManager& pStateManager, PLAYER_STATE CurrentState) override;
 
 private:
-    _uint m_iAttackCount = { 0 };
-    _uint m_iMaxAttack = { 4 };
+    static _uint m_iAttackCount;
+    static _float m_iAttackTime;
+    _uint m_iMaxAttack = { 0 };
 
 public:
     static CStateAttack* Create();

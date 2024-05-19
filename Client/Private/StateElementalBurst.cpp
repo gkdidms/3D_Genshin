@@ -8,11 +8,18 @@ CStateElementalBurst::CStateElementalBurst()
 
 PLAYER_STATE CStateElementalBurst::Enter(class CStateManager& pStateManager, PLAYER_STATE CurrentState)
 {
+	m_fDuration = { 3.f };
 	return PLAYER_ELEMENTAL_BURST;
 }
 
 PLAYER_STATE CStateElementalBurst::Update(const _float& fTimeDelta, CStateManager& pStateManager, PLAYER_STATE CurrentState)
 {
+	if (m_fDuration <= m_fTime)
+	{
+		return __super::ToIdle(pStateManager, CurrentState);
+	}
+	else m_fTime += fTimeDelta;
+
 	return CurrentState;
 }
 

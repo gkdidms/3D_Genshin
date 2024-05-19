@@ -26,7 +26,7 @@ public:
     virtual HRESULT Render();
 
 private:
-    _float m_fDurationTime = { 14.f };
+    _float m_fDuration = { 14.f };
     _float m_fCurrentTime = { 0.f };
 
 private:

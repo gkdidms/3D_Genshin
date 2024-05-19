@@ -62,7 +62,7 @@ void CCutCamera::Tick(const _float& fTimeDelta)
 		case CPlayer::PLAYER_WANDERER:
 			Wanderer_EB(fTimeDelta);
 			break;
-		case CPlayer::PLAYER_YAE:
+		case CPlayer::PLAYER_FEIYAN:
 			Yae_EB(fTimeDelta);
 			break;
 		default:
@@ -129,8 +129,9 @@ void CCutCamera::isCutScene(_bool isCutScene, _uint ePlayerble)
 
 		break;
 	}
-	case Client::CPlayer::PLAYER_YAE:
+	case Client::CPlayer::PLAYER_FEIYAN:
 	{
+		//¿¬ºñ¿ë ÄÆ¾À ¸¸µé±â
 		Rotation(&m_OrbitMatrix, XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-85.f));
 		Turn(&m_OrbitMatrix, XMVectorSet(0.f, 0.f, 1.0f, 0.f), -0.7f);
 

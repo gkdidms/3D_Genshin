@@ -5,7 +5,8 @@
 
 BEGIN(Engine)
 class CShader;
-class CModel;
+class CVIBuffer_Rect;
+class CTextrue;
 END
 
 BEGIN(Client)
@@ -27,9 +28,14 @@ public:
 
 protected:
     CShader* m_pShaderCom = { nullptr };
-    CModel* m_pModelCom = { nullptr };
+    CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
+    CTexture* m_pTextureCom = { nullptr };
 
-private:
+protected:
+    _float4x4 m_matWorld, m_matView, m_matProj;
+    _float m_fSizeX, m_fSizeY, m_fX, m_fY;
+
+protected:
     virtual HRESULT Add_Components() = 0;
     virtual HRESULT Bind_ResourceData() = 0;
 

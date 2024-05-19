@@ -32,6 +32,7 @@ protected:
     virtual PLAYER_STATE ToJump(class CStateManager& pStateManager, PLAYER_STATE CurrentState);
     virtual PLAYER_STATE ToFly(class CStateManager& pStateManager, PLAYER_STATE CurrentState);
     virtual PLAYER_STATE ToAttack(class CStateManager& pStateManager, PLAYER_STATE CurrentState);
+    virtual PLAYER_STATE ToExtraAttack(class CStateManager& pStateManager, PLAYER_STATE CurrentState);
     virtual PLAYER_STATE ToElementalArt(class CStateManager& pStateManager, PLAYER_STATE CurrentState);
     virtual PLAYER_STATE ToElementalBurst(class CStateManager& pStateManager, PLAYER_STATE CurrentState);
 
@@ -41,7 +42,7 @@ protected:
 
 protected:
     _float m_fTime = { 0.f };
-    _float m_fAttackTime = { 0.5f }; // 공격 모션 지속시간 
+    _float m_fDuration = { 0.5f }; // 공격 모션 지속시간 
 
 public:
     virtual void Free();

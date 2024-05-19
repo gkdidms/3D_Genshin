@@ -25,9 +25,9 @@ private:
     CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
     CShader* m_pShaderCom = { nullptr };
     CTexture* m_pTextureCom = { nullptr };
+    class CLoadingBar* m_pLoadingBar = { nullptr };
 
     _float4x4 m_matWorld, m_matView, m_matProj;
-
     _float m_fSizeX, m_fSizeY, m_fX, m_fY;
 
 private:

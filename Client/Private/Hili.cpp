@@ -9,6 +9,8 @@
 #include "Hili_Weapon_Club.h"
 #include "Hili_Weapon_Crossbow.h"
 
+#include "MonsterHP_Outline.h"
+
 
 CHili::CHili(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMonster{pDevice, pContext}
@@ -34,6 +36,9 @@ HRESULT CHili::Initialize(void* pArg)
 	m_Weapon = pDesc->eWeapon;
 
 	if (FAILED(__super::Initialize(pArg)))
+		return E_FAIL;
+
+	if (FAILED(Ready_UI()))
 		return E_FAIL;
 
 	return S_OK;
@@ -73,13 +78,15 @@ HRESULT CHili::Add_Components()
 HRESULT CHili::Bind_ResourceData()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderMatrix(m_pShaderCom, "g_WorldMatrix")))
-	return E_FAIL;
+		return E_FAIL;
 	
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(CPipeLine::D3DTS_VIEW))))
-	return E_FAIL;
+		return E_FAIL;
 	
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(CPipeLine::D3DTS_PROJ))))
-	return E_FAIL;
+		return E_FAIL;
+
+	return S_OK;
 }
 
 void CHili::Change_Animation(const _float& fTimeDelta)
@@ -225,20 +232,19 @@ HRESULT CHili::Ready_Object()
 	return S_OK;
 }
 
-//void CHili::Check_Coll()
-//{
-//	
-//	CCollider* pPlayerColl =  dynamic_cast<CCollider*>( m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, TEXT("Layer_Player"), TEXT("Com_Collider")));
-//	
-//	if (m_pColliderCom->Intersect(pPlayerColl))
-//	{
-//		m_isColl = true;
-//
-//		return;
-//	}
-//
-//	m_isColl = false;
-//}
+HRESULT CHili::Ready_UI()
+{
+	CMonsterHP_Outline::MONSTER_HP_OUTLINE_DESC Desc{};
+	Desc.pParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
+	Desc.pMonsterHP = &m_Info.fHP;
+	Desc.fMonsterMaxHP = m_Info.fMaxHp;
+
+	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_UI_MonsterHP_Outline", L"Layer_UI", &Desc)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 
 void CHili::SetUp_OnTerrain(const _float& fTimeDelta)
 {
@@ -253,6 +259,7 @@ void CHili::Free()
 
 	Safe_Release(m_pWeapon);
 }
+
 
 
 

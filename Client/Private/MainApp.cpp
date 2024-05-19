@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "Loading_Level.h"
 #include "Background.h"
+#include "LoadingBar.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance{ CGameInstance::GetInstance()}
@@ -59,7 +60,7 @@ void CMainApp::Render()
 
 HRESULT CMainApp::Open_Level()
 {	
-	if (FAILED(m_pGameInstance->Open_Level(LEVEL_LOADING, CLoading_Level::Create(LEVEL_LOGO, m_pDevice, m_pContext))))
+	if (FAILED(m_pGameInstance->Open_Level(LEVEL_LOADING, CLoading_Level::Create(LEVEL_GAMEPLAY, m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	return S_OK;
@@ -70,10 +71,13 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STATIC, L"Prototype_Component_VIBuffer_Rect", CVIBuffer_Rect::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STATIC, L"Prototype_Component_Shader", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFile/Shader_VtxPosTex.hlsl"), VXTPOSTEX::Elements, VXTPOSTEX::iNumElements))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STATIC, L"Prototype_Component_Shader", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxPosTex.hlsl"), VXTPOSTEX::Elements, VXTPOSTEX::iNumElements))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STATIC, L"Prototype_Component_Texture_Loading", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Default0.jpg"), 1))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STATIC, L"Prototype_Component_Texture_Loading", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Loading/Loading.jpg"), 1))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STATIC, L"Prototype_Component_Texture_LoadingBar", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Loading/Loading_Icon.png"), 1))))
 		return E_FAIL;
 
 	return S_OK;
@@ -82,6 +86,9 @@ HRESULT CMainApp::Ready_Prototype_Components()
 HRESULT CMainApp::Ready_Prototype_GameObjects()
 {
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Background", CBackground::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_LoadingBar", CLoadingBar::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	return S_OK;

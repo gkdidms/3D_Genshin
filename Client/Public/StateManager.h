@@ -18,6 +18,7 @@ public:
     enum STATE_TYPE {
         STATE_TYPE_IDEL,
         STATE_TYPE_ATTACK,
+        STATE_TYPE_EXTRA_ATTACK,
         STATE_TYPE_ELEMENTALART,
         STATE_TYPE_ELEMNETALBURST,
         STATE_TYPE_RUN,
@@ -40,7 +41,7 @@ private:
 
 public:
     PLAYER_STATE Set_CurrentState(STATE_TYPE Type, PLAYER_STATE CurrentState = PLAYER_END);
-    
+
 public:
     _uint Get_Playerble() { return *m_CurrentPlayerble; }
     _bool isFly() { return m_StateType == STATE_TYPE_FLY; }
@@ -71,9 +72,12 @@ private:
     _uint* m_CurrentDir = { nullptr };
 
 private:
-    vector<CState*> m_PlayerStates;
+    //vector<CState*> m_PlayerStates;
 
     _bool m_isCollWindField = { false };
+
+private:
+    void Change_Playerble();
 
 public:
     virtual void Free() override;

@@ -156,7 +156,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Action.h" />
+    <ClInclude Include="..\public\AlertCircle.h" />
     <ClInclude Include="..\public\Background.h" />
+    <ClInclude Include="..\public\Item.h" />
+    <ClInclude Include="..\public\LoadingBar.h" />
+    <ClInclude Include="..\Public\MonsterHP.h" />
+    <ClInclude Include="..\Public\MonsterHP_Outline.h" />
+    <ClInclude Include="..\public\PlayerHP.h" />
+    <ClInclude Include="..\public\PlayerHP_Outline.h" />
+    <ClInclude Include="..\public\SkillBtn_E.h" />
+    <ClInclude Include="..\public\SkillBtn_Icon.h" />
+    <ClInclude Include="..\public\StateExtraAttack.h" />
+    <ClInclude Include="..\public\Feiyan_Body.h" />
     <ClInclude Include="..\public\Body_EvilEye.h" />
     <ClInclude Include="..\public\Body_Harbinger.h" />
     <ClInclude Include="..\public\Body_Tartaglia.h" />
@@ -214,7 +225,7 @@
     <ClInclude Include="..\Public\Slime_Mid_Water.h" />
     <ClInclude Include="..\public\Slime_Root.h" />
     <ClInclude Include="..\public\Stage_Boss_Level.h" />
-    <ClInclude Include="..\public\StateElementalArt.h" />
+    <ClInclude Include="..\public\StateElementalArt_Feiyan.h" />
     <ClInclude Include="..\public\StateElementalArt_Nilou.h" />
     <ClInclude Include="..\public\StateElementalArt_Tighanri.h" />
     <ClInclude Include="..\public\StateElementalArt_Yae.h" />
@@ -264,7 +275,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Action.cpp" />
+    <ClCompile Include="..\private\AlertCircle.cpp" />
     <ClCompile Include="..\private\Background.cpp" />
+    <ClCompile Include="..\private\Item.cpp" />
+    <ClCompile Include="..\private\LoadingBar.cpp" />
+    <ClCompile Include="..\Private\MonsterHP.cpp" />
+    <ClCompile Include="..\Private\MonsterHP_Outline.cpp" />
+    <ClCompile Include="..\private\PlayerHP.cpp" />
+    <ClCompile Include="..\private\PlayerHP_Outline.cpp" />
+    <ClCompile Include="..\private\SkillBtn_E.cpp" />
+    <ClCompile Include="..\private\SkillBtn_Icon.cpp" />
+    <ClCompile Include="..\private\StateExtraAttack.cpp" />
+    <ClCompile Include="..\private\Feiyan_Body.cpp" />
     <ClCompile Include="..\private\Body_EvilEye.cpp" />
     <ClCompile Include="..\private\Body_Harbinger.cpp" />
     <ClCompile Include="..\private\Body_Tartaglia.cpp" />
@@ -321,7 +343,7 @@
     <ClCompile Include="..\Private\Slime_Mid_Water.cpp" />
     <ClCompile Include="..\private\Slime_Root.cpp" />
     <ClCompile Include="..\private\Stage_Boss_Level.cpp" />
-    <ClCompile Include="..\private\StateElementalArt.cpp" />
+    <ClCompile Include="..\private\StateElementalArt_Feiyan.cpp" />
     <ClCompile Include="..\private\StateElementalArt_Nilou.cpp" />
     <ClCompile Include="..\private\StateElementalArt_Tighanri.cpp" />
     <ClCompile Include="..\private\StateElementalArt_Yae.cpp" />
@@ -374,10 +396,12 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\Bin\ShaderFile\Shader_VtxAnimMesh.hlsl" />
-    <FxCompile Include="..\Bin\ShaderFile\Shader_VtxMesh.hlsl" />
-    <FxCompile Include="..\Bin\ShaderFile\Shader_VtxNorTex.hlsl" />
-    <FxCompile Include="..\Bin\ShaderFile\Shader_VtxPosTex.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex_UI.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex_UI.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimMesh.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

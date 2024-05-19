@@ -120,13 +120,13 @@ HRESULT CMainTool::Ready_Level_For_Main()
         return E_FAIL;
     
     // Shader
-    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Shader", CShader::Create(m_pDevice, m_pContext, L"../Bin/ShaderFile/Shader_VtxNorTex.hlsl", VTXNORTEX::Elements, VTXNORTEX::iNumElements))))
+    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Shader", CShader::Create(m_pDevice, m_pContext, L"../Bin/ShaderFiles/Shader_VtxNorTex.hlsl", VTXNORTEX::Elements, VTXNORTEX::iNumElements))))
         return E_FAIL;
 
-    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Shader_VtxMesh", CShader::Create(m_pDevice, m_pContext, L"../Bin/ShaderFile/Shader_VtxMesh.hlsl", VTXMESH::Elements, VTXMESH::iNumElements))))
+    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Shader_VtxMesh", CShader::Create(m_pDevice, m_pContext, L"../Bin/ShaderFiles/Shader_VtxMesh.hlsl", VTXMESH::Elements, VTXMESH::iNumElements))))
         return E_FAIL;
 
-    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Shader_VtxAnimMesh", CShader::Create(m_pDevice, m_pContext, L"../Bin/ShaderFile/Shader_VtxAnimMesh.hlsl", VTXANIMMESH::Elements, VTXANIMMESH::iNumElements))))
+    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Shader_VtxAnimMesh", CShader::Create(m_pDevice, m_pContext, L"../Bin/ShaderFiles/Shader_VtxAnimMesh.hlsl", VTXANIMMESH::Elements, VTXANIMMESH::iNumElements))))
         return E_FAIL;
 
     if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Navigation", CNavigation::Create(m_pDevice, m_pContext))))

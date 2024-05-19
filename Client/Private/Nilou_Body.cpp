@@ -108,6 +108,7 @@ HRESULT CNilou_Body::Bind_ResourceData()
 void CNilou_Body::Change_Animation(const _float& fTimeDelta)
 {
 	m_IsLinear = true;
+	m_IsLinearSpeed = false;
 	switch (*m_pState)
 	{
 	case PLAYER_ATTACK_1:

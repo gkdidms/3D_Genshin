@@ -91,7 +91,7 @@ void CCollider::Compute_Rank(_char strRank, _char strTargetRank, CTransform* pTr
 		//타켓이 B라면
 		_vector vSour = XMVector3Normalize(vTargetPos - vPos);
 
-		vTargetPos += vSour * 3.f * fTimeDelta;
+		vTargetPos += vSour * 5.f * fTimeDelta;
 		pTargetTransform->Go_Coll(vTargetPos, pTargetNavigation);
 	}
 	else
@@ -99,7 +99,7 @@ void CCollider::Compute_Rank(_char strRank, _char strTargetRank, CTransform* pTr
 		// 주체 객체가 B이거나 같으면
 		_vector vSour = XMVector3Normalize(vPos - vTargetPos);
 
-		vPos += vSour * 3.f * fTimeDelta;
+		vPos += vSour * 5.f * fTimeDelta;
 		pTransform->Go_Coll(vPos, pNavigation);
 	}
 }

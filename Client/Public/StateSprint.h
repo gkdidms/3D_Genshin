@@ -17,7 +17,7 @@ public:
     virtual PLAYER_STATE Exit(class CStateManager& pStateManager, PLAYER_STATE CurrentState) override;
 
 private:
-    _float m_fDurationTime = { 1.3f };
+    _float m_fDuration = { 1.3f };
     _float m_fCurrentTime = { 0.f };
 
 private:

@@ -10,6 +10,7 @@
 #include "Nilou_Body.h"
 #include "Wanderer_Body.h"
 #include "Yae_Body.h"
+#include "Feiyan_Body.h"
 
 #include "Weapon_Ayus.h"
 #include "Weapon_Alaya.h"
@@ -52,6 +53,9 @@
 #include "Tartaglia_Bow.h"
 #include "Tartaglia_DualBlade.h"
 
+#include "Flycloak.h"
+
+#pragma region SceneObj
 #include "TreasureBox.h"
 #include "CheckPoint.h"
 #include "DungeonGate.h"
@@ -60,8 +64,19 @@
 #include "Operator.h"
 #include "Plane.h"
 #include "ThornWall.h"
+#include "Item.h"
+#pragma endregion
 
-#include "Flycloak.h"
+#pragma region UI
+#include "PlayerHP.h"
+#include "PlayerHP_Outline.h"
+#include "MonsterHP.h"
+#include "MonsterHP_Outline.h"
+
+#include "SkillBtn_Icon.h"
+#include "SkillBtn_E.h"
+#pragma endregion
+
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pContext{pContext}, m_pDevice{pDevice} , m_pGameInstance{ CGameInstance::GetInstance() }
@@ -131,8 +146,33 @@ HRESULT CLoader::Loading_For_Logo()
 HRESULT CLoader::Loading_For_GamePlay()
 {
 	lstrcpy(m_szLoadingText, TEXT("텍스쳐를 로딩 중 입니다."));
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_Terrain", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Tile0.dds"), 1))))
+	//if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_Terrain", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Tile0.dds"), 1))))
+	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_UI_Avatar_HP_Outline", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Avatar/HP/UI_HPBar_2_Outline.png"), 1))))
 		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_UI_Avatar_HP", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Avatar/HP/UI_HPBar_2.png"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_UI_Monster_HP_Outline", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Monster/HP/UI_HPBar_0s_Outline.png"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_UI_Monster_HP", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Monster/HP/UI_HPBar_0s.png"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_UI_Btn_Frame_38", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Avatar/Btn/UI_Frame_38.png"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_UI_Btn_Frame_26", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Avatar/Btn/UI_Frame_26.png"), 1))))
+		return E_FAIL;
+
+#pragma region E_SKILL_TEXTURE
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_UI_SkillBtn_Icon_E_Tighnari", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Avatar/Btn/Tighnari/Skill_E_Tighnari_01.png"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_UI_SkillBtn_Icon_E_Nilou", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Avatar/Btn/Nilou/Skill_E_Nilou_01.png"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_UI_SkillBtn_Icon_E_Wanderer", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Avatar/Btn/Wanderer/Skill_E_Wanderer_01.png"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_UI_SkillBtn_Icon_E_Feiyan", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Avatar/Btn/Feiyan/Skill_E_Feiyan_01.png"), 1))))
+		return E_FAIL;
+#pragma endregion
+
+
 
 	lstrcpy(m_szLoadingText, TEXT("플레이어 모델를(을) 로딩 중 입니다."));
 
@@ -147,6 +187,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Yae", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Player/Yae/Yae.fbx", PreTransformMatrix, "../../Data/Yae.dat"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Feiyan", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Player/Feiyan/Feiyan.fbx", PreTransformMatrix, "../../Data/Feiyan.dat"))))
 		return E_FAIL;
 
 
@@ -185,6 +228,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Plane", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SceneObj/Plane/Plane.fbx", PreTransformMatrix, "../../Data/SceneObj_Plane.dat"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Item", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Item/BlankCoin.fbx", PreTransformMatrix, "../../Data/Item_BlankCoin.dat"))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("스킬 오브젝트 모델를(을) 로딩 중 입니다."));
@@ -234,16 +280,20 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("셰이더를(을) 로딩 중 입니다."));
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxNorTex", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFile/Shader_VtxNorTex.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxNorTex", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxNorTex.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements))))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxMesh", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFile/Shader_VtxMesh.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxMesh", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxMesh.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements))))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxAnimMesh", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFile/Shader_VtxAnimMesh.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxAnimMesh", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxAnimMesh.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxPosTex_UI", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxPosTex_UI.hlsl"), VXTPOSTEX::Elements, VXTPOSTEX::iNumElements))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxNorTex_UI", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxNorTex_UI.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("컴포넌트 로딩 중 입니다."));
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_VIBuffer_Terrain", CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Height1.bmp")))))
-		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_VIBuffer_Terrain", CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Height1.bmp")))))
+	//	return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Navigation", CNavigation::Create(m_pDevice, m_pContext, TEXT("../../Data/Navigation/Navigation_Stage_1.dat")))))
 		return E_FAIL;
@@ -272,6 +322,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Player_Yae", CYae_Body::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Player_Feiyan", CFeiyan_Body::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Weapon_Ayus", CWeapon_Ayus::Create(m_pDevice, m_pContext))))
@@ -346,6 +399,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_SceneObj_Plane", CPlane::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_SceneObj_Item", CItem::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Monster_Hili_Fire", CHili_Fire::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
@@ -361,6 +417,22 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Flycloak", CFlycloak::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+#pragma region UI
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_UI_PlayerHP_Outline", CPlayerHP_Outline::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_UI_PlayerHP", CPlayerHP::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_UI_MonsterHP_Outline", CMonsterHP_Outline::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_UI_MonsterHP", CMonsterHP::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_UI_SkillBtn_Icon", CSkillBtn_Icon::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_UI_SkillBtn_E", CSkillBtn_E::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+#pragma endregion
+
+
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
 	m_isFinished = true;
 
@@ -369,6 +441,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 HRESULT CLoader::Loading_For_Stage_Boss()
 {
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STATIC, L"Prototype_Component_Texture_AlertCircle", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/AlertCircle/AlertCircle.png"), 1))))
+		return E_FAIL;
+
 	_matrix PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Tighnari", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Player/Tighnari/Tighnari.fbx", PreTransformMatrix, "../../Data/Tighnari.dat"))))
 		return E_FAIL;
@@ -458,11 +533,11 @@ HRESULT CLoader::Loading_For_Stage_Boss()
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("셰이더를(을) 로딩 중 입니다."));
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxNorTex", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFile/Shader_VtxNorTex.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxNorTex", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxNorTex.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements))))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxMesh", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFile/Shader_VtxMesh.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxMesh", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxMesh.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements))))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxAnimMesh", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFile/Shader_VtxAnimMesh.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxAnimMesh", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxAnimMesh.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements))))
 		return E_FAIL;
 
 	/*객체 원형 로딩*/

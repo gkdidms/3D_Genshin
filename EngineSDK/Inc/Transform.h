@@ -49,7 +49,9 @@ public:
 
 public:
     _bool Go_Run(const _matrix vMoveMatrix, class CNavigation* pNavigationCom, _bool isFlyMove = false);
+    _bool Check_Radius_AfterRun(const _matrix vMoveMatrix, class CNavigation* pNavigationCom, _vector vRadius);
     _bool Go_Coll(const _fvector vMovePos, class CNavigation* pNavigationCom);
+
     void Go_Straight(const _float& fTimeDelta);
     void Go_Backwork(const _float& fTimeDelta);
     void Go_Left(const _float& fTimeDelta);

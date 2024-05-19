@@ -22,18 +22,26 @@ HRESULT CDungeonGate::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	m_CurrentState = GATE_IDEL;
+
 	return S_OK;
 }
 
 void CDungeonGate::Priority_Tick(const _float& fTimeDelta)
 {
+	//if (m_CurrentState == GATE_OPEN)
+	//	return;
+
+	//__super::Priority_Tick(fTimeDelta);
 }
 
 void CDungeonGate::Tick(const _float& fTimeDelta)
 {
+	Change_Animation(fTimeDelta);
+
 	_float4x4 MoveMatrix;
 	m_pModelCom->Play_Animation(fTimeDelta, &MoveMatrix);
-
+	
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 }
 
@@ -65,7 +73,7 @@ HRESULT CDungeonGate::Add_Components()
 	CBounding_AABB::BOUNDING_AABB_DESC Desc{};
 
 	Desc.eType = CCollider::COLLIDER_AABB;
-	Desc.vExtents = _float3(0.6f, 0.5f, 0.6f);
+	Desc.vExtents = _float3(0.3f, 2.f, 2.f);
 	Desc.vCenter = _float3(0.f, Desc.vExtents.y, 0.f);
 
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Collider", L"Com_Collider", reinterpret_cast<CComponent**>(&m_pColliderCom), &Desc)))
@@ -90,6 +98,10 @@ HRESULT CDungeonGate::Bind_ResourceData()
 
 void CDungeonGate::Change_Animation(const _float& fTimeDelta)
 {
+	// 방 하나가 끝나면 게이트 오픈.
+	// 게이트 애니메이션 수정하기
+
+	//m_pModelCom->Set_Animation(CModel::ANIM_DESC{})
 }
 
 CDungeonGate* CDungeonGate::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

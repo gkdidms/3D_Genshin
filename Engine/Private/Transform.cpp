@@ -77,14 +77,23 @@ _bool CTransform::Go_Run(const _matrix vMoveMatrix, CNavigation* pNavigationCom,
 	_vector vPos = XMVectorSetW(XMVector3TransformCoord(vMoveMatrix.r[3], Get_WorldMatrix()), 1.f);
 
 	if (nullptr == pNavigationCom ? false : !pNavigationCom->isMove(vPos))
-	{
 		return false;
-	}
 
 	if (pNavigationCom->Get_OptionType() == CCell::OPTION_FLY && pNavigationCom->isFlyCell(XMVector3Normalize(Get_State(STATE_LOOK))) && !isFlyMove)
 		return false;
 		
 	Set_State(CTransform::STATE_POSITION, vPos);
+	return true;
+}
+
+_bool CTransform::Check_Radius_AfterRun(const _matrix vMoveMatrix, CNavigation* pNavigationCom, _vector vRadius)
+{
+	_vector vPos = XMVector3TransformCoord(vMoveMatrix.r[3], Get_WorldMatrix());
+
+	_vector vPosToRadiuse = XMVectorSetW(vPos + vRadius, 1.f);
+	if (nullptr == pNavigationCom ? false : !pNavigationCom->isMove(vPosToRadiuse))
+		return false;
+
 	return true;
 }
 

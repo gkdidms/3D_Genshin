@@ -19,8 +19,8 @@ public:
     } PLAYER_DESC;
 
 public:
-    enum PLAYERBLE_TYPE { PLAYER_TIGHNARI, PLAYER_NILOU, PLAYER_WANDERER, PLAYER_YAE, PLAYER_TYPE_END };
-    enum PLAYER_PART { PART_BODY, PART_WEAPON_BLADE_R, PART_FLYCLOAK, PART_SKILLOBJ_1, PART_SKILLOJB_2, PART_END };
+    enum PLAYERBLE_TYPE { PLAYER_TIGHNARI, PLAYER_NILOU, PLAYER_WANDERER, PLAYER_FEIYAN, PLAYER_TYPE_END };
+    enum PLAYER_PART { PART_BODY, PART_WEAPON, PART_FLYCLOAK, PART_SKILLOBJ_1, PART_SKILLOJB_2, PART_END };
     enum PLAYER_DIR { DIR_RIGHT_SIDE, DIR_LEFT_SIDE, DIR_STRIGHT, DIR_BACKWORK, DIR_END };
     enum HILL_TYPE { HILL_UP, HILL_DOWN, HILL_END }; // 계단
 
@@ -38,6 +38,7 @@ public:
 public:
     void Set_PlayerMove(_vector vMoveSpeed);
     void Set_Coll(_bool isColl) { m_isColl = isColl; }
+    void Set_Height(_float fHeight);
 
 public:
     _uint Get_CurrentWeapon();
@@ -59,11 +60,10 @@ private:
 
     class CStateManager* m_pStateManager = { nullptr };
     vector<class CGameObject*> m_PartObject[PLAYER_TYPE_END];
-    _uint m_CurrentPlayerble = { PLAYER_NILOU };
+    _uint m_CurrentPlayerble = { PLAYER_FEIYAN };
 
 private:
     _int m_iPlayerNavigationIndex = { 0 };
-    _float3 m_vPlayerPos = {};
 
 private:
     _uint m_iState = { 0 }; // 현재 플레이어 상태
@@ -73,7 +73,9 @@ private:
 private: 
     _bool m_isBossSign = { false }; // 보스 (타탈) 단류가 부착되었는지 확인.
     _bool m_isColl = { false };
+    _bool m_isPlanHeight = { false }; // 발판과 충돌하여 위에 올라갓는가?
 
+    _float m_fHeight = { 0.f };
     _float m_fJumpDurationTime = { 0.2f };
     _float m_fJumpCurrentTime = { 0.f };
 

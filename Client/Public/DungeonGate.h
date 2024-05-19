@@ -5,6 +5,8 @@ BEGIN(Client)
 class CDungeonGate :
     public CSceneObj
 {
+public:
+    enum STATE { GATE_IDEL, GATE_OPEN, GATE_END, STATE_END };
 private:
     CDungeonGate(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
     CDungeonGate(const CDungeonGate& rhs);
@@ -17,6 +19,9 @@ public:
     virtual void Tick(const _float& fTimeDelta) override;
     virtual void Late_Tick(const _float& fTimeDelta) override;
     virtual HRESULT Render() override;
+
+private:
+    STATE m_CurrentState = { STATE_END };
 
 private:
     virtual HRESULT Add_Components() override;

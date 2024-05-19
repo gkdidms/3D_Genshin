@@ -162,9 +162,9 @@ CNode::NODE_STATE CBT_Hili::CheckAttackTime()
 {
 	if (m_isAttack)
 	{
-		if (m_fAttackDelay < m_fAttackTime)
+		if (m_fAttackDelay < m_fDuration)
 		{
-			m_fAttackTime = 0.f;
+			m_fDuration = 0.f;
 			m_isAttack = false;
 			return CNode::SUCCESS;
 		}

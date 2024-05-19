@@ -15,7 +15,7 @@ PLAYER_STATE CStateJump::Enter(class CStateManager& pStateManager, PLAYER_STATE 
 	if (CurrentState == PLAYER_RUN)
 		return PLAYER_JUMP_FOR_RUN;
 	if (CurrentState == PLAYER_SPRINT)
-		return PLAYER_SPRINT;
+		return PLAYER_JUMP_FOR_SPRINT;
 
 	return PLAYER_JUMP;
 }

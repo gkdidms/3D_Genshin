@@ -33,7 +33,7 @@ PLAYER_STATE CStateElementalArt_Nilou::Update(const _float& fTimeDelta, CStateMa
 	if (CurrentState == PALYER_ATTACK_SPEC || CurrentState == PLAYER_ELEMENTAL_SPEC)
 		return CurrentState;
 		
-	if (m_fTime < m_fAttackTime)
+	if (m_fTime < m_fDuration)
 		return CurrentState;
 
 	PLAYER_STATE eState{ CurrentState };

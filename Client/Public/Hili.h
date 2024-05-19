@@ -56,6 +56,7 @@ protected:
     virtual void Change_Animation(const _float& fTimeDelta);
 
     virtual HRESULT Ready_Object();
+    HRESULT Ready_UI();
     void SetUp_OnTerrain(const _float& fTimeDelta);
 
 protected:

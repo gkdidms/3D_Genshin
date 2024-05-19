@@ -59,6 +59,14 @@ PLAYER_STATE CState::ToAttack(CStateManager& pStateManager, PLAYER_STATE Current
 	return CurrentState;
 }
 
+PLAYER_STATE CState::ToExtraAttack(CStateManager& pStateManager, PLAYER_STATE CurrentState)
+{
+	if (m_pGameInstance->GetMouseState(DIM_RB) == CInput_Device::TAP)
+		return pStateManager.Set_CurrentState(CStateManager::STATE_TYPE_EXTRA_ATTACK);
+
+	return CurrentState;
+}
+
 PLAYER_STATE CState::ToElementalArt(CStateManager& pStateManager, PLAYER_STATE CurrentState)
 {
 	if (m_pGameInstance->GetKeyState(DIK_E) == CInput_Device::TAP)

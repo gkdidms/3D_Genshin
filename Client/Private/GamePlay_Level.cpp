@@ -30,7 +30,8 @@ HRESULT CGamePlay_Level::Initialize()
 
 	//if (FAILED(Ready_Layer_Monster(L"Layer_Fiona")))
 	//	return E_FAIL;
-
+	if (FAILED(Ready_Layer_UI(L"Layer_UI")))
+		return E_FAIL;
 	return S_OK;
 }
 
@@ -108,6 +109,14 @@ HRESULT CGamePlay_Level::Ready_Layer_BackGround(const wstring& strLayerTag, cons
 HRESULT CGamePlay_Level::Ready_Layer_Player(const wstring& strLayerTag, void* pArg)
 {
 	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Player", strLayerTag, pArg)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CGamePlay_Level::Ready_Layer_UI(const wstring& strLayerTag)
+{
+	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_UI_PlayerHP_Outline", strLayerTag)))
 		return E_FAIL;
 
 	return S_OK;
@@ -230,6 +239,7 @@ HRESULT CGamePlay_Level::Ready_Object(const char* strName, _matrix WorldMatrix, 
 
 		XMStoreFloat4x4(&Desc.WorldMatrix, WorldMatrix);
 		Desc.isMove = true;
+		Desc.iNavigationIndex = iNavigationIndex;
 
 		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_SceneObj_Plane", L"Layer_SceneObj", &Desc)))
 			return E_FAIL;

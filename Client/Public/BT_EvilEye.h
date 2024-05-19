@@ -24,6 +24,9 @@ private:
 	virtual ~CBT_EvilEye() = default;
 
 public:
+	virtual _bool isStrikeSkill() override { return m_Skill == SKILL_DUALBLADE_STRIKE; }
+
+public:
 	virtual HRESULT Initialize(void* pArg);
 	virtual void Tick(const _float& fTimeDelta);
 	virtual virtual CNode::NODE_STATE Evaluate() override;

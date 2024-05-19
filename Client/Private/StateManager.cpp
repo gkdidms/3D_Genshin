@@ -5,7 +5,13 @@
 #include "StateRun.h"
 #include "StateSprint.h"
 #include "StateIdle.h"
-#include "StateElementalArt.h"
+#include "StateElementalArt_Tighanri.h"
+#include "StateElementalArt_Nilou.h"
+#include "StateElementalArt_Wanderer.h"
+#include "StateElementalArt_Yae.h"
+#include "StateElementalArt_Feiyan.h"
+
+#include "StateExtraAttack.h"
 #include "StateElementalBurst.h"
 #include "StateAttack.h"
 #include "StateJump.h"
@@ -24,8 +30,62 @@ CStateManager::CStateManager()
 
 PLAYER_STATE CStateManager::Set_CurrentState(STATE_TYPE Type, PLAYER_STATE CurrentState)
 {
+	if (Type == m_StateType) return CurrentState;
+
+	Safe_Release(m_pCurrentState);
+
+	switch (Type)
+	{
+	case Client::CStateManager::STATE_TYPE_IDEL:
+		m_pCurrentState = CStateIdle::Create();
+		break;
+	case Client::CStateManager::STATE_TYPE_ATTACK:
+		m_pCurrentState = CStateAttack::Create();
+		break;
+	case Client::CStateManager::STATE_TYPE_EXTRA_ATTACK:
+		if (*m_CurrentPlayerble == CPlayer::PLAYER_FEIYAN)
+			m_pCurrentState = CStateExtraAttack::Create();
+		else
+			m_pCurrentState = CStateAttack::Create();
+		break;
+	case Client::CStateManager::STATE_TYPE_ELEMENTALART:
+		if (*m_CurrentPlayerble == CPlayer::PLAYER_TIGHNARI)
+			m_pCurrentState = CStateElementalArt_Tighanri::Create();
+		else if (*m_CurrentPlayerble == CPlayer::PLAYER_NILOU)
+			m_pCurrentState = CStateElementalArt_Nilou::Create();
+		else if (*m_CurrentPlayerble == CPlayer::PLAYER_WANDERER)
+			m_pCurrentState = CStateElementalArt_Wanderer::Create();
+		else if (*m_CurrentPlayerble == CPlayer::PLAYER_FEIYAN)
+			m_pCurrentState = CStateElementalArt_Feiyan::Create();
+		break;
+	case Client::CStateManager::STATE_TYPE_ELEMNETALBURST:
+		m_pCurrentState = CStateElementalBurst::Create();
+		break;
+	case Client::CStateManager::STATE_TYPE_RUN:
+		m_pCurrentState = CStateRun::Create();
+		break;
+	case Client::CStateManager::STATE_TYPE_SPRINT:
+		m_pCurrentState = CStateSprint::Create();
+		break;
+	case Client::CStateManager::STATE_TYPE_JUMP:
+		m_pCurrentState = CStateJump::Create();
+		break;
+	case Client::CStateManager::STATE_TYPE_FLY:
+		m_pCurrentState = CStateFly::Create();
+		break;
+	case Client::CStateManager::STATE_TYPE_FALL_ATTACK:
+		m_pCurrentState = CStateFallAttack::Create();
+		break;
+	case Client::CStateManager::STATE_TYPE_FALL_GROUND:
+		m_pCurrentState = CStateFallGround::Create();
+		break;
+	case Client::CStateManager::STATE_TYPE_END:
+		break;
+	default:
+		break;
+	}
+
 	m_StateType = Type;
-	m_pCurrentState = m_PlayerStates[Type];
 
 	return m_pCurrentState->Enter(*this, CurrentState);
 }
@@ -39,14 +99,11 @@ HRESULT CStateManager::Initialize(void* pArg)
 	m_CurrentPlayerble = pDesc->pPlayerbleType;
 	m_CurrentDir = pDesc->pPlayerDir;
 
-	if (FAILED(Ready_State()))
-		return E_FAIL;
-
 	return S_OK;
 }
 
 HRESULT CStateManager::Ready_State()
-{
+{/*
 	m_PlayerStates.emplace_back(CStateIdle::Create());
 	m_PlayerStates.emplace_back(CStateAttack::Create());
 	m_PlayerStates.emplace_back(CStateElementalArt::Create());
@@ -56,7 +113,7 @@ HRESULT CStateManager::Ready_State()
 	m_PlayerStates.emplace_back(CStateJump::Create());
 	m_PlayerStates.emplace_back(CStateFly::Create());
 	m_PlayerStates.emplace_back(CStateFallAttack::Create());
-	m_PlayerStates.emplace_back(CStateFallGround::Create());
+	m_PlayerStates.emplace_back(CStateFallGround::Create());*/
 
 	return S_OK;
 }

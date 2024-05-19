@@ -57,7 +57,7 @@ protected:
 	_float m_iDiscoverRange = { 20.f };
 
 	_float m_fAttackDelay = { 2.f }; // 2초
-	_float m_fAttackTime = { 0.f }; // 공격 후 시간 
+	_float m_fDuration = { 0.f }; // 공격 후 시간 
 
 protected:
 	virtual CNode::NODE_STATE CheckDeath();

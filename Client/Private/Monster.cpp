@@ -39,11 +39,14 @@ HRESULT CMonster::Initialize(void* pArg)
 
 void CMonster::Priority_Tick(const _float& fTimeDelta)
 {
-    CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, TEXT("Layer_Player"), 0));
-    m_isColl = m_pColliderCom->Intersect(dynamic_cast<CCollider*>(pPlayer->Get_Component(TEXT("Com_Collider"))));
+    m_isColl = false; // 초기화
 
-    if (m_isColl)
+    CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, TEXT("Layer_Player"), 0));
+    _bool isCheckColl = m_pColliderCom->Intersect(dynamic_cast<CCollider*>(pPlayer->Get_Component(TEXT("Com_Collider"))));
+
+    if (isCheckColl)
     {
+        m_isColl = true;
         pPlayer->Set_Coll(true);
         _char strPlayerRank = pPlayer->Get_StateRank();
         m_pColliderCom->Compute_Rank(m_strStateRank, strPlayerRank, m_pTransformCom, dynamic_cast<CTransform*>(pPlayer->Get_Component(TEXT("Com_Transform"))), m_pNavigation, dynamic_cast<CNavigation*>(pPlayer->Get_Component(TEXT("Com_Navigation"))), fTimeDelta);
@@ -51,12 +54,17 @@ void CMonster::Priority_Tick(const _float& fTimeDelta)
 
     vector<CGameObject*> vecMonsters = m_pGameInstance->Get_GameObjects(LEVEL_GAMEPLAY, TEXT("Layer_Monster"));
 
+    //자기 자신을 비교하지 않도록 처리하기
     for (auto& pMonster : vecMonsters)
     {
-        m_isColl = m_pColliderCom->Intersect(dynamic_cast<CCollider*>(pMonster->Get_Component(TEXT("Com_Collider"))));
+        if (pMonster->Get_Index() == m_iIndex)
+            continue;
 
-        if (m_isColl)
+        isCheckColl = m_pColliderCom->Intersect(dynamic_cast<CCollider*>(pMonster->Get_Component(TEXT("Com_Collider"))));
+
+        if (isCheckColl)
         {
+            m_isColl = true;
             CMonster* pCollMonster = dynamic_cast<CMonster*>(pMonster);
             _char strCollMonsterRank = pMonster->Get_StateRank();
 

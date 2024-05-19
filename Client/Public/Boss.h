@@ -14,7 +14,7 @@ class CBoss :
 {
 public:
     enum PAGE_STATE { ONE_PAGE, TWO_PAGE, FINAL_PAGE, PAGE_END };
-    enum PLAYER_PART { PART_BODY, PART_WEAPON_BLADE_R, PART_WEAPON_BLADE_L, PART_WEAPON_BOW, PART_WEAPON_DUALBLADE, PART_END };
+    enum PLAYER_PART { PART_BODY, PART_WEAPON, PART_WEAPON_BLADE_L, PART_WEAPON_BOW, PART_WEAPON_DUALBLADE, PART_END };
     enum BOSS_STATE {
         BOSS_IDLE,
         BOSS_BOW_IDLE,
@@ -104,15 +104,19 @@ private:
 private:
     vector<class CGameObject*> m_PartObject[PAGE_END];
 
-    PAGE_STATE m_CurrentPage = { TWO_PAGE };
+    PAGE_STATE m_CurrentPage = { ONE_PAGE };
     _uint m_CurrentState = { BOSS_END };
     _int m_iBossNavigationIndex = { -1 };
+
+    _bool m_isColl = { false };
 
 private:
     HRESULT Add_Components();
     HRESULT Ready_Body();
     HRESULT Ready_Weapon();
     HRESULT Ready_Object();
+    void Change_StateRank();
+    void Check_Coll(const _float& fTimeDelta);
 
 public:
     static CBoss* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

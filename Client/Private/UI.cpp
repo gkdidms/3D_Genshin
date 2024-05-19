@@ -1,5 +1,7 @@
 #include "UI.h"
 
+#include "GameInstance.h"
+
 CUI::CUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject{ pDevice, pContext }
 {
@@ -43,4 +45,9 @@ HRESULT CUI::Render()
 void CUI::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pTextureCom);
+	Safe_Release(m_pVIBufferCom);
+	Safe_Release(m_pShaderCom);
+
 }

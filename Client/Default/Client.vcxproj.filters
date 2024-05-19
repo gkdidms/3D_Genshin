@@ -28,9 +28,6 @@
     <Filter Include="02. GameObject">
       <UniqueIdentifier>{e4b884d1-7f31-4cf4-824a-a10459819422}</UniqueIdentifier>
     </Filter>
-    <Filter Include="97.ShaderFile">
-      <UniqueIdentifier>{b3ebe4cc-9257-419c-89ec-3099e7b941e8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="96. Utility">
       <UniqueIdentifier>{4ca56d1b-0058-40da-afc7-a78bec2b1926}</UniqueIdentifier>
     </Filter>
@@ -223,9 +220,6 @@
     <Filter Include="02. GameObject\07. SceneObj\CheckPoint">
       <UniqueIdentifier>{b8a25590-2168-4689-afd1-b7e2b9e81ab8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\07. SceneObj\Gate">
-      <UniqueIdentifier>{5c76dd34-4d1c-4faa-9f82-50322efdbd9f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\07. SceneObj\WindField">
       <UniqueIdentifier>{b0e56f0d-d94d-412f-8655-fd2c5ed7e4f0}</UniqueIdentifier>
     </Filter>
@@ -345,6 +339,60 @@
     </Filter>
     <Filter Include="02. GameObject\04. Player\PartObject\SkillObj\Wanderer">
       <UniqueIdentifier>{716e5138-240e-427b-aac6-39345f84a3bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. SceneObj\Gate">
+      <UniqueIdentifier>{5c76dd34-4d1c-4faa-9f82-50322efdbd9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility\03. Trigger">
+      <UniqueIdentifier>{f5881f28-6c41-474b-b048-bc9bc0793a4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. Boss\Skill">
+      <UniqueIdentifier>{f9bf051d-66e2-477c-b364-64b628447aec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\PartObject\Body\Feiyan">
+      <UniqueIdentifier>{60ea781c-7cf2-46f8-b3c3-ee2141ed39d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\State\State\ElementalArt\Feiyan">
+      <UniqueIdentifier>{d60cc780-653a-4671-b068-fb9432c6c82c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\State\State\ExtraAttack">
+      <UniqueIdentifier>{c823d5a4-71bf-4700-8f29-b39ab527a84e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. UI\HP">
+      <UniqueIdentifier>{aa01b901-75ee-4ada-9ffd-a41ed8dd7825}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. UI\HP\Player">
+      <UniqueIdentifier>{fd26f17f-ea7c-4638-8920-794b2a5d7534}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\00. Background\Icon">
+      <UniqueIdentifier>{a8593834-e766-456b-bb8d-e2bceee50e30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.ShaderFiles">
+      <UniqueIdentifier>{b3ebe4cc-9257-419c-89ec-3099e7b941e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. UI\HP\Player\HPBar">
+      <UniqueIdentifier>{bdcd9f56-0f30-4a61-bbbb-6927ac61ab2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. UI\HP\Monster">
+      <UniqueIdentifier>{57b1c2ae-8a32-47d8-9f96-f97459da9c0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. UI\HP\Monster\HPBar">
+      <UniqueIdentifier>{13448e13-e9f5-402c-b9de-f39cbb99c8fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. UI\Skill">
+      <UniqueIdentifier>{969e0816-ee0c-4e9d-af1e-eb417fa6712d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. UI\Skill\E_Skill">
+      <UniqueIdentifier>{49fe13fd-3cd7-4547-a8b9-23dbb1ed13f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. UI\Skill\Q_Skill">
+      <UniqueIdentifier>{dbd0c35a-d05c-4895-8837-524e039c7e45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. UI\Skill\Skill_Icon">
+      <UniqueIdentifier>{a1142fe8-b486-4487-bf44-124086ca4706}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\09. Item">
+      <UniqueIdentifier>{92e3d0b3-4e19-4045-a5ab-07e98360c177}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -657,14 +705,47 @@
     <ClInclude Include="..\public\FoxTower.h">
       <Filter>02. GameObject\04. Player\PartObject\SkillObj\Yae\FoxTower</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\StateElementalArt.h">
-      <Filter>02. GameObject\04. Player\State\State\ElementalArt</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\FlowerArrow.h">
       <Filter>02. GameObject\04. Player\PartObject\SkillObj\Tighnari</Filter>
     </ClInclude>
     <ClInclude Include="..\public\KasaRing.h">
       <Filter>02. GameObject\04. Player\PartObject\SkillObj\Wanderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\AlertCircle.h">
+      <Filter>02. GameObject\06. Boss\Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Feiyan_Body.h">
+      <Filter>02. GameObject\04. Player\PartObject\Body\Feiyan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\StateElementalArt_Feiyan.h">
+      <Filter>02. GameObject\04. Player\State\State\ElementalArt\Feiyan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\StateExtraAttack.h">
+      <Filter>02. GameObject\04. Player\State\State\ExtraAttack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PlayerHP_Outline.h">
+      <Filter>02. GameObject\08. UI\HP\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\LoadingBar.h">
+      <Filter>02. GameObject\00. Background\Icon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PlayerHP.h">
+      <Filter>02. GameObject\08. UI\HP\Player\HPBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MonsterHP_Outline.h">
+      <Filter>02. GameObject\08. UI\HP\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MonsterHP.h">
+      <Filter>02. GameObject\08. UI\HP\Monster\HPBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SkillBtn_E.h">
+      <Filter>02. GameObject\08. UI\Skill\E_Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SkillBtn_Icon.h">
+      <Filter>02. GameObject\08. UI\Skill\Skill_Icon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Item.h">
+      <Filter>02. GameObject\09. Item</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -965,14 +1046,47 @@
     <ClCompile Include="..\private\FoxTower.cpp">
       <Filter>02. GameObject\04. Player\PartObject\SkillObj\Yae\FoxTower</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\StateElementalArt.cpp">
-      <Filter>02. GameObject\04. Player\State\State\ElementalArt</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\FlowerArrow.cpp">
       <Filter>02. GameObject\04. Player\PartObject\SkillObj\Tighnari</Filter>
     </ClCompile>
     <ClCompile Include="..\private\KasaRing.cpp">
       <Filter>02. GameObject\04. Player\PartObject\SkillObj\Wanderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\AlertCircle.cpp">
+      <Filter>02. GameObject\06. Boss\Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Feiyan_Body.cpp">
+      <Filter>02. GameObject\04. Player\PartObject\Body\Feiyan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StateElementalArt_Feiyan.cpp">
+      <Filter>02. GameObject\04. Player\State\State\ElementalArt\Feiyan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StateExtraAttack.cpp">
+      <Filter>02. GameObject\04. Player\State\State\ExtraAttack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PlayerHP_Outline.cpp">
+      <Filter>02. GameObject\08. UI\HP\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\LoadingBar.cpp">
+      <Filter>02. GameObject\00. Background\Icon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PlayerHP.cpp">
+      <Filter>02. GameObject\08. UI\HP\Player\HPBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MonsterHP_Outline.cpp">
+      <Filter>02. GameObject\08. UI\HP\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MonsterHP.cpp">
+      <Filter>02. GameObject\08. UI\HP\Monster\HPBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SkillBtn_E.cpp">
+      <Filter>02. GameObject\08. UI\Skill\E_Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SkillBtn_Icon.cpp">
+      <Filter>02. GameObject\08. UI\Skill\Skill_Icon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Item.cpp">
+      <Filter>02. GameObject\09. Item</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -989,17 +1103,23 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\Bin\ShaderFile\Shader_VtxPosTex.hlsl">
-      <Filter>97.ShaderFile</Filter>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimMesh.hlsl">
+      <Filter>97.ShaderFiles</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFile\Shader_VtxNorTex.hlsl">
-      <Filter>97.ShaderFile</Filter>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl">
+      <Filter>97.ShaderFiles</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFile\Shader_VtxMesh.hlsl">
-      <Filter>97.ShaderFile</Filter>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl">
+      <Filter>97.ShaderFiles</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFile\Shader_VtxAnimMesh.hlsl">
-      <Filter>97.ShaderFile</Filter>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex_UI.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex_UI.hlsl">
+      <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

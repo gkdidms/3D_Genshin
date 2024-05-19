@@ -16,6 +16,7 @@ class CSceneObj :
 public:
     typedef struct tSceneObjDesc : public CGameObject::GAMEOBJECT_DESC
     {
+        _int iNavigationIndex;
         _float4x4 WorldMatrix;
     } SCENEOBJ_DESC;
 
@@ -36,6 +37,10 @@ protected:
     CShader* m_pShaderCom = { nullptr };
     CModel* m_pModelCom = { nullptr };
     CCollider* m_pColliderCom = { nullptr };
+
+protected:
+    _bool m_isColl = { false };
+    _int m_iNavigationIndex = { -1 };
 
 private:
     virtual HRESULT Add_Components() = 0;

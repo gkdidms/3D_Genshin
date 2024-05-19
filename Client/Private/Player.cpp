@@ -45,14 +45,20 @@ void CPlayer::Set_PlayerMove(_vector vMoveSpeed)
 	m_pTransformCom->Go_Run(MoveMatrix, m_pNavigationCom);
 }
 
+void CPlayer::Set_Height(_float fHeight) // 플레이어 높이를 직접 설정
+{
+	m_fHeight = fHeight;
+	m_isPlanHeight = true;
+}
+
 _uint CPlayer::Get_CurrentWeapon()
 {
-	return dynamic_cast<CWeapon*>(m_PartObject[m_CurrentPlayerble][PART_WEAPON_BLADE_R])->Get_WeaponType();
+	return dynamic_cast<CWeapon*>(m_PartObject[m_CurrentPlayerble][PART_WEAPON])->Get_WeaponType();
 }
 
 CCollider* CPlayer::Get_SwordCollider()
 {
-	return dynamic_cast<CWeapon_Regalis*>(m_PartObject[m_CurrentPlayerble][PART_WEAPON_BLADE_R])->Get_Collider();
+	return dynamic_cast<CWeapon_Regalis*>(m_PartObject[m_CurrentPlayerble][PART_WEAPON])->Get_Collider();
 }
 
 ELEMENTAL_TYPE CPlayer::Get_CurrentPlayerbleElemental()
@@ -72,7 +78,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	PLAYER_DESC* pDesc = static_cast<PLAYER_DESC*>(pArg);
 	
-	m_vPlayerPos = pDesc->vPlayerPos;
+	_float3 vPlayerPos = pDesc->vPlayerPos;
 	m_iPlayerNavigationIndex = pDesc->iPlayerNavigationIndex;
 
 	if (FAILED(__super::Initialize(pArg)))
@@ -95,7 +101,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	m_pCameraLook = dynamic_cast<CPartObject*>(m_PartObject[m_CurrentPlayerble][PART_BODY])->Get_CameraLook();
 	
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(m_vPlayerPos.x, m_vPlayerPos.y, m_vPlayerPos.z, 1.f));
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(vPlayerPos.x, vPlayerPos.y, vPlayerPos.z, 1.f));
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(90.f));
 
 
@@ -104,13 +110,15 @@ HRESULT CPlayer::Initialize(void* pArg)
 	PlayerStateDesc.pPlayerDir = &m_iDirState;
 
 	m_pStateManager->Initialize(&PlayerStateDesc);
-	m_pStateManager->Set_CurrentState(CStateManager::STATE_TYPE_IDEL, PLAYER_IDLE);
+	m_pStateManager->Set_CurrentState(CStateManager::STATE_TYPE_IDEL);
 
 	return S_OK;
 }
 
 void CPlayer::Priority_Tick(const _float& fTimeDelta)
 {
+	m_isPlanHeight = false;
+
 	for (auto& pObject : m_PartObject[m_CurrentPlayerble])
 		pObject->Priority_Tick(fTimeDelta);
 }
@@ -174,13 +182,14 @@ void CPlayer::Change_Playerble() // 코드 수정하기
 	if (m_pGameInstance->GetKeyState(DIK_3) == CInput_Device::TAP)
 		m_CurrentPlayerble = PLAYER_WANDERER;
 	if (m_pGameInstance->GetKeyState(DIK_4) == CInput_Device::TAP)
-		m_CurrentPlayerble = PLAYER_YAE;
+		m_CurrentPlayerble = PLAYER_FEIYAN;
 
 	if (m_pGameInstance->GetKeyState(DIK_1) == CInput_Device::TAP
 		|| m_pGameInstance->GetKeyState(DIK_2) == CInput_Device::TAP
 		|| m_pGameInstance->GetKeyState(DIK_3) == CInput_Device::TAP
 		|| m_pGameInstance->GetKeyState(DIK_4) == CInput_Device::TAP)
 	{
+		m_pStateManager->Set_CurrentState(CStateManager::STATE_TYPE_IDEL);
 		m_pCameraLook = dynamic_cast<CPartObject*>(m_PartObject[m_CurrentPlayerble][PART_BODY])->Get_CameraLook();
 	}
 }
@@ -214,7 +223,8 @@ void CPlayer::SetUp_OnTerrain(const _float& fTimeDelta)
 		
 	// 높이 조정
 	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	_float fHeight = m_pNavigationCom->Compute_Height(vPos);
+	if (!m_isPlanHeight)
+		m_fHeight = m_pNavigationCom->Compute_Height(vPos);
 
 	if (m_pStateManager->isJump())
 	{		
@@ -224,7 +234,7 @@ void CPlayer::SetUp_OnTerrain(const _float& fTimeDelta)
 		if (m_fJumpDurationTime > m_fJumpCurrentTime)
 			return;
 
-		if (XMVectorGetY(vPos) <= fHeight)
+		if (XMVectorGetY(vPos) <= m_fHeight)
 		{
 			m_fJumpCurrentTime = { 0.f };
 			m_iState = m_pStateManager->Set_CurrentState(CStateManager::STATE_TYPE_FALL_GROUND);
@@ -232,15 +242,9 @@ void CPlayer::SetUp_OnTerrain(const _float& fTimeDelta)
 
 		return;
 	}
-	//if (m_pStateManager->isElementalArt() && m_iState == PLAYER_FALL_ATTACK_LOOP)
-	//{
-	//	if (XMVectorGetY(vPos) <= fHeight)
-	//		m_iState = PLAYER_ELEMENTAL_END;
-	//	else return;
-	//}
 	if (m_pStateManager->isFly())
 	{
-		if (XMVectorGetY(vPos) <= fHeight)
+		if (XMVectorGetY(vPos) <= m_fHeight)
 		{
 			m_iState = m_pStateManager->Set_CurrentState(CStateManager::STATE_TYPE_FALL_GROUND);
 		}
@@ -249,14 +253,14 @@ void CPlayer::SetUp_OnTerrain(const _float& fTimeDelta)
 	}
 	if (m_pStateManager->isDrop())
 	{
-		if (XMVectorGetY(vPos) <= fHeight)
+		if (XMVectorGetY(vPos) <= m_fHeight)
 		{
 			m_iState = m_pStateManager->Set_CurrentState(CStateManager::STATE_TYPE_FALL_GROUND);
 		}
 		else return;
 	}
 
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSetY(vPos, fHeight));
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSetY(vPos, m_fHeight));
 }
 
 void CPlayer::SetUp_CellType(_bool isMove)
@@ -264,10 +268,7 @@ void CPlayer::SetUp_CellType(_bool isMove)
 	CCell::OPTION eOption = m_pNavigationCom->Get_OptionType();
 
 	if (eOption == CCell::OPTION_FLY && isMove) //FLY
-	{/*
-		if (fHeight > XMVectorGetY(vPos))
-			return;*/
-
+	{
 		if (m_iState != PLAYER_FALL_ATTACK_LOOP && !m_pStateManager->isFly() && !m_pStateManager->isJump())
 		{
 			m_iState = m_pStateManager->Set_CurrentState(CStateManager::STATE_TYPE_FALL_ATTACK);
@@ -282,35 +283,6 @@ void CPlayer::SetUp_CellType(_bool isMove)
 	else
 		m_eHill = HILL_END;
 }
-
-//_bool CPlayer::Check_Coll(const _float& fTimeDelta)
-//{
-//	// 콜라이더 충돌하고 있는지 확인하기
-//
-//	vector<CGameObject*> Monsters = m_pGameInstance->Get_GameObjects(LEVEL_GAMEPLAY, TEXT("Layer_Monster"));
-//
-//	for (auto& pMonster : Monsters)
-//	{
-//		CMonster* pObj = dynamic_cast<CMonster*>(pMonster);
-//		if (m_pColliderCom->Intersect(pObj->Get_Coll()))
-//		{
-//			//충돌 시 법선벡터 구하기
-//			CTransform* pTargetTransform = dynamic_cast<CTransform*>(pMonster->Get_Component(L"Com_Transform"));
-//
-//			_vector vNormal = XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_POSITION) - pTargetTransform->Get_State(CTransform::STATE_POSITION));
-//
-//			//투영 벡터
-//			_vector vProjection = XMVectorGetX(XMVector3Dot(vNormal, m_pTransformCom->Get_State(CTransform::STATE_LOOK) * -1.f)) * vNormal;
-//			
-//			_vector vSliding = XMVector3Normalize(vProjection - pTargetTransform->Get_State(CTransform::STATE_LOOK));
-//
-//			m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_pTransformCom->Get_State(CTransform::STATE_POSITION) + XMVectorSetW(vSliding, 0.f));
-//			return true;
-//		}
-//	}
-//
-//	return false;
-//}
 
 void CPlayer::Check_State(const _float& fTimeDelta)
 {
@@ -368,11 +340,16 @@ HRESULT CPlayer::Ready_Bodys()
 	m_PartObject[PLAYER_WANDERER].emplace_back(pGameObject);
 
 	//Yae
-	pGameObject = m_pGameInstance->Clone_Object(L"Prototype_GameObject_Player_Yae", &Desc);
+	//pGameObject = m_pGameInstance->Clone_Object(L"Prototype_GameObject_Player_Yae", &Desc);
+	//if (nullptr == pGameObject)
+	//	return E_FAIL;
+	//m_PartObject[PLAYER_YAE].emplace_back(pGameObject);
+
+	//Feiyan Prototype_GameObject_Player_Feiyan
+	pGameObject = m_pGameInstance->Clone_Object(L"Prototype_GameObject_Player_Feiyan", &Desc);
 	if (nullptr == pGameObject)
 		return E_FAIL;
-	m_PartObject[PLAYER_YAE].emplace_back(pGameObject);
-
+	m_PartObject[PLAYER_FEIYAN].emplace_back(pGameObject);
 
 	return S_OK;
 }
@@ -405,8 +382,8 @@ HRESULT CPlayer::Ready_Weapons()
 		return E_FAIL;
 	m_PartObject[PLAYER_TIGHNARI].emplace_back(pGameObject);
 
-	// Yae
-	pComponent = m_PartObject[PLAYER_YAE][PART_BODY]->Get_Component(L"Com_Model");
+	// Yae // Feiyan
+	pComponent = m_PartObject[PLAYER_FEIYAN][PART_BODY]->Get_Component(L"Com_Model");
 	if (nullptr == pComponent)
 		return E_FAIL;
 
@@ -418,7 +395,7 @@ HRESULT CPlayer::Ready_Weapons()
 	pGameObject = dynamic_cast<CPartObject*>(m_pGameInstance->Clone_Object(L"Prototype_GameObject_Weapon_Narukami", &WeaponDesc));
 	if (nullptr == pGameObject)
 		return E_FAIL;
-	m_PartObject[PLAYER_YAE].emplace_back(pGameObject);
+	m_PartObject[PLAYER_FEIYAN].emplace_back(pGameObject);
 
 	// Wanderer
 	pComponent = m_PartObject[PLAYER_WANDERER][PART_BODY]->Get_Component(L"Com_Model");
@@ -459,7 +436,7 @@ HRESULT CPlayer::Ready_Weapons()
 HRESULT CPlayer::Ready_SkillObjs()
 {
 	// Yae
-	CSkillObj::SKILLOBJ_DESC SKillObjDesc{};
+	/*CSkillObj::SKILLOBJ_DESC SKillObjDesc{};
 	CComponent* pComponent = m_PartObject[PLAYER_YAE][PART_BODY]->Get_Component(L"Com_Model");
 	if (nullptr == pComponent)
 		return E_FAIL;
@@ -483,11 +460,17 @@ HRESULT CPlayer::Ready_SkillObjs()
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
-	m_PartObject[PLAYER_YAE].emplace_back(pGameObject);
+	m_PartObject[PLAYER_YAE].emplace_back(pGameObject);*/
 
+	CSkillObj::SKILLOBJ_DESC SKillObjDesc{};
+
+	SKillObjDesc.pParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
+	SKillObjDesc.pState = &m_iState;
+	SKillObjDesc.fSpeedPecSec = 20.f;
+	SKillObjDesc.fRotatePecSec = XMConvertToRadians(45.f);
 
 	//Wanderer
-	pComponent = m_PartObject[PLAYER_WANDERER][PART_BODY]->Get_Component(L"Com_Model");
+	CComponent*  pComponent = m_PartObject[PLAYER_WANDERER][PART_BODY]->Get_Component(L"Com_Model");
 	if (nullptr == pComponent)
 		return E_FAIL;
 
@@ -495,7 +478,7 @@ HRESULT CPlayer::Ready_SkillObjs()
 	if (nullptr == SKillObjDesc.pHandCombinedTransformationMatrix)
 		return E_FAIL;
 
-	pGameObject = m_pGameInstance->Clone_Object(L"Prototype_GameObject_SkillObj_KasaRing", &SKillObjDesc);
+	CGameObject* pGameObject = m_pGameInstance->Clone_Object(L"Prototype_GameObject_SkillObj_KasaRing", &SKillObjDesc);
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
@@ -552,8 +535,8 @@ HRESULT CPlayer::Ready_Flycloak()
 
 	m_PartObject[PLAYER_WANDERER].emplace_back(pFlycloak);
 
-	/* Yae */
-	pComponent = dynamic_cast<CModel*>(m_PartObject[PLAYER_YAE][PART_BODY]->Get_Component(L"Com_Model"));
+	/* PLAYER_FEIYAN */
+	pComponent = dynamic_cast<CModel*>(m_PartObject[PLAYER_FEIYAN][PART_BODY]->Get_Component(L"Com_Model"));
 
 	FlycloakDesc.pParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
 	FlycloakDesc.pState = &m_iState;
@@ -565,7 +548,7 @@ HRESULT CPlayer::Ready_Flycloak()
 	if (nullptr == pFlycloak)
 		return E_FAIL;
 
-	m_PartObject[PLAYER_YAE].emplace_back(pFlycloak);
+	m_PartObject[PLAYER_FEIYAN].emplace_back(pFlycloak);
 
 	return S_OK;
 }

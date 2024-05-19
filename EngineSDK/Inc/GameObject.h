@@ -9,7 +9,6 @@ class ENGINE_DLL CGameObject abstract :
 public:
     typedef struct tGameObjectDesc: public CTransform::TRANSFORM_DESC
     {
-
     } GAMEOBJECT_DESC;
 
 protected:
@@ -19,10 +18,12 @@ protected:
 
 public:
     class CTransform* m_pTransformCom = { nullptr };
+    static _int g_iObjectIndex;
 
 public:
     _bool Get_Dead() { return m_isDead; }
     _char Get_StateRank() { return m_strStateRank; }
+    _uint Get_Index() { return m_iIndex; }
 
 public:
     virtual HRESULT Initialize_Prototype();
@@ -46,6 +47,7 @@ protected:
 protected:
     _bool m_isDead = { false };
     _char m_strStateRank = { 'F' }; // 객체의 현재 상태 등급
+    _int m_iIndex = { -1 };
 
 protected:
     HRESULT Add_Component(_uint iLevelIndex, const wstring strComponentPrototypeTag, const wstring strComponentTag, class CComponent** pComponent, void* pArg = nullptr);

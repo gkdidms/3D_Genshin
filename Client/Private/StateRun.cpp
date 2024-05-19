@@ -31,6 +31,8 @@ PLAYER_STATE CStateRun::Update(const _float& fTimeDelta, class CStateManager& pS
 	if ((eState = __super::ToAttack(pStateManager, CurrentState)) != CurrentState)
 		return eState;
 
+	if ((eState = __super::ToExtraAttack(pStateManager, CurrentState)) != CurrentState) return eState;
+
 	if ((eState = __super::ToElementalArt(pStateManager, CurrentState)) != CurrentState)
 		return eState;
 

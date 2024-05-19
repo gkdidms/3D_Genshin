@@ -36,7 +36,7 @@ void CFoxTower::Priority_Tick(const _float& fTimeDelta)
 
 void CFoxTower::Tick(const _float& fTimeDelta)
 {
-	if (m_fDurationTime <= m_fCurrentTime)
+	if (m_fDuration <= m_fCurrentTime)
 	{
 		m_isDead = true;
 		return;

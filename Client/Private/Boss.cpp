@@ -62,6 +62,7 @@ HRESULT CBoss::Initialize(void* pArg)
 
 void CBoss::Priority_Tick(const _float& fTimeDelta)
 {
+    Check_Coll(fTimeDelta);
 }
 
 void CBoss::Tick(const _float& fTimeDelta)
@@ -95,18 +96,21 @@ void CBoss::Tick(const _float& fTimeDelta)
         PartObject->Tick(fTimeDelta);
     }
 
-    CBoss_Body* pCurrentBody = dynamic_cast<CBoss_Body*>(m_PartObject[m_CurrentPage][PART_BODY]);
-    _float4x4 RootMatrix;
-    pCurrentBody->Set_PlayerPos(&RootMatrix);
+    if (m_isColl == false)
+    {
+        CBoss_Body* pCurrentBody = dynamic_cast<CBoss_Body*>(m_PartObject[m_CurrentPage][PART_BODY]);
+        _float4x4 RootMatrix;
+        pCurrentBody->Set_PlayerPos(&RootMatrix);
 
-    if (pCurrentBody->isMovePos())
-    {
-        m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMLoadFloat4x4(&RootMatrix).r[3]);
-    }
-    else
-    {
-        XMStoreFloat4x4(&RootMatrix, XMLoadFloat4x4(&RootMatrix) * -1.f);
-        m_pTransformCom->Go_Run(XMLoadFloat4x4(&RootMatrix), m_pNavigationCom);
+        if (pCurrentBody->isMovePos())
+        {
+            m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMLoadFloat4x4(&RootMatrix).r[3]);
+        }
+        else
+        {
+            XMStoreFloat4x4(&RootMatrix, XMLoadFloat4x4(&RootMatrix) * -1.f);
+            m_pTransformCom->Go_Run(XMLoadFloat4x4(&RootMatrix), m_pNavigationCom);
+        }
     }
 
     m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
@@ -114,6 +118,8 @@ void CBoss::Tick(const _float& fTimeDelta)
 
 void CBoss::Late_Tick(const _float& fTimeDelta)
 {
+    Change_StateRank();
+
     _vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
     vPos = XMVectorSetY(vPos, m_pNavigationCom->Compute_Height(vPos));
     m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
@@ -387,6 +393,202 @@ HRESULT CBoss::Ready_Object()
 
         return E_FAIL;
     return S_OK;
+}
+
+void CBoss::Change_StateRank()
+{
+    m_strStateRank = 'A';
+    //switch (m_CurrentState)
+    //{
+    //case BOSS_IDLE:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_BOW_IDLE:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_BLADE_IDEL:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_BOW_COMBO_ATTACK:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_BOW_COVER_ATTACK:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_BOW_COVER_ATTACK_BS:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_BOW_COVER_ATTACK_AS:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_BOW_COVER_ATTACK_LOOP:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_BOW_NORMAL_ATTACK_BS:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case  BOSS_BOW_NORMAL_ATTACK_AS:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_BOW_NORMAL_ATTACK_LOOP:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_BOW_POWER_ATTACK:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_BOW_POWER_ATTACK_BS:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_BOW_POWER_ATTACK_AS:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_BOW_POWER_ATTACK_LOOP:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_BOW_RANGE_ATTACK_BS:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_BOW_RANGE_ATTACK_AS:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_BOW_RANGE_ATTACK_LOOP_1:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_BOW_RANGE_ATTACK_LOOP_2:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_RUSH_BS:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_RUSH_AS:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_DEFEND_1:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_DEFEND_2:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_DEFEND_3:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_DEFEND_ATTACK_1:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_DEFEND_ATTACK_2:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_BLADE_EXTRA_ATTACK:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_BLADE_RANGE_ATTACK:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_BLADE_NORMAL_ATTACK_1:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_BLADE_NORMAL_ATTACK_2:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_BLADE_NORMAL_ATTACK_3:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_BLADE_NORMAL_ATTACK_4:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_DUALBLADE_CYCLE_ATTACK:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_DUALBLADE_STRIKE_ATTACK:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_DUALBLADE_STRIKE_ATTACK_BS:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_DUALBLADE_STRIKE_ATTACK_AS:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_DUALBLADE_STRIKE_ATTACK_LOOP:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_DUALBLADE_SWEEP_ATTACK_L:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_DUALBLADE_SWEEP_ATTACK_R:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_DUALBLADE_HIRAISHIN_BS:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_DUALBLADE_HIRAISHIN_AS:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_DUALBLADE_HIRAISHIN_LOOP:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_DUALBLADE_NORMAL_ATTACK_1:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_DUALBLADE_NORMAL_ATTACK_2:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_HARBINGER_NORMAL_ATTACK:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_HIT_H:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_HIT_L:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_TURN_L:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_TURN_R:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_WALK_R:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_WALK_L:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_WALK_R_To_L:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_WALK_L_TO_R:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_MOVE_BACK:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_MOVE_FORWARD:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_DIE:
+    //    m_strStateRank = 'A';
+    //    break;
+    //case BOSS_END:
+    //    break;
+    //default:
+    //    break;
+    //}
+}
+
+void CBoss::Check_Coll(const _float& fTimeDelta)
+{
+    CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, TEXT("Layer_Player"), 0));
+    m_isColl = m_pColliderCom->Intersect(dynamic_cast<CCollider*>(pPlayer->Get_Component(TEXT("Com_Collider"))));
+
+    if (m_isColl)
+    {
+        if (m_pBT[m_CurrentPage]->isStrikeSkill()) // 보스 돌진스킬 사용 시 충돌처리 무시한다.
+            return;
+
+        pPlayer->Set_Coll(true);
+        _char strPlayerRank = pPlayer->Get_StateRank();
+        m_pColliderCom->Compute_Rank(m_strStateRank, strPlayerRank, m_pTransformCom, dynamic_cast<CTransform*>(pPlayer->Get_Component(TEXT("Com_Transform"))), m_pNavigationCom, dynamic_cast<CNavigation*>(pPlayer->Get_Component(TEXT("Com_Navigation"))), fTimeDelta);
+    }
 }
 
 CBoss* CBoss::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

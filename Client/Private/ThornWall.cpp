@@ -31,7 +31,7 @@ void CThornWall::Priority_Tick(const _float& fTimeDelta)
 
 void CThornWall::Tick(const _float& fTimeDelta)
 {
-	//플레이어와 충돌하면 플레이어 사망함 
+	//플레이어와 충돌하면 체크포인드 장소로 이동한다.
 
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 }
@@ -75,7 +75,7 @@ HRESULT CThornWall::Add_Components()
 	CBounding_AABB::BOUNDING_AABB_DESC Desc{};
 
 	Desc.eType = CCollider::COLLIDER_AABB;
-	Desc.vExtents = _float3(1.f, 0.7f, 1.f);
+	Desc.vExtents = _float3(2.5f, 0.7f, 2.5f);
 	Desc.vCenter = _float3(0.f, Desc.vExtents.y, 0.f);
 
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Collider", L"Com_Collider", reinterpret_cast<CComponent**>(&m_pColliderCom), &Desc)))

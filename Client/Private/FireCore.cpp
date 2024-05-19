@@ -1,6 +1,8 @@
 #include "FireCore.h"
 
 #include "GameInstance.h"
+#include "Player.h"
+#include "Weapon.h"
 
 CFireCore::CFireCore(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CSceneObj{ pDevice, pContext}
@@ -28,15 +30,16 @@ HRESULT CFireCore::Initialize(void* pArg)
 		m_pTargetMatrix = pDesc->pTargetMatrix;
 	}
 
-	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ FIRECORE_REST, false, false ,false });
+	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ FIRECORE_START, false, false ,false });
 
-	m_CurrentState = FIRECORE_REST;
+	m_CurrentState = FIRECORE_START;
 
 	return S_OK;
 }
 
 void CFireCore::Priority_Tick(const _float& fTimeDelta)
 {
+	__super::Priority_Tick(fTimeDelta);
 }
 
 void CFireCore::Tick(const _float& fTimeDelta)
@@ -103,15 +106,47 @@ HRESULT CFireCore::Bind_ResourceData()
 void CFireCore::Change_Animation(const _float& fTimeDelta)
 {
 	//플레이어가 반경 안에 들어오면 START
-	_vector vTargetPos = XMLoadFloat4x4(m_pTargetMatrix).r[3];
+	if (CheckColl())
+	{
+		m_CurrentState = FIRECORE_END;
+	}
+
+	/*_vector vTargetPos = XMLoadFloat4x4(m_pTargetMatrix).r[3];
 	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
 	_vector vDistance = vTargetPos - vPos;
 	_float fDistance = sqrtf(XMVectorGetX(vDistance) * XMVectorGetX(vDistance) + XMVectorGetY(vDistance) * XMVectorGetY(vDistance) + XMVectorGetZ(vDistance) * XMVectorGetZ(vDistance));
 
-	m_CurrentState = fDistance <= m_fDistanceToTarget ? FIRECORE_START : FIRECORE_END;
-
+	m_CurrentState = fDistance <= m_fDistanceToTarget ? FIRECORE_START : FIRECORE_END;*/
+	 
 	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ _uint(m_CurrentState), false, false, false });
+}
+
+_bool CFireCore::CheckColl()
+{
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, TEXT("Layer_Player"), 0));
+
+	// 플레이어가 공격중인가?
+	if (false == pPlayer->isAttack())
+		return false;
+
+	// 플레이어가 근거리인가? 원거리인가?
+	// 플레이어가 근거리라면 무기 콜라이더 사용
+	// 플레이어가 원거리라면 이펙트 사용
+	if (pPlayer->Get_CurrentWeapon() == CWeapon::WEAPON_SWORD)
+	{
+		//근거리 (소드)
+		if (m_pColliderCom->Intersect(pPlayer->Get_SwordCollider()))
+		{
+			return true;
+		}
+	}
+	else
+	{
+		//원거리
+	}
+
+	return false;
 }
 
 CFireCore* CFireCore::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
