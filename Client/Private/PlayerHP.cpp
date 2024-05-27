@@ -26,13 +26,13 @@ HRESULT CPlayerHP::Initialize(void* pArg)
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
-	m_fSizeX = 510.f;
-	m_fSizeY = 15.f;
+	m_fSizeX = 256.f;
+	m_fSizeY = 8.f;
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMLoadFloat4x4(&m_pParentMatrix).r[3]);
 
-	XMStoreFloat4x4(&m_matView, XMMatrixIdentity());
-	XMStoreFloat4x4(&m_matProj, XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.0f));
+	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
+	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.0f));
 
 
 
@@ -81,10 +81,10 @@ HRESULT CPlayerHP::Bind_ResourceData()
 	if (FAILED(m_pTransformCom->Bind_ShaderMatrix(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_matView)))
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_matProj)))
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
 	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))

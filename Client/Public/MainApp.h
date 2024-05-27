@@ -25,11 +25,17 @@ private:
 	CGameInstance* m_pGameInstance = { nullptr };
 
 private:
+	_tchar m_szFPS[MAX_PATH] = { L"" };
+	_float	m_fTimeAcc = {};
+	_uint	m_iNumRender = {};
+
+private:
 	HRESULT Open_Level();
 
 private:
 	HRESULT Ready_Prototype_Components();
 	HRESULT Ready_Prototype_GameObjects();
+	HRESULT Ready_Font();
 
 public:
 	static CMainApp* Create();

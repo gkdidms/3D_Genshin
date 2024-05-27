@@ -64,7 +64,7 @@ _bool CBounding_OBB::Intersect(CCollider::TYPE eTargetType, CBounding* pTargetBo
 #ifdef _DEBUG
 HRESULT CBounding_OBB::Render(PrimitiveBatch<VertexPositionColor>* pBatch)
 {
-	DX::Draw(pBatch, *m_pBoundingBox);
+	DX::Draw(pBatch, *m_pBoundingBox, XMVectorSet(0.f, 0.f, 1.f, 1.f));
 
 	return S_OK;
 }

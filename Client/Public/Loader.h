@@ -20,8 +20,10 @@ public:
     }
 
     _bool is_Finished() const {
-        return m_isFinished;
+        return m_isDrop;
     }
+
+    const _float* Get_Progress() { return &m_fProgress; }
 
 public:
     HRESULT Initialize(LEVEL_STATE eNextLevel);
@@ -37,7 +39,9 @@ private:
     CRITICAL_SECTION m_Critical_Section = { 0 };
 
     _tchar					m_szLoadingText[MAX_PATH] = { TEXT("") };
-    _bool m_isFinished = { false };
+    _bool m_isDrop = { false };
+
+    _float m_fProgress = { 0.f };
 
 private:
     HRESULT Loading_For_Logo();

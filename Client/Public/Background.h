@@ -8,6 +8,10 @@ BEGIN(Client)
 class CBackground :
     public CGameObject
 {
+public:
+    typedef struct tBackgroundDesc {
+        const _float* pProgress;
+    } BACKGROUND_DESC;
 private:
     CBackground(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
     CBackground(const CBackground& rhs);
@@ -27,8 +31,11 @@ private:
     CTexture* m_pTextureCom = { nullptr };
     class CLoadingBar* m_pLoadingBar = { nullptr };
 
-    _float4x4 m_matWorld, m_matView, m_matProj;
+    _float4x4 m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
     _float m_fSizeX, m_fSizeY, m_fX, m_fY;
+
+private:
+    const _float* m_pProgress = { nullptr };
 
 private:
     HRESULT Add_Components();

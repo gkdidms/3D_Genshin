@@ -5,6 +5,9 @@
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
 #include <DirectXCollision.h>
+
+#include <random>
+
 #include <string>
 #include "fx11\d3dx11effect.h"
 #include "DirectXTK\DDSTextureLoader.h"

@@ -25,12 +25,15 @@ private:
     _float m_fAirStartTime = { 0.f };
 
 private:
+    _float m_fAttackDuration = { 0.4f };
+    _float m_fCurrentTime = { 0.f };
+    _bool m_isStop = { false }; // 한번 공격하면 활성화
+
+private:
     virtual HRESULT Add_Components() override;
     virtual HRESULT Bind_ResourceData() override;
     virtual void Change_Animation(const _float& fTimeDelta) override;
-
-
-
+    void Create_Bullet();
 
 public:
     static CWanderer_Body* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

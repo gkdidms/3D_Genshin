@@ -66,6 +66,9 @@ protected:
     _float4 m_vPrePos;
     _float4x4 m_PlayerMovePos;
 
+protected:
+    virtual _vector Targeting();
+
 private:
     virtual void Change_Animation(const _float& fTimeDelta) {};
 

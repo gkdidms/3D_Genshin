@@ -157,15 +157,28 @@
   <ItemGroup>
     <ClInclude Include="..\public\Action.h" />
     <ClInclude Include="..\public\AlertCircle.h" />
+    <ClInclude Include="..\public\Avatar_Face.h" />
+    <ClInclude Include="..\public\Avatar_Side.h" />
+    <ClInclude Include="..\public\Avatar_Side_Select.h" />
+    <ClInclude Include="..\public\Avatar_UI.h" />
     <ClInclude Include="..\public\Background.h" />
+    <ClInclude Include="..\public\Btn_Frame.h" />
+    <ClInclude Include="..\public\Bullet.h" />
+    <ClInclude Include="..\public\Effect.h" />
+    <ClInclude Include="..\public\Feiyan_Normal.h" />
+    <ClInclude Include="..\public\Feiyan_Normal_Trail.h" />
+    <ClInclude Include="..\public\Hili_Arrow.h" />
     <ClInclude Include="..\public\Item.h" />
     <ClInclude Include="..\public\LoadingBar.h" />
     <ClInclude Include="..\Public\MonsterHP.h" />
     <ClInclude Include="..\Public\MonsterHP_Outline.h" />
+    <ClInclude Include="..\public\Monster_Bullet.h" />
     <ClInclude Include="..\public\PlayerHP.h" />
     <ClInclude Include="..\public\PlayerHP_Outline.h" />
+    <ClInclude Include="..\public\Player_Bullet.h" />
     <ClInclude Include="..\public\SkillBtn_E.h" />
     <ClInclude Include="..\public\SkillBtn_Icon.h" />
+    <ClInclude Include="..\Public\SkillBtn_Q.h" />
     <ClInclude Include="..\public\StateExtraAttack.h" />
     <ClInclude Include="..\public\Feiyan_Body.h" />
     <ClInclude Include="..\public\Body_EvilEye.h" />
@@ -247,8 +260,10 @@
     <ClInclude Include="..\Public\Tartaglia_Bow.h" />
     <ClInclude Include="..\Public\Tartaglia_DualBlade.h" />
     <ClInclude Include="..\public\ThornWall.h" />
+    <ClInclude Include="..\public\Tighnari_Normal.h" />
     <ClInclude Include="..\public\TreasureBox.h" />
     <ClInclude Include="..\public\UI.h" />
+    <ClInclude Include="..\public\Wanderer_Normal.h" />
     <ClInclude Include="..\public\Weapon_Alaya.h" />
     <ClInclude Include="..\public\Weapon_Ayus.h" />
     <ClInclude Include="..\public\PartObject_Body.h" />
@@ -276,15 +291,28 @@
   <ItemGroup>
     <ClCompile Include="..\private\Action.cpp" />
     <ClCompile Include="..\private\AlertCircle.cpp" />
+    <ClCompile Include="..\private\Avatar_Face.cpp" />
+    <ClCompile Include="..\private\Avatar_Side.cpp" />
+    <ClCompile Include="..\private\Avatar_Side_Select.cpp" />
+    <ClCompile Include="..\private\Avatar_UI.cpp" />
     <ClCompile Include="..\private\Background.cpp" />
+    <ClCompile Include="..\private\Btn_Frame.cpp" />
+    <ClCompile Include="..\private\Bullet.cpp" />
+    <ClCompile Include="..\private\Effect.cpp" />
+    <ClCompile Include="..\private\Feiyan_Normal.cpp" />
+    <ClCompile Include="..\private\Feiyan_Normal_Trail.cpp" />
+    <ClCompile Include="..\private\Hili_Arrow.cpp" />
     <ClCompile Include="..\private\Item.cpp" />
     <ClCompile Include="..\private\LoadingBar.cpp" />
     <ClCompile Include="..\Private\MonsterHP.cpp" />
     <ClCompile Include="..\Private\MonsterHP_Outline.cpp" />
+    <ClCompile Include="..\private\Monster_Bullet.cpp" />
     <ClCompile Include="..\private\PlayerHP.cpp" />
     <ClCompile Include="..\private\PlayerHP_Outline.cpp" />
+    <ClCompile Include="..\private\Player_Bullet.cpp" />
     <ClCompile Include="..\private\SkillBtn_E.cpp" />
     <ClCompile Include="..\private\SkillBtn_Icon.cpp" />
+    <ClCompile Include="..\Private\SkillBtn_Q.cpp" />
     <ClCompile Include="..\private\StateExtraAttack.cpp" />
     <ClCompile Include="..\private\Feiyan_Body.cpp" />
     <ClCompile Include="..\private\Body_EvilEye.cpp" />
@@ -365,8 +393,10 @@
     <ClCompile Include="..\Private\Tartaglia_Bow.cpp" />
     <ClCompile Include="..\Private\Tartaglia_DualBlade.cpp" />
     <ClCompile Include="..\private\ThornWall.cpp" />
+    <ClCompile Include="..\private\Tighnari_Normal.cpp" />
     <ClCompile Include="..\private\TreasureBox.cpp" />
     <ClCompile Include="..\private\UI.cpp" />
+    <ClCompile Include="..\private\Wanderer_Normal.cpp" />
     <ClCompile Include="..\private\Weapon_Alaya.cpp" />
     <ClCompile Include="..\private\Weapon_Ayus.cpp" />
     <ClCompile Include="..\private\PartObject_Body.cpp" />
@@ -396,7 +426,8 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex_UI.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex_Skill.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex_Skill.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex_UI.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimMesh.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl" />

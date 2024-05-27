@@ -52,7 +52,7 @@ HRESULT CBoss_Body::Render()
 		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
 			return E_FAIL;
 
-		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_Texture", i, aiTextureType_DIFFUSE)))
+		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
 			continue;
 		m_pShaderCom->Begin(0);
 		m_pModelCom->Render(i);
@@ -75,6 +75,9 @@ HRESULT CBoss_Body::Bind_ResourceData()
 		return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(CPipeLine::D3DTS_PROJ))))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CamFar(), sizeof(_float))))
 		return E_FAIL;
 
 	return S_OK;

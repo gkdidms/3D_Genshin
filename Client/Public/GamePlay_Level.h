@@ -15,6 +15,7 @@ public:
     virtual void Render();
 
 private:
+    HRESULT Ready_Lights();
     HRESULT Ready_Layer_Camera(const wstring& strLayerTag);
     HRESULT Ready_Layer_BackGround(const wstring& strLayerTag, const char* pObjectName, void* pArg);
     HRESULT Ready_Layer_Player(const wstring& strLayerTag, void* pArg);

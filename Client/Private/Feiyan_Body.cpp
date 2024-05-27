@@ -2,6 +2,8 @@
 
 #include "StateManager.h"
 
+#include "Feiyan_Normal.h"
+
 CFeiyan_Body::CFeiyan_Body(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject_Body{ pDevice, pContext }
 {
@@ -24,6 +26,13 @@ HRESULT CFeiyan_Body::Initialize(void* pArg)
 
 	if (FAILED(Add_Components()))
 		return E_FAIL;
+
+	strcpy_s(m_Info.szPlayerbleName, "¿¬ºñ");
+	m_Info.m_fMaxHp = 9352.f;
+	m_Info.m_fHp = m_Info.m_fMaxHp;
+	m_Info.m_fAtk = 229.f;
+	m_Info.m_fDef = 728.f;
+	m_Info.eElementalType = FIRE;
 
 	return S_OK;
 }
@@ -53,14 +62,19 @@ void CFeiyan_Body::Tick(const _float& fTimeDelta)
 	__super::Move_Pos(fTimeDelta, &MoveMatrix);
 
 	XMStoreFloat4x4(&m_PlayerMovePos, MoveMatrix);
+
+	Create_Bullet(TEXT("Layer_Bullet"));
 }
 
 
 void CFeiyan_Body::Late_Tick(const _float& fTimeDelta)
 {
+	if (m_PreState != *m_pState)
+		m_PreState = *m_pState;
+
 	XMStoreFloat4x4(&m_pWorldMatrix, m_pTransformCom->Get_WorldMatrix() * XMLoadFloat4x4(m_pParentMatrix));
 
-	m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONBLENDER, this);
+	//m_pGameInstance->Add_Renderer(CRenderer::RENDER_UI, this);
 }
 
 HRESULT CFeiyan_Body::Render()
@@ -91,6 +105,9 @@ HRESULT CFeiyan_Body::Bind_ResourceData()
 		return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(CPipeLine::D3DTS_PROJ))))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CamFar(), sizeof(_float))))
 		return E_FAIL;
 
 	return S_OK;
@@ -327,6 +344,33 @@ void CFeiyan_Body::Change_Animation(const _float& fTimeDelta)
 	}
 
 	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ m_iAnim, m_IsLoop, m_IsLinear, m_IsLinearSpeed });
+}
+
+HRESULT CFeiyan_Body::Create_Bullet(const wstring& strLayerTag)
+{
+	if (m_PreState == *m_pState)
+		return S_OK;
+
+	if (m_pGameInstance->GetMouseState(DIM_LB) == CInput_Device::TAP)
+	{
+		CBullet::BULLET_DESC Desc{};
+
+		if (*m_pState == PLAYER_ATTACK_1)
+			Desc.HandCombinedTransformationMatrix = *m_pModelCom->Get_BoneCombinedTransformationMatrix("PRIVATE_NormalAttack01");
+		else if (*m_pState == PLAYER_ATTACK_2)
+			Desc.HandCombinedTransformationMatrix = *m_pModelCom->Get_BoneCombinedTransformationMatrix("PRIVATE_NormalAttack02");
+		else if (*m_pState == PLAYER_ATTACK_3)
+			Desc.HandCombinedTransformationMatrix = *m_pModelCom->Get_BoneCombinedTransformationMatrix("PRIVATE_NormalAttack03");
+
+		Desc.ParentMatrix = *m_pParentMatrix;
+		Desc.fSpeedPecSec = 10.f;
+		Desc.pTargetPos = Targeting();
+
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Skill_Feiyan_Normal"), strLayerTag, &Desc)))
+			return E_FAIL;
+	}
+
+	return S_OK;
 }
 
 CFeiyan_Body* CFeiyan_Body::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

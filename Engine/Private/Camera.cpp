@@ -32,6 +32,7 @@ HRESULT CCamera::Initialize(void* pArg)
 	m_fNear = pCameraDesc->fNear;
 	m_fFar = pCameraDesc->fFar;
 
+
 	return S_OK;
 }
 
@@ -43,6 +44,7 @@ void CCamera::Tick(const _float& fTimeDelta)
 {
 	m_pGameInstance->Set_Transform(CPipeLine::D3DTS_VIEW, XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_WorldMatrix)));
 	m_pGameInstance->Set_Transform(CPipeLine::D3DTS_PROJ, XMMatrixPerspectiveFovLH(m_fFovY, m_fAspect, m_fNear, m_fFar));
+	m_pGameInstance->Set_CamFar(m_fFar);
 }
 
 void CCamera::Late_Tick(const _float& fTimeDelta)
@@ -92,15 +94,21 @@ void CCamera::Rotation(_float4x4* OrbitMatrix, _fvector vAxis, _float fRadian)
 
 void CCamera::Zoom(const _float& fTimeDelta)
 {
-	_vector vDirect = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-	_vector vCamPos = m_pGameInstance->Get_CamPosition();
-	if (fTimeDelta < 0)
-		vCamPos -= vDirect;
-	else if (fTimeDelta > 0)
-		vCamPos += vDirect;
+	//_vector vDirect = XMVector3Normalize(m_pGameInstance->Get_CamLook());
+	//_vector vCamPos = m_pGameInstance->Get_CamPosition();
+	//if (fTimeDelta < 0)
+	//	vCamPos -= vDirect;
+	//else if (fTimeDelta > 0)
+	//	vCamPos += vDirect;
 
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vCamPos);
+	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, vCamPos);
 
+	m_fFovY += fTimeDelta;
+
+	if (m_fFovY > 2.f)
+		m_fFovY = 2.f;
+	else if (m_fFovY < 0.03f)
+		m_fFovY = 0.03f;
 }
 
 HRESULT CCamera::Render()

@@ -36,6 +36,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const wstring strTerrainFilePath
 
 	m_Primitive_Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	m_GIFormat = DXGI_FORMAT_R32_UINT;
+	m_iNumVertexBuffers = 1;
 	m_iVertexStride = sizeof(VTXNORTEX);
 	m_iNumVertices = ih.biWidth * ih.biHeight;
 	m_iNumVerticesX = ih.biWidth;

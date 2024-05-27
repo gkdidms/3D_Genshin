@@ -18,7 +18,7 @@ private:
 public:
     HRESULT Initialize_Engine(_uint iMaxLevelIndex, const ENGINE_DESC& Engine_Desc, ID3D11Device** ppDevice, ID3D11DeviceContext** ppContext);
     void Tick(const _float& fTimeDelta);
-    void Draw(const _float4 vClearColor);
+    void Draw();
     void Draw_From_Tool();
 
     // 그래픽
@@ -26,7 +26,6 @@ public:
     HRESULT Clear_BackBuffer_View(_float4 vClearColor);
     HRESULT Clear_DepthStencil_View();
     HRESULT Present();
-    _float Compute_ProjZ(const POINT& ptWindowPos);
     
     // 레벨 매니저
 public:
@@ -56,12 +55,19 @@ public: // 파이프라인
     const _float4* Get_CamPosition_Float4();
     _vector Get_CamPosition();
     void Set_Transform(CPipeLine::D3DTRANSFORMSTATE eState, _fmatrix matTransform);
+    const _float4* Get_ComLook_Float4();
     _vector Get_CamLook();
+    const _float* Get_CamFar();
+    void Set_CamFar(_float fFar);
 
 public: // 타이머
     _float		Get_TimeDelta(const _tchar* pTimerTag);
     void		Update_TimeDelta(const _tchar* pTimerTag);
     HRESULT		Ready_Timer(const _tchar* pTimerTag);
+
+public: // Font_Manager
+    HRESULT Add_Font(const wstring& strFontTag, const wstring& strFontFilePath);
+    HRESULT Render_Font(const wstring& strFontTag, const wstring& strText, const _float2& vPosition, _fvector vColor);
 
 public: // 키보드 & 마우스
     void Get_ProcessMessageKeyboard(UINT message, WPARAM wParam, LPARAM lParam);
@@ -83,6 +89,26 @@ public: // Picking
     _vector Picking(_bool* isSuccess);
     _vector Get_RayDir();
 
+
+    /*RenderTarget_Manager*/
+public: 
+    HRESULT Add_RenderTarget(const wstring& strRenderTargetTag, _uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixelFormat, const _float4& vClearColor);
+    HRESULT Add_MRT(const wstring& strMRTTag, const wstring& strRenderTargetTag);
+    HRESULT Begin_MRT(const wstring& strMRTTag);
+    HRESULT End_MRT();
+    HRESULT Bind_RenderTargetSRV(const wstring& strTargetTag, class CShader* pShader, const _char* pConstantName);
+
+#ifdef _DEBUG
+public:
+    HRESULT Ready_Debug(const wstring strRenderTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY);
+    HRESULT Render_Debug(const wstring& strMRTTag, class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
+#endif // _DEBUG
+
+    /*Light_Manager*/
+public:
+    HRESULT Add_Light(const LIGHT_DESC& LightDesc);
+    HRESULT Render_Lights(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
+
 private:
     class CGraphic_Device* m_pGraphic_Device = { nullptr };
     class CInput_Manager* m_pInput_Manager = { nullptr };
@@ -91,6 +117,9 @@ private:
     class CGameObject_Manager* m_pGameObject_Manager = { nullptr };
     class CComponent_Manager* m_pComponent_Manager = { nullptr };
     class CTimer_Manager* m_pTimer_Manager = { nullptr };
+    class CFont_Manager* m_pFont_Manager = { nullptr };
+    class CRenderTarget_Manager* m_pRenderTarget_Manager = { nullptr };
+    class CLight_Manager* m_pLight_Manager = { nullptr };
     class CRenderer* m_pRenderer = { nullptr };
     class CPipeLine* m_pPipeLine = { nullptr };
     class CPicking* m_pPicking = { nullptr };

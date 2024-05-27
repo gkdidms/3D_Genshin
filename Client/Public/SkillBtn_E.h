@@ -20,6 +20,10 @@ public:
 
 private:
     class CSkillBtn_Icon* m_pBtnIcon[4] = { nullptr };
+    CGameObject* m_pBtnFrame = { nullptr };
+    _uint m_iCurrentPlayerble = { 0 };
+    
+    class CStateManager* m_pStateManager = { nullptr };
 
 private:
     virtual HRESULT Add_Components();

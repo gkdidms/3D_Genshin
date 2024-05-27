@@ -11,9 +11,15 @@ class CNavigation;
 END
 
 BEGIN(Client)
-class CItem :
+class CItem final:
     public CGameObject
-{
+{ 
+public:
+    typedef struct tItemDesc : public CGameObject::GAMEOBJECT_DESC {
+        _float fHeight;
+        _float4x4 CreateMatrix;
+    } ITEM_DESC;
+
 private:
     CItem(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
     CItem(const CItem& rhs);
@@ -27,11 +33,19 @@ public:
     virtual void Late_Tick(const _float& fTimeDelta) override;
     virtual HRESULT Render() override;
 
-protected:
+private:
+    random_device				m_RandomDevice;
+    mt19937_64					m_RandomNumber;
+
+private:
     CShader* m_pShaderCom = { nullptr };
     CModel* m_pModelCom = { nullptr };
     CCollider* m_pColliderCom = { nullptr };
-    CNavigation* m_pNavigationCom = { nullptr };
+
+private:
+    _bool m_isDrop = { true };
+    _float m_fHeight = { 0.f };
+
 
 private:
     HRESULT Add_Components();

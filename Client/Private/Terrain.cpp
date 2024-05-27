@@ -25,8 +25,8 @@ HRESULT CTerrain::Initialize(void* pArg)
     if (FAILED(Add_Components()))
         return E_FAIL;
 
-    XMStoreFloat4x4(&m_matView, XMMatrixLookAtLH(XMVectorSet(0.f, 40.f, -30.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
-    XMStoreFloat4x4(&m_matProj, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.f), g_iWinSizeX / (_float)g_iWinSizeY, 0.1f, 3000.f));
+    XMStoreFloat4x4(&m_ViewMatrix, XMMatrixLookAtLH(XMVectorSet(0.f, 40.f, -30.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
+    XMStoreFloat4x4(&m_ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.f), g_iWinSizeX / (_float)g_iWinSizeY, 0.1f, 3000.f));
 
     return S_OK;
 }

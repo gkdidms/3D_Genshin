@@ -55,6 +55,40 @@ HRESULT CPartObject::Render()
 	return S_OK;
 }
 
+_vector CPartObject::Targeting()
+{
+	// 플레이어 시야에 있는 몬스터만 공격하도록 수정하기
+
+	_vector TargetPos = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+	_float fPreDistance = { 0.f };
+
+	vector<CGameObject*> pMonsters = m_pGameInstance->Get_GameObjects(LEVEL_GAMEPLAY, TEXT("Layer_Monster"));
+
+	for (auto& pMonster : pMonsters)
+	{
+		CTransform* pMonsterTransform = dynamic_cast<CTransform*>(pMonster->Get_Component(TEXT("Com_Transform")));
+
+		//거리
+		_vector vDistance = pMonsterTransform->Get_State(CTransform::STATE_POSITION) - XMLoadFloat4x4(m_pParentMatrix).r[3];
+		_float fDistance = XMVectorGetX(XMVector3Length(vDistance));
+
+		//시야
+		_float fAngle = acosf(XMVectorGetX(XMVector3Dot(XMVector3Normalize(vDistance), XMVector3Normalize(XMLoadFloat4x4(m_pParentMatrix).r[2]))));
+
+		float fFov = 100.f;
+		if (fDistance <= 10.f && XMConvertToDegrees(fAngle) < fFov)
+		{
+			if (fPreDistance == 0.f || fPreDistance > fDistance)
+			{
+				fPreDistance = fDistance;
+				TargetPos = pMonsterTransform->Get_State(CTransform::STATE_POSITION);
+			}
+		}
+	}
+
+	return TargetPos;
+}
+
 void CPartObject::Free()
 {
 	__super::Free();

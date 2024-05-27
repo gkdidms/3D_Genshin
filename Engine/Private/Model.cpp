@@ -92,7 +92,7 @@ CTexture* CModel::Ready_Materials(const char* pModelFilePath, const char* pFileP
 	strcpy_s(szFullPath, szDrive);
 	strcat_s(szFullPath, szDirectory);
 	strcat_s(szFullPath, szFileName);
-	strcat_s(szFullPath, szExt);
+	strcat_s(szFullPath, ".dds");
 
 	_tchar szRealFullPath[MAX_PATH] = L"";
 	MultiByteToWideChar(CP_ACP, 0, szFullPath, strlen(szFullPath), szRealFullPath, MAX_PATH);

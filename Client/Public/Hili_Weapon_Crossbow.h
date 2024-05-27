@@ -16,9 +16,13 @@ public:
     void Tick(const _float& fTimeDelta) override;
     void Late_Tick(const _float& fTimeDelta) override;
     HRESULT Render() override;
+    
+private:
+    _uint m_PreState;
 
-protected:
+private:
     virtual HRESULT Add_Components();
+    HRESULT Create_Arrow();
 
 public:
     static CHili_Weapon_Crossbow* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

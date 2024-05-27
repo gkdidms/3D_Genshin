@@ -1,6 +1,10 @@
 #pragma once
 #include "SceneObj.h"
 
+BEGIN(Engine)
+class CCollider;
+END
+
 BEGIN(Client)
 class CCheckPoint :
     public CSceneObj
@@ -24,10 +28,14 @@ public:
     virtual HRESULT Render() override;
 
 private:
+    CCollider* m_pTriggerCollider = { nullptr };
+
+private:
     const _float4x4* m_pTargetMatrix;
-    _float m_fDistanceToTarget = { 7.f };
+    _float m_fDistanceToTarget = { 5.f };
 
     _bool m_isCheckPoint = { false };
+    _float4x4 m_vCheckPointPlayerPos = {};
 
 private:
     virtual HRESULT Add_Components();

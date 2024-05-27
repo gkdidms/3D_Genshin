@@ -6,6 +6,12 @@
 #include "VIBuffer_Rect.h"
 #include "VIBuffer_Terrain.h"
 #include "VIBuffer_Cell.h"
+#include "VIBuffer_Instance.h"
+#include "VIBuffer_Instance_Point.h"
+#include "VIBuffer_Instance_Rect.h"
+#include "VIBuffer_Trail.h"
+#include "VIBuffer_RectZ.h"
+
 #include "Shader.h"
 #include "Texture.h"
 #include "Transform.h"
@@ -15,6 +21,7 @@
 
 #include "Bounding_AABB.h"
 #include "Bounding_OBB.h"
+#include "Bounding_Sphere.h"
 
 #include "Collider.h"
 

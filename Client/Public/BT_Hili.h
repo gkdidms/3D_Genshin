@@ -18,7 +18,7 @@ public:
 		const CModel* pModel;
 		const _float4x4* pTargetMatrix;
 		const CHili::HILI_WEAPON_TYPE* pWeaponType;
-		CHili::HILI_STATE* pState;
+		_uint* pState;
 		CTransform* pTransformCom;
 		CCollider* pCollider;
 		CHili::HILI_INFO* pInfo;
@@ -43,7 +43,7 @@ protected:
 	const _float4x4* m_pTargetMatrix;
 	CTransform* m_pTransformCom;
 	CCollider* m_pColliderCom;
-	CHili::HILI_STATE* m_pState;
+	_uint* m_pState;
 	const CHili::HILI_WEAPON_TYPE* m_pWeaponType;
 	CHili::HILI_INFO* m_pInfo = { nullptr };
 

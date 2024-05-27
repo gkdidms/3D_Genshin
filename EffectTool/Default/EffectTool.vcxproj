@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{65157c68-b13d-4d49-a356-5a19f3c1184b}</ProjectGuid>
+    <RootNamespace>EffectTool</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>../Bin\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>../Bin\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NOMINMAX;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>../public/;../../EngineSDK/Inc/;./;../../Imgui/background/;../../Imgui/imgui/;../../Imgui/ImGuiFileDialog;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Engine.lib;DirectXTKd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../EngineSDk/Lib/</AdditionalLibraryDirectories>
+    </Link>
+    <FxCompile>
+      <ShaderType>Effect</ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NOMINMAX;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>../public/;../../EngineSDK/Inc/;./;../../Imgui/background/;../../Imgui/imgui/;../../Imgui/ImGuiFileDialog;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <FxCompile>
+      <ShaderType>Effect</ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Imgui\background\imgui_impl_dx11.h" />
+    <ClInclude Include="..\..\Imgui\background\imgui_impl_win32.h" />
+    <ClInclude Include="..\..\Imgui\ImGuiFileDialog\ImGuiFileDialog.h" />
+    <ClInclude Include="..\..\Imgui\ImGuiFileDialog\ImGuiFileDialogConfig.h" />
+    <ClInclude Include="..\..\Imgui\imGuizmo\GraphEditor.h" />
+    <ClInclude Include="..\..\Imgui\imGuizmo\ImCurveEdit.h" />
+    <ClInclude Include="..\..\Imgui\imGuizmo\ImGradient.h" />
+    <ClInclude Include="..\..\Imgui\imGuizmo\ImGuizmo.h" />
+    <ClInclude Include="..\..\Imgui\imGuizmo\ImSequencer.h" />
+    <ClInclude Include="..\..\Imgui\imGuizmo\ImZoomSlider.h" />
+    <ClInclude Include="..\..\Imgui\imgui\imconfig.h" />
+    <ClInclude Include="..\..\Imgui\imgui\imgui.h" />
+    <ClInclude Include="..\..\Imgui\imgui\imgui_internal.h" />
+    <ClInclude Include="..\..\Imgui\imgui\imstb_rectpack.h" />
+    <ClInclude Include="..\..\Imgui\imgui\imstb_textedit.h" />
+    <ClInclude Include="..\..\Imgui\imgui\imstb_truetype.h" />
+    <ClInclude Include="..\public\EffectTool_Camera.h" />
+    <ClInclude Include="..\public\EffectTool_Terrain.h" />
+    <ClInclude Include="..\public\Effect_Default.h" />
+    <ClInclude Include="..\public\Effect_Manager.h" />
+    <ClInclude Include="..\public\Effect_Mesh.h" />
+    <ClInclude Include="..\public\Tool_Effect_Point.h" />
+    <ClInclude Include="..\public\Tool_Effect.h" />
+    <ClInclude Include="..\public\EffectTool_Manager.h" />
+    <ClInclude Include="..\public\Level_Tool.h" />
+    <ClInclude Include="..\public\MainEffect.h" />
+    <ClInclude Include="EffectTool.h" />
+    <ClInclude Include="EffectTool_Defines.h" />
+    <ClInclude Include="framework.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Imgui\background\imgui_impl_dx11.cpp" />
+    <ClCompile Include="..\..\Imgui\background\imgui_impl_win32.cpp" />
+    <ClCompile Include="..\..\Imgui\ImGuiFileDialog\ImGuiFileDialog.cpp" />
+    <ClCompile Include="..\..\Imgui\imGuizmo\GraphEditor.cpp" />
+    <ClCompile Include="..\..\Imgui\imGuizmo\ImCurveEdit.cpp" />
+    <ClCompile Include="..\..\Imgui\imGuizmo\ImGradient.cpp" />
+    <ClCompile Include="..\..\Imgui\imGuizmo\ImGuizmo.cpp" />
+    <ClCompile Include="..\..\Imgui\imGuizmo\ImSequencer.cpp" />
+    <ClCompile Include="..\..\Imgui\imgui\imgui.cpp" />
+    <ClCompile Include="..\..\Imgui\imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\..\Imgui\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\..\Imgui\imgui\imgui_tables.cpp" />
+    <ClCompile Include="..\..\Imgui\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="..\private\EffectTool_Camera.cpp" />
+    <ClCompile Include="..\private\EffectTool_Terrain.cpp" />
+    <ClCompile Include="..\private\Effect_Default.cpp" />
+    <ClCompile Include="..\private\Effect_Manager.cpp" />
+    <ClCompile Include="..\private\Effect_Mesh.cpp" />
+    <ClCompile Include="..\private\Tool_Effect_Point.cpp" />
+    <ClCompile Include="..\private\Tool_Effect.cpp" />
+    <ClCompile Include="..\private\EffectTool_Manager.cpp" />
+    <ClCompile Include="..\private\Level_Tool.cpp" />
+    <ClCompile Include="..\private\MainEffect.cpp" />
+    <ClCompile Include="EffectTool.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="EffectTool.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="EffectTool.ico" />
+    <Image Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Imgui\imgui\.editorconfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxInstance_Point.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -4,8 +4,8 @@
 
 #include "SkillBtn_Icon.h"
 #include "Player.h"
-
-
+#include "StateManager.h"
+#include "Btn_Frame.h"
 
 CSkillBtn_E::CSkillBtn_E(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI{ pDevice, pContext }
@@ -13,8 +13,10 @@ CSkillBtn_E::CSkillBtn_E(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CSkillBtn_E::CSkillBtn_E(const CSkillBtn_E& rhs)
-	: CUI{ rhs }
+	: CUI{ rhs },
+	m_pStateManager{ CStateManager::GetInstance()}
 {
+	Safe_AddRef(m_pStateManager);
 }
 
 HRESULT CSkillBtn_E::Initialize_Prototype()
@@ -37,10 +39,10 @@ HRESULT CSkillBtn_E::Initialize(void* pArg)
 	m_fY = g_iWinSizeY >> 1;
 
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(m_fX - g_iWinSizeX + 50.f, m_fY - g_iWinSizeY + m_fSizeY * 0.5f + 30.f, 0.f, 1.f));
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(-m_fX + g_iWinSizeX - 220.f, m_fY - g_iWinSizeY + m_fSizeY * 0.5f + 30.f, 0.f, 1.f));
 
-	XMStoreFloat4x4(&m_matView, XMMatrixIdentity());
-	XMStoreFloat4x4(&m_matProj, XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.0f));
+	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
+	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.0f));
 
 	if (FAILED(Ready_Icon()))
 		return E_FAIL;
@@ -58,6 +60,8 @@ void CSkillBtn_E::Tick(const _float& fTimeDelta)
 
 void CSkillBtn_E::Late_Tick(const _float& fTimeDelta)
 {
+	m_iCurrentPlayerble = m_pStateManager->Get_Playerble();
+
 	m_pGameInstance->Add_Renderer(CRenderer::RENDER_UI, this);
 }
 
@@ -66,9 +70,12 @@ HRESULT CSkillBtn_E::Render()
 	if (FAILED(Bind_ResourceData()))
 		return E_FAIL;
 
-	m_pShaderCom->Begin(0);
+	m_pShaderCom->Begin(3);
 	m_pVIBufferCom->Render();
 
+	m_pBtnIcon[m_iCurrentPlayerble]->Render();
+
+	m_pBtnFrame->Render();
 	return S_OK;
 }
 
@@ -80,7 +87,7 @@ HRESULT CSkillBtn_E::Add_Components()
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxPosTex_UI", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_UI_Monster_HP_Outline", L"Com_Texture", reinterpret_cast<CComponent**>(&m_pTextureCom))))
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_UI_Btn_Frame_26", L"Com_Texture", reinterpret_cast<CComponent**>(&m_pTextureCom))))
 		return E_FAIL;
 
 	return S_OK;
@@ -91,10 +98,10 @@ HRESULT CSkillBtn_E::Bind_ResourceData()
 	if (FAILED(m_pTransformCom->Bind_ShaderMatrix(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_matView)))
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_matProj)))
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
 	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
@@ -120,6 +127,15 @@ HRESULT CSkillBtn_E::Ready_Icon()
 	Desc.strComponentPrototypeTag = L"Prototype_Component_Texture_UI_SkillBtn_Icon_E_Feiyan";
 	m_pBtnIcon[CPlayer::PLAYER_FEIYAN] = dynamic_cast<CSkillBtn_Icon*>(m_pGameInstance->Clone_Object(L"Prototype_GameObject_UI_SkillBtn_Icon", &Desc));
 
+
+	CBtn_Frame::BTN_FRAME_DESC BtnDesc{};
+	BtnDesc.vPos = _float2{ 0.f, -38.f };
+	BtnDesc.ParentMatrix = *m_pTransformCom->Get_WorldFloat4x4();
+	BtnDesc.strText = L"E";
+
+	m_pBtnFrame = m_pGameInstance->Clone_Object(L"Prototype_GameObject_UI_Btn_Frame", &BtnDesc);
+	if (nullptr == m_pBtnFrame)
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -147,4 +163,10 @@ CGameObject* CSkillBtn_E::Clone(void* pArg)
 void CSkillBtn_E::Free()
 {
 	__super::Free();
+
+	for (auto& pIcon : m_pBtnIcon)
+		Safe_Release(pIcon);
+
+	Safe_Release(m_pBtnFrame);
+	Safe_Release(m_pStateManager);
 }

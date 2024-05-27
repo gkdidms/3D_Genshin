@@ -208,10 +208,10 @@
     <Image Include="Tool.ico" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\Bin\ShaderFile\Shader_VtxAnimMesh.hlsl" />
-    <FxCompile Include="..\Bin\ShaderFile\Shader_VtxMesh.hlsl" />
-    <FxCompile Include="..\Bin\ShaderFile\Shader_VtxNorTex.hlsl" />
-    <FxCompile Include="..\Bin\ShaderFile\Shader_VtxPosTex.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimMesh.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

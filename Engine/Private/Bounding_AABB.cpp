@@ -55,7 +55,11 @@ _bool CBounding_AABB::Intersect(CCollider::TYPE eTargetType, CBounding* pTargetB
 		break;
 	}
 	case Engine::CCollider::COLLIDER_SPHERE:
+	{
+		BoundingSphere* pDesc = static_cast<BoundingSphere*>(pTargetBounding->Get_Desc());
+		isColl = m_pBoundingBox->Intersects(*pDesc);
 		break;
+	}
 	case Engine::CCollider::COLLIDER_END:
 		break;
 	default:

@@ -6,6 +6,8 @@
 #include "GamePlay_Level.h"
 #include "Stage_Boss_Level.h"
 
+#include "Background.h"
+
 CLoading_Level::CLoading_Level(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel{ pDevice, pContext }
 {
@@ -50,7 +52,10 @@ void CLoading_Level::Render()
 
 HRESULT CLoading_Level::Ready_Background(const wstring strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_LOADING, L"Prototype_GameObject_Background", strLayerTag, nullptr)))
+	CBackground::BACKGROUND_DESC Desc{};
+	Desc.pProgress = m_pLoader->Get_Progress();
+
+	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_LOADING, L"Prototype_GameObject_Background", strLayerTag, &Desc)))
 		return E_FAIL;
 
 	return S_OK;

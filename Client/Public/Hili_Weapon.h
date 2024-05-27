@@ -18,6 +18,7 @@ public:
 	typedef struct tHiliWeaponDesc : public CGameObject::GAMEOBJECT_DESC{
 		const _float4x4* pTargetCombinedTransformationMatrix;
 		const _float4x4* pHandCombinedTransformationMatrix;
+		const _uint* pState;
 	}HILI_WEAPON_DESC;
 
 protected:
@@ -37,6 +38,7 @@ protected:
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
 	CCollider* m_pColliderCom = { nullptr };
+	const _uint* m_pState = { nullptr };
 
 	const _float4x4* m_TargetMatrix;
 	const _float4x4* m_SocketMatrix;

@@ -394,6 +394,48 @@
     <Filter Include="02. GameObject\09. Item">
       <UniqueIdentifier>{92e3d0b3-4e19-4045-a5ab-07e98360c177}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\08. UI\Btn">
+      <UniqueIdentifier>{01250b07-e697-465f-a560-e7730be1eabc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. UI\Side">
+      <UniqueIdentifier>{335115ba-a9c2-45dc-b294-8d3d1ccfedfb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. UI\Side\Face">
+      <UniqueIdentifier>{1da59c89-fb22-4c05-ae92-6f37645cebcd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\10. Effect">
+      <UniqueIdentifier>{38779ed9-2942-416d-a335-33f1018e03b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. UI\Side\Select">
+      <UniqueIdentifier>{7b1fb029-33b5-49b9-8191-e6481eb054b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. UI\Side\Default">
+      <UniqueIdentifier>{58b285d3-f750-4874-bf3b-0900327ceb0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\11. Bullet">
+      <UniqueIdentifier>{1498800b-73ca-41ce-a42f-3d8a6eac111e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\11. Bullet\Player">
+      <UniqueIdentifier>{8a8358b5-c81f-401a-8def-50b98124fd0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\11. Bullet\Player\Feiyan">
+      <UniqueIdentifier>{1c2fe62e-7c20-492c-ac53-cf727a35bfbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\11. Bullet\Player\Feiyan\Trail">
+      <UniqueIdentifier>{b9459c0d-18a1-402b-b6cf-a5d218293366}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\11. Bullet\Player\Wanderer">
+      <UniqueIdentifier>{54ada9bb-abae-4ec4-b943-882e848ef862}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\11. Bullet\Player\Tighnari">
+      <UniqueIdentifier>{9fdf1cb7-5842-4a29-bbf6-9342386adebb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\11. Bullet\Monster">
+      <UniqueIdentifier>{94c5c840-8a9b-4c97-aacd-43780df5fffa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\11. Bullet\Monster\Hili">
+      <UniqueIdentifier>{27a4efce-6068-4809-bd90-21df7561a788}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">
@@ -747,6 +789,51 @@
     <ClInclude Include="..\public\Item.h">
       <Filter>02. GameObject\09. Item</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\SkillBtn_Q.h">
+      <Filter>02. GameObject\08. UI\Skill\Q_Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Btn_Frame.h">
+      <Filter>02. GameObject\08. UI\Btn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Avatar_Face.h">
+      <Filter>02. GameObject\08. UI\Side\Face</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Effect.h">
+      <Filter>02. GameObject\10. Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Avatar_Side_Select.h">
+      <Filter>02. GameObject\08. UI\Side\Select</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Avatar_Side.h">
+      <Filter>02. GameObject\08. UI\Side\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Avatar_UI.h">
+      <Filter>02. GameObject\08. UI\Side</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Bullet.h">
+      <Filter>02. GameObject\11. Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Feiyan_Normal.h">
+      <Filter>02. GameObject\11. Bullet\Player\Feiyan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Feiyan_Normal_Trail.h">
+      <Filter>02. GameObject\11. Bullet\Player\Feiyan\Trail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Tighnari_Normal.h">
+      <Filter>02. GameObject\11. Bullet\Player\Tighnari</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Wanderer_Normal.h">
+      <Filter>02. GameObject\11. Bullet\Player\Wanderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Player_Bullet.h">
+      <Filter>02. GameObject\11. Bullet\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Monster_Bullet.h">
+      <Filter>02. GameObject\11. Bullet\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Hili_Arrow.h">
+      <Filter>02. GameObject\11. Bullet\Monster\Hili</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -1088,6 +1175,51 @@
     <ClCompile Include="..\private\Item.cpp">
       <Filter>02. GameObject\09. Item</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\SkillBtn_Q.cpp">
+      <Filter>02. GameObject\08. UI\Skill\Q_Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Btn_Frame.cpp">
+      <Filter>02. GameObject\08. UI\Btn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Avatar_Face.cpp">
+      <Filter>02. GameObject\08. UI\Side\Face</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Effect.cpp">
+      <Filter>02. GameObject\10. Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Avatar_Side_Select.cpp">
+      <Filter>02. GameObject\08. UI\Side\Select</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Avatar_Side.cpp">
+      <Filter>02. GameObject\08. UI\Side\Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Avatar_UI.cpp">
+      <Filter>02. GameObject\08. UI\Side</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Bullet.cpp">
+      <Filter>02. GameObject\11. Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Feiyan_Normal.cpp">
+      <Filter>02. GameObject\11. Bullet\Player\Feiyan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Feiyan_Normal_Trail.cpp">
+      <Filter>02. GameObject\11. Bullet\Player\Feiyan\Trail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Tighnari_Normal.cpp">
+      <Filter>02. GameObject\11. Bullet\Player\Tighnari</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Wanderer_Normal.cpp">
+      <Filter>02. GameObject\11. Bullet\Player\Wanderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Player_Bullet.cpp">
+      <Filter>02. GameObject\11. Bullet\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Monster_Bullet.cpp">
+      <Filter>02. GameObject\11. Bullet\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Hili_Arrow.cpp">
+      <Filter>02. GameObject\11. Bullet\Monster\Hili</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1118,7 +1250,10 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex_UI.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex_UI.hlsl">
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex_Skill.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex_Skill.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

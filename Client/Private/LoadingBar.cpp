@@ -19,22 +19,28 @@ HRESULT CLoadingBar::Initialize_Prototype()
 
 HRESULT CLoadingBar::Initialize(void* pArg)
 {
+	if (nullptr != pArg)
+	{
+		LOADING_BACK_DESC* pDesc = static_cast<LOADING_BACK_DESC*>(pArg);
+		m_pProgress = pDesc->pProgress;
+	}
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
-	m_fSizeX = 650.f;
-	m_fSizeY = 78.f;
+	m_fSizeX = 512.f;
+	m_fSizeY = 128.f;
 	m_fX = g_iWinSizeX >> 1;
 	m_fY = g_iWinSizeY >> 1;
 
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f, 1.f));
 
-	XMStoreFloat4x4(&m_matView, XMMatrixIdentity());
-	XMStoreFloat4x4(&m_matProj, XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.0f));
+	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
+	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.0f));
 
 	return S_OK;
 }
@@ -84,13 +90,16 @@ HRESULT CLoadingBar::Bind_Render()
 	if (FAILED(m_pTransformCom->Bind_ShaderMatrix(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_matView)))
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_matProj)))
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
 	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fProgress", m_pProgress, sizeof(_float))))
 		return E_FAIL;
 
 	return S_OK;

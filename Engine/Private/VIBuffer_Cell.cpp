@@ -18,6 +18,7 @@ HRESULT CVIBuffer_Cell::Initialize_Prototype(const _float3* pPoints)
 	m_iNumVertices = 3;
 	m_iVertexStride = sizeof(VXTPOS);
 
+	m_iNumVertexBuffers = 1;
 	m_Buffer_Desc.ByteWidth = m_iVertexStride * m_iNumVertices;
 	m_Buffer_Desc.Usage = D3D11_USAGE_DEFAULT;
 	m_Buffer_Desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;

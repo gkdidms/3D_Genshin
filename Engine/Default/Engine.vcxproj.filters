@@ -133,6 +133,45 @@
     <Filter Include="01. Utility\03. Component\Collider\Bounding\OBB">
       <UniqueIdentifier>{30def1a3-acaa-4d27-986f-2819f32a39ca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\05. Font">
+      <UniqueIdentifier>{0f5771a4-0493-44ad-8c56-c390a3077957}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\05. Font\Manager">
+      <UniqueIdentifier>{8e2ffb5a-065b-4bb3-811b-5039752d91d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\VIBuffer\Instance">
+      <UniqueIdentifier>{84a01b28-0449-4d70-b59a-2995d7e1fb46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\VIBuffer\Instance\Point">
+      <UniqueIdentifier>{adcdb09c-a4a0-4d6f-973f-8dd4d99fa761}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\VIBuffer\Instance\Rect">
+      <UniqueIdentifier>{92f57b33-b651-4997-9a7b-6f217f525bfd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\06. RenderTarget">
+      <UniqueIdentifier>{bce9d3f1-e746-4108-9bb6-0becda208960}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\06. RenderTarget\Manager">
+      <UniqueIdentifier>{00ceaf15-d923-4a33-859b-0515a9b86517}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\07. Lights">
+      <UniqueIdentifier>{1e77aad2-aa34-4a7c-a72c-6db3c42ecfc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\07. Lights\Manager">
+      <UniqueIdentifier>{32b904a7-e6ce-4cc6-a250-6242f0114e12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\02. GameObject\BlendObject">
+      <UniqueIdentifier>{9bb7115b-2df0-4ff4-9f48-86584f7a6cd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\Collider\Bounding\Sphere">
+      <UniqueIdentifier>{f39190f7-3813-410b-a34c-3d91e9717348}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\VIBuffer\Trail">
+      <UniqueIdentifier>{c1fc5f0f-fa11-4762-b4be-87b635a8e56b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\VIBuffer\RectZ">
+      <UniqueIdentifier>{1c5be891-dd55-45a0-bd3b-925c780f6e56}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -254,6 +293,45 @@
     </ClCompile>
     <ClCompile Include="..\private\Bounding_OBB.cpp">
       <Filter>01. Utility\03. Component\Collider\Bounding\OBB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\CustomFont.cpp">
+      <Filter>01. Utility\05. Font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Font_Manager.cpp">
+      <Filter>01. Utility\05. Font\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_Instance.cpp">
+      <Filter>01. Utility\03. Component\VIBuffer\Instance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_Instance_Rect.cpp">
+      <Filter>01. Utility\03. Component\VIBuffer\Instance\Rect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_Instance_Point.cpp">
+      <Filter>01. Utility\03. Component\VIBuffer\Instance\Point</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\RenderTarget.cpp">
+      <Filter>01. Utility\06. RenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\RenderTarget_Manager.cpp">
+      <Filter>01. Utility\06. RenderTarget\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Light.cpp">
+      <Filter>01. Utility\07. Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Light_Manager.cpp">
+      <Filter>01. Utility\07. Lights\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BlendObject.cpp">
+      <Filter>01. Utility\02. GameObject\BlendObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Bounding_Sphere.cpp">
+      <Filter>01. Utility\03. Component\Collider\Bounding\Sphere</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_Trail.cpp">
+      <Filter>01. Utility\03. Component\VIBuffer\Trail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_RectZ.cpp">
+      <Filter>01. Utility\03. Component\VIBuffer\RectZ</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -389,9 +467,51 @@
     <ClInclude Include="..\public\Bounding_OBB.h">
       <Filter>01. Utility\03. Component\Collider\Bounding\OBB</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\CustomFont.h">
+      <Filter>01. Utility\05. Font</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Font_Manager.h">
+      <Filter>01. Utility\05. Font\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_Instance.h">
+      <Filter>01. Utility\03. Component\VIBuffer\Instance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_Instance_Rect.h">
+      <Filter>01. Utility\03. Component\VIBuffer\Instance\Rect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_Instance_Point.h">
+      <Filter>01. Utility\03. Component\VIBuffer\Instance\Point</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\RenderTarget.h">
+      <Filter>01. Utility\06. RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\RenderTarget_Manager.h">
+      <Filter>01. Utility\06. RenderTarget\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Light.h">
+      <Filter>01. Utility\07. Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Light_Manager.h">
+      <Filter>01. Utility\07. Lights\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BlendObject.h">
+      <Filter>01. Utility\02. GameObject\BlendObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Bounding_Sphere.h">
+      <Filter>01. Utility\03. Component\Collider\Bounding\Sphere</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_Trail.h">
+      <Filter>01. Utility\03. Component\VIBuffer\Trail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_RectZ.h">
+      <Filter>01. Utility\03. Component\VIBuffer\RectZ</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Cell.hlsl">
+      <Filter>98.ShaderFile</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Deferred.hlsl">
       <Filter>98.ShaderFile</Filter>
     </FxCompile>
   </ItemGroup>

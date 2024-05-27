@@ -2,6 +2,10 @@
 
 #include "GameInstance.h"
 
+#include "Hili.h"
+#include "Hili_Arrow.h"
+#include "Player.h"
+
 CHili_Weapon_Crossbow::CHili_Weapon_Crossbow(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CHili_Weapon{ pDevice, pContext}
 {
@@ -45,10 +49,15 @@ void CHili_Weapon_Crossbow::Tick(const _float& fTimeDelta)
 
 	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * SocketMatrix * XMLoadFloat4x4(m_TargetMatrix));
 	m_pColliderCom->Tick(XMLoadFloat4x4(&m_WorldMatrix));
+
+	Create_Arrow();
 }
 
 void CHili_Weapon_Crossbow::Late_Tick(const _float& fTimeDelta)
 {
+	if (m_PreState != *m_pState)
+		m_PreState = *m_pState;
+
 	m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONBLENDER, this);
 }
 
@@ -80,6 +89,27 @@ HRESULT CHili_Weapon_Crossbow::Add_Components()
 
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Collider", L"Com_Collider", reinterpret_cast<CComponent**>(&m_pColliderCom), &Desc)))
 		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CHili_Weapon_Crossbow::Create_Arrow()
+{
+	if (m_PreState == *m_pState)
+		return S_OK;
+
+	if (*m_pState == CHili::HILI_NORMAL_ATK)
+	{
+		CHili_Arrow::BULLET_DESC ArrowDesc{};
+		ArrowDesc.fSpeedPecSec = 20.f;
+		ArrowDesc.HandCombinedTransformationMatrix = *m_SocketMatrix;
+		CTransform* pPlayerTransform = dynamic_cast<CTransform*>(m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, TEXT("Layer_Player"), TEXT("Com_Transform"), 0));
+		ArrowDesc.ParentMatrix = *m_TargetMatrix;
+		ArrowDesc.pTargetPos = pPlayerTransform->Get_State(CTransform::STATE_POSITION);
+
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Skill_Hili_Arrow"), TEXT("Layer_MonBullet"), &ArrowDesc)))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }

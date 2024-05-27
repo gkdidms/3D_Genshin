@@ -13,24 +13,26 @@ CTransform::CTransform(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 CTransform::CTransform(const CTransform& rhs)
 	: CComponent{ rhs },
-	m_matWorld{ rhs.m_matWorld },
+	m_WorldMatrix{ rhs.m_WorldMatrix },
 	m_fSpeedPerSec{ rhs.m_fSpeedPerSec },
-	m_fRotationPerSec{ rhs.m_fRotationPerSec }
+	m_fRotationPerSec{ rhs.m_fRotationPerSec },
+	m_fPower{ rhs.m_fPower },
+	m_fAccelTime{ rhs.m_fAccelTime }
 {
 }
 
 _vector CTransform::Get_State(STATE eState)
 {
-	return XMLoadFloat4x4(&m_matWorld).r[eState];
+	return XMLoadFloat4x4(&m_WorldMatrix).r[eState];
 }
 
 void CTransform::Set_State(STATE eState, _fvector vState)
 {
-	_matrix matWorld = XMLoadFloat4x4(&m_matWorld);
+	_matrix matWorld = XMLoadFloat4x4(&m_WorldMatrix);
 
 	matWorld.r[eState] = vState;
 
-	XMStoreFloat4x4(&m_matWorld, matWorld);
+	XMStoreFloat4x4(&m_WorldMatrix, matWorld);
 }
 
 void CTransform::Scaling(_float fScaleX, _float fScaleY, _float fScaleZ)
@@ -49,7 +51,7 @@ void CTransform::Set_Scale(_float fScaleX, _float fScaleY, _float fScaleZ)
 
 HRESULT CTransform::Initialize_Prototype()
 {
-	XMStoreFloat4x4(&m_matWorld, XMMatrixIdentity());
+	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());
 
 	return S_OK;
 }
@@ -62,6 +64,7 @@ HRESULT CTransform::Initialize(void* pArg)
 
 		m_fSpeedPerSec = pTransformDesc->fSpeedPecSec;
 		m_fRotationPerSec = pTransformDesc->fRotatePecSec;
+		m_fPower = pTransformDesc->fPower;
 	}
 
 	return S_OK;
@@ -69,7 +72,7 @@ HRESULT CTransform::Initialize(void* pArg)
 
 HRESULT CTransform::Bind_ShaderMatrix(CShader* pShader, const _char* pConstantName)
 {
-	return pShader->Bind_Matrix(pConstantName, &m_matWorld);
+	return pShader->Bind_Matrix(pConstantName, &m_WorldMatrix);
 }
 
 _bool CTransform::Go_Run(const _matrix vMoveMatrix, CNavigation* pNavigationCom, _bool isFlyMove)
@@ -107,6 +110,32 @@ _bool CTransform::Go_Coll(const _fvector vMovePos, class CNavigation* pNavigatio
 
 
 	Set_State(STATE_POSITION, vMovePos);
+}
+
+_bool CTransform::Jump(const _float& fTimeDelta, _float fHeight, _float fAccelTime)
+{
+	m_fAccelTime += fAccelTime;
+
+	_float fTemp = (m_fPower * m_fAccelTime) - (9.8f * m_fAccelTime * m_fAccelTime * 0.5f);
+
+	_vector vPosition = Get_State(STATE_POSITION);
+	_vector vLook = Get_State(STATE_LOOK);
+
+	_float fY = XMVectorGetY(vPosition);
+	vPosition += XMVector3Normalize(vLook) * m_fSpeedPerSec * fTimeDelta;
+	vPosition = XMVectorSetY(vPosition, fY + fTemp);
+
+	Set_State(CTransform::STATE_POSITION, vPosition);
+
+	if (fHeight >= XMVectorGetY(vPosition))
+	{
+		vPosition = XMVectorSetY(vPosition, fHeight);
+		Set_State(CTransform::STATE_POSITION, vPosition);
+
+		return false;
+	}
+
+	return true;
 }
 
 void CTransform::Go_Straight(const _float& fTimeDelta)
@@ -241,6 +270,31 @@ void CTransform::Rotation(_float fRotationX, _float fRotationY, _float fRotation
 	Set_State(STATE_RIGHT, vRight);
 	Set_State(STATE_UP, vUp);
 	Set_State(STATE_LOOK, vLook);
+}
+
+void CTransform::Get_Rotation(_fvector vAxis, _float fRadian, _float4x4* TargetMatrix)
+{
+	_vector		vRight = XMLoadFloat4x4(TargetMatrix).r[0];
+	_vector		vUp = XMLoadFloat4x4(TargetMatrix).r[1];
+	_vector		vLook = XMLoadFloat4x4(TargetMatrix).r[2];
+
+	_matrix		RotationMatrix = XMMatrixRotationAxis(vAxis, fRadian);
+
+	vRight = XMVector3TransformNormal(vRight, RotationMatrix);
+	vUp = XMVector3TransformNormal(vUp, RotationMatrix);
+	vLook = XMVector3TransformNormal(vLook, RotationMatrix);
+
+	_matrix ChangeMatrix = XMLoadFloat4x4(TargetMatrix);
+	ChangeMatrix.r[0] = vRight;
+	ChangeMatrix.r[1] = vUp;
+	ChangeMatrix.r[2] = vLook;
+
+	XMStoreFloat4x4(TargetMatrix, ChangeMatrix);
+}
+
+void CTransform::Billboard(_float4 CamPosition)
+{
+
 }
 
 void CTransform::Get_RootTransformationMatrix(_fmatrix RootMatrix)

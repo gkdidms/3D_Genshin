@@ -26,7 +26,7 @@ HRESULT CSkillBtn_Icon::Initialize(void* pArg)
 	m_strComponentPrototypeTag = pDesc->strComponentPrototypeTag;
 	m_ParentMatrix = pDesc->ParentMatrix;
 	m_fSizeX = pDesc->fSizeX;
-	m_fSizeX = pDesc->fSizeY;
+	m_fSizeY = pDesc->fSizeY;
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -35,7 +35,10 @@ HRESULT CSkillBtn_Icon::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * XMLoadFloat4x4(&m_ParentMatrix));
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMLoadFloat4x4(&m_ParentMatrix).r[3]);
+
+	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
+	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.0f));
 
 	return S_OK;
 }
@@ -57,7 +60,7 @@ HRESULT CSkillBtn_Icon::Render()
 	if (FAILED(Bind_ResourceData()))
 		return E_FAIL;
 
-	m_pShaderCom->Begin(0);
+	m_pShaderCom->Begin(4);
 	m_pVIBufferCom->Render();
 
 	return S_OK;
@@ -79,13 +82,16 @@ HRESULT CSkillBtn_Icon::Add_Components()
 
 HRESULT CSkillBtn_Icon::Bind_ResourceData()
 {
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
+	/*if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
+		return E_FAIL;*/
+
+	if (FAILED(m_pTransformCom->Bind_ShaderMatrix(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_matView)))
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_matProj)))
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
 	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))

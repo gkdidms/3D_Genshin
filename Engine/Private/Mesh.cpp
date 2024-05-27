@@ -24,6 +24,7 @@ HRESULT CMesh::Initialize_Prototype(MESHTYPE eMeshType, _fmatrix PreTransformMat
 {
 	strcpy_s(m_szName, pName);
 
+	m_iNumVertexBuffers = 1;
  	m_iMaterialIndex = iMaterialIndex;
 
 	m_GIFormat = DXGI_FORMAT_R32_UINT;

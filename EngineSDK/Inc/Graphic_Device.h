@@ -29,10 +29,7 @@ private:
     IDXGISwapChain* m_pSwapChain = { nullptr };
 
     ID3D11RenderTargetView* m_pBackBufferRTV = { nullptr };
-
-    ID3D11Texture2D* m_pHitScreenTexture = { nullptr };
-    ID3D11RenderTargetView* m_pHitScreenRTV = { nullptr };
-    ID3D11Texture2D* m_pDepthTexture = { nullptr };
+    //ID3D11Texture2D* m_pDepthTexture = { nullptr };
 
     ID3D11DepthStencilView* m_pDepthStencilView = { nullptr };
 
@@ -40,7 +37,6 @@ private:
     HRESULT Ready_SwapChain(HWND hWnd, _bool isWindowed, _uint iWinCX, _uint iWinCY);
     HRESULT Ready_BackBufferRenderTargetView();
     HRESULT Ready_DepthStencilRenderTargetView(_uint iWinCX, _uint iWinCY);
-    HRESULT Ready_HitScreenRenderTargetView(_uint iWinCX, _uint iWinCY);
 
 public:
     static CGraphic_Device* Create(const ENGINE_DESC& EngineDesc, _Out_ ID3D11Device** ppDevice, _Out_ ID3D11DeviceContext** ppDeviceContextOut);

@@ -58,7 +58,7 @@ HRESULT CPartObject_Body::Render()
 		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
 			return E_FAIL;
 
-		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_Texture", i, aiTextureType_DIFFUSE)))
+		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
 			continue;
 		m_pShaderCom->Begin(0);
 		m_pModelCom->Render(i);
@@ -127,3 +127,4 @@ void CPartObject_Body::Free()
 {
 	__super::Free();
 }
+

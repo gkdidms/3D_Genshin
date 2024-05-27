@@ -76,7 +76,7 @@ void CYae_Body::Late_Tick(const _float& fTimeDelta)
 
 	XMStoreFloat4x4(&m_pWorldMatrix, m_pTransformCom->Get_WorldMatrix() * XMLoadFloat4x4(m_pParentMatrix));
 
-	m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONBLENDER, this);
+	//m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONBLENDER, this);
 }
 
 HRESULT CYae_Body::Render()
@@ -107,6 +107,9 @@ HRESULT CYae_Body::Bind_ResourceData()
 		return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(CPipeLine::D3DTS_PROJ))))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CamFar(), sizeof(_float))))
 		return E_FAIL;
 
 	return S_OK;

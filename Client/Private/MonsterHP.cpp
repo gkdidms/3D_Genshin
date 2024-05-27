@@ -18,7 +18,7 @@ HRESULT CMonsterHP::Initialize(void* pArg)
 	{
 		MONSTER_HP_DESC* pDesc = static_cast<MONSTER_HP_DESC*>(pArg);
 		m_pParentMatrix = pDesc->pParentMatrix;
-		m_pMonsterHP = pDesc->pMonsterHP;
+		m_pPlayerHP = pDesc->pMonsterHP;
 		m_fMonsterMaxHP = pDesc->fMonsterMaxHP;
 	}
 

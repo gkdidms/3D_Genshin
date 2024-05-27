@@ -15,6 +15,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tool", "Tool\Default\Tool.v
 		{23FA8C84-564A-4FEA-AFEA-9D702EA5A1D9} = {23FA8C84-564A-4FEA-AFEA-9D702EA5A1D9}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EffectTool", "EffectTool\Default\EffectTool.vcxproj", "{65157C68-B13D-4D49-A356-5A19F3C1184B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{23FA8C84-564A-4FEA-AFEA-9D702EA5A1D9} = {23FA8C84-564A-4FEA-AFEA-9D702EA5A1D9}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -47,6 +52,14 @@ Global
 		{74F12F88-795C-4846-AA7A-EEF8D158863B}.Release|x64.Build.0 = Release|x64
 		{74F12F88-795C-4846-AA7A-EEF8D158863B}.Release|x86.ActiveCfg = Release|Win32
 		{74F12F88-795C-4846-AA7A-EEF8D158863B}.Release|x86.Build.0 = Release|Win32
+		{65157C68-B13D-4D49-A356-5A19F3C1184B}.Debug|x64.ActiveCfg = Debug|x64
+		{65157C68-B13D-4D49-A356-5A19F3C1184B}.Debug|x64.Build.0 = Debug|x64
+		{65157C68-B13D-4D49-A356-5A19F3C1184B}.Debug|x86.ActiveCfg = Debug|Win32
+		{65157C68-B13D-4D49-A356-5A19F3C1184B}.Debug|x86.Build.0 = Debug|Win32
+		{65157C68-B13D-4D49-A356-5A19F3C1184B}.Release|x64.ActiveCfg = Release|x64
+		{65157C68-B13D-4D49-A356-5A19F3C1184B}.Release|x64.Build.0 = Release|x64
+		{65157C68-B13D-4D49-A356-5A19F3C1184B}.Release|x86.ActiveCfg = Release|Win32
+		{65157C68-B13D-4D49-A356-5A19F3C1184B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

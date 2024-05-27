@@ -25,6 +25,7 @@ HRESULT CHili_Weapon::Initialize(void* pArg)
     HILI_WEAPON_DESC* pDesc = static_cast<HILI_WEAPON_DESC*>(pArg);
     m_TargetMatrix = pDesc->pTargetCombinedTransformationMatrix;
     m_SocketMatrix = pDesc->pHandCombinedTransformationMatrix;
+    m_pState = pDesc->pState;
 
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
@@ -53,7 +54,7 @@ HRESULT CHili_Weapon::Render()
 
     for (int i = 0; i < iNumMeshes; ++i)
     {
-        if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_Texture", i, aiTextureType_DIFFUSE)))
+        if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
             continue;
 
         m_pShaderCom->Begin(0);

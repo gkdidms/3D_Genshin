@@ -33,17 +33,13 @@ HRESULT CGraphic_Device::Initialize(const ENGINE_DESC& EngineDesc, _Inout_ ID3D1
 	if (FAILED(Ready_DepthStencilRenderTargetView(EngineDesc.iWinSizeX, EngineDesc.iWinSizeY)))
 		return E_FAIL;
 
-	if (FAILED(Ready_HitScreenRenderTargetView(EngineDesc.iWinSizeX, EngineDesc.iWinSizeY)))
-		return E_FAIL;
-
 	/* 장치에 바인드해놓을 렌더타겟들과 뎁스스텐실뷰를 세팅한다. */
 	/* 장치는 동시에 최대 8개의 렌더타겟을 들고 있을 수 있다. */
-	ID3D11RenderTargetView* pRTVs[2] = {
-		m_pBackBufferRTV,
-		m_pHitScreenRTV
+	ID3D11RenderTargetView* pRTVs[1] = {
+		m_pBackBufferRTV
 	};
 
-	m_pDeviceContext->OMSetRenderTargets(2, pRTVs,
+	m_pDeviceContext->OMSetRenderTargets(1, pRTVs,
 		m_pDepthStencilView);
 
 	D3D11_VIEWPORT			ViewPortDesc;
@@ -74,10 +70,6 @@ HRESULT CGraphic_Device::Clear_BackBuffer_View(_float4 vClearColor)
 	/* 백버퍼를 초기화한다.  */
 	m_pDeviceContext->ClearRenderTargetView(m_pBackBufferRTV, (_float*)&vClearColor);
 
-	/* 백버퍼를 초기화한다.  */
-	_float2		vClearHitColor = { 0.0f, 0.f };
-	m_pDeviceContext->ClearRenderTargetView(m_pHitScreenRTV, (_float*)&vClearHitColor);
-
 	return S_OK;
 }
 
@@ -105,26 +97,28 @@ HRESULT CGraphic_Device::Present()
 
 _float CGraphic_Device::Compute_ProjZ(const POINT& ptWindowPos)
 {
-	D3D11_MAPPED_SUBRESOURCE		SubResources{};
+	//D3D11_MAPPED_SUBRESOURCE		SubResources{};
 
-	_float	fProjZ = { 0.0f };
+	//_float	fProjZ = { 0.0f };
 
-	m_pDeviceContext->CopyResource(m_pDepthTexture, m_pHitScreenTexture);
+	//m_pDeviceContext->CopyResource(m_pDepthTexture, m_pHitScreenTexture);
 
-	m_pDeviceContext->Map(m_pDepthTexture, 0, D3D11_MAP_READ, 0, &SubResources);
+	//m_pDeviceContext->Map(m_pDepthTexture, 0, D3D11_MAP_READ, 0, &SubResources);
 
-	/* 내 마우스 좌표가 존재하는 위치에 있는 텍스쳐 픽셀의 인덱스 */
-	_uint		iIndex = ptWindowPos.y * 1280.0f + ptWindowPos.x;
+	///* 내 마우스 좌표가 존재하는 위치에 있는 텍스쳐 픽셀의 인덱스 */
+	//_uint		iIndex = ptWindowPos.y * 1280.0f + ptWindowPos.x;
 
-	_float2		vResult = ((_float2*)SubResources.pData)[iIndex];
+	//_float2		vResult = ((_float2*)SubResources.pData)[iIndex];
 
-	m_pDeviceContext->Unmap(m_pDepthTexture, 0);
+	//m_pDeviceContext->Unmap(m_pDepthTexture, 0);
 
 
-	if (0.0f == vResult.y)
-		return -1.f;
+	//if (0.0f == vResult.y)
+	//	return -1.f;
 
-	return vResult.x;
+	//return vResult.x;
+
+	return 0;
 }
 
 
@@ -199,57 +193,57 @@ HRESULT CGraphic_Device::Ready_BackBufferRenderTargetView()
 	return S_OK;
 }
 
-HRESULT CGraphic_Device::Ready_HitScreenRenderTargetView(_uint iWinCX, _uint iWinCY)
-{
-	if (nullptr == m_pDevice)
-		return E_FAIL;
-
-	D3D11_TEXTURE2D_DESC	TextureDesc;
-	ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
-
-	TextureDesc.Width = iWinCX;
-	TextureDesc.Height = iWinCY;
-	TextureDesc.MipLevels = 1;
-	TextureDesc.ArraySize = 1;
-	TextureDesc.Format = DXGI_FORMAT_R32G32_FLOAT;
-
-	TextureDesc.SampleDesc.Quality = 0;
-	TextureDesc.SampleDesc.Count = 1;
-
-	TextureDesc.Usage = D3D11_USAGE_DEFAULT;
-	TextureDesc.BindFlags = D3D11_BIND_RENDER_TARGET
-		/*| D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE*/;
-	TextureDesc.CPUAccessFlags = 0;
-	TextureDesc.MiscFlags = 0;
-
-	if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, &m_pHitScreenTexture)))
-		return E_FAIL;
-
-	if (FAILED(m_pDevice->CreateRenderTargetView(m_pHitScreenTexture, nullptr, &m_pHitScreenRTV)))
-		return E_FAIL;
-
-
-	ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
-
-	TextureDesc.Width = iWinCX;
-	TextureDesc.Height = iWinCY;
-	TextureDesc.MipLevels = 1;
-	TextureDesc.ArraySize = 1;
-	TextureDesc.Format = DXGI_FORMAT_R32G32_FLOAT;
-
-	TextureDesc.SampleDesc.Quality = 0;
-	TextureDesc.SampleDesc.Count = 1;
-
-	TextureDesc.Usage = D3D11_USAGE_STAGING;
-	TextureDesc.BindFlags = 0;
-	TextureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
-	TextureDesc.MiscFlags = 0;
-
-	if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, &m_pDepthTexture)))
-		return E_FAIL;
-
-	return S_OK;
-}
+//HRESULT CGraphic_Device::Ready_HitScreenRenderTargetView(_uint iWinCX, _uint iWinCY)
+//{
+//	if (nullptr == m_pDevice)
+//		return E_FAIL;
+//
+//	D3D11_TEXTURE2D_DESC	TextureDesc;
+//	ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
+//
+//	TextureDesc.Width = iWinCX;
+//	TextureDesc.Height = iWinCY;
+//	TextureDesc.MipLevels = 1;
+//	TextureDesc.ArraySize = 1;
+//	TextureDesc.Format = DXGI_FORMAT_R32G32_FLOAT;
+//
+//	TextureDesc.SampleDesc.Quality = 0;
+//	TextureDesc.SampleDesc.Count = 1;
+//
+//	TextureDesc.Usage = D3D11_USAGE_DEFAULT;
+//	TextureDesc.BindFlags = D3D11_BIND_RENDER_TARGET
+//		/*| D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE*/;
+//	TextureDesc.CPUAccessFlags = 0;
+//	TextureDesc.MiscFlags = 0;
+//
+//	if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, &m_pHitScreenTexture)))
+//		return E_FAIL;
+//
+//	if (FAILED(m_pDevice->CreateRenderTargetView(m_pHitScreenTexture, nullptr, &m_pHitScreenRTV)))
+//		return E_FAIL;
+//
+//
+//	ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
+//
+//	TextureDesc.Width = iWinCX;
+//	TextureDesc.Height = iWinCY;
+//	TextureDesc.MipLevels = 1;
+//	TextureDesc.ArraySize = 1;
+//	TextureDesc.Format = DXGI_FORMAT_R32G32_FLOAT;
+//
+//	TextureDesc.SampleDesc.Quality = 0;
+//	TextureDesc.SampleDesc.Count = 1;
+//
+//	TextureDesc.Usage = D3D11_USAGE_STAGING;
+//	TextureDesc.BindFlags = 0;
+//	TextureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+//	TextureDesc.MiscFlags = 0;
+//
+//	if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, &m_pDepthTexture)))
+//		return E_FAIL;
+//
+//	return S_OK;
+//}
 
 HRESULT CGraphic_Device::Ready_DepthStencilRenderTargetView(_uint iWinCX, _uint iWinCY)
 {
@@ -312,27 +306,24 @@ void CGraphic_Device::Free()
 	Safe_Release(m_pDepthStencilView);
 	Safe_Release(m_pBackBufferRTV);
 	Safe_Release(m_pDeviceContext);
-	Safe_Release(m_pDepthTexture);
-	Safe_Release(m_pHitScreenTexture);
-	Safe_Release(m_pHitScreenRTV);
 
-	//#if defined(DEBUG) || defined(_DEBUG)
-	//	ID3D11Debug* d3dDebug;
-	//	HRESULT hr = m_pDevice->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&d3dDebug));
-	//	if (SUCCEEDED(hr))
-	//	{
-	//		OutputDebugStringW(L"----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- \r ");
-	//		OutputDebugStringW(L"                                                                    D3D11 Live Object ref Count Checker \r ");
-	//		OutputDebugStringW(L"----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- \r ");
-	//
-	//		hr = d3dDebug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
-	//
-	//		OutputDebugStringW(L"----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- \r ");
-	//		OutputDebugStringW(L"                                                                    D3D11 Live Object ref Count Checker END \r ");
-	//		OutputDebugStringW(L"----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- \r ");
-	//	}
-	//	if (d3dDebug != nullptr)            d3dDebug->Release();
-	//#endif
+	/*#if defined(DEBUG) || defined(_DEBUG)
+		ID3D11Debug* d3dDebug;
+		HRESULT hr = m_pDevice->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&d3dDebug));
+		if (SUCCEEDED(hr))
+		{
+			OutputDebugStringW(L"----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- \r ");
+			OutputDebugStringW(L"                                                                    D3D11 Live Object ref Count Checker \r ");
+			OutputDebugStringW(L"----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- \r ");
+	
+			hr = d3dDebug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
+	
+			OutputDebugStringW(L"----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- \r ");
+			OutputDebugStringW(L"                                                                    D3D11 Live Object ref Count Checker END \r ");
+			OutputDebugStringW(L"----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- \r ");
+		}
+		if (d3dDebug != nullptr)            d3dDebug->Release();
+	#endif*/
 
 
 	Safe_Release(m_pDevice);

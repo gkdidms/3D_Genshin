@@ -4,6 +4,7 @@
 #include "StateManager.h"
 
 #include "FlowerArrow.h"
+#include "Tighnari_Normal.h"
 
 CTighnari_Body::CTighnari_Body(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject_Body{ pDevice, pContext } 
@@ -73,12 +74,12 @@ void CTighnari_Body::Tick(const _float& fTimeDelta)
 
 void CTighnari_Body::Late_Tick(const _float& fTimeDelta)
 {
-	if (*m_pState == m_PreState)
+	if (*m_pState != m_PreState)
 		m_PreState = *m_pState;
 
 	XMStoreFloat4x4(&m_pWorldMatrix, m_pTransformCom->Get_WorldMatrix() * XMLoadFloat4x4(m_pParentMatrix));
 
-	m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONBLENDER, this);
+	//m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONBLENDER, this);
 }
 
 HRESULT CTighnari_Body::Render()
@@ -109,6 +110,9 @@ HRESULT CTighnari_Body::Bind_ResourceData()
 		return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(CPipeLine::D3DTS_PROJ))))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CamFar(), sizeof(_float))))
 		return E_FAIL;
 
 	return S_OK;
@@ -340,6 +344,19 @@ HRESULT CTighnari_Body::Create_Object()
 {
 	if (*m_pState == m_PreState)
 		return S_OK;
+
+	//Equip_Bow_Ayus_Model bullet »ý¼º   Prototype_GameObject_Skill_Tighnari_Normal
+	if (m_pStateManager->isAttack())
+	{
+		CBullet::BULLET_DESC Desc{};
+		Desc.HandCombinedTransformationMatrix = *m_pModelCom->Get_BoneCombinedTransformationMatrix("PRIVATE_RHand");
+		Desc.ParentMatrix = m_pWorldMatrix;
+		Desc.pTargetPos = Targeting();
+		Desc.fSpeedPecSec = 20.f;
+
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Skill_Tighnari_Normal"), TEXT("Layer_Bullet"), &Desc)))
+			return E_FAIL;
+	}
 
 	if (*m_pState == PLAYER_ELEMENTAL_BURST)
 	{

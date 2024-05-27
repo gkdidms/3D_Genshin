@@ -3,6 +3,8 @@
 
 #include "Client_Defines.h"
 
+#include "Background.h"
+
 BEGIN(Engine)
 class CVIBuffer_Rect;
 class CShader;
@@ -13,6 +15,10 @@ BEGIN(Client)
 class CLoadingBar :
     public CGameObject
 {
+public:
+    typedef struct tLoadingBarDesc : public CBackground::BACKGROUND_DESC{
+    }LOADING_BACK_DESC;
+
 private:
     CLoadingBar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
     CLoadingBar(const CLoadingBar& rhs);
@@ -31,8 +37,11 @@ private:
     CShader* m_pShaderCom = { nullptr };
     CTexture* m_pTextureCom = { nullptr };
 
-    _float4x4 m_matWorld, m_matView, m_matProj;
+    _float4x4 m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
     _float m_fSizeX, m_fSizeY, m_fX, m_fY;
+
+private:
+    const _float* m_pProgress = { nullptr };
 
 private:
     HRESULT Add_Components();

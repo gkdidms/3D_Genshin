@@ -22,9 +22,9 @@ PLAYER_STATE CStateElementalArt_Nilou::Update(const _float& fTimeDelta, CStateMa
 	m_fCurrentTime += fTimeDelta;
 
 	if (m_fCurrentTime > m_fFinishTime)
-		m_isFinished = true;
+		m_isDrop = true;
 
-	if (m_isFinished)
+	if (m_isDrop)
 	{
 		Reset();
 		return __super::ToIdle(pStateManager, CurrentState);
@@ -89,7 +89,7 @@ PLAYER_STATE CStateElementalArt_Nilou::Exit(CStateManager& pStateManager, PLAYER
 
 	if (CurrentState == PALYER_ATTACK_SPEC ||
 		CurrentState == PLAYER_ELEMENTAL_SPEC)
-		m_isFinished = true;
+		m_isDrop = true;
 
 	return PLAYER_IDLE;
 }
@@ -100,7 +100,7 @@ void CStateElementalArt_Nilou::Reset()
 	m_iAttackCount = 0;
 	m_iElementalArtCount = 0;
 
-	m_isFinished = false;
+	m_isDrop = false;
 }
 
 CStateElementalArt_Nilou* CStateElementalArt_Nilou::Create()

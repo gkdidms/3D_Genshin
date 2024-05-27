@@ -30,7 +30,7 @@ private:
     const _float4x4* m_pParentMatrix = { nullptr };
 
     _float m_fMonsterMaxHP = { 0.f };
-    const _float* m_pMonsterHP = { nullptr };
+    const _float* m_pPlayerHP = { nullptr };
 
 private:
     _float4x4 m_WorldMatrix = {};

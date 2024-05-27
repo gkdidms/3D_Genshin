@@ -30,6 +30,8 @@ protected:
 
 public:
     ELEMENTAL_TYPE Get_PlayerbleElemental() { return m_Info.eElementalType; }
+    _float Get_HP() { return m_Info.m_fHp; }
+    _float Get_MaxHP() { return m_Info.m_fMaxHp; }
 
 public:
     virtual HRESULT Initialize_Prototype();
@@ -65,6 +67,7 @@ protected:
     virtual HRESULT Add_Components() = 0;
     virtual HRESULT Bind_ResourceData() = 0;
     virtual void Change_Animation(const _float& fTimeDelta) {};
+
 
 protected:
     void Move_Pos(const _float& fTimeDelta, _matrix* MoveMatrix);

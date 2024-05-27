@@ -32,6 +32,9 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(Open_Level()))
 		return E_FAIL;
 
+	if (FAILED(Ready_Font()))
+		return E_FAIL;
+
 #ifdef _DEBUG
 
 	if (::AllocConsole() == TRUE)
@@ -50,12 +53,30 @@ HRESULT CMainApp::Initialize()
 
 void CMainApp::Tick(const _float& fTimeDelta)
 {
+	m_fTimeAcc += fTimeDelta;
+
 	m_pGameInstance->Tick(fTimeDelta);
 }
 
 void CMainApp::Render()
 {
-	m_pGameInstance->Draw(_float4(0.f, 0.f, 1.f, 1.f));
+	++m_iNumRender;
+
+	if (m_fTimeAcc >= 1.f)
+	{
+		wsprintf(m_szFPS, TEXT("FPS : %d"), m_iNumRender);
+		m_fTimeAcc = 0.f;
+		m_iNumRender = 0;
+	}
+
+	m_pGameInstance->Clear_BackBuffer_View(_float4(0.f, 0.f, 1.f, 1.f));
+	m_pGameInstance->Clear_DepthStencil_View();
+
+	m_pGameInstance->Draw();
+
+	m_pGameInstance->Render_Font(TEXT("Font_Nanum_28"), m_szFPS, _float2(0.f, 0.f), XMVectorSet(1.f, 1.f, 0.f, 1.f));
+
+	m_pGameInstance->Present();
 }
 
 HRESULT CMainApp::Open_Level()
@@ -77,7 +98,7 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STATIC, L"Prototype_Component_Texture_Loading", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Loading/Loading.jpg"), 1))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STATIC, L"Prototype_Component_Texture_LoadingBar", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Loading/Loading_Icon.png"), 1))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STATIC, L"Prototype_Component_Texture_LoadingBar", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Loading/Loading_Icon.dds"), 1))))
 		return E_FAIL;
 
 	return S_OK;
@@ -89,6 +110,35 @@ HRESULT CMainApp::Ready_Prototype_GameObjects()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_LoadingBar", CLoadingBar::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CMainApp::Ready_Font()
+{
+	if (FAILED(m_pGameInstance->Add_Font(L"Font_Nanum_12", L"../Bin/Resources/Fonts/nanum12.spritefont")))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Font(L"Font_Nanum_10", L"../Bin/Resources/Fonts/nanum10.spritefont")))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Font(L"Font_Nanum_14", L"../Bin/Resources/Fonts/nanum14.spritefont")))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Font(L"Font_Nanum_20", L"../Bin/Resources/Fonts/nanum20.spritefont")))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Font(L"Font_Nanum_22", L"../Bin/Resources/Fonts/nanum22.spritefont")))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Font(L"Font_Nanum_24", L"../Bin/Resources/Fonts/nanum24.spritefont")))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Font(L"Font_Nanum_28", L"../Bin/Resources/Fonts/nanum28.spritefont")))
+		return E_FAIL;
+	
+	if (FAILED(m_pGameInstance->Add_Font(L"Font_SDK_SC_10", L"../Bin/Resources/Fonts/SDK_SC_10.spritefont")))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Font(L"Font_SDK_SC_12", L"../Bin/Resources/Fonts/SDK_SC_12.spritefont")))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Font(L"Font_SDK_SC_20", L"../Bin/Resources/Fonts/SDK_SC_20.spritefont")))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Font(L"Font_SDK_SC_24", L"../Bin/Resources/Fonts/SDK_SC_24.spritefont")))
 		return E_FAIL;
 
 	return S_OK;

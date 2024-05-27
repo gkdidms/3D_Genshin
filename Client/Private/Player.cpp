@@ -36,6 +36,16 @@ _bool CPlayer::isAttack()
 	return m_pStateManager->isAttack();
 }
 
+_float CPlayer::Get_PlayerbleHP()
+{
+	return dynamic_cast<CPartObject_Body*>(m_PartObject[m_CurrentPlayerble][PART_BODY])->Get_HP();
+}
+
+_float CPlayer::Get_PlayerbleMaxHP()
+{
+	return dynamic_cast<CPartObject_Body*>(m_PartObject[m_CurrentPlayerble][PART_BODY])->Get_MaxHP();
+}
+
 void CPlayer::Set_PlayerMove(_vector vMoveSpeed)
 {
 	// 받아온 속도 만큼 이동해주기

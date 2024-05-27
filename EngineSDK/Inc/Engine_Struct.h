@@ -13,6 +13,22 @@ namespace Engine
 		unsigned int	iWinSizeY;
 	}ENGINE_DESC;
 
+	typedef struct tLightDesc
+	{
+		enum TYPE { TYPE_DIRECTIONAL, TYPE_POINT, TYPE_END };
+
+		TYPE		eType = { TYPE_END };
+
+		XMFLOAT4	vDirection;
+		XMFLOAT4	vPosition;
+		float		fRange;
+
+		/* 빛의 기본적인 색상. */
+		XMFLOAT4	vDiffuse;
+		XMFLOAT4	vAmbient;
+		XMFLOAT4	vSpecular;
+	}LIGHT_DESC;
+
 	typedef struct ENGINE_DLL tVexPos
 	{
 		XMFLOAT3 vPosition;
@@ -20,6 +36,15 @@ namespace Engine
 		static const _uint iNumElements = 1;
 		static const D3D11_INPUT_ELEMENT_DESC Elements[iNumElements];
 	} VXTPOS;
+
+	typedef struct ENGINE_DLL tVtxPoint
+	{
+		XMFLOAT3		vPosition;
+		XMFLOAT2		vPSize;
+
+		static const unsigned int		iNumElements = { 2 };
+		static const D3D11_INPUT_ELEMENT_DESC	Elements[2];
+	}VTXPOINT;
 	
 	typedef struct ENGINE_DLL tVexPosTex 
 	{
@@ -78,5 +103,34 @@ namespace Engine
 
 		double Time;
 	} KEYFRAME;
+
+	typedef struct ENGINE_DLL tVtxMatRix
+	{
+		XMFLOAT4			vRight;
+		XMFLOAT4			vUp;
+		XMFLOAT4			vLook;
+		XMFLOAT4			vTranslation;
+		XMFLOAT2			vLifeTime;
+	}VTXMATRIX;
+
+	typedef struct ENGINE_DLL tVtxInstance_Rect
+	{
+		static const unsigned int		iNumElements = { 7 };
+		static const D3D11_INPUT_ELEMENT_DESC	Elements[7];
+	}VTXINSTANCE_RECT;
+
+	typedef struct ENGINE_DLL tVtxInstance_Point
+	{
+		static const unsigned int		iNumElements = { 7 };
+		static const D3D11_INPUT_ELEMENT_DESC	Elements[7];
+	}VTXINSTANCE_POINT;
+
+	typedef struct ENGINE_DLL tagIndex32
+	{
+		_ulong  _0;
+		_ulong  _1;
+		_ulong  _2;
+
+	}INDEX32;
 }
 #endif // Engine_Struct_h__

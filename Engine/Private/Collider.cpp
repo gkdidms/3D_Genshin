@@ -4,6 +4,7 @@
 
 #include "Bounding_AABB.h"
 #include "Bounding_OBB.h"
+#include "Bounding_Sphere.h"
 
 CCollider::CCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent{ pDevice, pContext }
@@ -55,6 +56,7 @@ HRESULT CCollider::Initialize(void* pArg)
 		m_pCurrentBounding = CBounding_OBB::Create(pArg);
 		break;
 	case COLLIDER_SPHERE:
+		m_pCurrentBounding = CBounding_Sphere::Create(pArg);
 		break;
 	case COLLIDER_END:
 		break;
@@ -107,6 +109,13 @@ void CCollider::Compute_Rank(_char strRank, _char strTargetRank, CTransform* pTr
 #ifdef _DEBUG
 HRESULT CCollider::Render()
 {
+	//m_pContext->GSSetShader(nullptr, nullptr, 0);
+
+	//m_pContext->OMSetDepthStencilState(nullptr, 0);
+	//_float		fTemp = {};
+	//m_pContext->OMSetBlendState(nullptr, &fTemp, 0);
+	//m_pContext->RSSetState(nullptr);
+
 	m_pShader->SetWorld(XMMatrixIdentity());
 	m_pShader->SetView(m_pGameInstance->Get_Transform_Matrix(CPipeLine::D3DTS_VIEW));
 	m_pShader->SetProjection(m_pGameInstance->Get_Transform_Matrix(CPipeLine::D3DTS_PROJ));

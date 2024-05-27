@@ -21,6 +21,12 @@ HRESULT CBackground::Initialize_Prototype()
 
 HRESULT CBackground::Initialize(void* pArg)
 {
+	if (nullptr != pArg)
+	{
+		BACKGROUND_DESC* pDesc = static_cast<BACKGROUND_DESC*>(pArg);
+		m_pProgress = pDesc->pProgress;
+	}
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -35,8 +41,8 @@ HRESULT CBackground::Initialize(void* pArg)
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.9f, 1.f));
 
-	XMStoreFloat4x4(&m_matView, XMMatrixIdentity());
-	XMStoreFloat4x4(&m_matProj, XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.0f));
+	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
+	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.0f));
 
 	return S_OK;
 }
@@ -51,7 +57,7 @@ void CBackground::Tick(const _float& fTimeDelta)
 
 void CBackground::Late_Tick(const _float& fTimeDelta)
 {
-	m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONBLENDER, this);
+	m_pGameInstance->Add_Renderer(CRenderer::RENDER_UI, this);
 }
 
 HRESULT CBackground::Render()
@@ -82,7 +88,10 @@ HRESULT CBackground::Add_Components()
 	if (nullptr == m_pTextureCom)
 		return E_FAIL;
 
-	m_pLoadingBar = dynamic_cast<CLoadingBar*>(m_pGameInstance->Clone_Object(L"Prototype_GameObject_LoadingBar", nullptr));
+	CLoadingBar::LOADING_BACK_DESC Desc{};
+	Desc.pProgress = m_pProgress;
+
+	m_pLoadingBar = dynamic_cast<CLoadingBar*>(m_pGameInstance->Clone_Object(L"Prototype_GameObject_LoadingBar", &Desc));
 	if (nullptr == m_pLoadingBar)
 		return E_FAIL;
 
@@ -94,10 +103,10 @@ HRESULT CBackground::Bind_Render()
 	if (FAILED(m_pTransformCom->Bind_ShaderMatrix(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
 	
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_matView)))
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_matProj)))
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
 	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))

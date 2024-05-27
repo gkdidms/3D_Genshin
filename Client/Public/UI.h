@@ -32,7 +32,7 @@ protected:
     CTexture* m_pTextureCom = { nullptr };
 
 protected:
-    _float4x4 m_matWorld, m_matView, m_matProj;
+    _float4x4 m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
     _float m_fSizeX, m_fSizeY, m_fX, m_fY;
 
 protected:

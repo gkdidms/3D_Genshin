@@ -14,7 +14,6 @@
 #include "CheckPoint.h"
 #include "Plane.h"
 
-
 CGamePlay_Level::CGamePlay_Level(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel{ pDevice, pContext }
 {
@@ -22,6 +21,9 @@ CGamePlay_Level::CGamePlay_Level(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 
 HRESULT CGamePlay_Level::Initialize()
 {
+	if (FAILED(Ready_Lights()))
+		return E_FAIL;
+
 	if (FAILED(Load_File(LEVEL_GAMEPLAY)))
 		return E_FAIL;
 
@@ -44,6 +46,41 @@ void CGamePlay_Level::Render()
 {
 }
 
+HRESULT CGamePlay_Level::Ready_Lights()
+{
+	LIGHT_DESC			LightDesc{};
+
+	LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
+	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
+	LightDesc.vDiffuse = _float4(0.7f, 0.7f, 0.7f, 1.f);
+	LightDesc.vAmbient = _float4(0.4f, 0.4f, 0.4f, 1.f);
+	LightDesc.vSpecular = _float4(0.1f, 0.1f, 0.1f, 1.f);
+
+	m_pGameInstance->Add_Light(LightDesc);
+
+
+	//ZeroMemory(&LightDesc, sizeof(LIGHT_DESC));
+	//LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+	//LightDesc.vPosition = _float4(20.f, 5.f, 20.f, 1.f);
+	//LightDesc.fRange = 20.f;
+	//LightDesc.vDiffuse = _float4(1.f, 0.0f, 0.f, 1.f);
+	//LightDesc.vAmbient = _float4(0.4f, 0.1f, 0.1f, 1.f);
+	//LightDesc.vSpecular = LightDesc.vDiffuse;
+
+	//m_pGameInstance->Add_Light(LightDesc);
+
+	//ZeroMemory(&LightDesc, sizeof(LIGHT_DESC));
+	//LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+	//LightDesc.vPosition = _float4(40.f, 5.f, 20.f, 1.f);
+	//LightDesc.fRange = 20.f;
+	//LightDesc.vDiffuse = _float4(0.0f, 1.f, 0.f, 1.f);
+	//LightDesc.vAmbient = _float4(0.1f, 0.4f, 0.1f, 1.f);
+	//LightDesc.vSpecular = LightDesc.vDiffuse;
+
+	//m_pGameInstance->Add_Light(LightDesc);
+	return S_OK;
+}
+
 HRESULT CGamePlay_Level::Ready_Layer_Camera(const wstring& strLayerTag)
 {
 	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, L"Layer_Player", 0));
@@ -54,10 +91,10 @@ HRESULT CGamePlay_Level::Ready_Layer_Camera(const wstring& strLayerTag)
 	tDefaultCamera.pPlayerMatrix = dynamic_cast<CTransform*>(m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, L"Layer_Player", L"Com_Transform"))->Get_WorldFloat4x4();
 
 	tDefaultCamera.pCameraLookMatrix = pPlayer->Get_PlayerCameraLook();
-	tDefaultCamera.vEye = _float4(0.f, 2.f, -2.f, 1.f);
+	tDefaultCamera.vEye = _float4(0.f, 2.f, -3.f, 1.f);
 	tDefaultCamera.vFocus = _float4(0.f, 10.f, 0.f, 1.f);
 	
-	tDefaultCamera.fFovY = XMConvertToRadians(90.f);
+	tDefaultCamera.fFovY = XMConvertToRadians(60.f);
 	tDefaultCamera.fAspect = g_iWinSizeX / (_float)g_iWinSizeY;
 	tDefaultCamera.fNear = 0.1f;
 	tDefaultCamera.fFar = 3000.f;
@@ -118,7 +155,15 @@ HRESULT CGamePlay_Level::Ready_Layer_UI(const wstring& strLayerTag)
 {
 	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_UI_PlayerHP_Outline", strLayerTag)))
 		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_UI_SkillBtn_E", strLayerTag)))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_UI_SkillBtn_Q", strLayerTag)))
+		return E_FAIL;
 
+
+	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_UI_Avatar", strLayerTag)))
+		return E_FAIL;
+	
 	return S_OK;
 }
 
@@ -264,8 +309,8 @@ HRESULT CGamePlay_Level::Ready_Object(const char* strName, _matrix WorldMatrix, 
 
 		if (string(strName).find("Bow") != string::npos)
 			Desc.eWeapon = CHili::HILI_WEAPON_CROSSBOW;
-		//else if (string(strName).find("Club") != string::npos)
-		//	Desc.eWeapon = CHili::HILI_WEAPON_CLUB;
+		else if (string(strName).find("Club") != string::npos) return S_OK;
+			//Desc.eWeapon = CHili::HILI_WEAPON_CLUB;
 
 		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Monster_Hili_Fire", L"Layer_Monster", &Desc)))
 			return E_FAIL;

@@ -21,10 +21,12 @@
   <ItemGroup>
     <ClInclude Include="..\public\Animation.h" />
     <ClInclude Include="..\public\Base.h" />
+    <ClInclude Include="..\public\BlendObject.h" />
     <ClInclude Include="..\public\Bone.h" />
     <ClInclude Include="..\public\Bounding.h" />
     <ClInclude Include="..\public\Bounding_AABB.h" />
     <ClInclude Include="..\public\Bounding_OBB.h" />
+    <ClInclude Include="..\public\Bounding_Sphere.h" />
     <ClInclude Include="..\public\Calculator.h" />
     <ClInclude Include="..\public\Camera.h" />
     <ClInclude Include="..\public\Cell.h" />
@@ -33,8 +35,14 @@
     <ClInclude Include="..\public\Component.h" />
     <ClInclude Include="..\public\Component_Manager.h" />
     <ClInclude Include="..\Public\DebugDraw.h" />
+    <ClInclude Include="..\public\CustomFont.h" />
+    <ClInclude Include="..\public\Font_Manager.h" />
+    <ClInclude Include="..\public\Light.h" />
+    <ClInclude Include="..\public\Light_Manager.h" />
     <ClInclude Include="..\public\Navigation.h" />
     <ClInclude Include="..\public\Picking.h" />
+    <ClInclude Include="..\public\RenderTarget.h" />
+    <ClInclude Include="..\public\RenderTarget_Manager.h" />
     <ClInclude Include="..\Public\SoundMgr.h" />
     <ClInclude Include="..\Public\Engine_Defines.h" />
     <ClInclude Include="..\Public\Engine_Function.h" />
@@ -60,17 +68,24 @@
     <ClInclude Include="..\Public\Timer_Manager.h" />
     <ClInclude Include="..\public\Transform.h" />
     <ClInclude Include="..\public\VIBuffer_Cell.h" />
+    <ClInclude Include="..\public\VIBuffer_Instance.h" />
+    <ClInclude Include="..\public\VIBuffer_Instance_Rect.h" />
+    <ClInclude Include="..\public\VIBuffer_Instance_Point.h" />
+    <ClInclude Include="..\public\VIBuffer_RectZ.h" />
     <ClInclude Include="..\public\VIBuffer_Terrain.h" />
     <ClInclude Include="..\public\VIBuffer.h" />
     <ClInclude Include="..\public\VIBuffer_Rect.h" />
+    <ClInclude Include="..\public\VIBuffer_Trail.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Animation.cpp" />
     <ClCompile Include="..\private\Base.cpp" />
+    <ClCompile Include="..\private\BlendObject.cpp" />
     <ClCompile Include="..\private\Bone.cpp" />
     <ClCompile Include="..\private\Bounding.cpp" />
     <ClCompile Include="..\private\Bounding_AABB.cpp" />
     <ClCompile Include="..\private\Bounding_OBB.cpp" />
+    <ClCompile Include="..\private\Bounding_Sphere.cpp" />
     <ClCompile Include="..\private\Calculator.cpp" />
     <ClCompile Include="..\private\Camera.cpp" />
     <ClCompile Include="..\private\Cell.cpp" />
@@ -79,8 +94,14 @@
     <ClCompile Include="..\private\Component.cpp" />
     <ClCompile Include="..\private\Component_Manager.cpp" />
     <ClCompile Include="..\Private\DebugDraw.cpp" />
+    <ClCompile Include="..\private\CustomFont.cpp" />
+    <ClCompile Include="..\private\Font_Manager.cpp" />
+    <ClCompile Include="..\private\Light.cpp" />
+    <ClCompile Include="..\private\Light_Manager.cpp" />
     <ClCompile Include="..\private\Navigation.cpp" />
     <ClCompile Include="..\private\Picking.cpp" />
+    <ClCompile Include="..\private\RenderTarget.cpp" />
+    <ClCompile Include="..\private\RenderTarget_Manager.cpp" />
     <ClCompile Include="..\Private\SoundMgr.cpp" />
     <ClCompile Include="..\private\GameInstance.cpp" />
     <ClCompile Include="..\private\GameObject.cpp" />
@@ -101,13 +122,19 @@
     <ClCompile Include="..\Private\Timer_Manager.cpp" />
     <ClCompile Include="..\private\Transform.cpp" />
     <ClCompile Include="..\private\VIBuffer_Cell.cpp" />
+    <ClCompile Include="..\private\VIBuffer_Instance.cpp" />
+    <ClCompile Include="..\private\VIBuffer_Instance_Rect.cpp" />
+    <ClCompile Include="..\private\VIBuffer_Instance_Point.cpp" />
+    <ClCompile Include="..\private\VIBuffer_RectZ.cpp" />
     <ClCompile Include="..\private\VIBuffer_Terrain.cpp" />
     <ClCompile Include="..\private\VIBuffer.cpp" />
     <ClCompile Include="..\private\VIBuffer_Rect.cpp" />
+    <ClCompile Include="..\private\VIBuffer_Trail.cpp" />
     <ClCompile Include="..\Public\Engine_Struct.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Cell.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Deferred.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Bin\ShaderFiles\Engine_Shader_Defines.hlsli" />

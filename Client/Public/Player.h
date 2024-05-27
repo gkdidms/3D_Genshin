@@ -34,6 +34,10 @@ public:
     _uint Get_PlayerState() { return m_iState; }
     _bool Get_BossSign() { return m_isBossSign; }
     _bool isAttack();
+    
+public:// 플레이어 정보 가져오기
+    _float Get_PlayerbleHP();
+    _float Get_PlayerbleMaxHP();
 
 public:
     void Set_PlayerMove(_vector vMoveSpeed);

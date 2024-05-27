@@ -60,7 +60,7 @@ protected:
     void SetUp_OnTerrain(const _float& fTimeDelta);
 
 protected:
-    HILI_STATE m_CurrentState = { HILI_END };
+    _uint m_CurrentState = { HILI_END };
     HILI_WEAPON_TYPE m_Weapon = { HILI_WEAPON_END };
     class CHili_Weapon* m_pWeapon = { nullptr };
     HILI_INFO m_Info;

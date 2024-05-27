@@ -13,7 +13,7 @@ protected:
 public:
     virtual HRESULT Initialize_Prototype() override;
     virtual HRESULT Initialize(void* pArg) override;
-    void Render();
+    virtual HRESULT Render();
 
 public:
     HRESULT Create_Buffer(ID3D11Buffer** pOut);
@@ -26,6 +26,7 @@ protected:
     D3D11_BUFFER_DESC m_Buffer_Desc = {};
     D3D11_SUBRESOURCE_DATA m_ResourceData = {};
 
+    _uint m_iNumVertexBuffers = { 0 };
     _uint m_iVertexStride = { 0 };
     _uint m_iNumVertices = { 0 };
 

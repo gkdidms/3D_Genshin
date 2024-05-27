@@ -11,17 +11,19 @@ private:
     virtual ~CFeiyan_Body() = default;
 
 public:
-    virtual HRESULT Initialize_Prototype();
-    virtual HRESULT Initialize(void* pArg);
-    virtual void Priority_Tick(const _float& fTimeDelta);
-    virtual void Tick(const _float& fTimeDelta);
-    virtual void Late_Tick(const _float& fTimeDelta);
-    virtual HRESULT Render();
+    virtual HRESULT Initialize_Prototype() override;
+    virtual HRESULT Initialize(void* pArg) override;
+    virtual void Priority_Tick(const _float& fTimeDelta) override;
+    virtual void Tick(const _float& fTimeDelta) override;
+    virtual void Late_Tick(const _float& fTimeDelta) override;
+    virtual HRESULT Render() override;
 
 private:
-    virtual HRESULT Add_Components() ;
-    virtual HRESULT Bind_ResourceData() ;
+    virtual HRESULT Add_Components();
+    virtual HRESULT Bind_ResourceData();
     virtual void Change_Animation(const _float& fTimeDelta);
+
+    HRESULT Create_Bullet(const wstring& strLayerTag);
 
 public:
     static CFeiyan_Body* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -3,6 +3,8 @@
 #include "GameInstance.h"
 #include "StateManager.h"
 
+#include "Wanderer_Normal.h"
+
 CWanderer_Body::CWanderer_Body(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject_Body{ pDevice, pContext } 
 {
@@ -43,6 +45,16 @@ void CWanderer_Body::Priority_Tick(const _float& fTimeDelta)
 
 void CWanderer_Body::Tick(const _float& fTimeDelta)
 {
+	//공격 
+	if (m_pStateManager->isAttack() && (m_fCurrentTime < m_fAttackDuration))
+	{
+		m_fCurrentTime += fTimeDelta;
+
+		if (m_fCurrentTime > m_fAttackDuration)
+			m_isStop = true;
+	}
+		
+
 	if (m_pModelCom->Get_Animation_Finished())
 		*m_pState = m_pStateManager->Exit(PLAYER_STATE(*m_pState));
 
@@ -80,13 +92,28 @@ void CWanderer_Body::Tick(const _float& fTimeDelta)
 	__super::Move_Pos(fTimeDelta, &MoveMatrix);
 		
 	XMStoreFloat4x4(&m_PlayerMovePos, MoveMatrix);
+
+	Create_Bullet();
 }
 
 void CWanderer_Body::Late_Tick(const _float& fTimeDelta)
 {
+	if (m_PreState != *m_pState)
+	{
+		if (m_pStateManager->isAttack())
+		{
+			//초기화
+			m_fCurrentTime = 0.f;
+			m_isStop = false;
+		}
+
+		m_PreState = *m_pState;
+	}
+		
+
 	XMStoreFloat4x4(&m_pWorldMatrix, m_pTransformCom->Get_WorldMatrix() * XMLoadFloat4x4(m_pParentMatrix));
 
-	m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONBLENDER, this);
+	//m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONBLENDER, this);
 }
 
 HRESULT CWanderer_Body::Render()
@@ -104,8 +131,9 @@ HRESULT CWanderer_Body::Render()
 		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
 			return E_FAIL;
 
-		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_Texture", i, aiTextureType_DIFFUSE)))
+		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
 			continue;
+
 		m_pShaderCom->Begin(0);
 		m_pModelCom->Render(i);
 	}
@@ -133,6 +161,9 @@ HRESULT CWanderer_Body::Bind_ResourceData()
 		return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(CPipeLine::D3DTS_PROJ))))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CamFar(), sizeof(_float))))
 		return E_FAIL;
 
 	return S_OK;
@@ -437,6 +468,42 @@ void CWanderer_Body::Change_Animation(const _float& fTimeDelta)
 
 	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ m_iAnim, m_IsLoop, m_IsLinear, m_IsLinearSpeed });
 }
+
+void CWanderer_Body::Create_Bullet()
+{
+	if (!m_isStop)
+		return;
+
+	m_isStop = false;
+
+	if (m_pStateManager->isAttack())
+	{
+		CWanderer_Normal::WANDERER_NORMAL_DESC Desc{};
+		Desc.fSpeedPecSec = 8.f;
+		Desc.fRotatePecSec = XMConvertToRadians(90.f);
+		Desc.HandCombinedTransformationMatrix = *m_pModelCom->Get_BoneCombinedTransformationMatrix("PRIVATE_RHand");
+		Desc.ParentMatrix = *m_pParentMatrix;
+		Desc.pTargetPos = Targeting();
+		if (*m_pState == PLAYER_ATTACK_2 )
+			Desc.iDir = CWanderer_Normal::DIR_LIFT;
+		else if (*m_pState == PLAYER_ATTACK_1 || *m_pState == PLAYER_ATTACK_3)
+			Desc.iDir = CWanderer_Normal::DIR_RIGHT;
+		
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Skill_Wanderer_Normal", L"Layer_Bullet", &Desc)))
+			return;
+
+		// PLAYER_ATTACK_3 일 때 한번 더 생성 
+		if (*m_pState == PLAYER_ATTACK_3)
+		{
+			Desc.iDir = CWanderer_Normal::DIR_LIFT;
+
+			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Skill_Wanderer_Normal", L"Layer_Bullet", &Desc)))
+				return;
+		}
+	}
+
+}
+
 
 CWanderer_Body* CWanderer_Body::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

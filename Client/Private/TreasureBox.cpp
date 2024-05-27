@@ -1,6 +1,7 @@
 #include "TreasureBox.h"
 
 #include "GameInstance.h"
+#include "Item.h"
 
 CTreasureBox::CTreasureBox(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CSceneObj{ pDevice, pContext }
@@ -24,6 +25,8 @@ HRESULT CTreasureBox::Initialize(void* pArg)
 
 	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ 0, false, false ,false });
 
+	m_State = BOX_CLOSE;
+
 	return S_OK;
 }
 
@@ -36,9 +39,16 @@ void CTreasureBox::Tick(const _float& fTimeDelta)
 	CCollider* pPlayerCollider = dynamic_cast<CCollider*>(m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, L"Layer_Player", L"Com_Collider"));
 	if (m_pColliderCom->Intersect(pPlayerCollider)) // 플레이어와 충돌 시
 	{
-		if (m_pGameInstance->GetKeyState(DIK_F) == CInput_Device::TAP)
+		if (m_State != BOX_OPEN)
 		{
-			m_pModelCom->Set_Animation(CModel::ANIM_DESC{ 1, false, false, false });
+			if (m_pGameInstance->GetKeyState(DIK_F) == CInput_Device::TAP)
+			{
+				m_pModelCom->Set_Animation(CModel::ANIM_DESC{ 1, false, false, false });
+				m_State = BOX_OPEN;
+
+				if (FAILED(Create_Item()))
+					return;
+			}
 		}
 	}
 
@@ -96,11 +106,34 @@ HRESULT CTreasureBox::Bind_ResourceData()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(CPipeLine::D3DTS_PROJ))))
 		return E_FAIL;
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CamFar(), sizeof(_float))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
 void CTreasureBox::Change_Animation(const _float& fTimeDelta)
 {
+}
+
+HRESULT CTreasureBox::Create_Item()
+{
+	srand(unsigned(time(NULL)));
+
+	_int iNum = rand() % 3 + 4;
+
+	for (size_t i = 0; i < iNum; ++i)
+	{
+		CItem::ITEM_DESC ItemDesc{};
+		ItemDesc.fHeight = XMVectorGetY(m_pTransformCom->Get_State(CTransform::STATE_POSITION)) + 0.2f;
+		ItemDesc.fSpeedPecSec = 7.f;
+		ItemDesc.fPower = 4.f;
+		ItemDesc.CreateMatrix = *m_pTransformCom->Get_WorldFloat4x4();
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_SceneObj_Item", L"Layer_Item", &ItemDesc)))
+			return E_FAIL;
+	}
+
+	return S_OK;
 }
 
 CTreasureBox* CTreasureBox::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

@@ -15,7 +15,7 @@ public:
     virtual PLAYER_STATE Exit(class CStateManager& pStateManager, PLAYER_STATE CurrentState) override;
 
 private:
-    _bool m_isFinished = { false };
+    _bool m_isDrop = { false };
 
     _uint m_iMaxSkill = { 3 };
     _float m_fFinishTime = { 10.f }; // 스킬 지속시간

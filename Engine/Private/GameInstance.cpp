@@ -6,7 +6,10 @@
 #include "Level_Manager.h"
 #include "GameObject_Manager.h"
 #include "Component_Manager.h"
+#include "RenderTarget_Manager.h"
+#include "Light_Manager.h"
 #include "Timer_Manager.h"
+#include "Font_Manager.h"
 #include "Renderer.h"
 #include "Picking.h"
 
@@ -42,12 +45,24 @@ HRESULT CGameInstance::Initialize_Engine(_uint iMaxLevelIndex, const ENGINE_DESC
 	if (nullptr == m_pGameObject_Manager)
 		return E_FAIL;
 
-	m_pRenderer = CRenderer::Create(iMaxLevelIndex);
+	m_pRenderTarget_Manager = CRenderTarget_Manager::Create(*ppDevice, *ppContext);
+	if (nullptr == m_pRenderTarget_Manager)
+		return E_FAIL;
+
+	m_pLight_Manager = CLight_Manager::Create();
+	if (nullptr == m_pLight_Manager)
+		return E_FAIL;
+
+	m_pRenderer = CRenderer::Create(*ppDevice, *ppContext);
 	if (nullptr == m_pRenderer)
 		return E_FAIL;
 
 	m_pComponent_Manager = CComponent_Manager::Create(iMaxLevelIndex);
 	if (nullptr == m_pComponent_Manager)
+		return E_FAIL;
+
+	m_pFont_Manager = CFont_Manager::Create(*ppDevice, *ppContext);
+	if (nullptr == m_pFont_Manager)
 		return E_FAIL;
 
 	m_pPipeLine = CPipeLine::Create();
@@ -77,14 +92,9 @@ void CGameInstance::Tick(const _float& fTimeDelta)
 	m_pLevel_Manager->Tick(fTimeDelta);
 }
 
-void CGameInstance::Draw(const _float4 vClearColor)
+void CGameInstance::Draw()
 {
-	Clear_BackBuffer_View(vClearColor);
-	Clear_DepthStencil_View();
-
 	m_pRenderer->Draw();
-
-	Present();
 }
 
 void CGameInstance::Draw_From_Tool()
@@ -105,11 +115,6 @@ HRESULT CGameInstance::Clear_DepthStencil_View()
 HRESULT CGameInstance::Present()
 {
 	return m_pGraphic_Device->Present();
-}
-
-_float CGameInstance::Compute_ProjZ(const POINT& ptWindowPos)
-{
-	return m_pGraphic_Device->Compute_ProjZ(ptWindowPos);
 }
 
 HRESULT CGameInstance::Open_Level(_uint iLevelIndex, CLevel* pLevel)
@@ -203,9 +208,24 @@ void CGameInstance::Set_Transform(CPipeLine::D3DTRANSFORMSTATE eState, _fmatrix 
 	m_pPipeLine->Set_Transform(eState, matTransform);
 }
 
+const _float4* CGameInstance::Get_ComLook_Float4()
+{
+	return m_pPipeLine->Get_ComLook_Float4();
+}
+
 _vector CGameInstance::Get_CamLook()
 {
 	return m_pPipeLine->Get_CamLook();
+}
+
+const _float* CGameInstance::Get_CamFar()
+{
+	return m_pPipeLine->Get_CamFar();
+}
+
+void CGameInstance::Set_CamFar(_float fFar)
+{
+	m_pPipeLine->Set_CamFar(fFar);
 }
 
 _float CGameInstance::Get_TimeDelta(const _tchar* pTimerTag)
@@ -221,6 +241,16 @@ void CGameInstance::Update_TimeDelta(const _tchar* pTimerTag)
 HRESULT CGameInstance::Ready_Timer(const _tchar* pTimerTag)
 {
 	return m_pTimer_Manager->Ready_Timer(pTimerTag);
+}
+
+HRESULT CGameInstance::Add_Font(const wstring& strFontTag, const wstring& strFontFilePath)
+{
+	return m_pFont_Manager->Add_Font(strFontTag, strFontFilePath);
+}
+
+HRESULT CGameInstance::Render_Font(const wstring& strFontTag, const wstring& strText, const _float2& vPosition, _fvector vColor)
+{
+	return m_pFont_Manager->Render_Font(strFontTag, strText, vPosition, vColor);
 }
 
 void CGameInstance::Get_ProcessMessageKeyboard(UINT message, WPARAM wParam, LPARAM lParam)
@@ -288,6 +318,54 @@ _vector CGameInstance::Get_RayDir()
 	return m_pPicking->Get_RayDir();
 }
 
+HRESULT CGameInstance::Add_RenderTarget(const wstring& strRenderTargetTag, _uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixelFormat, const _float4& vClearColor)
+{
+	return m_pRenderTarget_Manager->Add_RenderTarget(strRenderTargetTag, iSizeX, iSizeY, ePixelFormat, vClearColor);
+}
+
+HRESULT CGameInstance::Add_MRT(const wstring& strMRTTag, const wstring& strRenderTargetTag)
+{
+	return m_pRenderTarget_Manager->Add_MRT(strMRTTag, strRenderTargetTag);
+}
+
+HRESULT CGameInstance::Begin_MRT(const wstring& strMRTTag)
+{
+	return m_pRenderTarget_Manager->Begin_MRT(strMRTTag);
+}
+
+HRESULT CGameInstance::End_MRT()
+{
+	return m_pRenderTarget_Manager->End_MRT();
+}
+
+HRESULT CGameInstance::Bind_RenderTargetSRV(const wstring& strTargetTag, CShader* pShader, const _char* pConstantName)
+{
+	return m_pRenderTarget_Manager->Bind_RenderTargetSRV(strTargetTag, pShader, pConstantName);
+}
+
+#ifdef _DEBUG
+HRESULT CGameInstance::Ready_Debug(const wstring strRenderTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY)
+{
+	return m_pRenderTarget_Manager->Ready_Debug(strRenderTargetTag, fX, fY, fSizeX, fSizeY);
+}
+
+HRESULT CGameInstance::Render_Debug(const wstring& strMRTTag, CShader* pShader, CVIBuffer_Rect* pVIBuffer)
+{
+	return m_pRenderTarget_Manager->Render_Debug(strMRTTag, pShader, pVIBuffer);
+}
+#endif // _DEBUG
+
+
+HRESULT CGameInstance::Add_Light(const LIGHT_DESC& LightDesc)
+{
+	return m_pLight_Manager->Add_Light(LightDesc);
+}
+
+HRESULT CGameInstance::Render_Lights(CShader* pShader, CVIBuffer_Rect* pVIBuffer)
+{
+	return m_pLight_Manager->Render(pShader, pVIBuffer);
+}
+
 void CGameInstance::Release_Engine()
 {
 	Free();
@@ -300,7 +378,10 @@ void CGameInstance::Free()
 	Safe_Release(m_pLevel_Manager);
 	Safe_Release(m_pGameObject_Manager);
 	Safe_Release(m_pComponent_Manager);
+	Safe_Release(m_pRenderTarget_Manager);
+	Safe_Release(m_pLight_Manager);
 	Safe_Release(m_pTimer_Manager);
+	Safe_Release(m_pFont_Manager);
 	Safe_Release(m_pRenderer);
 	Safe_Release(m_pPipeLine);
 	Safe_Release(m_pGraphic_Device);

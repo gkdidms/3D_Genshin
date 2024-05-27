@@ -19,7 +19,7 @@ public:
     virtual HRESULT Render() override;
 
 private:
-    class CPlayerHP* m_pMonsterHP = { nullptr };
+    class CPlayerHP* m_pPlayerHP = { nullptr };
 
 private:
     virtual HRESULT Add_Components();

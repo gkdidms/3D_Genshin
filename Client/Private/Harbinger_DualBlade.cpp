@@ -90,6 +90,9 @@ HRESULT CHarbinger_DualBlade::Bind_ResourceData()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(CPipeLine::D3DTS_PROJ))))
 		return E_FAIL;
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CamFar(), sizeof(_float))))
+		return E_FAIL;
+
 	return S_OK;
 }
 

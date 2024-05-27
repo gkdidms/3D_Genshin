@@ -31,7 +31,7 @@ private:
     CShader* m_pShaderCom = { nullptr };
     CTexture* m_pTextureCom = { nullptr };
 
-    _float4x4 m_matView, m_matProj;
+    _float4x4 m_ViewMatrix, m_ProjMatrix;
 
 private:
     HRESULT Add_Components();

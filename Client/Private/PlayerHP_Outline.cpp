@@ -2,6 +2,7 @@
 
 #include "GameInstance.h"
 
+#include "Player.h"
 #include "PlayerHP.h"
 
 CPlayerHP_Outline::CPlayerHP_Outline(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -28,21 +29,21 @@ HRESULT CPlayerHP_Outline::Initialize(void* pArg)
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
-	m_fSizeX = 510.f;
-	m_fSizeY = 15.f; 
+	m_fSizeX = 256.f;
+	m_fSizeY = 8.f;
 	m_fX = g_iWinSizeX >> 1;
 	m_fY = g_iWinSizeY >> 1;
 
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(m_fX - g_iWinSizeX * 0.5f, m_fY - g_iWinSizeY + m_fSizeY * 0.5f + 50.f, 0.1f, 1.f));
 
-	XMStoreFloat4x4(&m_matView, XMMatrixIdentity());
-	XMStoreFloat4x4(&m_matProj, XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.0f));
+	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
+	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.0f));
 
 	CPlayerHP::PLAYER_HP_DESC tPlayerHPDESC{};
 	XMStoreFloat4x4(&tPlayerHPDESC.pParentMatrix, m_pTransformCom->Get_WorldMatrix());
-	m_pMonsterHP = dynamic_cast<CPlayerHP*>(m_pGameInstance->Clone_Object(L"Prototype_GameObject_UI_PlayerHP", &tPlayerHPDESC));
-	if (nullptr == m_pMonsterHP)
+	m_pPlayerHP = dynamic_cast<CPlayerHP*>(m_pGameInstance->Clone_Object(L"Prototype_GameObject_UI_PlayerHP", &tPlayerHPDESC));
+	if (nullptr == m_pPlayerHP)
 		return E_FAIL;
 
 	return S_OK;
@@ -69,8 +70,16 @@ HRESULT CPlayerHP_Outline::Render()
 	m_pShaderCom->Begin(0);
 	m_pVIBufferCom->Render();
 
-	if (FAILED(m_pMonsterHP->Render()))
+	if (FAILED(m_pPlayerHP->Render()))
 		return E_FAIL;
+
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, TEXT("Layer_Player"), 0));
+	_tchar strText[MAX_PATH]/* = to_wstring(_int(pPlayer->Get_PlayerbleMaxHP())) + L" \ " + to_wstring(_int(pPlayer->Get_PlayerbleHP()))*/;
+	wsprintf(strText, TEXT("%d / %d"), _int(pPlayer->Get_PlayerbleMaxHP()), _int(pPlayer->Get_PlayerbleHP()));
+	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	
+	_float2 vFontPos = _float2(g_iWinSizeX * 0.5f - 30.f, g_iWinSizeY - 60.f);
+	m_pGameInstance->Render_Font(L"Font_SDK_SC_20", strText, vFontPos, XMVectorSet(1.f, 1.f, 1.f, 1.f));
 
 	return S_OK;
 }
@@ -95,10 +104,10 @@ HRESULT CPlayerHP_Outline::Bind_ResourceData()
 	if (FAILED(m_pTransformCom->Bind_ShaderMatrix(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_matView)))
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_matProj)))
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
 	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
@@ -131,5 +140,5 @@ void CPlayerHP_Outline::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pMonsterHP);
+	Safe_Release(m_pPlayerHP);
 }

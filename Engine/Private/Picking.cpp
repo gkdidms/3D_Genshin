@@ -46,7 +46,7 @@ _vector CPicking::Picking(_bool* isSuccess)
 
 	vMousePos = XMVectorSetX(vMousePos, ptMouse.x / (m_fWinSizeX * 0.5f) - 1.f);
 	vMousePos = XMVectorSetY(vMousePos, ptMouse.y / -(m_fWinSizeY * 0.5f) + 1.f);
-	vMousePos = XMVectorSetZ(vMousePos, m_pGameInstance->Compute_ProjZ(ptMouse));
+	vMousePos = XMVectorSetZ(vMousePos, 0.f); // 수정해야함
 	vMousePos = XMVectorSetW(vMousePos, 1.f);
 
 	if (XMVectorGetZ(vMousePos) < 0.f)

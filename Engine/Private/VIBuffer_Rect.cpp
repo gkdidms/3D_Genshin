@@ -23,6 +23,7 @@ HRESULT CVIBuffer_Rect::Initialize_Prototype()
 	m_GIFormat = DXGI_FORMAT_R16_UINT;
 	m_Primitive_Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
+	m_iNumVertexBuffers = 1;
 	m_iNumVertices = 4;
 	m_iVertexStride = sizeof(VXTPOSTEX);
 

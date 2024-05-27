@@ -34,6 +34,11 @@ _vector CPipeLine::Get_CamPosition()
 	return XMLoadFloat4(&m_vCamPosition);
 }
 
+const _float4* CPipeLine::Get_ComLook_Float4()
+{
+	return &m_vCamLook;
+}
+
 _vector CPipeLine::Get_CamLook()
 {
 	return XMLoadFloat4(&m_vCamLook);

@@ -33,8 +33,6 @@ HRESULT CSceneObj::Initialize(void* pArg)
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
-
-	
 	m_pTransformCom->Set_WorldMatrix(XMLoadFloat4x4(&pDesc->WorldMatrix));
 
 	return S_OK;
@@ -72,9 +70,11 @@ HRESULT CSceneObj::Render()
 		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
 			return E_FAIL;
 
-		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_Texture", i, aiTextureType_DIFFUSE)))
+		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
 			return E_FAIL;
 
+		m_pModelCom->Bind_Material(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS);
+		
 		m_pShaderCom->Begin(0);
 		m_pModelCom->Render(i);
 	}

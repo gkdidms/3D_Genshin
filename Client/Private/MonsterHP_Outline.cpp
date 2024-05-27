@@ -25,7 +25,7 @@ HRESULT CMonsterHP_Outline::Initialize(void* pArg) // 빌보드 적용하기
 	{
 		MONSTER_HP_OUTLINE_DESC* pDesc = static_cast<MONSTER_HP_OUTLINE_DESC*>(pArg);
 		m_pParentMatrix = pDesc->pParentMatrix;
-		m_pMonsterHP = pDesc->pMonsterHP;
+		m_pPlayerHP = pDesc->pMonsterHP;
 		m_fMonsterMaxHP = pDesc->fMonsterMaxHP;
 	}
 
@@ -35,14 +35,15 @@ HRESULT CMonsterHP_Outline::Initialize(void* pArg) // 빌보드 적용하기
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
-	m_fSizeX = 128.f * 0.005f;
-	m_fSizeY = 10.f * 0.005f;
+	m_fSizeX = 128.f * 0.01f;
+	m_fSizeY = 10.f * 0.02f;
 	m_fX = 0.f;
 	m_fY = 2.f;
 
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(m_fX, m_fY, 0.f, 1.f));
+	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(90.f));
 
 	return S_OK;
 }
@@ -52,12 +53,15 @@ void CMonsterHP_Outline::Priority_Tick(const _float& fTimeDelta)
 }
 
 void CMonsterHP_Outline::Tick(const _float& fTimeDelta)
-{
+{	
+	m_pTransformCom->LookAt(m_pGameInstance->Get_CamLook());
 }
 
 void CMonsterHP_Outline::Late_Tick(const _float& fTimeDelta)
 {
-	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * XMLoadFloat4x4(m_pParentMatrix));
+	_matrix ParentPosMatrix = XMMatrixIdentity();
+	ParentPosMatrix.r[3] = XMLoadFloat4x4(m_pParentMatrix).r[3];
+	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * ParentPosMatrix);
 
 	m_pGameInstance->Add_Renderer(CRenderer::RENDER_UI, this);
 
@@ -92,7 +96,7 @@ HRESULT CMonsterHP_Outline::Add_Components()
 
 	CMonsterHP::MONSTER_HP_DESC tMonsterDesc{};
 	tMonsterDesc.pParentMatrix = &m_WorldMatrix;
-	tMonsterDesc.pMonsterHP = m_pMonsterHP;
+	tMonsterDesc.pMonsterHP = m_pPlayerHP;
 	tMonsterDesc.fMonsterMaxHP = m_fMonsterMaxHP;
 
 	m_pMonsterHPBar = dynamic_cast<CMonsterHP*>(m_pGameInstance->Clone_Object(L"Prototype_GameObject_UI_MonsterHP", &tMonsterDesc));
