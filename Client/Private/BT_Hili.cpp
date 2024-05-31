@@ -8,6 +8,9 @@
 #include "Sequence.h"
 #include "Action.h"
 
+#include "Effect.h"
+#include "Effect_Image.h"
+
 CBT_Hili::CBT_Hili()
 	: CNode{},
 	m_pGameInstance { CGameInstance::GetInstance() }
@@ -110,12 +113,54 @@ CNode::NODE_STATE CBT_Hili::Hit()
 		if (m_pColliderCom->Intersect(pPlayer->Get_SwordCollider()))
 		{
 			*m_pState = CHili::HILI_HIT;
+
+			//Prototype_GameObject_Effect_Nilou_Hit
+			CEffect::EFFECT_DESC HitDesc{};
+
+			HitDesc.pPlayerMatrix = m_pTransformCom->Get_WorldFloat4x4();
+			XMStoreFloat4x4(&HitDesc.RotationMatrix, XMMatrixIdentity());
+			HitDesc.vPos = _float4(0.f, 1.f, 0.f, 1.f);
+			HitDesc.vScale = _float3(1.f, 1.f, 1.f);
+			HitDesc.fDuration = 0.3f;
+			HitDesc.iMoveType = CEffect_Image::INCREASE;
+
+			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_Nilou_Hit"), TEXT("Layer_Trail"), &HitDesc)))
+				return CNode::SUCCESS;
+
 			return CNode::SUCCESS;
 		}
 	}
 	else
 	{
 		//원거리
+		vector<CGameObject*> m_Bullets = m_pGameInstance->Get_GameObjects(LEVEL_GAMEPLAY, TEXT("Layer_Bullet"));
+		
+		for (auto& pBullet : m_Bullets)
+		{
+			CCollider* pBulletColl = dynamic_cast<CCollider*>(pBullet->Get_Component(TEXT("Com_Collider")));
+			if (m_pColliderCom->Intersect(pBulletColl))
+			{
+				//충돌했다면? 
+				*m_pState = CHili::HILI_HIT;
+
+				//Prototype_GameObject_Effect_Nilou_Hit
+				CEffect::EFFECT_DESC HitDesc{};
+
+				HitDesc.pPlayerMatrix = m_pTransformCom->Get_WorldFloat4x4();
+				XMStoreFloat4x4(&HitDesc.RotationMatrix, XMMatrixIdentity());
+				HitDesc.vPos = _float4(0.f, 1.f, 0.f, 1.f);
+				HitDesc.vScale = _float3(1.f, 1.f, 1.f);
+				HitDesc.fDuration = 0.3f;
+				HitDesc.iMoveType = CEffect_Image::INCREASE;
+
+				if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_Nilou_Hit"), TEXT("Layer_Trail"), &HitDesc)))
+					return CNode::SUCCESS;
+				
+				pBullet->Set_Dead();
+				return CNode::SUCCESS;
+				
+			}
+		}
 	}
 
 	return CNode::FAILURE;

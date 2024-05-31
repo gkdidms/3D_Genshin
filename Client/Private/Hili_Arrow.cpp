@@ -187,7 +187,6 @@ _bool CHili_Arrow::Move_Arrow(const _float& fTimeDelta)
         return true;
     }
 
-
     return false;
 }
 

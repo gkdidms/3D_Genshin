@@ -12,8 +12,10 @@ CStateAttack::CStateAttack()
 
 PLAYER_STATE CStateAttack::Enter(class CStateManager& pStateManager, PLAYER_STATE CurrentState)
 {
-	m_iMaxAttack = pStateManager.Get_Playerble() == CPlayer::PLAYER_NILOU || pStateManager.Get_Playerble() == CPlayer::PLAYER_TIGHNARI ? 4 : 3;
+	m_iMaxAttack = pStateManager.Get_Playerble() == CPlayer::PLAYER_TIGHNARI ? 4 : 3;
 
+	m_fDuration = 0.5f;
+	m_fTime = 0.f;
 	return PLAYER_ATTACK_1;
 }
 
@@ -42,7 +44,7 @@ PLAYER_STATE CStateAttack::Update(const _float& fTimeDelta, CStateManager& pStat
 
 	if (m_pGameInstance->GetMouseState(DIM_LB) == CInput_Device::TAP)
 	{
-		m_fTime = 0; // 초기화
+		m_fTime = 0.f; // 초기화
 		m_iAttackCount++;
 
 		if (m_iAttackCount >= m_iMaxAttack)

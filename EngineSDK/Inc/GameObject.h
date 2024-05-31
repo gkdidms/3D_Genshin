@@ -26,6 +26,9 @@ public:
     _uint Get_Index() { return m_iIndex; }
 
 public:
+    void Set_Dead() { m_isDead = true; }
+
+public:
     virtual HRESULT Initialize_Prototype();
     virtual HRESULT Initialize(void* pArg);
     virtual void Priority_Tick(const _float& fTimeDelta);

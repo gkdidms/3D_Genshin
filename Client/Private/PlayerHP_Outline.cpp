@@ -78,7 +78,7 @@ HRESULT CPlayerHP_Outline::Render()
 	wsprintf(strText, TEXT("%d / %d"), _int(pPlayer->Get_PlayerbleMaxHP()), _int(pPlayer->Get_PlayerbleHP()));
 	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	
-	_float2 vFontPos = _float2(g_iWinSizeX * 0.5f - 30.f, g_iWinSizeY - 60.f);
+	_float2 vFontPos = _float2(g_iWinSizeX * 0.5f - 40.f, g_iWinSizeY - 60.f);
 	m_pGameInstance->Render_Font(L"Font_SDK_SC_20", strText, vFontPos, XMVectorSet(1.f, 1.f, 1.f, 1.f));
 
 	return S_OK;

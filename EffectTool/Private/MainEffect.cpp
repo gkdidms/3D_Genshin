@@ -10,6 +10,7 @@
 
 #include "Effect_Default.h"
 #include "Effect_Mesh.h"
+#include "Effect_Trail.h"
 
 CMainEffect::CMainEffect()
     : m_pGameInstance { CGameInstance::GetInstance() },
@@ -112,6 +113,9 @@ HRESULT CMainEffect::Loading_Components()
         return E_FAIL;
 #pragma endregion
 
+    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Shader_VtxMesh_Trail", CShader::Create(m_pDevice, m_pContext, L"../Bin/ShaderFiles/Shader_VtxMesh_Trail.hlsl", VTXMESH::Elements, VTXMESH::iNumElements))))
+        return E_FAIL;
+
     return S_OK;
 }
 
@@ -126,6 +130,8 @@ HRESULT CMainEffect::Loading_GameObjects()
     if (FAILED(m_pGameInstance->Add_GameObject_Prototype(TEXT("Prototype_GameObject_Effect_Default"), CEffect_Default::Create(m_pDevice, m_pContext))))
         return E_FAIL;
     if (FAILED(m_pGameInstance->Add_GameObject_Prototype(TEXT("Prototype_GameObject_Effect_Mesh"), CEffect_Mesh::Create(m_pDevice, m_pContext))))
+        return E_FAIL;
+    if (FAILED(m_pGameInstance->Add_GameObject_Prototype(TEXT("Prototype_GameObject_Effect_Trail"), CEffect_Trail::Create(m_pDevice, m_pContext))))
         return E_FAIL;
 
     return S_OK;

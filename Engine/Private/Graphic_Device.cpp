@@ -88,8 +88,6 @@ HRESULT CGraphic_Device::Present()
 	if (nullptr == m_pSwapChain)
 		return E_FAIL;
 
-
-
 	/* 전면 버퍼와 후면 버퍼를 교체하여 후면 버퍼를 전면으로 보여주는 역할을 한다. */
 	/* 후면 버퍼를 직접 화면에 보여줄게. */
 	return m_pSwapChain->Present(0, 0);
@@ -179,7 +177,7 @@ HRESULT CGraphic_Device::Ready_BackBufferRenderTargetView()
 
 	/* 내가 앞으로 사용하기위한 용도의 텍스쳐를 생성하기위한 베이스 데이터를 가지고 있는 객체이다. */
 	/* 내가 앞으로 사용하기위한 용도의 텍스쳐 : ID3D11RenderTargetView, ID3D11ShaderResoureView, ID3D11DepthStencilView */
-	ID3D11Texture2D* pBackBufferTexture = nullptr;
+	ID3D11Texture2D*  pBackBufferTexture = nullptr;
 
 	/* 스왑체인이 들고있던 텍스처를 가져와봐. */
 	if (FAILED(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&pBackBufferTexture)))

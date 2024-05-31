@@ -47,8 +47,11 @@ public:
     _bool isFly() { return m_StateType == STATE_TYPE_FLY; }
     _bool isJump() { return m_StateType == STATE_TYPE_JUMP; }
     _bool isDrop() { return m_StateType == STATE_TYPE_FALL_ATTACK; }
-    _bool isAttack() { return m_StateType == STATE_TYPE_ATTACK || m_StateType == STATE_TYPE_ELEMENTALART || m_StateType == STATE_TYPE_ELEMNETALBURST; }
+    _bool isAttack() { 
+        return m_StateType == STATE_TYPE_ATTACK || m_StateType == STATE_TYPE_ELEMENTALART || m_StateType == STATE_TYPE_ELEMNETALBURST; }
+    _bool isNormalAttack() { return m_StateType == STATE_TYPE_ATTACK; }
     _bool isElementalArt() { return m_StateType == STATE_TYPE_ELEMENTALART; }
+    _bool isElementalBurst() { return m_StateType == STATE_TYPE_ELEMNETALBURST; }
 
 public:
     void Set_CollWindField(_bool isColl) { m_isCollWindField = isColl; }

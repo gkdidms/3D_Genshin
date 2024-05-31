@@ -2,6 +2,8 @@
 
 #include "RenderTarget.h"
 
+#include "GameInstance.h"
+
 CRenderTarget_Manager::CRenderTarget_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice {pDevice}, m_pContext{pContext }
 {
@@ -95,11 +97,6 @@ HRESULT CRenderTarget_Manager::Bind_RenderTargetSRV(const wstring& strTargetTag,
 		return E_FAIL;
 
 	return pRenderTarget->Bind_SVR(pShader, pConstantName);
-}
-
-HRESULT CRenderTarget_Manager::Copy_Backbuffer()
-{
-	return S_OK;
 }
 
 #ifdef _DEBUG

@@ -62,6 +62,7 @@ public:
     void LookForCamera(_fvector vCamLook, _float fRadian);
     void Turn(_fvector vAxis, _float fTimeDelta);
     void Rotation(_fvector vAxis, _float fRadian);
+    void WorldRotation(_fvector vAxis, _float fRadian);
     void Rotation(_float fRotationX, _float fRotationY, _float fRotationZ);
     void Get_Rotation(_fvector vAxis, _float fRadian, _float4x4* TargetMatrix);
     void Billboard(_float4 CamPosition);

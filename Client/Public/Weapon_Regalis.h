@@ -22,10 +22,16 @@ public:
     virtual HRESULT Render() override;
 
 private:
+    _uint m_iPreState = {0};
+
+    _float m_fCurrentTime = { 0.f };
+    _bool m_isCreated = { false };
+
+private:
     virtual HRESULT Add_Components() override;
     virtual HRESULT Bind_ResourceData() override;
     virtual void Change_Animation(const _float& fTimeDelta) override;
-
+    HRESULT Create_TrailBuffer(const _float& fTimeDelta);
 
 public:
     static CWeapon_Regalis* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

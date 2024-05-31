@@ -29,7 +29,6 @@ private:
     IDXGISwapChain* m_pSwapChain = { nullptr };
 
     ID3D11RenderTargetView* m_pBackBufferRTV = { nullptr };
-    //ID3D11Texture2D* m_pDepthTexture = { nullptr };
 
     ID3D11DepthStencilView* m_pDepthStencilView = { nullptr };
 

@@ -17,6 +17,9 @@ HRESULT CVIBuffer_Instance_Point::Initialize_Prototype(const INSTANCE_DESC& Inst
 
 	m_InstanceDesc = InstanceDesc;
 
+	uniform_real_distribution<float>	Size(InstanceDesc.vSize.x, InstanceDesc.vSize.y);
+	_float	fSize = Size(m_RandomNumber);
+
 	m_GIFormat = DXGI_FORMAT_R16_UINT;
 	m_Primitive_Topology = D3D_PRIMITIVE_TOPOLOGY_POINTLIST;
 	m_iNumVertexBuffers = 2;
@@ -39,7 +42,7 @@ HRESULT CVIBuffer_Instance_Point::Initialize_Prototype(const INSTANCE_DESC& Inst
 	VTXPOINT* pVertexts = new VTXPOINT[m_iNumVertices];
 
 	pVertexts[0].vPosition = _float3{ 0.f, 0.f, 0.f };
-	pVertexts[0].vPSize = _float2{ 1.f, 1.f };
+	pVertexts[0].vPSize = _float2{ fSize, fSize };
 
 	m_ResourceData.pSysMem = pVertexts;
 
@@ -84,6 +87,9 @@ HRESULT CVIBuffer_Instance_Point::Initialize_Prototype(const INSTANCE_DESC& Inst
 	m_pSpeeds = new _float[m_iNumInstance];
 	ZeroMemory(m_pSpeeds, sizeof(_float) * m_iNumInstance);
 
+	m_pPower = new _float[m_iNumInstance];
+	ZeroMemory(m_pPower, sizeof(_float) * m_iNumInstance);
+
 	m_pOriginalPositions = new _float3[m_iNumInstance];
 	ZeroMemory(m_pOriginalPositions, sizeof(_float3) * m_iNumInstance);
 
@@ -91,14 +97,15 @@ HRESULT CVIBuffer_Instance_Point::Initialize_Prototype(const INSTANCE_DESC& Inst
 	uniform_real_distribution<float>	RangeY(InstanceDesc.vPivotPos.y - InstanceDesc.vRange.y * 0.5f, InstanceDesc.vPivotPos.y + InstanceDesc.vRange.y * 0.5f);
 	uniform_real_distribution<float>	RangeZ(InstanceDesc.vPivotPos.z - InstanceDesc.vRange.z * 0.5f, InstanceDesc.vPivotPos.z + InstanceDesc.vRange.z * 0.5f);
 
-	uniform_real_distribution<float>	Size(InstanceDesc.vSize.x, InstanceDesc.vSize.y);
+
 	uniform_real_distribution<float>	Speed(InstanceDesc.vSpeed.x, InstanceDesc.vSpeed.y);
+	uniform_real_distribution<float>	Power(InstanceDesc.vPower.x, InstanceDesc.vPower.y);
 
 	uniform_real_distribution<float>	LifeTime(InstanceDesc.vLifeTime.x, InstanceDesc.vLifeTime.y);
 
 	for (size_t i = 0; i < m_iNumInstance; i++)
 	{
-		_float	fSize = Size(m_RandomNumber);
+		
 		// Right, Up, Loop, Pos 순서로 월드 행렬의 좌표를 넣어준다.
 		pInstanceVertices[i].vRight = _float4(fSize, 0.f, 0.f, 0.f);
 		pInstanceVertices[i].vUp = _float4(0.f, fSize, 0.f, 0.f);
@@ -107,6 +114,7 @@ HRESULT CVIBuffer_Instance_Point::Initialize_Prototype(const INSTANCE_DESC& Inst
 		m_pOriginalPositions[i] = _float3(pInstanceVertices[i].vTranslation.x, pInstanceVertices[i].vTranslation.y, pInstanceVertices[i].vTranslation.z); // Loop를 위해 저장해준다.
 		pInstanceVertices[i].vLifeTime.x = LifeTime(m_RandomNumber); // 파티클이 살아있을 수 있는 시간.
 
+		m_pPower[i] = Power(m_RandomNumber);
 		m_pSpeeds[i] = Speed(m_RandomNumber);
 	}
 	m_ResourceData.pSysMem = pInstanceVertices;

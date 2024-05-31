@@ -91,7 +91,7 @@ HRESULT CHili_Fire::Add_Components()
 
 	CBounding_AABB::BOUNDING_AABB_DESC Desc{};
 	Desc.eType = CCollider::COLLIDER_AABB;
-	Desc.vExtents = _float3(0.5f, 0.5f, 0.5f);
+	Desc.vExtents = _float3(0.5f, 0.7f, 0.5f);
 	Desc.vCenter = _float3(0.f, Desc.vExtents.y, 0.f);
 
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Collider", L"Com_Collider", reinterpret_cast<CComponent**>(&m_pColliderCom), &Desc)))

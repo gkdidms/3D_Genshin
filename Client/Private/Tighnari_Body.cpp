@@ -5,6 +5,8 @@
 
 #include "FlowerArrow.h"
 #include "Tighnari_Normal.h"
+#include "Effect.h"
+#include "Effect_Image.h"
 
 CTighnari_Body::CTighnari_Body(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject_Body{ pDevice, pContext } 
@@ -68,14 +70,19 @@ void CTighnari_Body::Tick(const _float& fTimeDelta)
 	__super::Move_Pos(fTimeDelta, &MoveMatrix);
 	XMStoreFloat4x4(&m_PlayerMovePos, MoveMatrix);
 
-	if (FAILED(Create_Object()))
+	if (FAILED(Create_Object(fTimeDelta)))
 		return;
 }
 
 void CTighnari_Body::Late_Tick(const _float& fTimeDelta)
 {
 	if (*m_pState != m_PreState)
+	{
 		m_PreState = *m_pState;
+		m_isCreated = false;
+		m_fCurrentTime = 0.f;
+	}
+		
 
 	XMStoreFloat4x4(&m_pWorldMatrix, m_pTransformCom->Get_WorldMatrix() * XMLoadFloat4x4(m_pParentMatrix));
 
@@ -340,26 +347,76 @@ void CTighnari_Body::Change_Animation(const _float& fTimeDelta)
 	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ m_iAnim, m_IsLoop, m_IsLinear, m_IsLinearSpeed });
 }
 
-HRESULT CTighnari_Body::Create_Object()
+HRESULT CTighnari_Body::Create_Object(const _float& fTimeDetla)
 {
-	if (*m_pState == m_PreState)
+	if (m_isCreated)
 		return S_OK;
 
 	//Equip_Bow_Ayus_Model bullet »ý¼º   Prototype_GameObject_Skill_Tighnari_Normal
-	if (m_pStateManager->isAttack())
+	if (m_pStateManager->isNormalAttack())
 	{
+		m_fCurrentTime += fTimeDetla;
+
+		if (*m_pState == PLAYER_ATTACK_1 || *m_pState == PLAYER_ATTACK_2)
+			m_isCreated = true;
+		else if (*m_pState == PLAYER_ATTACK_3)
+		{
+			if (m_fCurrentTime > 0.4f)
+				m_isCreated = true;
+			else return S_OK;
+		}
+		else if (*m_pState == PLAYER_ATTACK_4)
+		{
+			if (m_fCurrentTime > 0.5f)
+				m_isCreated = true;
+			else return S_OK;
+		}
+		
+
+		CEffect::EFFECT_DESC EffectDesc{};
+
+		EffectDesc.pPlayerMatrix = m_pParentMatrix;
+		XMStoreFloat4x4(&EffectDesc.RotationMatrix, XMMatrixIdentity());
+		EffectDesc.vPos = _float4(0.f, 1.2f, 0.5f, 1.f);
+		EffectDesc.vScale = _float3(1.f, 1.f, 1.f);
+		EffectDesc.fDuration = 0.1f;
+		EffectDesc.iMoveType = CEffect_Image::INCREASE;
+
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_Tighnari_Effect_Arrow_Start"), TEXT("Layer_Trail"), &EffectDesc)))
+			return E_FAIL;
+
 		CBullet::BULLET_DESC Desc{};
 		Desc.HandCombinedTransformationMatrix = *m_pModelCom->Get_BoneCombinedTransformationMatrix("PRIVATE_RHand");
 		Desc.ParentMatrix = m_pWorldMatrix;
 		Desc.pTargetPos = Targeting();
-		Desc.fSpeedPecSec = 20.f;
+		Desc.fSpeedPecSec = 30.f;
 
 		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Skill_Tighnari_Normal"), TEXT("Layer_Bullet"), &Desc)))
 			return E_FAIL;
+		
+	}
+	else if (m_pStateManager->isElementalBurst())
+	{
+		
+		if (*m_pState == PLAYER_ELEMENTAL_BURST_END)
+		{
+			m_isCreated = true;
+
+			CBullet::BULLET_DESC Desc{};
+			Desc.HandCombinedTransformationMatrix = *m_pModelCom->Get_BoneCombinedTransformationMatrix("PRIVATE_RHand");
+			Desc.ParentMatrix = m_pWorldMatrix;
+			Desc.pTargetPos = Targeting();
+			Desc.fSpeedPecSec = 30.f;
+
+			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Skill_Tighnari_Busrt"), TEXT("Layer_Bullet"), &Desc)))
+				return E_FAIL;
+		}
 	}
 
 	if (*m_pState == PLAYER_ELEMENTAL_BURST)
 	{
+		m_isCreated = true;
+
 		CSkillObj::SKILLOBJ_DESC SkillObjDesc{};
 		SkillObjDesc.pParentMatrix = m_pParentMatrix;
 		SkillObjDesc.pState = m_pState;
@@ -370,6 +427,8 @@ HRESULT CTighnari_Body::Create_Object()
 		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_SkillObj_FlowerArrow", L"Layer_SkillObj", &SkillObjDesc)))
 			return E_FAIL;
 	}
+
+	
 
 	return S_OK;
 }

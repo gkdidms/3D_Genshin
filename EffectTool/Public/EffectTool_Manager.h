@@ -48,12 +48,12 @@ private:
     class CEffect_Manager* m_pEffectManager = { nullptr };
 
 private:
-    string m_strTextureFileName = { "" };
     string m_strTextureFilePath = { "" };
-    string m_strTrailFileName = { "" };
-    string m_strTrailFilePath = { "" };
-    string m_strMeshFileName = { "" };
     string m_strMeshFilePath = { "" };
+    string m_strMaskFilePath = { "" };
+    string m_strNoiseFilePath = { "" };
+    _bool m_isMask = { false };
+    _bool m_isNoise = { false };
 
     vector<string> m_FileName;
     _bool m_isShowLoadModal = { false };
@@ -64,6 +64,7 @@ private:
     _int m_iSaveFileIndex = { 0 };
     _int m_iLoadFileIndex = { 0 };
     _int m_iEffectType = { 0 };
+    _int m_iTextureNum = { 0 };
 
 private: // Patch
     _int m_iPatchIndex = { -1 };
@@ -84,16 +85,19 @@ private:
     _float3 m_vRange = {};
     _float2 m_vSize = {};
     _float2 m_vSpeed = {};
+    _float2 m_vPower = {};
     _float2 m_vLifeTime = {};
     _bool m_isLoop = { false };
-    _int m_iTextureNum = { 1 };
 
 private:
     _bool m_isTrailBuffer = {false};
     _float m_fTextureSpeed = { 0.f };
     _float m_fRotateSpeed = { 45.f };
 
-    _float2 m_vUV;
+    _float2 m_vUV = {};
+    _float4 m_vColor = {};
+
+    _int m_iShaderPass = { 0 };
 
 public:
     void Release_Tool();

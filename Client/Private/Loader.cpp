@@ -87,14 +87,21 @@
 
 #pragma region Skill
 #include "Hili_Arrow.h"
+#include "Boss_Normal.h"
 
 #include "Feiyan_Normal.h"
 #include "Feiyan_Normal_Trail.h"
 
 #include "Tighnari_Normal.h"
+#include "Tighnari_Burst.h"
 
 #include "Wanderer_Normal.h"
 #pragma endregion
+
+#pragma region Effect
+#include "Effect.h"
+#pragma endregion
+
 
 
 
@@ -177,10 +184,16 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_Skill_Tighnari_Normal_Trail", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Feiyan/Eff_Trail_Scratch_02.png"), 1))))
 		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_Skill_Tighnari_Burst", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Tighnari/Eff_Glow_09_Clamp.png"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_Skill_Tighnari_Burst_Trail", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Tighnari/Eff_Trail_69_Clamp.png"), 1))))
+		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_Skill_Wanderer_Normal", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Eff_Trail_61_01.png"), 1))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_Skill_Hili_Arrow", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Monster/Eff_Trail_48.png"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_Particle_Water", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Eff_Smoke/Eff_Smoke_%d.png"), 31))))
 		return E_FAIL;
 	
 #pragma endregion
@@ -374,6 +387,30 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxNorTex_Skill", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxNorTex_Skill.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements))))
 		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxAnimMesh_Skill", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxAnimMesh_Skill.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxPosTex_Effect", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxPosTex_Effect.hlsl"), VXTPOSTEX::Elements, VXTPOSTEX::iNumElements))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxMesh_Effect", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxMesh_Effect.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_Instance_Point", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxInstance_Point.hlsl"), VTXINSTANCE_POINT::Elements, VTXINSTANCE_POINT::iNumElements))))
+		return E_FAIL;
+
+	lstrcpy(m_szLoadingText, TEXT("파티클를(을) 로딩 중 입니다."));
+	CVIBuffer_Instance_Point::INSTANCE_DESC EffectDesc{};
+	EffectDesc.vOffsetPos = _float3(0.f, 1.5f, 1.f);
+	EffectDesc.vPivotPos = _float3(0.f, 1.5f, 0.f);
+	EffectDesc.vRange = _float3(0.5f, 1.f, 0.6f);
+	EffectDesc.iNumInstance = 20.f;
+	EffectDesc.vSize = _float2(0.06f, 0.07f);
+	EffectDesc.vSpeed = _float2(0.2f, 0.5f);
+	EffectDesc.vLifeTime = _float2(1.f, 2.f);
+	EffectDesc.isLoop = false;
+
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Particle_Water", CVIBuffer_Instance_Point::Create(m_pDevice, m_pContext, EffectDesc))))
+		return E_FAIL;
+	
+
 	m_fProgress = 80.f;
 
 	lstrcpy(m_szLoadingText, TEXT("컴포넌트 로딩 중 입니다."));
@@ -509,6 +546,52 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Flycloak", CFlycloak::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+#pragma region Effect
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Normal_01", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Normal_1.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Normal_02", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Normal_2.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Normal_03", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Normal_3.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Elemental_Start", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Water_Helix.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Elemental_Normal_1", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Water_Atk_1.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Elemental_Normal_2", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Water_Atk_3.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Elemental_Normal_spec", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Water_Normal_5.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Elemental_Ring", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Water_Ring.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Hit", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Hit_Effect.dat"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_ParticleTwinkle_1", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Particle_Twinkle_1.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_ParticleWater_1", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Particle_Water_1.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_ParticleWater_2", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Particle_Water_2.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_ParticleBuble_1", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Particle_Buble.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Blade_Particle", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Blade_Particle.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Feiyan_Normal_Particle", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Feiyan_Normal_Particle.dat"))))
+		return E_FAIL;
+	
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Tighnari_Effect_Arrow_Start", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Tighnari_Effect_Bullet_Start.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Tighnari_Effect_Arrow_End", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Tighnari_Effect_Bullet_End.dat"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Feiyan_Normal_Start", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Feiyan_Normal_Start.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Feiyan_Normal_Start_Particle", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Feiyan_Normal_Start_Particle.dat"))))
+		return E_FAIL;
+#pragma endregion
+
 #pragma region UI
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_UI_PlayerHP_Outline", CPlayerHP_Outline::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -540,6 +623,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 #pragma region Skill
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Skill_Hili_Arrow", CHili_Arrow::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Skill_Boss_Arrow", CBoss_Normal::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Skill_Feiyan_Normal", CFeiyan_Normal::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -548,10 +633,14 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Skill_Tighnari_Normal", CTighnari_Normal::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Skill_Tighnari_Busrt", CTighnari_Burst::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Skill_Wanderer_Normal", CWanderer_Normal::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 #pragma endregion
+
+
 
 
 	m_fProgress = 100.f;

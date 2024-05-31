@@ -2,6 +2,8 @@
 
 #include "GameInstance.h"
 #include "Feiyan_Normal_Trail.h"
+#include "Effect.h"
+#include "Effect_Image.h"
 
 
 CFeiyan_Normal::CFeiyan_Normal(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -30,18 +32,18 @@ HRESULT CFeiyan_Normal::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	if (FAILED(Add_Components()))
-		return E_FAIL;
-
 	_matrix WorldMatrix;
 	_matrix HandMatrix = XMMatrixIdentity();
 	HandMatrix.r[3] = XMLoadFloat4x4(&pDesc->HandCombinedTransformationMatrix).r[3];
 	WorldMatrix = m_pTransformCom->Get_WorldMatrix() * HandMatrix * XMLoadFloat4x4(&pDesc->ParentMatrix);
-	
+
 	m_pTransformCom->Set_WorldMatrix(WorldMatrix);
 	m_vTargetPos.y = m_vTargetPos.y + 1.f;
 	m_pTransformCom->Set_Scale(0.5f, 1.f, 0.5f);
 	m_pTransformCom->LookAt(XMLoadFloat4(&m_vTargetPos));
+
+	if (FAILED(Add_Components()))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -66,12 +68,16 @@ void CFeiyan_Normal::Tick(const _float& fTimeDelta)
 	//회전시키기
 	m_pTrailBuffer->Tick(fTimeDelta);
 
-	Check_Coll();
+	//Check_Coll();
+
+	m_FireParticle->Tick(fTimeDelta);
 }
 
 void CFeiyan_Normal::Late_Tick(const _float& fTimeDelta)
 {
 	m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONLIGHT, this);
+
+	m_FireParticle->Late_Tick(fTimeDelta);
 }
 
 HRESULT CFeiyan_Normal::Render()
@@ -106,8 +112,8 @@ HRESULT CFeiyan_Normal::Add_Components()
 
 	CBounding_AABB::BOUNDING_AABB_DESC BoundingBoxDesc{};
 	BoundingBoxDesc.eType = CCollider::COLLIDER_AABB;
-	BoundingBoxDesc.vExtents = _float3(0.5f, 0.5f, 0.5f);
-	BoundingBoxDesc.vCenter = _float3(0.f, BoundingBoxDesc.vExtents.y, 0.f);
+	BoundingBoxDesc.vExtents = _float3(0.3f, 0.3f, 0.3f);
+	BoundingBoxDesc.vCenter = _float3(0.f, 0.f, 0.f);
 
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Collider", L"Com_Collider", reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingBoxDesc)))
 		return E_FAIL;
@@ -117,6 +123,42 @@ HRESULT CFeiyan_Normal::Add_Components()
 	m_pTrailBuffer = m_pGameInstance->Clone_Object(TEXT("Prototype_GameObject_Skill_Feiyan_Normal_Trail"), &TrailDesc);
 
 	if (nullptr == m_pTrailBuffer)
+		return E_FAIL;
+
+	CEffect::EFFECT_DESC ParticleDesc{};
+
+	ParticleDesc.pPlayerMatrix = m_pTransformCom->Get_WorldFloat4x4();
+	XMStoreFloat4x4(&ParticleDesc.RotationMatrix, XMMatrixRotationX(XMConvertToRadians(-90.f)));
+	ParticleDesc.vPos = _float4(0.f, 0.f, 0.f, 1.f);
+	ParticleDesc.vScale = _float3(1.f, 1.f, 1.f);
+	ParticleDesc.fDuration = 3.f;
+	ParticleDesc.isFollowPlayer = true;
+
+	m_FireParticle = m_pGameInstance->Clone_Object(TEXT("Prototype_GameObject_Effect_Feiyan_Normal_Particle"), &ParticleDesc);
+
+	//glow
+	CEffect::EFFECT_DESC StartParticleDesc{};
+
+	StartParticleDesc.pPlayerMatrix = m_pTransformCom->Get_WorldFloat4x4();
+	XMStoreFloat4x4(&StartParticleDesc.RotationMatrix, XMMatrixIdentity());
+	StartParticleDesc.vPos = _float4(0.f, -0.5f, 0.f, 1.f);
+	StartParticleDesc.vScale = _float3(1.f, 1.f, 1.f);
+	StartParticleDesc.fDuration = 0.4f;
+
+	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_Feiyan_Normal_Start_Particle"), TEXT("Layer_Particle"), &StartParticleDesc)))
+		return E_FAIL;
+
+	//Texture
+	CEffect::EFFECT_DESC TextureDesc{};
+
+	TextureDesc.pPlayerMatrix = m_pTransformCom->Get_WorldFloat4x4();
+	XMStoreFloat4x4(&TextureDesc.RotationMatrix, XMMatrixIdentity());
+	TextureDesc.vPos = _float4(0.f, 0.f, 0.f, 1.f);
+	TextureDesc.vScale = _float3(1.5f, 1.5f, 1.5f);
+	TextureDesc.fDuration = 0.3f;
+	TextureDesc.iMoveType = CEffect_Image::SHRINK;
+
+	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_Feiyan_Normal_Start"), TEXT("Layer_Particle"), &TextureDesc)))
 		return E_FAIL;
 
 	return S_OK;
@@ -168,4 +210,5 @@ void CFeiyan_Normal::Free()
 	Safe_Release(m_pVIBufferCom);
 
 	Safe_Release(m_pTrailBuffer);
+	Safe_Release(m_FireParticle);
 }

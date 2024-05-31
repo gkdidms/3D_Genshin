@@ -1,6 +1,8 @@
 #include "Tighnari_Normal.h"
 
 #include "GameInstance.h"
+#include "Effect.h"
+#include "Effect_Image.h"
 
 CTighnari_Normal::CTighnari_Normal(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPlayer_Bullet{ pDevice, pContext }
@@ -100,12 +102,11 @@ HRESULT CTighnari_Normal::Add_Components()
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_VIBuffer_RectZ", L"Com_VIBuffer", reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
 		return E_FAIL;
 
-	
 
 	CBounding_AABB::BOUNDING_AABB_DESC BoundingBoxDesc{};
 	BoundingBoxDesc.eType = CCollider::COLLIDER_AABB;
-	BoundingBoxDesc.vExtents = _float3(0.5f, 0.5f, 0.5f);
-	BoundingBoxDesc.vCenter = _float3(0.f, BoundingBoxDesc.vExtents.y, 0.f);
+	BoundingBoxDesc.vExtents = _float3(0.3f, 0.3f, 0.3f);
+	BoundingBoxDesc.vCenter = _float3(0.f, 0.f, 0.f);
 
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Collider", L"Com_Collider", reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingBoxDesc)))
 		return E_FAIL;
@@ -142,7 +143,7 @@ HRESULT CTighnari_Normal::Bind_ResourceData()
 
 _bool CTighnari_Normal::Move_Arrow(const _float& fTimeDelta)
 {
-	m_fAccelTime += fTimeDelta * 0.05f;
+	m_fAccelTime += fTimeDelta * 0.01f;
 
 	_float fTemp = (m_fPower * m_fAccelTime) - (9.8f * m_fAccelTime * m_fAccelTime * 0.5f);
 
@@ -156,10 +157,21 @@ _bool CTighnari_Normal::Move_Arrow(const _float& fTimeDelta)
 
 	if (m_fHeight >= XMVectorGetY(vPosition))
 	{
+		CEffect::EFFECT_DESC EffectDesc{};
+
+		EffectDesc.pPlayerMatrix = m_pTransformCom->Get_WorldFloat4x4();
+		XMStoreFloat4x4(&EffectDesc.RotationMatrix, XMMatrixIdentity());
+		EffectDesc.vPos = _float4(0.f, 0.5f, 0.f, 1.f);
+		EffectDesc.vScale = _float3(1.f, 1.f, 1.f);
+		EffectDesc.fDuration = 0.2f;
+		EffectDesc.iMoveType = CEffect_Image::SHRINK;
+
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_Tighnari_Effect_Arrow_Start"), TEXT("Layer_Trail"), &EffectDesc)))
+			return E_FAIL;
+
 		// 충돌했을때 이펙트 출력
 		return true;
 	}
-		
 
 	return false;
 }

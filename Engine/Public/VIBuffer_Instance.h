@@ -15,6 +15,7 @@ public:
         _float2 vSize;
         _float2 vSpeed;
         _float2 vLifeTime;
+        _float2 vPower;
         _bool isLoop;
     }INSTANCE_DESC;
 
@@ -38,11 +39,15 @@ protected:
     _uint m_iInstanceStride = { 0 };
 
     _float* m_pSpeeds = { nullptr };
+    _float* m_pPower = { nullptr };
     _float3* m_pOriginalPositions = { nullptr };
+
+    _float m_fAccelTime = { 0.f };
 
 public:
     void Spread(_float fTimeDelta);
     void Drop(_float fTimeDelta);
+    void Helix(_float fTimeDelta);
     
 protected:
     random_device				m_RandomDevice;

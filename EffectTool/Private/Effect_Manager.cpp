@@ -4,6 +4,7 @@
 
 #include "Effect_Mesh.h"
 #include "Tool_Effect_Point.h"
+#include "Effect_Trail.h"
 
 IMPLEMENT_SINGLETON(CEffect_Manager);
 
@@ -30,7 +31,7 @@ void CEffect_Manager::Tick(const _float& fTimeDelta)
 		pEffect->Late_Tick(fTimeDelta);
 }
 
-HRESULT CEffect_Manager::Add_Effect(EFFECT_TYPE eType, void* pArg)
+HRESULT CEffect_Manager::Add_Effect(EFFECT_TYPE eType, void* pArg, _uint iShaderPass)
 {
 	if (eType == PARTICLE)
 	{
@@ -39,6 +40,7 @@ HRESULT CEffect_Manager::Add_Effect(EFFECT_TYPE eType, void* pArg)
 		if (nullptr == pParticle)
 			return E_FAIL;
 
+		pParticle->Set_ShaderPass(iShaderPass);
 		m_Effects.emplace_back(pParticle);
 	}
 	else if (eType == EFFECT_IMG)
@@ -48,6 +50,7 @@ HRESULT CEffect_Manager::Add_Effect(EFFECT_TYPE eType, void* pArg)
 		if (nullptr == pEffect)
 			return E_FAIL;
 
+		pEffect->Set_ShaderPass(iShaderPass);
 		m_Effects.emplace_back(pEffect);
 	}
 	else if (eType == EFFECT_MESH)
@@ -58,9 +61,18 @@ HRESULT CEffect_Manager::Add_Effect(EFFECT_TYPE eType, void* pArg)
 		if (nullptr == pEffect)
 			return E_FAIL;
 
+		pEffect->Set_ShaderPass(iShaderPass);
 		m_Effects.emplace_back(pEffect);
 	}
+	else if (eType == EFFECT_TRAIL)
+	{
+		CTool_Effect* pEffect = dynamic_cast<CTool_Effect*>(m_pGameInstance->Clone_Object(TEXT("Prototype_GameObject_Effect_Trail"), pArg));
+		if (nullptr == pEffect)
+			return E_FAIL;
 
+		pEffect->Set_ShaderPass(iShaderPass);
+		m_Effects.emplace_back(pEffect);
+	}
 	return S_OK;
 }
 
@@ -103,81 +115,140 @@ HRESULT CEffect_Manager::Save(const _char* szFileName)
 			ofs.write((_char*)&Desc.vRange, sizeof(_float3));
 			ofs.write((_char*)&Desc.vSize, sizeof(_float2));
 			ofs.write((_char*)&Desc.vSpeed, sizeof(_float2));
-
-			//파티클 파일 이름
-			string strName = "";
-			strName.assign(pParticle->Get_FileName().begin(), pParticle->Get_FileName().end());
-			_uint iFileNameSize = pParticle->Get_FileName().size() + 1;
-			ofs.write((_char*)&iFileNameSize, sizeof(_uint));
-			ofs.write(strName.c_str(), iFileNameSize);
+			ofs.write((_char*)&Desc.vPower, sizeof(_float2));
 
 			//파티클 파일 경로
+			wstring strOrinFilePath = pParticle->Get_FilePath();
 			string strFilePath = "";
-			strFilePath.assign(pParticle->Get_FilePath().begin(), pParticle->Get_FilePath().end());
-			_uint iFilePathSize = pParticle->Get_FilePath().size() + 1;
+			strFilePath.assign(strOrinFilePath.begin(), strOrinFilePath.end());
+			_uint iFilePathSize = strOrinFilePath.size() + 1;
 			ofs.write((_char*)&iFilePathSize, sizeof(_uint));
 			ofs.write(strFilePath.c_str(), iFilePathSize);
+
+			//마스크 경로
+			_bool isMask = pParticle->isMask();
+			ofs.write((_char*)&isMask, sizeof(_bool));
+
+			wstring strMaskFilepath = pParticle->Get_MaskFilePath();
+			string MaskFilePath = "";
+			MaskFilePath.assign(strMaskFilepath.begin(), strMaskFilepath.end());
+			_uint iMaskFilePathSize = MaskFilePath.size() + 1;
+			ofs.write((_char*)&iMaskFilePathSize, sizeof(_uint));
+			ofs.write(MaskFilePath.c_str(), iMaskFilePathSize);
+
+			//노이즈 경로
+			_bool isNoise = pParticle->isNoise();
+			ofs.write((_char*)&isNoise, sizeof(_bool));
+
+			wstring strNoiseFilePath = pParticle->Get_NoiseFilePath();
+			string NoiseFilePath = "";
+			NoiseFilePath.assign(strNoiseFilePath.begin(), strNoiseFilePath.end());
+			_uint iNoiseFilePathSize = NoiseFilePath.size() + 1;
+			ofs.write((_char*)&iNoiseFilePathSize, sizeof(_uint));
+			ofs.write(NoiseFilePath.c_str(), iNoiseFilePathSize);
+
+			//색상
+			_float4 vColor = pParticle->Get_Color();
+			ofs.write((_char*)&vColor, sizeof(_float4));
+
+			//텍스쳐 갯수
+			_uint iNumTexture = pParticle->Get_TextureNum();
+			ofs.write((_char*)&iNumTexture, sizeof(_uint));
+
+			//렌더러 타입
+			_uint iRendererType = pParticle->Get_RendererType();
+			ofs.write((_char*)&iRendererType, sizeof(_uint));
+
+			//프레임 루프
+			_bool isFrameLoop = pParticle->isFrameLoop();
+			ofs.write((_char*)&isFrameLoop, sizeof(_bool));
 
 			//월드행렬
 			const _float4x4* WorldMatrix = pParticle->m_pTransformCom->Get_WorldFloat4x4();
 			ofs.write((_char*)WorldMatrix, sizeof(_float4x4));
+
+			//쉐이더 패스
+			_uint iShaderPass = pParticle->Get_ShaderPass();
+			ofs.write((_char*)&iShaderPass, sizeof(_uint));
 		}
 		else if (iEffectType == EFFECT_IMG)
 		{
 			CEffect_Default* pTextureEffect = dynamic_cast<CEffect_Default*>(pEffect);
 
-			//텍스쳐 파일 이름
-			string strName = "";
-			strName.assign(pTextureEffect->Get_FileName().begin(), pTextureEffect->Get_FileName().end());
-			_uint iFileNameSize = pTextureEffect->Get_FileName().size() + 1;
-			ofs.write((_char*)&iFileNameSize, sizeof(_uint));
-			ofs.write(strName.c_str(), iFileNameSize);
-
 			//파일 경로
+			wstring strOrinFilePath = pTextureEffect->Get_TextureFilePath();
 			string strFilePath = "";
-			strFilePath.assign(pTextureEffect->Get_TextureFilePath().begin(), pTextureEffect->Get_TextureFilePath().end());
-			_uint iFilePathSize = pTextureEffect->Get_TextureFilePath().size() + 1;
+			strFilePath.assign(strOrinFilePath.begin(), strOrinFilePath.end());
+			_uint iFilePathSize = strOrinFilePath.size() + 1;
 			ofs.write((_char*)&iFilePathSize, sizeof(_uint));
 			ofs.write(strFilePath.c_str(), iFilePathSize);
 
 			//월드행렬
 			const _float4x4* WorldMatrix = pTextureEffect->m_pTransformCom->Get_WorldFloat4x4();
 			ofs.write((_char*)WorldMatrix, sizeof(_float4x4));
+
+			//이미지 갯수
+			const _uint iTextureNum = pTextureEffect->Get_TextureNum();
+			ofs.write((_char*)&iTextureNum, sizeof(_uint));
+
+			//색상
+			_float4 vColor = pTextureEffect->Get_Color();
+			ofs.write((_char*)&vColor, sizeof(_float4));
+
+			//렌더러 타입
+			_uint iRendererType = pTextureEffect->Get_RendererType();
+			ofs.write((_char*)&iRendererType, sizeof(_uint));
+
+			//프레임 루프
+			_bool isFrameLoop = pTextureEffect->isFrameLoop();
+			ofs.write((_char*)&isFrameLoop, sizeof(_bool));
+
+			//쉐이더 패스
+			_uint iShaderPass = pTextureEffect->Get_ShaderPass();
+			ofs.write((_char*)&iShaderPass, sizeof(_uint));
+
 		}
-		else if (iEffectType == EFFECT_MESH)
+		else if (iEffectType == EFFECT_MESH || iEffectType == EFFECT_TRAIL)
 		{
 			CEffect_Mesh* pMeshEffect = dynamic_cast<CEffect_Mesh*>(pEffect);
 
-			//파일 이름
-			string strName = "";
-			strName.assign(pMeshEffect->Get_FileName().begin(), pMeshEffect->Get_FileName().end());
-			_uint iFileNameSize = pMeshEffect->Get_FileName().size() + 1;
-			ofs.write((_char*)&iFileNameSize, sizeof(_uint));
-			ofs.write(strName.c_str(), iFileNameSize);
-
 			//파일 경로
+			wstring strOrinFilePath = pMeshEffect->Get_TextureFilePath();
 			string strFilePath = "";
-			strFilePath.assign(pMeshEffect->Get_TextureFilePath().begin(), pMeshEffect->Get_TextureFilePath().end());
-			_uint iFilePathSize = pMeshEffect->Get_TextureFilePath().size() + 1;
+			strFilePath.assign(strOrinFilePath.begin(), strOrinFilePath.end());
+			_uint iFilePathSize = strOrinFilePath.size() + 1;
 			ofs.write((_char*)&iFilePathSize, sizeof(_uint));
 			ofs.write(strFilePath.c_str(), iFilePathSize);
-
-			//메쉬 이름
-			string strMeshFileName = pMeshEffect->Get_ModelFileName();
-			_uint iMeshFileNameSize = pMeshEffect->Get_ModelFileName().size() + 1;
-			ofs.write((_char*)&iMeshFileNameSize, sizeof(_uint));
-			ofs.write(strMeshFileName.c_str(), iMeshFileNameSize);
 
 			//메쉬 파일 경로
 			string strMeshFilePath = pMeshEffect->Get_MeshFilePath();
 			_uint iMeshFilePathSize = strMeshFilePath.size() + 1;
 			ofs.write((_char*)&iMeshFilePathSize, sizeof(_uint));
-			ofs.write(strMeshFileName.c_str(), iMeshFilePathSize);
+			ofs.write(strMeshFilePath.c_str(), iMeshFilePathSize);
+
+			_bool isMask = pMeshEffect->isMask();
+			ofs.write((_char*)&isMask, sizeof(_bool));
+
+			if (isMask)
+			{
+				//마스크 파일 경로
+				string MaskFilePath = "";
+				wstring strMaskFilePath = pMeshEffect->Get_MaskFilePath();
+				MaskFilePath.assign(strMaskFilePath.begin(), strMaskFilePath.end());
+				_uint iMaskFilePathSize = MaskFilePath.size() + 1;
+				ofs.write((_char*)&iMaskFilePathSize, sizeof(_uint));
+				ofs.write(MaskFilePath.c_str(), iMaskFilePathSize);
+			}
 
 			//월드행렬
 			const _float4x4* WorldMatrix = pMeshEffect->m_pTransformCom->Get_WorldFloat4x4();
 			ofs.write((_char*)WorldMatrix, sizeof(_float4x4));
+
+			//쉐이더 패스
+			_uint iShaderPass = pMeshEffect->Get_ShaderPass();
+			ofs.write((_char*)&iShaderPass, sizeof(_uint));
 		}
+		
 	}
 
 	ofs.close();
@@ -201,9 +272,9 @@ HRESULT CEffect_Manager::Load(const _char* szFileName)
 	ifs.read((_char*)&iNumObjects, sizeof(_uint));
 
 	//이펙트들 모두 저장
-	for (auto& pEffect : m_Effects)
+	for (size_t i = 0; i < iNumObjects; ++i)
 	{
-		_uint iEffectType = pEffect->Get_EffectType();
+		_uint iEffectType = 0;
 		ifs.read((_char*)&iEffectType, sizeof(_uint));
 
 		if (iEffectType == PARTICLE)
@@ -219,13 +290,8 @@ HRESULT CEffect_Manager::Load(const _char* szFileName)
 			ifs.read((_char*)&Desc.vRange, sizeof(_float3));
 			ifs.read((_char*)&Desc.vSize, sizeof(_float2));
 			ifs.read((_char*)&Desc.vSpeed, sizeof(_float2));
+			ifs.read((_char*)&Desc.vPower, sizeof(_float2));
 			Desc.iEffectType = iEffectType;
-
-			//파티클 파일 이름
-			_char strName[MAX_PATH] = "";
-			_uint iFileNameSize = 0;
-			ifs.read((_char*)&iFileNameSize, sizeof(_uint));
-			ifs.read(strName, iFileNameSize);
 
 			//파티클 파일 경로
 			_char strFilePath[MAX_PATH] = "";
@@ -233,27 +299,23 @@ HRESULT CEffect_Manager::Load(const _char* szFileName)
 			ifs.read((_char*)&iFilePathSize, sizeof(_uint));
 			ifs.read(strFilePath, iFilePathSize);
 
+
 			//월드행렬
 			_float4x4 WorldMatrix;
 			ifs.read((_char*)&WorldMatrix, sizeof(_float4x4));
 
-			string stringFileName = strName;
-			wstring wstrFileName = L"";
-			wstrFileName.assign(stringFileName.begin(), stringFileName.end());
-
-			Desc.strTextureFileName = wstrFileName;
 			strcpy_s(Desc.strTextureFilePath, strFilePath);
 
-			Add_Effect(EFFECT_TYPE(iEffectType), &Desc);
+			Desc.iEffectType = iEffectType;
+
+			_uint iShaderPass = 0;
+			ifs.read((_char*)&iShaderPass, sizeof(_uint));
+
+			Add_Effect(EFFECT_TYPE(iEffectType), &Desc, iShaderPass);
 		}
 		else if (iEffectType == EFFECT_IMG)
 		{
 			CEffect_Default::EFFECT_DEFAULT_DESC Desc;
-			//텍스쳐 파일 이름
-			_char strName[MAX_PATH] = "";
-			_uint iFileNameSize = 0;
-			ifs.read((_char*)&iFileNameSize, sizeof(_uint));
-			ifs.read(strName, iFileNameSize);
 
 			//파일 경로
 			_char strFilePath[MAX_PATH] = "";
@@ -265,60 +327,66 @@ HRESULT CEffect_Manager::Load(const _char* szFileName)
 			_float4x4 WorldMatrix;
 			ifs.read((_char*)&WorldMatrix, sizeof(_float4x4));
 
-			string stringFileName = strName;
-			wstring wstrFileName = L"";
-			wstrFileName.assign(stringFileName.begin(), stringFileName.end());
+			//쉐이더
+			_uint iShaderPass = 0;
+			ifs.read((_char*)&iShaderPass, sizeof(_uint));
 
-			Desc.strTextureFileName = wstrFileName;
 			strcpy_s(Desc.strTextureFilePath, strFilePath);
 
-			Add_Effect(EFFECT_TYPE(iEffectType), &Desc);
-		}
-		else if (iEffectType == EFFECT_MESH)
-		{
-			//파일 이름
-			_char strName[MAX_PATH] = "";
-			_uint iFileNameSize = 0;
-			ifs.read((_char*)&iFileNameSize, sizeof(_uint));
-			ifs.read(strName, iFileNameSize);
+			Desc.iEffectType = iEffectType;
 
+			Add_Effect(EFFECT_TYPE(iEffectType), &Desc, iShaderPass);
+		}
+		else if (iEffectType == EFFECT_MESH || iEffectType == EFFECT_TRAIL)
+		{
 			//파일 경로
 			_char strFilePath[MAX_PATH] = "";
 			_uint iFilePathSize = 0;
 			ifs.read((_char*)&iFilePathSize, sizeof(_uint));
 			ifs.read(strFilePath, iFilePathSize);
-
-			//메쉬 이름
-			_char strMeshFileName[MAX_PATH] = "";
-			_uint iMeshFileNameSize = 0;
-			ifs.read((_char*)&iMeshFileNameSize, sizeof(_uint));
-			ifs.read(strMeshFileName, iMeshFileNameSize);
 
 			//메쉬 파일 경로
 			_char strMeshFilePath[MAX_PATH] = "";
 			_uint iMeshFilePathSize = 0;
 			ifs.read((_char*)&iMeshFilePathSize, sizeof(_uint));
-			ifs.read(strMeshFileName, iMeshFilePathSize);
+			ifs.read(strMeshFilePath, iMeshFilePathSize);
+
+			_bool isMask = false;
+			ifs.read((_char*)&isMask, sizeof(_bool));
+
+			_char szMaskFilePath[MAX_PATH] = "";
+
+			if (isMask)
+			{
+				//마스크 파일 경로
+				_uint iMaskFilePathSize = 0;
+				ifs.read((_char*)&iMaskFilePathSize, sizeof(_uint));
+				ifs.read(szMaskFilePath, iMaskFilePathSize);
+			}
 
 			//월드행렬
 			_float4x4 WorldMatrix;
 			ifs.read((_char*)&WorldMatrix, sizeof(_float4x4));
 
+			//쉐이더 패스
+			_uint iShaderPass = 0;
+			ifs.read((_char*)&iShaderPass, sizeof(_uint));
+
 			CEffect_Mesh::EFFECT_MESH_DESC Desc{};
 			strcpy_s(Desc.szModelFilePath, strMeshFilePath); // 메쉬 경로
 			strcpy_s(Desc.strTextureFilePath, strFilePath); // 텍스쳐 경로
 			
-			//텍스쳐 이름
-			string stringFileName = strName;
-			wstring wstrFileName = L"";
-			wstrFileName.assign(stringFileName.begin(), stringFileName.end());
-			Desc.strTextureFileName = wstrFileName;
+			// 마스크 파일 경로
+			Desc.isMask = isMask;
+			if (isMask)
+			{
+				string strMaskFilePath = szMaskFilePath;
+				Desc.strMaskFilePath = strMaskFilePath;
+			}
 
-			//메쉬 이름
-			string stringMeshFileName = strMeshFileName;
-			Desc.strModelFileName = stringMeshFileName;
+			Desc.iEffectType = iEffectType;
 
-			Add_Effect(EFFECT_TYPE(iEffectType), &Desc);
+			Add_Effect(EFFECT_TYPE(iEffectType), &Desc, iShaderPass);
 		}
 	}
 

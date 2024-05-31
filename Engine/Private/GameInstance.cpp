@@ -117,6 +117,7 @@ HRESULT CGameInstance::Present()
 	return m_pGraphic_Device->Present();
 }
 
+
 HRESULT CGameInstance::Open_Level(_uint iLevelIndex, CLevel* pLevel)
 {
 	return m_pLevel_Manager->Open_Level(iLevelIndex, pLevel);

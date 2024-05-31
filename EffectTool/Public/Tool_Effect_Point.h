@@ -11,11 +11,10 @@ class CTool_Effect_Point :
     public CTool_Effect
 {
 public:
-    enum TYPE { DROP, SPREAD, TYPE_END };
+    enum TYPE { DROP, SPREAD, HELIX, TYPE_END };
 
 public:
     typedef struct tEffectPoint : public CTool_Effect::TOOL_EFFECT_DESC {
-        _char strTextureFilePath[MAX_PATH];
         _int iParticleType;
         _uint iNumInstance;
         _float3 vOffsetPos;
@@ -23,6 +22,7 @@ public:
         _float3 vRange;
         _float2 vSize;
         _float2 vSpeed;
+        _float2 vPower;
         _float2 vLifeTime;
         _bool isLoop;
     } EFFECT_POINT_DESC;
@@ -49,7 +49,7 @@ private:
     CVIBuffer_Instance_Point* m_pVIBufferCom = { nullptr };
     _int m_ParticleType = { TYPE_END };
 
-    EFFECT_POINT_DESC m_EffectDesc = {};
+    EFFECT_POINT_DESC m_EffectDesc;
 
 private:
     virtual HRESULT Add_Components();

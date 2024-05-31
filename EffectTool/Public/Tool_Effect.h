@@ -15,8 +15,14 @@ class CTool_Effect abstract:
 {
 public:
     typedef struct tToolEffectDesc : public CGameObject::GAMEOBJECT_DESC {
+        _char strTextureFilePath[MAX_PATH];
+        string strMaskFilePath;
+        string strNoiseFilePath;
+
+        _bool isMask;
+        _bool isNoise;
         _uint iEffectType;
-        wstring strTextureFileName;
+        _int iTextureNum = { 1 };
     }TOOL_EFFECT_DESC;
 
 protected:
@@ -27,12 +33,23 @@ protected:
 public:
     _uint Get_EffectType() { return m_iEffectType; }
     _uint Get_ShaderPass() { return m_iShaderPass; }
-    _bool Get_Start() { return m_isStart; }
-    wstring Get_FileName() { return m_strTextureFileName; }
+    _uint Get_TextureNum() { return m_iNumTexture; }
+    _float4 Get_Color() { return m_vColor; }
+    _uint Get_RendererType() { return m_iRendererType; }
 
+    wstring Get_TextureFilePath() { return m_strTextureFilePath; }
+    wstring Get_MaskFilePath() { return m_strMaskPath; }
+    wstring Get_NoiseFilePath() { return m_strNoisePath; }
+
+    _bool isMask() { return m_isMask; }
+    _bool isNoise() { return m_isNoise; }
+    _bool isFrameLoop() { return m_isFrameLoop; }
+    
 public:
     void Set_ShaderPass(_uint iShaderPass) { m_iShaderPass = iShaderPass; }
-    void isStart() { m_isStart = true; }
+    void Set_Color(_float4 vColor) { m_vColor = vColor; }
+    void Set_RendererType(_int iRendererType) { m_iRendererType = iRendererType; }
+    void Set_FrameLoop(_bool isLoop) { m_isFrameLoop = isLoop;}
 
 public:
     virtual HRESULT Initialize_Prototype() override;
@@ -45,13 +62,27 @@ public:
 protected:
     CShader* m_pShaderCom = { nullptr };
     CTexture* m_pTextureCom = { nullptr };
+    CTexture* m_pMaskTextureCom = { nullptr };
+    CTexture* m_pNoiseTexturCom = { nullptr };
 
     _uint m_iEffectType = { 0 };
-    wstring m_strTextureFileName = { L"" };
+    _int m_iNumTexture = { 1 };
+    _float4 m_vColor = {};
+
+    _uint m_iShaderPass = { 0 };
+    _uint m_iRendererType = { 0 };
+
+    _float m_fFrame = { 0.f };
+    _bool m_isFrameLoop = { false };
+    _bool m_isFrameStop = { false };
 
 protected:
-    _uint m_iShaderPass = { 0 };
-    _bool m_isStart = { false };
+    wstring m_strTextureFilePath = { L"" };
+    wstring m_strMaskPath = { L"" };
+    wstring m_strNoisePath = { L"" };
+
+    _bool m_isMask = { false };
+    _bool m_isNoise = { false };
 
 protected:
     virtual HRESULT Add_Components();

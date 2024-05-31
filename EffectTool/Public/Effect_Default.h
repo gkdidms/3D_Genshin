@@ -12,12 +12,9 @@ class CEffect_Default :
     public CTool_Effect
 {
 public:
+    enum TEXTURE_MOVE_TYPE { INCREASE, SHRINK, BOUNCE, TRAIL, MOVE_END };
     typedef struct tEffectDefault : public CTool_Effect::TOOL_EFFECT_DESC
     {
-        _char strTextureFilePath[MAX_PATH];
-        _char strTrailFilePath[MAX_PATH];
-        _bool isTrailBuffer;
-        _int iNumTexture;
     } EFFECT_DEFAULT_DESC;
 private:
     CEffect_Default(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -25,8 +22,12 @@ private:
     virtual ~CEffect_Default() = default;
 
 public:
-    wstring Get_TextureFilePath() { return m_strTextureFilePath; }
-    wstring Get_TrailFilePath() { return m_strTrailTextureFilePath; }
+    _uint Get_TextureMoveType() { return m_iTextureMoveType; }
+    _float Get_TextureMoveSpeed() { return m_fTextureMoveSpeed; }
+
+public:
+    void Set_TextureMoveType(_uint iIndex) { m_iTextureMoveType = iIndex; }
+    void Set_TextureMoveSpeed(_float fSpeed) { m_fTextureMoveSpeed = fSpeed; }
 
 public:
     virtual HRESULT Initialize_Prototype() override;
@@ -38,17 +39,13 @@ public:
 
 private:
     CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
-    CVIBuffer_Trail* m_pTrailVIBufferCom = { nullptr };
-    CTexture* m_pTrailTextureCom = { nullptr };
 
-    wstring m_strTextureFilePath = { L"" };
-    wstring m_strTrailTextureFilePath = { L"" };
-    _int m_iNumTexture = { 0 };
-    _bool m_isTrailBuffer = { false };
+    _uint m_iTextureMoveType = { MOVE_END };
 
 private:
     _float m_fDuration = { 5.f };
     _float m_fCurrentTime = { 0.f };
+    _float m_fTextureMoveSpeed = { 1.f };
 
 private:
     virtual HRESULT Add_Components() ;

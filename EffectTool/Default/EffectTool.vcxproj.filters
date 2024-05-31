@@ -64,6 +64,9 @@
     <Filter Include="02. GameObject\01. Effect\Effect\Mesh">
       <UniqueIdentifier>{30095a91-d4a9-429e-a576-7bd2ac7d5142}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\01. Effect\Effect\Trail">
+      <UniqueIdentifier>{2eccb8d5-95ad-4961-a90d-ccb871e619ad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EffectTool.h">
@@ -159,6 +162,9 @@
     <ClInclude Include="..\public\Effect_Mesh.h">
       <Filter>02. GameObject\01. Effect\Effect\Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Effect_Trail.h">
+      <Filter>02. GameObject\01. Effect\Effect\Trail</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="EffectTool.ico">
@@ -241,6 +247,9 @@
     <ClCompile Include="..\private\Effect_Mesh.cpp">
       <Filter>02. GameObject\01. Effect\Effect\Mesh</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Effect_Trail.cpp">
+      <Filter>02. GameObject\01. Effect\Effect\Trail</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="EffectTool.rc">
@@ -256,13 +265,16 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxInstance_Point.hlsl">
       <Filter>96. ShaderFiles</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl">
-      <Filter>96. ShaderFiles</Filter>
-    </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl">
       <Filter>96. ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl">
+      <Filter>96. ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh_Trail.hlsl">
+      <Filter>96. ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl">
       <Filter>96. ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

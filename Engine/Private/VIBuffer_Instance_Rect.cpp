@@ -105,6 +105,8 @@ HRESULT CVIBuffer_Instance_Rect::Initialize_Prototype(const CVIBuffer_Instance::
 	m_pSpeeds = new _float[m_iNumInstance];
 	ZeroMemory(m_pSpeeds, sizeof(_float) * m_iNumInstance);
 
+
+
 	m_pOriginalPositions = new _float3[m_iNumInstance];
 	ZeroMemory(m_pOriginalPositions, sizeof(_float3) * m_iNumInstance);
 
@@ -114,6 +116,7 @@ HRESULT CVIBuffer_Instance_Rect::Initialize_Prototype(const CVIBuffer_Instance::
 
 	uniform_real_distribution<float>	Size(InstanceDesc.vSize.x, InstanceDesc.vSize.y);
 	uniform_real_distribution<float>	Speed(InstanceDesc.vSpeed.x, InstanceDesc.vSpeed.y);
+	uniform_real_distribution<float>	Power(InstanceDesc.vPower.x, InstanceDesc.vPower.y);
 
 	uniform_real_distribution<float>	LifeTime(InstanceDesc.vLifeTime.x, InstanceDesc.vLifeTime.y);
 
@@ -128,6 +131,7 @@ HRESULT CVIBuffer_Instance_Rect::Initialize_Prototype(const CVIBuffer_Instance::
 		m_pOriginalPositions[i] = _float3(pInstanceVertices[i].vTranslation.x, pInstanceVertices[i].vTranslation.y, pInstanceVertices[i].vTranslation.z); // Loop를 위해 저장해준다.
 		pInstanceVertices[i].vLifeTime.x = LifeTime(m_RandomNumber); // 파티클이 살아있을 수 있는 시간.
 
+		
 		m_pSpeeds[i] = Speed(m_RandomNumber);
 	}
 	m_ResourceData.pSysMem = pInstanceVertices;

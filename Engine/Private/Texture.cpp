@@ -26,7 +26,7 @@ HRESULT CTexture::Initialize_Prototype(const wstring& strTextureFilePath, _uint 
 
 	for (size_t i = 0; i < iNumTextures; ++i)
 	{
-		wsprintf(szTextureFile, strTextureFilePath.c_str(), iNumTextures);
+		wsprintf(szTextureFile, strTextureFilePath.c_str(), i);
 		_wsplitpath_s(szTextureFile, nullptr, 0, nullptr, 0, nullptr, 0, szExt, MAX_PATH); // 파일 경로에서 확장자 저장
 
 		ID3D11ShaderResourceView* pSRV = { nullptr };

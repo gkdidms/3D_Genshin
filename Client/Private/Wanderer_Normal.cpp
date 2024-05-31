@@ -36,7 +36,7 @@ HRESULT CWanderer_Normal::Initialize(void* pArg)
 	HandMatrix.r[1] = XMVector3Normalize(HandMatrix.r[1]);
 	HandMatrix.r[2] = XMVector3Normalize(HandMatrix.r[2]);
 
-	m_pTransformCom->Rotation(XMVectorSet(1.f, 0.f, 1.f, 0.f), pDesc->iDir == DIR_RIGHT ? XMConvertToRadians(-45.f) : XMConvertToRadians(45.f));
+	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), pDesc->iDir == DIR_RIGHT ? XMConvertToRadians(-45.f) : XMConvertToRadians(45.f));
 
 	WorldMatrix = m_pTransformCom->Get_WorldMatrix() * HandMatrix * XMLoadFloat4x4(&pDesc->ParentMatrix);
 

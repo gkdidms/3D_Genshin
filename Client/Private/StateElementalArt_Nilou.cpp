@@ -11,6 +11,7 @@ PLAYER_STATE CStateElementalArt_Nilou::Enter(class CStateManager& pStateManager,
 {
 	m_fTime = { 0.f };
 	m_fCurrentTime = { 0.f };
+	m_fDuration = { 0.5f };
 
 	m_iElementalArtCount++;
 	return PLAYER_ELEMENTAL_1;
@@ -18,6 +19,8 @@ PLAYER_STATE CStateElementalArt_Nilou::Enter(class CStateManager& pStateManager,
 
 PLAYER_STATE CStateElementalArt_Nilou::Update(const _float& fTimeDelta, CStateManager& pStateManager, PLAYER_STATE CurrentState)
 {
+	PLAYER_STATE eState{ CurrentState };
+
 	m_fTime += fTimeDelta;
 	m_fCurrentTime += fTimeDelta;
 
@@ -29,14 +32,19 @@ PLAYER_STATE CStateElementalArt_Nilou::Update(const _float& fTimeDelta, CStateMa
 		Reset();
 		return __super::ToIdle(pStateManager, CurrentState);
 	}
-
-	if (CurrentState == PALYER_ATTACK_SPEC || CurrentState == PLAYER_ELEMENTAL_SPEC)
-		return CurrentState;
 		
 	if (m_fTime < m_fDuration)
 		return CurrentState;
 
-	PLAYER_STATE eState{ CurrentState };
+	if (CurrentState == PALYER_ATTACK_SPEC)
+	{
+		if (CurrentState != (eState = __super::ToRun(pStateManager, CurrentState)))
+			return eState;
+
+		if (CurrentState != (eState = __super::ToSprint(pStateManager, CurrentState)))
+			return eState;
+	}
+
 	if (m_pGameInstance->GetMouseState(DIM_LB) == CInput_Device::TAP) // 일반 공격
 	{
 		m_fTime = 0.f;
@@ -54,6 +62,8 @@ PLAYER_STATE CStateElementalArt_Nilou::Update(const _float& fTimeDelta, CStateMa
 		if (m_iSkillCount == m_iMaxSkill) //기도의 달
 		{
 			eState = PALYER_ATTACK_SPEC;
+			m_iSkillCount = 0.f;
+			m_iAttackCount = 0.f;
 		}
 	}
 	else if (m_pGameInstance->GetKeyState(DIK_E) == CInput_Device::TAP) // E 스킬

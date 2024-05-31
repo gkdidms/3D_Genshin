@@ -162,9 +162,13 @@
     <ClInclude Include="..\public\Avatar_Side_Select.h" />
     <ClInclude Include="..\public\Avatar_UI.h" />
     <ClInclude Include="..\public\Background.h" />
+    <ClInclude Include="..\public\Boss_Normal.h" />
     <ClInclude Include="..\public\Btn_Frame.h" />
     <ClInclude Include="..\public\Bullet.h" />
     <ClInclude Include="..\public\Effect.h" />
+    <ClInclude Include="..\public\EffectObject.h" />
+    <ClInclude Include="..\public\Effect_Image.h" />
+    <ClInclude Include="..\public\Effect_Particle.h" />
     <ClInclude Include="..\public\Feiyan_Normal.h" />
     <ClInclude Include="..\public\Feiyan_Normal_Trail.h" />
     <ClInclude Include="..\public\Hili_Arrow.h" />
@@ -195,9 +199,6 @@
     <ClInclude Include="..\public\BT_Tartaglia.h" />
     <ClInclude Include="..\public\CheckPoint.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
-    <ClInclude Include="..\public\Command.h" />
-    <ClInclude Include="..\public\Command_Manager.h" />
-    <ClInclude Include="..\public\Command_ATT.h" />
     <ClInclude Include="..\public\CutCamera.h" />
     <ClInclude Include="..\public\DefaultCamera.h" />
     <ClInclude Include="..\public\DungeonGate.h" />
@@ -260,7 +261,9 @@
     <ClInclude Include="..\Public\Tartaglia_Bow.h" />
     <ClInclude Include="..\Public\Tartaglia_DualBlade.h" />
     <ClInclude Include="..\public\ThornWall.h" />
+    <ClInclude Include="..\Public\Tighnari_Burst.h" />
     <ClInclude Include="..\public\Tighnari_Normal.h" />
+    <ClInclude Include="..\public\Effect_Trail.h" />
     <ClInclude Include="..\public\TreasureBox.h" />
     <ClInclude Include="..\public\UI.h" />
     <ClInclude Include="..\public\Wanderer_Normal.h" />
@@ -296,9 +299,13 @@
     <ClCompile Include="..\private\Avatar_Side_Select.cpp" />
     <ClCompile Include="..\private\Avatar_UI.cpp" />
     <ClCompile Include="..\private\Background.cpp" />
+    <ClCompile Include="..\private\Boss_Normal.cpp" />
     <ClCompile Include="..\private\Btn_Frame.cpp" />
     <ClCompile Include="..\private\Bullet.cpp" />
     <ClCompile Include="..\private\Effect.cpp" />
+    <ClCompile Include="..\private\EffectObject.cpp" />
+    <ClCompile Include="..\private\Effect_Image.cpp" />
+    <ClCompile Include="..\private\Effect_Particle.cpp" />
     <ClCompile Include="..\private\Feiyan_Normal.cpp" />
     <ClCompile Include="..\private\Feiyan_Normal_Trail.cpp" />
     <ClCompile Include="..\private\Hili_Arrow.cpp" />
@@ -328,9 +335,6 @@
     <ClCompile Include="..\private\BT_Hili_CrossBow.cpp" />
     <ClCompile Include="..\private\BT_Tartaglia.cpp" />
     <ClCompile Include="..\private\CheckPoint.cpp" />
-    <ClCompile Include="..\private\Command.cpp" />
-    <ClCompile Include="..\private\Command_Manager.cpp" />
-    <ClCompile Include="..\private\Command_ATT.cpp" />
     <ClCompile Include="..\private\CutCamera.cpp" />
     <ClCompile Include="..\private\DefaultCamera.cpp" />
     <ClCompile Include="..\private\DungeonGate.cpp" />
@@ -393,7 +397,9 @@
     <ClCompile Include="..\Private\Tartaglia_Bow.cpp" />
     <ClCompile Include="..\Private\Tartaglia_DualBlade.cpp" />
     <ClCompile Include="..\private\ThornWall.cpp" />
+    <ClCompile Include="..\Private\Tighnari_Burst.cpp" />
     <ClCompile Include="..\private\Tighnari_Normal.cpp" />
+    <ClCompile Include="..\private\Effect_Trail.cpp" />
     <ClCompile Include="..\private\TreasureBox.cpp" />
     <ClCompile Include="..\private\UI.cpp" />
     <ClCompile Include="..\private\Wanderer_Normal.cpp" />
@@ -426,7 +432,12 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimMesh_Skill.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxInstance_Point.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh_Effect.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex_Effect.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex_Skill.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex_Effect.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex_Skill.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex_UI.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimMesh.hlsl" />

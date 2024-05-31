@@ -171,6 +171,7 @@
     <ClInclude Include="..\public\Effect_Default.h" />
     <ClInclude Include="..\public\Effect_Manager.h" />
     <ClInclude Include="..\public\Effect_Mesh.h" />
+    <ClInclude Include="..\Public\Effect_Trail.h" />
     <ClInclude Include="..\public\Tool_Effect_Point.h" />
     <ClInclude Include="..\public\Tool_Effect.h" />
     <ClInclude Include="..\public\EffectTool_Manager.h" />
@@ -201,6 +202,7 @@
     <ClCompile Include="..\private\Effect_Default.cpp" />
     <ClCompile Include="..\private\Effect_Manager.cpp" />
     <ClCompile Include="..\private\Effect_Mesh.cpp" />
+    <ClCompile Include="..\Private\Effect_Trail.cpp" />
     <ClCompile Include="..\private\Tool_Effect_Point.cpp" />
     <ClCompile Include="..\private\Tool_Effect.cpp" />
     <ClCompile Include="..\private\EffectTool_Manager.cpp" />
@@ -221,6 +223,7 @@
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxInstance_Point.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh_Trail.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl" />
   </ItemGroup>

@@ -479,7 +479,7 @@ void CWanderer_Body::Create_Bullet()
 	if (m_pStateManager->isAttack())
 	{
 		CWanderer_Normal::WANDERER_NORMAL_DESC Desc{};
-		Desc.fSpeedPecSec = 8.f;
+		Desc.fSpeedPecSec = 20.f;
 		Desc.fRotatePecSec = XMConvertToRadians(90.f);
 		Desc.HandCombinedTransformationMatrix = *m_pModelCom->Get_BoneCombinedTransformationMatrix("PRIVATE_RHand");
 		Desc.ParentMatrix = *m_pParentMatrix;

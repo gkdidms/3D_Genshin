@@ -27,8 +27,11 @@ private:
     void Render_Priority();
     void Render_NonBlender();
     void Render_LightAcc();
+    void Render_CopyBackBuffer();
     void Render_DeferredResult();
     void Render_NonLight();
+    void Render_Gaussian();
+    void Render_GlowDeferred();
     void Render_Blender();
     void Render_UI();
 

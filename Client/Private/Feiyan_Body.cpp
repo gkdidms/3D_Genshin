@@ -3,6 +3,8 @@
 #include "StateManager.h"
 
 #include "Feiyan_Normal.h"
+#include <Effect.h>
+#include <Effect_Image.h>
 
 CFeiyan_Body::CFeiyan_Body(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject_Body{ pDevice, pContext }
@@ -63,14 +65,19 @@ void CFeiyan_Body::Tick(const _float& fTimeDelta)
 
 	XMStoreFloat4x4(&m_PlayerMovePos, MoveMatrix);
 
-	Create_Bullet(TEXT("Layer_Bullet"));
+	Create_Bullet(TEXT("Layer_Bullet"), fTimeDelta);
 }
 
 
 void CFeiyan_Body::Late_Tick(const _float& fTimeDelta)
 {
 	if (m_PreState != *m_pState)
+	{
 		m_PreState = *m_pState;
+		m_isCreated = false;
+		m_fCurrentTime = 0.f;
+	}
+		
 
 	XMStoreFloat4x4(&m_pWorldMatrix, m_pTransformCom->Get_WorldMatrix() * XMLoadFloat4x4(m_pParentMatrix));
 
@@ -346,28 +353,47 @@ void CFeiyan_Body::Change_Animation(const _float& fTimeDelta)
 	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ m_iAnim, m_IsLoop, m_IsLinear, m_IsLinearSpeed });
 }
 
-HRESULT CFeiyan_Body::Create_Bullet(const wstring& strLayerTag)
+HRESULT CFeiyan_Body::Create_Bullet(const wstring& strLayerTag, const _float& fTimeDelta)
 {
-	if (m_PreState == *m_pState)
+	if (m_isCreated)
 		return S_OK;
 
-	if (m_pGameInstance->GetMouseState(DIM_LB) == CInput_Device::TAP)
+	if (m_pStateManager->isNormalAttack())
 	{
+		m_fCurrentTime += fTimeDelta;
+
 		CBullet::BULLET_DESC Desc{};
 
 		if (*m_pState == PLAYER_ATTACK_1)
-			Desc.HandCombinedTransformationMatrix = *m_pModelCom->Get_BoneCombinedTransformationMatrix("PRIVATE_NormalAttack01");
-		else if (*m_pState == PLAYER_ATTACK_2)
-			Desc.HandCombinedTransformationMatrix = *m_pModelCom->Get_BoneCombinedTransformationMatrix("PRIVATE_NormalAttack02");
-		else if (*m_pState == PLAYER_ATTACK_3)
-			Desc.HandCombinedTransformationMatrix = *m_pModelCom->Get_BoneCombinedTransformationMatrix("PRIVATE_NormalAttack03");
+		{
+			if (m_fCurrentTime <= 0.2f)
+				return S_OK;
 
+			Desc.HandCombinedTransformationMatrix = *m_pModelCom->Get_BoneCombinedTransformationMatrix("PRIVATE_NormalAttack01");
+		}
+		else if (*m_pState == PLAYER_ATTACK_2)
+		{
+			if (m_fCurrentTime <= 0.3f)
+				return S_OK;
+
+			Desc.HandCombinedTransformationMatrix = *m_pModelCom->Get_BoneCombinedTransformationMatrix("PRIVATE_NormalAttack02");
+		}
+		else if (*m_pState == PLAYER_ATTACK_3)
+		{
+			if (m_fCurrentTime <= 0.5f)
+				return S_OK;
+
+			Desc.HandCombinedTransformationMatrix = *m_pModelCom->Get_BoneCombinedTransformationMatrix("PRIVATE_NormalAttack03");
+		}
+
+		m_isCreated = true;
 		Desc.ParentMatrix = *m_pParentMatrix;
 		Desc.fSpeedPecSec = 10.f;
 		Desc.pTargetPos = Targeting();
 
 		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Skill_Feiyan_Normal"), strLayerTag, &Desc)))
 			return E_FAIL;
+
 	}
 
 	return S_OK;

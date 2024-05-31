@@ -31,33 +31,6 @@
     <Filter Include="96. Utility">
       <UniqueIdentifier>{4ca56d1b-0058-40da-afc7-a78bec2b1926}</UniqueIdentifier>
     </Filter>
-    <Filter Include="96. Utility\01. Command">
-      <UniqueIdentifier>{2602ebfe-664d-44c0-993d-d84b32ea7fdf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\01. Command\Commend">
-      <UniqueIdentifier>{c1eea5a3-d53a-4d08-b208-3060db5afdc0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\01. Command\Manager">
-      <UniqueIdentifier>{e82c6b15-421c-4ddd-9dd7-618e1f1c67a2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\01. Command\Commend\Command_ATT">
-      <UniqueIdentifier>{dca0523c-338d-4ca3-8c2e-a1781e465447}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\02. AI">
-      <UniqueIdentifier>{c13141d5-5a58-45aa-aa89-2b5777994ec0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\02. AI\Node">
-      <UniqueIdentifier>{feed5125-c863-4687-a7a1-36154aeab93d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\02. AI\Node\Sequence">
-      <UniqueIdentifier>{5420b019-550d-471a-982d-468c03a6ca64}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\02. AI\Node\Selector">
-      <UniqueIdentifier>{daf3381b-449f-47cf-9948-fee0d567268f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. Utility\02. AI\Node\Action">
-      <UniqueIdentifier>{01196d42-b3db-49a6-bbba-4a700f1d1aca}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Level\02. Stage_Boss">
       <UniqueIdentifier>{7e044996-709f-4c0e-a668-484b0696decd}</UniqueIdentifier>
     </Filter>
@@ -343,9 +316,6 @@
     <Filter Include="02. GameObject\07. SceneObj\Gate">
       <UniqueIdentifier>{5c76dd34-4d1c-4faa-9f82-50322efdbd9f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="96. Utility\03. Trigger">
-      <UniqueIdentifier>{f5881f28-6c41-474b-b048-bc9bc0793a4f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\06. Boss\Skill">
       <UniqueIdentifier>{f9bf051d-66e2-477c-b364-64b628447aec}</UniqueIdentifier>
     </Filter>
@@ -435,6 +405,42 @@
     </Filter>
     <Filter Include="02. GameObject\11. Bullet\Monster\Hili">
       <UniqueIdentifier>{27a4efce-6068-4809-bd90-21df7561a788}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\10. Effect\EffectObject">
+      <UniqueIdentifier>{89073836-e644-4188-bacb-2fa29053e81c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\10. Effect\EffectObject\00. Trail">
+      <UniqueIdentifier>{fa48ac8c-934a-4f41-9659-14fa674ea565}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\10. Effect\EffectObject\01. Particle">
+      <UniqueIdentifier>{b185530e-14d0-42b3-ae08-69111b3c8eaa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\10. Effect\EffectObject\02. Image">
+      <UniqueIdentifier>{40a30dad-7436-4c26-a6e9-52465c309605}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\11. Bullet\Player\Tighnari\Normal">
+      <UniqueIdentifier>{d7bca8e8-f87c-4aea-8eb2-e68acaa706e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\11. Bullet\Player\Tighnari\Burst">
+      <UniqueIdentifier>{fc2ba0d1-821e-48e4-95e5-c34763c85f1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\11. Bullet\Monster\Boss">
+      <UniqueIdentifier>{d3ec17ed-27d5-4066-8378-359e5803e4cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility\00. AI">
+      <UniqueIdentifier>{c13141d5-5a58-45aa-aa89-2b5777994ec0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility\00. AI\Node">
+      <UniqueIdentifier>{feed5125-c863-4687-a7a1-36154aeab93d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility\00. AI\Node\Sequence">
+      <UniqueIdentifier>{5420b019-550d-471a-982d-468c03a6ca64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility\00. AI\Node\Selector">
+      <UniqueIdentifier>{daf3381b-449f-47cf-9948-fee0d567268f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility\00. AI\Node\Action">
+      <UniqueIdentifier>{01196d42-b3db-49a6-bbba-4a700f1d1aca}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -573,15 +579,6 @@
     <ClInclude Include="..\public\Weapon_Narukami.h">
       <Filter>02. GameObject\04. Player\PartObject\Weapon\Yae</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Command.h">
-      <Filter>96. Utility\01. Command\Commend</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Command_ATT.h">
-      <Filter>96. Utility\01. Command\Commend\Command_ATT</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Command_Manager.h">
-      <Filter>96. Utility\01. Command\Manager</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Slime.h">
       <Filter>02. GameObject\05. Monster\Slime</Filter>
     </ClInclude>
@@ -613,16 +610,16 @@
       <Filter>02. GameObject\05. Monster\Slime\AI</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Selector.h">
-      <Filter>96. Utility\02. AI\Node\Selector</Filter>
+      <Filter>96. Utility\00. AI\Node\Selector</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Sequence.h">
-      <Filter>96. Utility\02. AI\Node\Sequence</Filter>
+      <Filter>96. Utility\00. AI\Node\Sequence</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Node.h">
-      <Filter>96. Utility\02. AI\Node</Filter>
+      <Filter>96. Utility\00. AI\Node</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Action.h">
-      <Filter>96. Utility\02. AI\Node\Action</Filter>
+      <Filter>96. Utility\00. AI\Node\Action</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Hili.h">
       <Filter>02. GameObject\05. Monster\hili</Filter>
@@ -819,9 +816,6 @@
     <ClInclude Include="..\public\Feiyan_Normal_Trail.h">
       <Filter>02. GameObject\11. Bullet\Player\Feiyan\Trail</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Tighnari_Normal.h">
-      <Filter>02. GameObject\11. Bullet\Player\Tighnari</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Wanderer_Normal.h">
       <Filter>02. GameObject\11. Bullet\Player\Wanderer</Filter>
     </ClInclude>
@@ -833,6 +827,27 @@
     </ClInclude>
     <ClInclude Include="..\public\Hili_Arrow.h">
       <Filter>02. GameObject\11. Bullet\Monster\Hili</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Boss_Normal.h">
+      <Filter>02. GameObject\11. Bullet\Monster\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Effect_Trail.h">
+      <Filter>02. GameObject\10. Effect\EffectObject\00. Trail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Effect_Particle.h">
+      <Filter>02. GameObject\10. Effect\EffectObject\01. Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Effect_Image.h">
+      <Filter>02. GameObject\10. Effect\EffectObject\02. Image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EffectObject.h">
+      <Filter>02. GameObject\10. Effect\EffectObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Tighnari_Normal.h">
+      <Filter>02. GameObject\11. Bullet\Player\Tighnari\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Tighnari_Burst.h">
+      <Filter>02. GameObject\11. Bullet\Player\Tighnari\Burst</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -959,15 +974,6 @@
     <ClCompile Include="..\private\Weapon_Narukami.cpp">
       <Filter>02. GameObject\04. Player\PartObject\Weapon\Yae</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Command.cpp">
-      <Filter>96. Utility\01. Command\Commend</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Command_ATT.cpp">
-      <Filter>96. Utility\01. Command\Commend\Command_ATT</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Command_Manager.cpp">
-      <Filter>96. Utility\01. Command\Manager</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Slime.cpp">
       <Filter>02. GameObject\05. Monster\Slime</Filter>
     </ClCompile>
@@ -999,16 +1005,16 @@
       <Filter>02. GameObject\05. Monster\Slime\AI</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Selector.cpp">
-      <Filter>96. Utility\02. AI\Node\Selector</Filter>
+      <Filter>96. Utility\00. AI\Node\Selector</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Sequence.cpp">
-      <Filter>96. Utility\02. AI\Node\Sequence</Filter>
+      <Filter>96. Utility\00. AI\Node\Sequence</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Node.cpp">
-      <Filter>96. Utility\02. AI\Node</Filter>
+      <Filter>96. Utility\00. AI\Node</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Action.cpp">
-      <Filter>96. Utility\02. AI\Node\Action</Filter>
+      <Filter>96. Utility\00. AI\Node\Action</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Hili_Fire.cpp">
       <Filter>02. GameObject\05. Monster\hili\Fire</Filter>
@@ -1205,9 +1211,6 @@
     <ClCompile Include="..\private\Feiyan_Normal_Trail.cpp">
       <Filter>02. GameObject\11. Bullet\Player\Feiyan\Trail</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Tighnari_Normal.cpp">
-      <Filter>02. GameObject\11. Bullet\Player\Tighnari</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Wanderer_Normal.cpp">
       <Filter>02. GameObject\11. Bullet\Player\Wanderer</Filter>
     </ClCompile>
@@ -1219,6 +1222,27 @@
     </ClCompile>
     <ClCompile Include="..\private\Hili_Arrow.cpp">
       <Filter>02. GameObject\11. Bullet\Monster\Hili</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boss_Normal.cpp">
+      <Filter>02. GameObject\11. Bullet\Monster\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Effect_Trail.cpp">
+      <Filter>02. GameObject\10. Effect\EffectObject\00. Trail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Effect_Particle.cpp">
+      <Filter>02. GameObject\10. Effect\EffectObject\01. Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Effect_Image.cpp">
+      <Filter>02. GameObject\10. Effect\EffectObject\02. Image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EffectObject.cpp">
+      <Filter>02. GameObject\10. Effect\EffectObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Tighnari_Normal.cpp">
+      <Filter>02. GameObject\11. Bullet\Player\Tighnari\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Tighnari_Burst.cpp">
+      <Filter>02. GameObject\11. Bullet\Player\Tighnari\Burst</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1254,6 +1278,21 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex_Skill.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxInstance_Point.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex_Effect.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh_Effect.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimMesh_Skill.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex_Effect.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

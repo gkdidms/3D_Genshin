@@ -40,6 +40,7 @@ HRESULT CGameObject::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_Components.emplace(L"Com_Transform", m_pTransformCom);
+	Safe_AddRef(m_pTransformCom);
 
 	m_iIndex = g_iObjectIndex++;
 

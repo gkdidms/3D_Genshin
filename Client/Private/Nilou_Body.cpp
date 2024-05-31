@@ -365,6 +365,7 @@ void CNilou_Body::Change_Animation(const _float& fTimeDelta)
 
 }
 
+
 CNilou_Body* CNilou_Body::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CNilou_Body* pInstance = new CNilou_Body(pDevice, pContext);

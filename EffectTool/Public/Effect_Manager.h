@@ -15,7 +15,7 @@ class CEffect_Manager :
     DECLARE_SINGLETON(CEffect_Manager)
 
 public:
-    enum EFFECT_TYPE { PARTICLE, EFFECT_IMG, EFFECT_MESH, EFFECT_END };
+    enum EFFECT_TYPE { PARTICLE, EFFECT_IMG, EFFECT_MESH, EFFECT_TRAIL, EFFECT_BURST, EFFECT_END };
 
 private:
     CEffect_Manager();
@@ -27,7 +27,7 @@ public:
 public:
     HRESULT Initialize();
     void Tick(const _float& fTimeDelta);
-    HRESULT Add_Effect(EFFECT_TYPE eType, void* pArg = nullptr);
+    HRESULT Add_Effect(EFFECT_TYPE eType, void* pArg = nullptr, _uint iShaderPass = 0);
     void Remove_Effect(_int iIndex);
     
     HRESULT Save(const _char* szFileName);

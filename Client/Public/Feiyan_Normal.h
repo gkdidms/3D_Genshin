@@ -33,6 +33,7 @@ private:
     CVIBuffer_RectZ* m_pVIBufferCom = { nullptr };
 
     CGameObject* m_pTrailBuffer = { nullptr };
+    CGameObject* m_FireParticle = { nullptr };
 
 private:
     HRESULT Add_Components();

@@ -19,11 +19,15 @@ public:
     virtual HRESULT Render() override;
 
 private:
+    _float m_fCurrentTime = { 0.f };
+    _bool m_isCreated = { false };
+
+private:
     virtual HRESULT Add_Components();
     virtual HRESULT Bind_ResourceData();
     virtual void Change_Animation(const _float& fTimeDelta);
 
-    HRESULT Create_Bullet(const wstring& strLayerTag);
+    HRESULT Create_Bullet(const wstring& strLayerTag, const _float& fTimeDelta);
 
 public:
     static CFeiyan_Body* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

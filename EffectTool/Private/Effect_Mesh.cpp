@@ -24,10 +24,6 @@ HRESULT CEffect_Mesh::Initialize(void* pArg)
 
 	EFFECT_MESH_DESC* pDesc = static_cast<EFFECT_MESH_DESC*>(pArg);
 	strcpy_s(m_szModelFilePath, pDesc->szModelFilePath);
-	string strTextureFilePath(pDesc->strTextureFilePath);
-	m_strTextureFilePath.assign(strTextureFilePath.begin(), strTextureFilePath.end());
-	m_iNumTexture = pDesc->iNumTexture;
-	m_strModelFileName = pDesc->strModelFileName;
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -48,7 +44,7 @@ void CEffect_Mesh::Tick(const _float& fTimeDelta)
 
 void CEffect_Mesh::Late_Tick(const _float& fTimeDelta)
 {
-	m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONLIGHT, this);
+	m_pGameInstance->Add_Renderer(CRenderer::RENDERER_STATE(m_iRendererType), this);
 }
 
 HRESULT CEffect_Mesh::Render()
@@ -74,11 +70,11 @@ HRESULT CEffect_Mesh::Add_Components()
 
 	_matrix PreMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
 	m_pModelCom = CModel::Create(m_pDevice, m_pContext, m_szModelFilePath, PreMatrix, m_szModelFilePath);
+
 	if (nullptr == m_pModelCom)
 		return E_FAIL;
 
-	m_pTextureCom = CTexture::Create(m_pDevice, m_pContext, m_strTextureFilePath, m_iNumTexture);
-	if (nullptr == m_pTextureCom)
+	if (FAILED(__super::Add_Components()))
 		return E_FAIL;
 
 	return S_OK;
@@ -86,14 +82,7 @@ HRESULT CEffect_Mesh::Add_Components()
 
 HRESULT CEffect_Mesh::Bind_ResourceData()
 {
-	if (FAILED(m_pTransformCom->Bind_ShaderMatrix(m_pShaderCom, "g_WorldMatrix")))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(CPipeLine::D3DTS_VIEW))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(CPipeLine::D3DTS_PROJ))))
-		return E_FAIL;
-
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", 0)))
+	if (FAILED(__super::Bind_ResourceData()))
 		return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_UV", &m_UV, sizeof(_float2))))

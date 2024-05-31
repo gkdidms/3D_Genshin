@@ -76,7 +76,7 @@ _vector CPartObject::Targeting()
 		_float fAngle = acosf(XMVectorGetX(XMVector3Dot(XMVector3Normalize(vDistance), XMVector3Normalize(XMLoadFloat4x4(m_pParentMatrix).r[2]))));
 
 		float fFov = 100.f;
-		if (fDistance <= 10.f && XMConvertToDegrees(fAngle) < fFov)
+		if (fDistance <= 20.f && XMConvertToDegrees(fAngle) < fFov)
 		{
 			if (fPreDistance == 0.f || fPreDistance > fDistance)
 			{

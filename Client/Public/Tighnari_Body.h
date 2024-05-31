@@ -19,12 +19,16 @@ public:
     HRESULT Render();
 
 private:
+    _float m_fCurrentTime = { 0.f };
+    _bool m_isCreated = { false };
+
+private:
     virtual HRESULT Add_Components() override;
     virtual HRESULT Bind_ResourceData() override;
     virtual void Change_Animation(const _float& fTimeDelta) override;
 
 private:
-    HRESULT Create_Object();
+    HRESULT Create_Object(const _float& fTimeDelta);
 
 public:
     static CTighnari_Body* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

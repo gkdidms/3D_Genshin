@@ -34,7 +34,7 @@ private:
 
 private:
     _float m_fAccelTime = { 0.f };
-    _float m_fPower = { 5.f };
+    _float m_fPower = { 7.f };
     _float m_fHeight = { 0.f }; // 플레이어 y값 저장
 
 private:

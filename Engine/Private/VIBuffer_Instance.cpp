@@ -12,8 +12,9 @@ CVIBuffer_Instance::CVIBuffer_Instance(const CVIBuffer_Instance& rhs)
 	m_iIndexCountPerInstance{ rhs.m_iIndexCountPerInstance },
 	m_iInstanceStride{ rhs.m_iInstanceStride },
 	m_InstanceBufferDesc{ rhs.m_InstanceBufferDesc },
-	m_pSpeeds { rhs.m_pSpeeds },
-	m_pOriginalPositions { rhs.m_pOriginalPositions }
+	m_pSpeeds{ rhs.m_pSpeeds },
+	m_pOriginalPositions{ rhs.m_pOriginalPositions },
+	m_pPower{ rhs.m_pPower }
 {
 	m_pDevice->CreateBuffer(&m_InstanceBufferDesc, nullptr, &m_pVBInstance);
 	m_pContext->CopyResource(m_pVBInstance, rhs.m_pVBInstance);
@@ -113,6 +114,42 @@ void CVIBuffer_Instance::Drop(_float fTimeDelta)
 
 	m_pContext->Unmap(m_pVBInstance, 0);
 }
+void CVIBuffer_Instance::Helix(_float fTimeDelta)
+{
+	D3D11_MAPPED_SUBRESOURCE		SubResource{};
+
+	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+
+	m_fAccelTime += fTimeDelta * 0.01f;
+
+	for (size_t i = 0; i < m_iNumInstance; i++)
+	{
+		VTXMATRIX* pVertices = (VTXMATRIX*)SubResource.pData;
+		pVertices[i].vLifeTime.y += fTimeDelta;
+
+		_vector			vDir = XMVectorSet(1.f, 0.f, 1.f * m_pPower[i], 0.f);
+
+		_vector vPos = XMLoadFloat4(&pVertices[i].vTranslation) + XMVector3Normalize(vDir) * m_pSpeeds[i] * fTimeDelta;
+		_float fY = XMVectorGetX(vPos);
+		_float fTemp = (m_pPower[i] * m_fAccelTime) - (9.8f * m_fAccelTime * m_fAccelTime * 0.5f);
+
+		vPos = XMVectorSetY(vPos, fY - fTemp);
+
+		XMStoreFloat4(&pVertices[i].vTranslation, vPos);
+
+		if (pVertices[i].vLifeTime.y >= pVertices[i].vLifeTime.x)
+		{
+			if (true == m_InstanceDesc.isLoop)
+			{
+				pVertices[i].vTranslation = _float4(m_pOriginalPositions[i].x, m_pOriginalPositions[i].y, m_pOriginalPositions[i].z, 1.f);
+				pVertices[i].vLifeTime.y = 0.f;
+			}
+		}
+	}
+
+	m_pContext->Unmap(m_pVBInstance, 0);
+}
+
 void CVIBuffer_Instance::Free()
 {
 	__super::Free();
@@ -120,6 +157,7 @@ void CVIBuffer_Instance::Free()
 	if (false == m_isCloned)
 	{
 		Safe_Delete_Array(m_pSpeeds);
+		Safe_Delete_Array(m_pPower);
 		Safe_Delete_Array(m_pOriginalPositions);
 	}
 

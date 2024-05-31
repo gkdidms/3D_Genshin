@@ -77,7 +77,8 @@ void CEffectTool_Manager::Window_Effect()
 
     ImGui::RadioButton("Particle", &m_iEffectType, 0);ImGui::SameLine();
     ImGui::RadioButton("Effect_Img", &m_iEffectType, 1); ImGui::SameLine();
-    ImGui::RadioButton("Effect_Mesh", &m_iEffectType, 2);
+    ImGui::RadioButton("Effect_Mesh", &m_iEffectType, 2);ImGui::SameLine();
+    ImGui::RadioButton("Effect_Trail", &m_iEffectType, 3);
 
     ImGui::NewLine();
 
@@ -93,56 +94,79 @@ void CEffectTool_Manager::Window_Effect()
         if (ImGuiFileDialog::Instance()->IsOk()) { // action if OK
             m_strTextureFilePath = ImGuiFileDialog::Instance()->GetFilePathName();
             string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
-            m_strTextureFileName = ImGuiFileDialog::Instance()->GetCurrentFileName();
             // action
         }
 
         // close
         ImGuiFileDialog::Instance()->Close();
     }
-    ImGui::InputInt("Texture Num", &m_iTextureNum);
+
+    ImGui::InputInt("Texture Count : ", &m_iTextureNum);
 
     char szTextureFileName[MAX_PATH] = "";
     sprintf_s(szTextureFileName, "TextureFileName : %s", m_strTextureFilePath.c_str());
     ImGui::Text(szTextureFileName);
 
-    if (m_iEffectType == CEffect_Manager::EFFECT_IMG)
-    {
-        ImGui::InputFloat("Speed : ", &m_fTextureSpeed);
-        ImGui::InputFloat("Rotate : ", &m_fRotateSpeed);
-    }
-
-    ImGui::Checkbox("TrailBuffer ?", &m_isTrailBuffer);
-
-    if (m_isTrailBuffer)
+    ImGui::Checkbox("Mask Texture? ", &m_isMask);
+    if (m_isMask)
     {
         ImGui::NewLine();
 
-        // TrailBuffer 만들기
-        if (ImGui::Button("Open TrailFile")) {
+        // Mask 만들기
+        if (ImGui::Button("Open MaskFile")) {
             IGFD::FileDialogConfig config;
             config.path = "../../Client/Bin/Resources/Textures/";
-            ImGuiFileDialog::Instance()->OpenDialog("ChooseTrailFileDlgKey", "Choose File", ".png, .jpg, .dds", config);
+            ImGuiFileDialog::Instance()->OpenDialog("ChooseMaskFileDlgKey", "Choose File", ".png, .jpg, .dds", config);
         }
 
         // display
-        if (ImGuiFileDialog::Instance()->Display("ChooseTrailFileDlgKey")) {
+        if (ImGuiFileDialog::Instance()->Display("ChooseMaskFileDlgKey")) {
             if (ImGuiFileDialog::Instance()->IsOk()) { // action if OK
-                m_strTrailFilePath = ImGuiFileDialog::Instance()->GetFilePathName();
+                m_strMaskFilePath = ImGuiFileDialog::Instance()->GetFilePathName();
                 string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
-                m_strTrailFileName = ImGuiFileDialog::Instance()->GetCurrentFileName();
                 // action
             }
-
             // close
             ImGuiFileDialog::Instance()->Close();
         }
 
-        char szTrailFileName[MAX_PATH] = "";
-        sprintf_s(szTrailFileName, "TrailFileName : %s", m_strTrailFileName.c_str());
-        ImGui::Text(szTrailFileName);
-    }
+        char szMaskFileName[MAX_PATH] = "";
+        sprintf_s(szMaskFileName, "MaskFileName : %s", m_strMaskFilePath.c_str());
+        ImGui::Text(szMaskFileName);
 
+        ImGui::NewLine();
+    }
+    ImGui::NewLine();
+
+    ImGui::Checkbox("Noise Texture? ", &m_isNoise);
+    if (m_isNoise)
+    {
+        ImGui::NewLine();
+
+        // Mask 만들기
+        if (ImGui::Button("Open NoiseFile")) {
+            IGFD::FileDialogConfig config;
+            config.path = "../../Client/Bin/Resources/Textures/";
+            ImGuiFileDialog::Instance()->OpenDialog("ChooseNoiseFileDlgKey", "Choose File", ".png, .jpg, .dds", config);
+        }
+
+        // display
+        if (ImGuiFileDialog::Instance()->Display("ChooseNoiseFileDlgKey")) {
+            if (ImGuiFileDialog::Instance()->IsOk()) { // action if OK
+                m_strNoiseFilePath = ImGuiFileDialog::Instance()->GetFilePathName();
+                string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
+                // action
+            }
+            // close
+            ImGuiFileDialog::Instance()->Close();
+        }
+
+        char szNoiseFileName[MAX_PATH] = "";
+        sprintf_s(szNoiseFileName, "NoiseFileName : %s", m_strMaskFilePath.c_str());
+        ImGui::Text(szNoiseFileName);
+
+        ImGui::NewLine();
+    }
     ImGui::NewLine();
 
     // Mesh 만들기 (mesh 파일은 .dat 파일로 가져오기)
@@ -151,13 +175,11 @@ void CEffectTool_Manager::Window_Effect()
         config.path = "../../Data/EffectMesh/";
         ImGuiFileDialog::Instance()->OpenDialog("ChooseMeshFileDlgKey", "Choose File", ".dat", config);
     }
-
     // display
     if (ImGuiFileDialog::Instance()->Display("ChooseMeshFileDlgKey")) {
         if (ImGuiFileDialog::Instance()->IsOk()) { // action if OK
             m_strMeshFilePath = ImGuiFileDialog::Instance()->GetFilePathName();
             string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
-            m_strMeshFileName = ImGuiFileDialog::Instance()->GetCurrentFileName();
             // action
         }
 
@@ -166,7 +188,7 @@ void CEffectTool_Manager::Window_Effect()
     }
 
     char szMeshFileName[MAX_PATH] = "";
-    sprintf_s(szMeshFileName, "TextrueFileName : %s", m_strMeshFileName.c_str());
+    sprintf_s(szMeshFileName, "MeshFileName : %s", m_strMeshFilePath.c_str());
     ImGui::Text(szMeshFileName);
 
     ImGui::NewLine();
@@ -175,7 +197,8 @@ void CEffectTool_Manager::Window_Effect()
     ImGui::NewLine();
 
     ImGui::RadioButton("Spread", &m_ParticleType, 1); ImGui::SameLine();
-    ImGui::RadioButton("Drop", &m_ParticleType, 0);
+    ImGui::RadioButton("Drop", &m_ParticleType, 0); ImGui::SameLine();
+    ImGui::RadioButton("Helix", &m_ParticleType, 2);
 
     ImGui::InputInt("Instance Num", &m_iNumInstance);
     ImGui::InputFloat3("Offset", (_float*)&m_vOffsetPos);
@@ -183,6 +206,7 @@ void CEffectTool_Manager::Window_Effect()
     ImGui::InputFloat3("Range", (_float*)&m_vRange);
     ImGui::InputFloat2("Size", (_float*)&m_vSize);
     ImGui::InputFloat2("Speed", (_float*)&m_vSpeed);
+    ImGui::InputFloat2("Power", (_float*)&m_vPower);
     ImGui::InputFloat2("LifeTime", (_float*)&m_vLifeTime);
     ImGui::Checkbox("Loop", &m_isLoop);
 
@@ -203,24 +227,32 @@ void CEffectTool_Manager::Window_Effect()
             EffectDesc.vSize = m_vSize;
             EffectDesc.vSpeed = m_vSpeed;
             EffectDesc.vLifeTime = m_vLifeTime;
+            EffectDesc.vPower = m_vPower;
             EffectDesc.isLoop = m_isLoop;
             EffectDesc.iParticleType = m_ParticleType;
             strcpy_s(EffectDesc.strTextureFilePath, m_strTextureFilePath.c_str());
             EffectDesc.iEffectType = m_iEffectType;
+            EffectDesc.isMask = m_isMask;
+            EffectDesc.strMaskFilePath = m_strMaskFilePath;
+            EffectDesc.isNoise = m_isMask;
+            EffectDesc.strNoiseFilePath = m_strNoiseFilePath;
 
             if (FAILED(m_pEffectManager->Add_Effect(CEffect_Manager::EFFECT_TYPE(m_iEffectType), &EffectDesc)))
             {
                 MessageBoxW(g_hWnd, L"파티클 생성 실패", 0, 0);
             }
         }
-        else if (m_iEffectType == CEffect_Manager::EFFECT_MESH)
+        else if (m_iEffectType == CEffect_Manager::EFFECT_MESH || m_iEffectType == CEffect_Manager::EFFECT_TRAIL)
         {
             CEffect_Mesh::EFFECT_MESH_DESC EffectDesc{};
            
             strcpy_s(EffectDesc.strTextureFilePath, m_strTextureFilePath.c_str());
-            EffectDesc.iNumTexture = m_iTextureNum;
             strcpy_s(EffectDesc.szModelFilePath, m_strMeshFilePath.c_str());
             EffectDesc.iEffectType = m_iEffectType;
+            EffectDesc.isMask = m_isMask;
+            EffectDesc.strMaskFilePath = m_strMaskFilePath;
+            EffectDesc.isNoise = m_isMask;
+            EffectDesc.strNoiseFilePath = m_strNoiseFilePath;
 
             if (FAILED(m_pEffectManager->Add_Effect(CEffect_Manager::EFFECT_TYPE(m_iEffectType), &EffectDesc)))
             {
@@ -229,17 +261,16 @@ void CEffectTool_Manager::Window_Effect()
         }
         else if (m_iEffectType == CEffect_Manager::EFFECT_IMG)
         {
-            wstring strTrailFilePath = TEXT("");
-            strTrailFilePath.assign(m_strTrailFilePath.begin(), m_strTrailFilePath.end());
-
             CEffect_Default::EFFECT_DEFAULT_DESC EffectDesc{};
-            EffectDesc.isTrailBuffer = m_isTrailBuffer;
             strcpy_s(EffectDesc.strTextureFilePath, m_strTextureFilePath.c_str());
-            strcpy_s(EffectDesc.strTrailFilePath, m_strTrailFilePath.c_str());
-            EffectDesc.iNumTexture = m_iTextureNum;
             EffectDesc.iEffectType = m_iEffectType;
             EffectDesc.fRotatePecSec = m_fRotateSpeed;
             EffectDesc.fSpeedPecSec = m_fTextureSpeed;
+            EffectDesc.iTextureNum = m_iTextureNum;
+            EffectDesc.isNoise = m_isMask;
+            EffectDesc.strNoiseFilePath = m_strNoiseFilePath;
+            EffectDesc.isMask = m_isMask;
+            EffectDesc.strMaskFilePath = m_strMaskFilePath;
 
             if (FAILED(m_pEffectManager->Add_Effect(CEffect_Manager::EFFECT_TYPE(m_iEffectType), &EffectDesc)))
             {
@@ -327,20 +358,6 @@ void CEffectTool_Manager::Window_EffectPatch()
     ImGui::InputFloat3("Sc", matrixScale);
     ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, (_float*)&m_EffectMatrix);
 
-
-
-    if (m_iPatchIndex != -1)
-    {
-        if (Effects.size() == 0 || !Effects[m_iPatchIndex]->Get_Start())
-        {
-            vector<CTool_Effect*> Objects = m_pEffectManager->Get_Effects();
-            _matrix ObjectMatrix = Objects[m_iPatchIndex]->m_pTransformCom->Get_WorldMatrix();
-            memcpy(&ObjectMatrix, &m_EffectMatrix, sizeof(_float4x4));
-            Objects[m_iPatchIndex]->m_pTransformCom->Set_WorldMatrix(ObjectMatrix);
-        }
-
-    }
-
     if (m_iPatchIndex == -1)
     {
         ImGui::End();
@@ -351,14 +368,28 @@ void CEffectTool_Manager::Window_EffectPatch()
 
     if (pCurrentEffect->Get_EffectType() == CEffect_Manager::EFFECT_IMG)
     {
-        // 런타임 스타트
-        
-        if (ImGui::Button("TRAIL START"))
-        {
-            pCurrentEffect->isStart();
-        }
+        // 타입 설정
+        CEffect_Default* pTexture = dynamic_cast<CEffect_Default*>(pCurrentEffect);
+        _int iType = pTexture->Get_TextureMoveType();
+        // INCREASE, SHRINK, RUN
+        if (ImGui::RadioButton("INCREASE", &iType, 0)) // 확대
+            pTexture->Set_TextureMoveType(iType);
+        else if (ImGui::RadioButton("SHRINK", &iType, 1)) // 축소
+            pTexture->Set_TextureMoveType(iType);
+        else if (ImGui::RadioButton("BOUNCE", &iType, 2)) // 콩닥콩닥
+            pTexture->Set_TextureMoveType(iType);
+        else if (ImGui::RadioButton("TRAIL", &iType, 3)) // 트레일 버퍼같은 용도
+            pTexture->Set_TextureMoveType(iType);
+        else if (ImGui::RadioButton("STOP", &iType, 4)) // end
+            pTexture->Set_TextureMoveType(iType);
+
+        _float fSpeed = pTexture->Get_TextureMoveSpeed();
+
+        if (ImGui::InputFloat("Speed", &fSpeed))
+            pTexture->Set_TextureMoveSpeed(fSpeed);
+
     }
-    if (pCurrentEffect->Get_EffectType() == CEffect_Manager::EFFECT_MESH)
+    if (pCurrentEffect->Get_EffectType() == CEffect_Manager::EFFECT_MESH || pCurrentEffect->Get_EffectType() == CEffect_Manager::EFFECT_TRAIL)
     {
         CEffect_Mesh* pMesh = dynamic_cast<CEffect_Mesh*>(pCurrentEffect);
         _float2 vUV = pMesh->Get_UV();
@@ -367,11 +398,54 @@ void CEffectTool_Manager::Window_EffectPatch()
             pMesh->Set_UV(vUV);
         }
     }
-    //쉐이더 옵션 변경하기
-    _int iShaderPass = pCurrentEffect->Get_ShaderPass();
-    if (ImGui::InputInt("ShaderPass : ", &iShaderPass))
+
+    _int iCurrentRendererType = pCurrentEffect->Get_RendererType();
+
+    if (ImGui::RadioButton("NONLIGHT", &iCurrentRendererType, CRenderer::RENDER_NONLIGHT))
+        pCurrentEffect->Set_RendererType(iCurrentRendererType);
+    else if (ImGui::RadioButton("BLAND", &iCurrentRendererType, CRenderer::RENDER_BLENDER))
+        pCurrentEffect->Set_RendererType(iCurrentRendererType);
+
+    //프레임 루프
+    _bool isFrameLoop = pCurrentEffect->isFrameLoop();
+    if (ImGui::Checkbox("FrameLoop", &isFrameLoop))
+        pCurrentEffect->Set_FrameLoop(isFrameLoop);
+
+    //색상 선택 
+    m_vColor = pCurrentEffect->Get_Color();
+    ImGui::InputFloat4("Color : ", (_float*)&m_vColor);
+
+    m_iShaderPass = pCurrentEffect->Get_ShaderPass();
+    _uint iEffectType = pCurrentEffect->Get_EffectType();
+    //쉐이더 옵션 변경하기 (이펙트 별로 다르게 주기)
+    // 쉐이더별로 줄 수 있도록 조절하기
+    if (iEffectType == CEffect_Manager::PARTICLE)
     {
-        pCurrentEffect->Set_ShaderPass(iShaderPass);
+        if (ImGui::RadioButton("All Color Alpha", &m_iShaderPass, 0))
+            pCurrentEffect->Set_ShaderPass(m_iShaderPass);
+        if (ImGui::RadioButton("Spread", &m_iShaderPass, 1))
+            pCurrentEffect->Set_ShaderPass(m_iShaderPass);
+        if (ImGui::RadioButton("Nilou_Water", &m_iShaderPass, 2))
+            pCurrentEffect->Set_ShaderPass(m_iShaderPass);
+    }
+    else if (iEffectType == CEffect_Manager::EFFECT_IMG)
+    {
+        if (ImGui::RadioButton("Default", &m_iShaderPass, 0))
+            pCurrentEffect->Set_ShaderPass(m_iShaderPass);
+    }
+    else if (iEffectType == CEffect_Manager::EFFECT_MESH)
+    {
+        if (ImGui::RadioButton("UV_TEST", &m_iShaderPass, 0))
+            pCurrentEffect->Set_ShaderPass(m_iShaderPass);
+    }
+    else if (m_iEffectType == CEffect_Manager::EFFECT_TRAIL)
+    {
+        if (ImGui::RadioButton("Default_Trail", &m_iShaderPass, 0))
+            pCurrentEffect->Set_ShaderPass(m_iShaderPass);
+        if (ImGui::RadioButton("Water_Trail", &m_iShaderPass, 1))
+            pCurrentEffect->Set_ShaderPass(m_iShaderPass);
+        if (ImGui::RadioButton("Water_Ring_Trail", &m_iShaderPass, 2))
+            pCurrentEffect->Set_ShaderPass(m_iShaderPass);
     }
 
     ImGui::End();
@@ -439,10 +513,10 @@ void CEffectTool_Manager::Effect_Save() // 파일 저장
         if (ImGui::Button("Save"))
         {
             // 저장하는 함수 호출 & 불변수 호출
-            /*if (IsNewFile)
-                m_pObject_Manager->Save(m_szNewFileName);
+            if (m_isNewFile)
+                m_pEffectManager->Save(m_szNewFileName);
             else
-                m_pObject_Manager->Save(m_FileName[m_iSaveFileIndex].c_str());*/
+                m_pEffectManager->Save(m_FileName[m_iSaveFileIndex].c_str());
 
             Bind_FileName();
             ImGui::CloseCurrentPopup();
@@ -484,7 +558,7 @@ void CEffectTool_Manager::Effect_Load() // 파일 로드
         if (ImGui::Button("Load"))
         {
             // 불러오는 함수 호출 & 불변수 호출
-
+            m_pEffectManager->Load(m_FileName[m_iLoadFileIndex].c_str());
             ImGui::CloseCurrentPopup();
             m_isShowLoadModal = false;
         }

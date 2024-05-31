@@ -24,10 +24,6 @@ HRESULT CTool_Effect_Point::Initialize(void* pArg)
 
 	EFFECT_POINT_DESC* pDesc = static_cast<EFFECT_POINT_DESC*>(pArg);
 	m_ParticleType = pDesc->iParticleType;
-	
-	string strFilePath(pDesc->strTextureFilePath);
-	
-	m_strTextureFilePath.assign(strFilePath.begin(), strFilePath.end());
 	m_EffectDesc = *pDesc;
 
 	if (FAILED(__super::Initialize(pArg)))
@@ -45,15 +41,31 @@ void CTool_Effect_Point::Priority_Tick(const _float& fTimeDelta)
 
 void CTool_Effect_Point::Tick(const _float& fTimeDelta)
 {
+	if (m_iNumTexture > 1)
+	{
+		if (m_isFrameStop == false)
+		{
+			m_fFrame += m_iNumTexture * fTimeDelta;
+
+			if (m_fFrame >= m_iNumTexture)
+			{
+				if (!m_isFrameLoop) m_isFrameStop = true;
+				m_fFrame = 0.f;
+			}
+		}
+	}
+
 	if (m_ParticleType == SPREAD)
 		m_pVIBufferCom->Spread(fTimeDelta);
 	else if (m_ParticleType == DROP)
 		m_pVIBufferCom->Drop(fTimeDelta);
+	else if (m_ParticleType == HELIX)
+		m_pVIBufferCom->Helix(fTimeDelta);
 }
 
 void CTool_Effect_Point::Late_Tick(const _float& fTimeDelta)
 {
-	m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONLIGHT, this);
+	m_pGameInstance->Add_Renderer(CRenderer::RENDERER_STATE(m_iRendererType), this);
 }
 
 HRESULT CTool_Effect_Point::Render()
@@ -61,7 +73,7 @@ HRESULT CTool_Effect_Point::Render()
 	if (FAILED(Bind_ResourceData()))
 		return E_FAIL;
 
-	m_pShaderCom->Begin(m_ParticleType);
+	m_pShaderCom->Begin(m_iShaderPass);
 	m_pVIBufferCom->Render();
 
 	return S_OK;
@@ -80,6 +92,7 @@ HRESULT CTool_Effect_Point::Add_Components()
 	InstanceDesc.vRange = m_EffectDesc.vRange;
 	InstanceDesc.vSize = m_EffectDesc.vSize;
 	InstanceDesc.vSpeed = m_EffectDesc.vSpeed;
+	InstanceDesc.vPower = m_EffectDesc.vPower;
 	InstanceDesc.vLifeTime = m_EffectDesc.vLifeTime;
 	InstanceDesc.isLoop = m_EffectDesc.isLoop;
 
@@ -87,8 +100,7 @@ HRESULT CTool_Effect_Point::Add_Components()
 	if (nullptr == m_pVIBufferCom)
 		return E_FAIL;
 
-	m_pTextureCom = CTexture::Create(m_pDevice, m_pContext, m_strTextureFilePath, 1);
-	if (nullptr == m_pTextureCom)
+	if (FAILED(__super::Add_Components()))
 		return E_FAIL;
 
 	return S_OK;
@@ -96,14 +108,7 @@ HRESULT CTool_Effect_Point::Add_Components()
 
 HRESULT CTool_Effect_Point::Bind_ResourceData()
 {
-	if (FAILED(m_pTransformCom->Bind_ShaderMatrix(m_pShaderCom, "g_WorldMatrix")))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(CPipeLine::D3DTS_VIEW))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(CPipeLine::D3DTS_PROJ))))
-		return E_FAIL;
-
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
+	if (FAILED(__super::Bind_ResourceData()))
 		return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", m_pGameInstance->Get_CamPosition_Float4(), sizeof(_float4))))
