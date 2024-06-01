@@ -28,6 +28,7 @@ private:
 public:
     _uint Get_NumMeshes() { return m_iNumMeshes; }
     _uint Get_NumMaterials() { return m_iNumMaterials; }
+    _uint Get_NumAnim() { return m_iNumAnimations; }
 
     _bool Get_Animation_Finished() const { return m_Animations[m_tAnimDesc.iCurrentAnimIndex]->IsFinished(); } //현재 재생되고 있는 애니메이션 모델이 종료 되었는지 확인하는 함수
     _bool Get_Animation_Finished(_uint iIndex) const { return m_Animations[iIndex]->IsFinished(); } // 매개변수의 인덱스 애니메이션이 종료 되었는지 확인하는 함수

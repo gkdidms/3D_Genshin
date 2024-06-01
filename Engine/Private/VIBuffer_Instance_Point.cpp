@@ -90,6 +90,9 @@ HRESULT CVIBuffer_Instance_Point::Initialize_Prototype(const INSTANCE_DESC& Inst
 	m_pPower = new _float[m_iNumInstance];
 	ZeroMemory(m_pPower, sizeof(_float) * m_iNumInstance);
 
+	m_pAccelTime = new _float[m_iNumInstance];
+	ZeroMemory(m_pAccelTime, sizeof(_float) * m_iNumInstance);
+
 	m_pOriginalPositions = new _float3[m_iNumInstance];
 	ZeroMemory(m_pOriginalPositions, sizeof(_float3) * m_iNumInstance);
 
@@ -116,6 +119,7 @@ HRESULT CVIBuffer_Instance_Point::Initialize_Prototype(const INSTANCE_DESC& Inst
 
 		m_pPower[i] = Power(m_RandomNumber);
 		m_pSpeeds[i] = Speed(m_RandomNumber);
+		m_pAccelTime[i] = 0.f;
 	}
 	m_ResourceData.pSysMem = pInstanceVertices;
 

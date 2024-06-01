@@ -168,6 +168,7 @@
     <ClInclude Include="..\..\Imgui\imgui\imstb_truetype.h" />
     <ClInclude Include="..\public\EffectTool_Camera.h" />
     <ClInclude Include="..\public\EffectTool_Terrain.h" />
+    <ClInclude Include="..\Public\Effect_Anim_Model.h" />
     <ClInclude Include="..\public\Effect_Default.h" />
     <ClInclude Include="..\public\Effect_Manager.h" />
     <ClInclude Include="..\public\Effect_Mesh.h" />
@@ -199,6 +200,7 @@
     <ClCompile Include="..\..\Imgui\imgui\imgui_widgets.cpp" />
     <ClCompile Include="..\private\EffectTool_Camera.cpp" />
     <ClCompile Include="..\private\EffectTool_Terrain.cpp" />
+    <ClCompile Include="..\Private\Effect_Anim_Model.cpp" />
     <ClCompile Include="..\private\Effect_Default.cpp" />
     <ClCompile Include="..\private\Effect_Manager.cpp" />
     <ClCompile Include="..\private\Effect_Mesh.cpp" />
@@ -221,6 +223,7 @@
     <None Include="..\..\Imgui\imgui\.editorconfig" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimMesh.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxInstance_Point.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh_Trail.hlsl" />

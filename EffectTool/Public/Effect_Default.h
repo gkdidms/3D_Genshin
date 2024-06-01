@@ -29,6 +29,8 @@ public:
     void Set_TextureMoveType(_uint iIndex) { m_iTextureMoveType = iIndex; }
     void Set_TextureMoveSpeed(_float fSpeed) { m_fTextureMoveSpeed = fSpeed; }
 
+
+
 public:
     virtual HRESULT Initialize_Prototype() override;
     virtual HRESULT Initialize(void* pArg) override;
@@ -43,8 +45,7 @@ private:
     _uint m_iTextureMoveType = { MOVE_END };
 
 private:
-    _float m_fDuration = { 5.f };
-    _float m_fCurrentTime = { 0.f };
+    
     _float m_fTextureMoveSpeed = { 1.f };
 
 private:

@@ -12,9 +12,11 @@ class CEffect_Trail :
     public CTool_Effect
 {
 public:
+    enum TYPE { NON_TYPE, NILOU_FlOWER, NOLOU_RING, TYPE_END };
     typedef struct tEffectMesh : public CTool_Effect::TOOL_EFFECT_DESC
     {
         _char szModelFilePath[MAX_PATH];
+        _uint iTrailType = { 0 };
     } EFFECT_MESH_DESC;
 
 private:
@@ -24,11 +26,12 @@ private:
 
 public:
     _char* Get_MeshFilePath() { return m_szModelFilePath; }
-
+    _uint Get_TrailMoveType() { return m_iTrailMoveType; }
     _float2 Get_UV() { return m_UV; }
 
 public:
     void Set_UV(_float2 vUV) { m_UV = vUV; }
+    void Set_TrailMoveType(_uint iType) { m_iTrailMoveType = iType; }
 
 public:
     virtual HRESULT Initialize_Prototype() override;
@@ -42,7 +45,7 @@ private:
     CModel* m_pModelCom = { nullptr };
 
     _char m_szModelFilePath[MAX_PATH] = {""};
-    
+    _uint m_iTrailMoveType = { 0 };
 
 private:
     _float2 m_UV = {};

@@ -37,6 +37,14 @@ void CEffect_Default::Priority_Tick(const _float& fTimeDelta)
 
 void CEffect_Default::Tick(const _float& fTimeDelta)
 {
+	m_fCurrentTime += fTimeDelta;
+
+	if (m_fStartTime >= m_fCurrentTime)
+		return;
+
+	if (m_fDurationTime <= m_fCurrentTime && m_fDurationTime > 0.f)
+		return;
+
 	if (m_iNumTexture > 1)
 	{
 		if (m_isFrameStop == false)
@@ -69,6 +77,12 @@ void CEffect_Default::Tick(const _float& fTimeDelta)
 
 void CEffect_Default::Late_Tick(const _float& fTimeDelta)
 {
+	if (m_fStartTime >= m_fCurrentTime)
+		return;
+
+	if (m_fDurationTime <= m_fCurrentTime && m_fDurationTime > 0.f)
+		return;
+
 	m_pGameInstance->Add_Renderer(CRenderer::RENDERER_STATE(m_iRendererType), this);
 }
 

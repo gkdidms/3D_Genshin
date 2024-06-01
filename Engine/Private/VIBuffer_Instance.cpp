@@ -114,26 +114,26 @@ void CVIBuffer_Instance::Drop(_float fTimeDelta)
 
 	m_pContext->Unmap(m_pVBInstance, 0);
 }
-void CVIBuffer_Instance::Helix(_float fTimeDelta)
+
+void CVIBuffer_Instance::Fountain(_float fTimeDelta)
 {
 	D3D11_MAPPED_SUBRESOURCE		SubResource{};
 
 	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
 
-	m_fAccelTime += fTimeDelta * 0.01f;
-
 	for (size_t i = 0; i < m_iNumInstance; i++)
 	{
 		VTXMATRIX* pVertices = (VTXMATRIX*)SubResource.pData;
 		pVertices[i].vLifeTime.y += fTimeDelta;
+		m_pAccelTime[i] += fTimeDelta * 0.01f;
 
-		_vector			vDir = XMVectorSet(1.f, 0.f, 1.f * m_pPower[i], 0.f);
+		_vector			vDir = XMVectorSetW(XMLoadFloat4(&pVertices[i].vTranslation) - XMLoadFloat3(&m_InstanceDesc.vOffsetPos), 0.f);
 
-		_vector vPos = XMLoadFloat4(&pVertices[i].vTranslation) + XMVector3Normalize(vDir) * m_pSpeeds[i] * fTimeDelta;
-		_float fY = XMVectorGetX(vPos);
-		_float fTemp = (m_pPower[i] * m_fAccelTime) - (9.8f * m_fAccelTime * m_fAccelTime * 0.5f);
+		_vector vPos = XMLoadFloat4(&pVertices[i].vTranslation) + (XMVector3Normalize(vDir) * m_pSpeeds[i] * fTimeDelta);
+		_float fY = XMVectorGetY(vPos);
+		_float fTemp = (m_pPower[i] * m_pAccelTime[1]) - (9.8f * m_pAccelTime[1] * m_pAccelTime[1] * 0.5f);
 
-		vPos = XMVectorSetY(vPos, fY - fTemp);
+		vPos = XMVectorSetY(vPos, fY + fTemp);
 
 		XMStoreFloat4(&pVertices[i].vTranslation, vPos);
 
@@ -143,6 +143,7 @@ void CVIBuffer_Instance::Helix(_float fTimeDelta)
 			{
 				pVertices[i].vTranslation = _float4(m_pOriginalPositions[i].x, m_pOriginalPositions[i].y, m_pOriginalPositions[i].z, 1.f);
 				pVertices[i].vLifeTime.y = 0.f;
+				m_pAccelTime[1] = 0.f;
 			}
 		}
 	}

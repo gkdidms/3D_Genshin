@@ -33,6 +33,7 @@ private:
     void Window_Effect();
     void Window_MainBar();
     void Window_EffectPatch();
+    void Window_Model();
 
 private:
     void Effect_Save();
@@ -52,6 +53,8 @@ private:
     string m_strMeshFilePath = { "" };
     string m_strMaskFilePath = { "" };
     string m_strNoiseFilePath = { "" };
+    string m_strModelFilePath = { "" };
+    string m_strModelDataFilePath = { "" };
     _bool m_isMask = { false };
     _bool m_isNoise = { false };
 
@@ -76,6 +79,11 @@ private: // Patch
 
     ImGuizmo::OPERATION mCurrentGizmoOperation = { ImGuizmo::TRANSLATE };
     ImGuizmo::MODE mCurrentGizmoMode = { ImGuizmo::WORLD };
+
+    _float m_fStartTime = {};
+    _float m_fDurationTime = {};
+
+    _int m_iAnimIndex = { 0 };
 
 private:
     _int m_ParticleType = { 0 };

@@ -67,6 +67,9 @@
     <Filter Include="02. GameObject\01. Effect\Effect\Trail">
       <UniqueIdentifier>{2eccb8d5-95ad-4961-a90d-ccb871e619ad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\Model">
+      <UniqueIdentifier>{f1fa63f8-f7d0-4b2f-b878-ad7637f9ffbd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EffectTool.h">
@@ -165,6 +168,9 @@
     <ClInclude Include="..\Public\Effect_Trail.h">
       <Filter>02. GameObject\01. Effect\Effect\Trail</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Effect_Anim_Model.h">
+      <Filter>02. GameObject\Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="EffectTool.ico">
@@ -250,6 +256,9 @@
     <ClCompile Include="..\Private\Effect_Trail.cpp">
       <Filter>02. GameObject\01. Effect\Effect\Trail</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Effect_Anim_Model.cpp">
+      <Filter>02. GameObject\Model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="EffectTool.rc">
@@ -275,6 +284,9 @@
       <Filter>96. ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl">
+      <Filter>96. ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimMesh.hlsl">
       <Filter>96. ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

@@ -11,7 +11,7 @@ class CTool_Effect_Point :
     public CTool_Effect
 {
 public:
-    enum TYPE { DROP, SPREAD, HELIX, TYPE_END };
+    enum TYPE { DROP, SPREAD, FOUNTAIN, TYPE_END };
 
 public:
     typedef struct tEffectPoint : public CTool_Effect::TOOL_EFFECT_DESC {

@@ -150,7 +150,7 @@ HRESULT CMainTool::Ready_Level_For_Main()
     if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Object", CTool_Non_Object::Create(m_pDevice, m_pContext))))
         return E_FAIL;
 
-    if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_AnimObject", CTool_Anim_Object::Create(m_pDevice, m_pContext))))
+    if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_AnimObject", CEffect_Anim_Model::Create(m_pDevice, m_pContext))))
         return E_FAIL;
 
     if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Dungeon", CTool_Dungeon::Create(m_pDevice, m_pContext))))

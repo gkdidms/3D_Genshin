@@ -23,6 +23,13 @@ public:
         _bool isNoise;
         _uint iEffectType;
         _int iTextureNum = { 1 };
+
+        _float4 vColor = {};
+        _uint iRendererType = { 0 };
+        _bool isFrameLoop = { false };
+        _float fStartTime = { 0.f };
+        _float fDurationTime = { 0.f };
+        _matrix WorldMatrix = { XMMatrixIdentity()};
     }TOOL_EFFECT_DESC;
 
 protected:
@@ -36,6 +43,8 @@ public:
     _uint Get_TextureNum() { return m_iNumTexture; }
     _float4 Get_Color() { return m_vColor; }
     _uint Get_RendererType() { return m_iRendererType; }
+    _float Get_StartTime() { return m_fStartTime; }
+    _float Get_DurationTime() { return m_fDurationTime; }
 
     wstring Get_TextureFilePath() { return m_strTextureFilePath; }
     wstring Get_MaskFilePath() { return m_strMaskPath; }
@@ -44,12 +53,16 @@ public:
     _bool isMask() { return m_isMask; }
     _bool isNoise() { return m_isNoise; }
     _bool isFrameLoop() { return m_isFrameLoop; }
+
+    void Reset() { m_fCurrentTime == 0.f; }
     
 public:
-    void Set_ShaderPass(_uint iShaderPass) { m_iShaderPass = iShaderPass; }
+    void Set_ShaderPass(_uint iShaderPass) { m_iShaderPass = iShaderPass; Reset(); }
     void Set_Color(_float4 vColor) { m_vColor = vColor; }
     void Set_RendererType(_int iRendererType) { m_iRendererType = iRendererType; }
     void Set_FrameLoop(_bool isLoop) { m_isFrameLoop = isLoop;}
+    void Set_StartTime(_float fStartTime) { m_fStartTime = fStartTime; Reset(); }
+    void Set_DurationTime(_float fDurationTime) { m_fDurationTime = fDurationTime; Reset(); }
 
 public:
     virtual HRESULT Initialize_Prototype() override;
@@ -70,11 +83,13 @@ protected:
     _float4 m_vColor = {};
 
     _uint m_iShaderPass = { 0 };
-    _uint m_iRendererType = { 0 };
+    _uint m_iRendererType = { 2 };
 
     _float m_fFrame = { 0.f };
     _bool m_isFrameLoop = { false };
     _bool m_isFrameStop = { false };
+
+
 
 protected:
     wstring m_strTextureFilePath = { L"" };
@@ -83,6 +98,11 @@ protected:
 
     _bool m_isMask = { false };
     _bool m_isNoise = { false };
+
+    _float m_fStartTime = {0.f};
+    _float m_fDurationTime = {0.f};
+
+    _float m_fCurrentTime = { 0.f };
 
 protected:
     virtual HRESULT Add_Components();

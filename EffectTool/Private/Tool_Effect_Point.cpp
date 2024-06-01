@@ -41,6 +41,9 @@ void CTool_Effect_Point::Priority_Tick(const _float& fTimeDelta)
 
 void CTool_Effect_Point::Tick(const _float& fTimeDelta)
 {
+	if (m_iShaderPass == 2)
+		m_fCurrentTime += fTimeDelta;
+
 	if (m_iNumTexture > 1)
 	{
 		if (m_isFrameStop == false)
@@ -59,8 +62,8 @@ void CTool_Effect_Point::Tick(const _float& fTimeDelta)
 		m_pVIBufferCom->Spread(fTimeDelta);
 	else if (m_ParticleType == DROP)
 		m_pVIBufferCom->Drop(fTimeDelta);
-	else if (m_ParticleType == HELIX)
-		m_pVIBufferCom->Helix(fTimeDelta);
+	else if (m_ParticleType == FOUNTAIN)
+		m_pVIBufferCom->Fountain(fTimeDelta);
 }
 
 void CTool_Effect_Point::Late_Tick(const _float& fTimeDelta)

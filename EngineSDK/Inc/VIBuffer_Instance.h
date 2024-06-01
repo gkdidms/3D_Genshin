@@ -40,14 +40,13 @@ protected:
 
     _float* m_pSpeeds = { nullptr };
     _float* m_pPower = { nullptr };
+    _float* m_pAccelTime = { nullptr };
     _float3* m_pOriginalPositions = { nullptr };
-
-    _float m_fAccelTime = { 0.f };
 
 public:
     void Spread(_float fTimeDelta);
     void Drop(_float fTimeDelta);
-    void Helix(_float fTimeDelta);
+    void Fountain(_float fTimeDelta);
     
 protected:
     random_device				m_RandomDevice;

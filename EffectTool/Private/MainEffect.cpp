@@ -12,6 +12,8 @@
 #include "Effect_Mesh.h"
 #include "Effect_Trail.h"
 
+#include "Effect_Anim_Model.h"
+
 CMainEffect::CMainEffect()
     : m_pGameInstance { CGameInstance::GetInstance() },
     m_pEffectTool_Manager { CEffectTool_Manager::GetInstance() },
@@ -116,6 +118,9 @@ HRESULT CMainEffect::Loading_Components()
     if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Shader_VtxMesh_Trail", CShader::Create(m_pDevice, m_pContext, L"../Bin/ShaderFiles/Shader_VtxMesh_Trail.hlsl", VTXMESH::Elements, VTXMESH::iNumElements))))
         return E_FAIL;
 
+    if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_MAIN, L"Prototype_Component_Shader_VtxAnimMesh", CShader::Create(m_pDevice, m_pContext, L"../Bin/ShaderFiles/Shader_VtxAnimMesh.hlsl", VTXANIMMESH::Elements, VTXANIMMESH::iNumElements))))
+        return E_FAIL;
+    
     return S_OK;
 }
 
@@ -133,7 +138,10 @@ HRESULT CMainEffect::Loading_GameObjects()
         return E_FAIL;
     if (FAILED(m_pGameInstance->Add_GameObject_Prototype(TEXT("Prototype_GameObject_Effect_Trail"), CEffect_Trail::Create(m_pDevice, m_pContext))))
         return E_FAIL;
+    if (FAILED(m_pGameInstance->Add_GameObject_Prototype(TEXT("Prototype_GameObject_Model"), CEffect_Anim_Model::Create(m_pDevice, m_pContext))))
+        return E_FAIL;
 
+    
     return S_OK;
 }
 

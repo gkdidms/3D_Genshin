@@ -19,6 +19,9 @@ HRESULT CTool_Effect::Initialize_Prototype()
 
 HRESULT CTool_Effect::Initialize(void* pArg)
 {
+    if (FAILED(__super::Initialize(pArg)))
+        return E_FAIL;
+
     if (nullptr == pArg)
         return E_FAIL;
 
@@ -30,14 +33,13 @@ HRESULT CTool_Effect::Initialize(void* pArg)
 
     //마스크 텍스쳐를 쓰는지 안쓰는지
     m_isMask = pDesc->isMask;
-
     if (m_isMask)
         m_strMaskPath.assign(pDesc->strMaskFilePath.begin(), pDesc->strMaskFilePath.end());
 
     m_isNoise = pDesc->isNoise;
-
     if (m_isNoise)
         m_strNoisePath.assign(pDesc->strNoiseFilePath.begin(), pDesc->strNoiseFilePath.end());
+
     // 이펙트 타입
     m_iEffectType = pDesc->iEffectType;
 
@@ -54,10 +56,14 @@ HRESULT CTool_Effect::Initialize(void* pArg)
         m_strTextureFilePath.assign(strFilePath.begin(), strFilePath.end());
     }
 
-    m_iRendererType = CRenderer::RENDER_NONLIGHT;
+    m_iRendererType = pDesc->iRendererType;
+    m_fStartTime = pDesc->fStartTime;
+    m_fDurationTime = pDesc->fDurationTime;
+    m_isFrameLoop = pDesc->isFrameLoop;
+    m_vColor = pDesc->vColor;
+    m_pTransformCom->Set_WorldMatrix(pDesc->WorldMatrix);
 
-    if (FAILED(__super::Initialize(pArg)))
-        return E_FAIL;
+
 
     return S_OK;
 }
@@ -85,10 +91,18 @@ HRESULT CTool_Effect::Add_Components()
     if (nullptr == m_pTextureCom)
         return E_FAIL;
 
-    if (m_isMask == true)
+    if (m_strMaskPath.length() > 0 && m_isMask == true)
     {
         m_pMaskTextureCom = CTexture::Create(m_pDevice, m_pContext, m_strMaskPath, 1);
         if (nullptr == m_pMaskTextureCom)
+            return E_FAIL;
+    }
+
+    if (m_strNoisePath.length() > 0 && m_isNoise == true)
+    {
+        
+        m_pNoiseTexturCom = CTexture::Create(m_pDevice, m_pContext, m_strNoisePath, 1);
+        if (nullptr == m_pNoiseTexturCom)
             return E_FAIL;
     }
 
@@ -115,11 +129,14 @@ HRESULT CTool_Effect::Bind_ResourceData()
 
     if (m_isNoise)
     {
-        if (FAILED(m_pMaskTextureCom->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", 0)))
+        if (FAILED(m_pNoiseTexturCom->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", 0)))
             return E_FAIL;
     }
 
     if (FAILED(m_pShaderCom->Bind_RawValue("g_vColor", &m_vColor, sizeof(_float4))))
+        return E_FAIL;
+
+    if (FAILED(m_pShaderCom->Bind_RawValue("g_fTimeDelta", &m_fCurrentTime, sizeof(_float))))
         return E_FAIL;
 
     return S_OK;

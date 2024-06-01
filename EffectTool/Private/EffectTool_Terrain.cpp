@@ -96,7 +96,6 @@ void CEffectTool_Terrain::Get_MousePos_On_Terrain()
 	{
 		_float3 vMousePosFloat3;
 		XMStoreFloat3(&vMousePosFloat3, vMousePos);
-
 	}
 }
 

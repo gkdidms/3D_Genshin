@@ -24,6 +24,7 @@ HRESULT CEffect_Trail::Initialize(void* pArg)
 
 	EFFECT_MESH_DESC* pDesc = static_cast<EFFECT_MESH_DESC*>(pArg);
 	strcpy_s(m_szModelFilePath, pDesc->szModelFilePath);
+	m_iTrailMoveType = pDesc->iTrailType;
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -65,7 +66,7 @@ HRESULT CEffect_Trail::Render()
 
 HRESULT CEffect_Trail::Add_Components()
 {
-	if (FAILED(Add_Component(LEVEL_MAIN, L"Prototype_Component_Shader_VtxMesh", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
+	if (FAILED(Add_Component(LEVEL_MAIN, L"Prototype_Component_Shader_VtxMesh_Trail", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
 	_matrix PreMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
