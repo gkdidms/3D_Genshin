@@ -1,5 +1,6 @@
 #include "Btn_Frame.h"
 
+#include "MainApp.h"
 #include "GameInstance.h"
 
 CBtn_Frame::CBtn_Frame(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -84,10 +85,10 @@ HRESULT CBtn_Frame::Add_Components()
     if (FAILED(__super::Add_Component(LEVEL_STATIC, L"Prototype_Component_VIBuffer_Rect", L"Com_VIBuffer", reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
         return E_FAIL;
 
-    if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxPosTex_UI", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
+    if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Shader_VtxPosTex_UI", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
         return E_FAIL;
 
-    if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_UI_Btn_Frame", L"Com_Texture", reinterpret_cast<CComponent**>(&m_pTextureCom))))
+    if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Texture_UI_Btn_Frame", L"Com_Texture", reinterpret_cast<CComponent**>(&m_pTextureCom))))
         return E_FAIL;
 
     return S_OK;

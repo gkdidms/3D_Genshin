@@ -86,6 +86,9 @@ private:
     virtual ~CBoss() = default;
 
 public:
+    _uint Get_Page() { return m_CurrentPage; }
+
+public:
     virtual HRESULT Initialize_Prototype() override;
     virtual HRESULT Initialize(void* pArg) override;
     virtual void Priority_Tick(const _float& fTimeDelta) override;

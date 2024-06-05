@@ -1,5 +1,6 @@
 #include "Nilou_Body.h"
 
+#include "MainApp.h"
 #include "GameInstance.h"
 #include "StateManager.h"
 
@@ -82,10 +83,10 @@ HRESULT CNilou_Body::Render()
 
 HRESULT CNilou_Body::Add_Components()
 {
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxAnimMesh", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Shader_VtxAnimMesh", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Nilou", L"Com_Model", reinterpret_cast<CComponent**>(&m_pModelCom))))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Model_Nilou", L"Com_Model", reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
 	return S_OK;
@@ -355,6 +356,12 @@ void CNilou_Body::Change_Animation(const _float& fTimeDelta)
 		m_iAnim = 55; // 56
 		m_IsLoop = true;
 		m_IsLinear = false;
+		break;
+	}
+	case PLAYER_HIT:
+	{
+		m_iAnim = 36;
+		m_IsLoop = false;
 		break;
 	}
 	default:

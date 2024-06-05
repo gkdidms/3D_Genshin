@@ -83,7 +83,7 @@ void CTool_Dungeon::Tick(const _float& fTimeDelta)
 
 void CTool_Dungeon::Late_Tick(const _float& fTimeDelta)
 {
-	m_pGameInstance->Add_Renderer(CRenderer::RENDER_PRIORITY, this);
+	m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONBLENDER, this);
 }
 
 HRESULT CTool_Dungeon::Render()
@@ -146,7 +146,7 @@ void CTool_Dungeon::Get_MousePos_On_Dungeon()
 		GetCursorPos(&ptMouse);
 		ScreenToClient(g_hWnd, &ptMouse);
 
-		_int iIndex = m_pNavigationCom->Find_Index(ptMouse, vMousePos, m_pGameInstance->Get_RayDir(), m_pTransformCom->Get_WorldMatrix());
+		_int iIndex = m_pNavigationCom->Find_Index(ptMouse, vMousePos, m_pGameInstance->Get_PickDir(), m_pTransformCom->Get_WorldMatrix());
 		if (FAILED(m_pObject_Manager->Add_CloneObject(
 			CTool_Object_Manager::OBJECT_SCENE,
 			L"GameObject_Object",
@@ -173,7 +173,7 @@ void CTool_Dungeon::Picking_PlayerPos()
 		_float vPlayerPos[3] = { XMVectorGetX(vMousePos), XMVectorGetY(vMousePos), XMVectorGetZ(vMousePos) };
 		m_pObject_Manager->Set_PlayerPos(vPlayerPos);
 
-		_int iIndex = m_pNavigationCom->Find_Index(ptMouse, vMousePos, m_pGameInstance->Get_RayDir(), m_pTransformCom->Get_WorldMatrix());
+		_int iIndex = m_pNavigationCom->Find_Index(ptMouse, vMousePos, m_pGameInstance->Get_PickDir(), m_pTransformCom->Get_WorldMatrix());
 		m_pObject_Manager->Set_PlayerNavigationIndex(iIndex);
 	}
 }
@@ -275,7 +275,7 @@ _bool CTool_Dungeon::isRemove()
 		POINT ptMouse;
 		GetCursorPos(&ptMouse);
 		ScreenToClient(g_hWnd, &ptMouse);
-		iIndex = m_pNavigationCom->Find_Index(ptMouse, vMousePos, m_pGameInstance->Get_RayDir(), m_pTransformCom->Get_WorldMatrix(), &iVecterIndex);
+		iIndex = m_pNavigationCom->Find_Index(ptMouse, vMousePos, m_pGameInstance->Get_PickDir(), m_pTransformCom->Get_WorldMatrix(), &iVecterIndex);
 	}
 	else
 		return false;

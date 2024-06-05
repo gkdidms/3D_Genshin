@@ -1,5 +1,6 @@
 #include "Tighnari_Burst.h"
 
+#include "MainApp.h"
 #include "GameInstance.h"
 
 CTighnari_Burst::CTighnari_Burst(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -37,13 +38,13 @@ HRESULT CTighnari_Burst::Initialize(void* pArg)
 	_matrix HandMatrix = XMMatrixIdentity();
 	m_pTransformCom->WorldRotation(XMVectorSet(1.f, 0.f, 0.f, 0.f), XMConvertToRadians(180.f));
 	HandMatrix.r[3] = XMLoadFloat4x4(&pDesc->HandCombinedTransformationMatrix).r[3];
-	WorldMatrix = m_pTransformCom->Get_WorldMatrix() * HandMatrix * XMLoadFloat4x4(&pDesc->ParentMatrix);
+	WorldMatrix = m_pTransformCom->Get_WorldMatrix() * HandMatrix * XMLoadFloat4x4(pDesc->ParentMatrix);
 
 	m_pTransformCom->Set_WorldMatrix(WorldMatrix);
 	
 	m_vTargetPos.y = m_vTargetPos.y + 1.5f;
 
-	m_fHeight = pDesc->ParentMatrix.m[3][1]; // y 값 저장
+	m_fHeight = pDesc->ParentMatrix->m[3][1]; // y 값 저장
 
 	XMStoreFloat4(&m_vTargetLook, XMVector3Normalize(XMLoadFloat4(&m_vTargetPos) - m_pTransformCom->Get_State(CTransform::STATE_POSITION)));
 
@@ -114,19 +115,19 @@ HRESULT CTighnari_Burst::Render()
 
 HRESULT CTighnari_Burst::Add_Components()
 {
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxAnimMesh_Skill", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Shader_VtxAnimMesh_Skill", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Model_FlowerArrow", L"Com_Model", reinterpret_cast<CComponent**>(&m_pModelCom))))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Model_FlowerArrow", L"Com_Model", reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxPosTex_Skill", L"Com_TrailShader", reinterpret_cast<CComponent**>(&m_pTrailShaderCom))))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Shader_VtxPosTex_Skill", L"Com_TrailShader", reinterpret_cast<CComponent**>(&m_pTrailShaderCom))))
 		return E_FAIL;
 	
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_Skill_Tighnari_Burst", L"Com_Texture", reinterpret_cast<CComponent**>(&m_pTextureCom[0]))))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Texture_Skill_Tighnari_Burst", L"Com_Texture", reinterpret_cast<CComponent**>(&m_pTextureCom[0]))))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_Skill_Tighnari_Burst_Trail", L"Com_TrailTexture", reinterpret_cast<CComponent**>(&m_pTextureCom[1]))))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Texture_Skill_Tighnari_Burst_Trail", L"Com_TrailTexture", reinterpret_cast<CComponent**>(&m_pTextureCom[1]))))
 		return E_FAIL;
 
 	CBounding_AABB::BOUNDING_AABB_DESC BoundingBoxDesc{};
@@ -134,14 +135,14 @@ HRESULT CTighnari_Burst::Add_Components()
 	BoundingBoxDesc.vExtents = _float3(0.2f, 0.2f, 0.2f);
 	BoundingBoxDesc.vCenter = _float3(0.f, BoundingBoxDesc.vExtents.y, 0.f);
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Collider", L"Com_Collider", reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingBoxDesc)))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Collider", L"Com_Collider", reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingBoxDesc)))
 		return E_FAIL;
 
 	CVIBuffer_Trail::VIBUFFER_TRAIL_DESC TrailDesc{};
 	TrailDesc.iMaxTrail = 30;
 	TrailDesc.vInitPosA = _float3(-0.3f, 0.3f, 0.f);
 	TrailDesc.vInitPosB = _float3(-0.3f, -0.3f, 0.f);
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_VIBuffer_Trail", L"Com_TrailBuffer", reinterpret_cast<CComponent**>(&m_pTrailVIBufferCom), &TrailDesc)))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_VIBuffer_Trail", L"Com_TrailBuffer", reinterpret_cast<CComponent**>(&m_pTrailVIBufferCom), &TrailDesc)))
 		return E_FAIL;
 
 	return S_OK;

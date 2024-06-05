@@ -1,6 +1,8 @@
 #include "Player.h"
 
 #include "GameInstance.h"
+#include "MainApp.h"
+
 #include "PartObject_Body.h"
 #include "StateManager.h"
 #include "Wanderer_Body.h"
@@ -36,6 +38,18 @@ _bool CPlayer::isAttack()
 	return m_pStateManager->isAttack();
 }
 
+void CPlayer::Set_Hit(_float fDamage)
+{
+	//히트 모션을 하고 있는지 아닌지 확인하여 이미 히트 모션을 하고 있다면 return;
+	//히트 모션을 하고 있지 않다면 히트 모션으로 변경하고, 0.3f 초가 끝나면 다시 공격 맞을 수 있음.
+
+	if (false == m_isAttackPossible || m_pStateManager->isHit()) return;
+
+	m_isAttackPossible = false;
+	m_iState = m_pStateManager->Set_CurrentState(CStateManager::STATE_TYPE_HIT);
+	dynamic_cast<CPartObject_Body*>(m_PartObject[m_CurrentPlayerble][PART_BODY])->Set_HP(fDamage);
+}
+
 _float CPlayer::Get_PlayerbleHP()
 {
 	return dynamic_cast<CPartObject_Body*>(m_PartObject[m_CurrentPlayerble][PART_BODY])->Get_HP();
@@ -44,6 +58,11 @@ _float CPlayer::Get_PlayerbleHP()
 _float CPlayer::Get_PlayerbleMaxHP()
 {
 	return dynamic_cast<CPartObject_Body*>(m_PartObject[m_CurrentPlayerble][PART_BODY])->Get_MaxHP();
+}
+
+_float CPlayer::Get_PlayerbleAtk()
+{
+	return dynamic_cast<CPartObject_Body*>(m_PartObject[m_CurrentPlayerble][PART_BODY])->Get_Atk();
 }
 
 void CPlayer::Set_PlayerMove(_vector vMoveSpeed)
@@ -135,6 +154,17 @@ void CPlayer::Priority_Tick(const _float& fTimeDelta)
 
 void CPlayer::Tick(const _float& fTimeDelta)
 {
+	if (m_pStateManager->isHit())
+	{
+		m_fHitCurrentTime += fTimeDelta;
+
+		if (m_fHitCurrentTime >= m_fHitDuration)
+		{
+			m_isAttackPossible = true;
+			m_fHitCurrentTime = 0.f;
+		}
+	}
+
 	Change_Playerble();
 	Check_State(fTimeDelta);
 	Input_Key(fTimeDelta);
@@ -209,7 +239,7 @@ HRESULT CPlayer::Add_Components()
 	CNavigation::NAVIGATION_DESC NavigationDesc = {};
 	NavigationDesc.iIndex = m_iPlayerNavigationIndex;
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Navigation", L"Com_Navigation", reinterpret_cast<CComponent**>(&m_pNavigationCom), &NavigationDesc)))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Navigation", L"Com_Navigation", reinterpret_cast<CComponent**>(&m_pNavigationCom), &NavigationDesc)))
 		return E_FAIL;
 
 	CBounding_AABB::BOUNDING_AABB_DESC ColliderDesc = {};
@@ -217,7 +247,7 @@ HRESULT CPlayer::Add_Components()
 	ColliderDesc.vExtents = _float3{ 0.5f, 0.8f, 0.5f };
 	ColliderDesc.vCenter = _float3{ 0.f, ColliderDesc.vExtents.y, 0.f };
 	
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Collider", L"Com_Collider", reinterpret_cast<CComponent**>(&m_pColliderCom), &ColliderDesc)))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Collider", L"Com_Collider", reinterpret_cast<CComponent**>(&m_pColliderCom), &ColliderDesc)))
 		return E_FAIL;
 
 	return S_OK;

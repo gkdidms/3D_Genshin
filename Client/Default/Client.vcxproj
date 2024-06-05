@@ -162,6 +162,8 @@
     <ClInclude Include="..\public\Avatar_Side_Select.h" />
     <ClInclude Include="..\public\Avatar_UI.h" />
     <ClInclude Include="..\public\Background.h" />
+    <ClInclude Include="..\Public\BossHP.h" />
+    <ClInclude Include="..\Public\BossHP_Outline.h" />
     <ClInclude Include="..\public\Boss_Normal.h" />
     <ClInclude Include="..\public\Btn_Frame.h" />
     <ClInclude Include="..\public\Bullet.h" />
@@ -203,11 +205,9 @@
     <ClInclude Include="..\public\DefaultCamera.h" />
     <ClInclude Include="..\public\DungeonGate.h" />
     <ClInclude Include="..\public\Dungeon_1.h" />
-    <ClInclude Include="..\Public\Dungeon_2.h" />
     <ClInclude Include="..\public\FireCore.h" />
     <ClInclude Include="..\public\FlowerArrow.h" />
     <ClInclude Include="..\public\Flycloak.h" />
-    <ClInclude Include="..\public\FoxTower.h" />
     <ClInclude Include="..\public\GoldenHouse.h" />
     <ClInclude Include="..\public\Harbinger_Blade.h" />
     <ClInclude Include="..\Public\Harbinger_Bow.h" />
@@ -227,9 +227,6 @@
     <ClInclude Include="..\public\Selector.h" />
     <ClInclude Include="..\public\Sequence.h" />
     <ClInclude Include="..\public\SkillObj.h" />
-    <ClInclude Include="..\public\BlackFox.h" />
-    <ClInclude Include="..\public\FoxTail_Burst.h" />
-    <ClInclude Include="..\public\Gohei.h" />
     <ClInclude Include="..\public\Slime.h" />
     <ClInclude Include="..\public\Slime_Large.h" />
     <ClInclude Include="..\public\Slime_Large_Fire.h" />
@@ -256,6 +253,7 @@
     <ClInclude Include="..\public\StateFallAttack.h" />
     <ClInclude Include="..\public\StateFallGround.h" />
     <ClInclude Include="..\public\StateFly.h" />
+    <ClInclude Include="..\public\StateHit.h" />
     <ClInclude Include="..\public\StateJump.h" />
     <ClInclude Include="..\public\Tartaglia_Blade.h" />
     <ClInclude Include="..\Public\Tartaglia_Bow.h" />
@@ -266,6 +264,7 @@
     <ClInclude Include="..\public\Effect_Trail.h" />
     <ClInclude Include="..\public\TreasureBox.h" />
     <ClInclude Include="..\public\UI.h" />
+    <ClInclude Include="..\public\UI_Atk.h" />
     <ClInclude Include="..\public\Wanderer_Normal.h" />
     <ClInclude Include="..\public\Weapon_Alaya.h" />
     <ClInclude Include="..\public\Weapon_Ayus.h" />
@@ -279,7 +278,6 @@
     <ClInclude Include="..\public\StateRun.h" />
     <ClInclude Include="..\public\StateAttack.h" />
     <ClInclude Include="..\public\StateManager.h" />
-    <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\public\Tighnari_Body.h" />
     <ClInclude Include="..\Public\Wanderer_Body.h" />
     <ClInclude Include="..\public\Weapon_Narukami.h" />
@@ -299,6 +297,8 @@
     <ClCompile Include="..\private\Avatar_Side_Select.cpp" />
     <ClCompile Include="..\private\Avatar_UI.cpp" />
     <ClCompile Include="..\private\Background.cpp" />
+    <ClCompile Include="..\Private\BossHP.cpp" />
+    <ClCompile Include="..\Private\BossHP_Outline.cpp" />
     <ClCompile Include="..\private\Boss_Normal.cpp" />
     <ClCompile Include="..\private\Btn_Frame.cpp" />
     <ClCompile Include="..\private\Bullet.cpp" />
@@ -339,11 +339,9 @@
     <ClCompile Include="..\private\DefaultCamera.cpp" />
     <ClCompile Include="..\private\DungeonGate.cpp" />
     <ClCompile Include="..\private\Dungeon_1.cpp" />
-    <ClCompile Include="..\Private\Dungeon_2.cpp" />
     <ClCompile Include="..\private\FireCore.cpp" />
     <ClCompile Include="..\private\FlowerArrow.cpp" />
     <ClCompile Include="..\private\Flycloak.cpp" />
-    <ClCompile Include="..\private\FoxTower.cpp" />
     <ClCompile Include="..\private\GoldenHouse.cpp" />
     <ClCompile Include="..\private\Harbinger_Blade.cpp" />
     <ClCompile Include="..\Private\Harbinger_Bow.cpp" />
@@ -363,9 +361,6 @@
     <ClCompile Include="..\private\Selector.cpp" />
     <ClCompile Include="..\private\Sequence.cpp" />
     <ClCompile Include="..\private\SkillObj.cpp" />
-    <ClCompile Include="..\private\BlackFox.cpp" />
-    <ClCompile Include="..\private\FoxTail_Burst.cpp" />
-    <ClCompile Include="..\private\Gohei.cpp" />
     <ClCompile Include="..\private\Slime.cpp" />
     <ClCompile Include="..\private\Slime_Large.cpp" />
     <ClCompile Include="..\private\Slime_Large_Fire.cpp" />
@@ -392,6 +387,7 @@
     <ClCompile Include="..\private\StateFallAttack.cpp" />
     <ClCompile Include="..\private\StateFallGround.cpp" />
     <ClCompile Include="..\private\StateFly.cpp" />
+    <ClCompile Include="..\private\StateHit.cpp" />
     <ClCompile Include="..\private\StateJump.cpp" />
     <ClCompile Include="..\private\Tartaglia_Blade.cpp" />
     <ClCompile Include="..\Private\Tartaglia_Bow.cpp" />
@@ -402,6 +398,7 @@
     <ClCompile Include="..\private\Effect_Trail.cpp" />
     <ClCompile Include="..\private\TreasureBox.cpp" />
     <ClCompile Include="..\private\UI.cpp" />
+    <ClCompile Include="..\private\UI_Atk.cpp" />
     <ClCompile Include="..\private\Wanderer_Normal.cpp" />
     <ClCompile Include="..\private\Weapon_Alaya.cpp" />
     <ClCompile Include="..\private\Weapon_Ayus.cpp" />
@@ -415,7 +412,6 @@
     <ClCompile Include="..\private\StateRun.cpp" />
     <ClCompile Include="..\private\StateAttack.cpp" />
     <ClCompile Include="..\private\StateManager.cpp" />
-    <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\private\Tighnari_Body.cpp" />
     <ClCompile Include="..\Private\Wanderer_Body.cpp" />
     <ClCompile Include="..\private\Weapon_Narukami.cpp" />

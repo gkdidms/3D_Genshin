@@ -8,19 +8,26 @@ class CEffectObject abstract :
     public CBlendObject
 {
 public:
+    enum EFFECT_TYPE { EFFECT_PARTICLE, EFFECT_IMG, EFFECT_MESH, EFFECT_TRAIL, EFFECT_END };
+
     typedef struct tEffectObjectDesc {
         const _float4x4* pParentMatrix;
-        _float4x4 WorldMatrix;
+        _char strTextureFilePath[MAX_PATH];
+        string strMaskFilePath;
+        string strNoiseFilePath;
 
-        _float4x4 RotationMatrix;
-        _float3 vScale;
-        _float4 vPos;
         _uint iShaderPass;
-        _bool isTrailMove = { false };
-        _float fSpeed = { 0.f };
+        _bool isMask;
+        _bool isNoise;
+        _uint iEffectType;
+        _int iTextureNum = { 1 };
 
-        _uint iMoveType;
-        _float fDuration;
+        _float4 vColor = {};
+        _uint iRendererType = { 0 };
+        _bool isFrameLoop = { false };
+        _float fStartTime = { 0.f };
+        _float fDurationTime = { 0.f };
+        _matrix WorldMatrix = { XMMatrixIdentity() };
     } EFFECT_OBJECT_DESC;
 
 protected:
@@ -41,14 +48,35 @@ protected:
     _float4x4 m_WorldMatrix = {};
 
 protected:
+    CShader* m_pShaderCom = { nullptr };
+    CTexture* m_pTextureCom = { nullptr };
+    CTexture* m_pMaskTextureCom = { nullptr };
+    CTexture* m_pNoiseTextureCom = { nullptr };
+
+    wstring m_strTextureFilePath = { L"" }; // 텍스쳐
+    wstring m_strMaskFilePath = { L"" }; // 마스크
+    wstring m_strNoiseFilePath = { L"" }; // 노이즈
+
     _uint m_iShaderPass = { 0 };
-    _bool m_isTrailMove = { false };
-    _float m_fSpeed = { 0.f };
-    _float m_fDuration = { 0.f };
+    _uint m_iTextureNum = { 0 };
+
+    _bool m_isMask = { false };
+    _bool m_isNoise = { false };
+    _uint m_iEffectType = { EFFECT_END };
+
+    _float4 m_vColor = {};
+    _uint m_iRendererType = { 0 };
+    _bool m_isFrameLoop = { false };
+    _float m_fStartTime = { 0.f };
+    _float m_fDurationTime = { 0.f };
 
 protected:
-    virtual HRESULT Add_Components() = 0;
-    virtual HRESULT Bind_ResourceData() = 0;
+    _float m_fCurrentTime = { 0.f };
+    _float m_fFrame = { 0.f };
+
+protected:
+    virtual HRESULT Add_Components();
+    virtual HRESULT Bind_ResourceData();
 
 public:
     virtual void Free() override;

@@ -25,6 +25,7 @@ HRESULT CBullet::Initialize(void* pArg)
 	BULLET_DESC* pDesc = static_cast<BULLET_DESC*>(pArg);
 	//m_pTargetMatrix = pDesc->pTargetMatrix;
 	XMStoreFloat4(&m_vTargetPos ,pDesc->pTargetPos);
+	m_fAtk = pDesc->fAtk;
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 

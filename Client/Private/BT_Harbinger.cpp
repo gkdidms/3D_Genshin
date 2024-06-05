@@ -127,7 +127,7 @@ CNode::NODE_STATE CBT_Harbinger::Check_Hit()
 
 CNode::NODE_STATE CBT_Harbinger::Check_Intersect()
 {
-	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, L"Layer_Player", 0));
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_STAGE_BOSS, L"Layer_Player", 0));
 
 	CCollider* pWeaponCollider = { nullptr };
 
@@ -138,7 +138,7 @@ CNode::NODE_STATE CBT_Harbinger::Check_Intersect()
 	else
 	{
 		// 화살 + 마법 이펙트들은 따로 사용 (임시용)
-		pWeaponCollider = dynamic_cast<CCollider*>(m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, L"Layer_Player", L"Com_Collider"));
+		pWeaponCollider = dynamic_cast<CCollider*>(m_pGameInstance->Get_GameObject_Component(LEVEL_STAGE_BOSS, L"Layer_Player", L"Com_Collider"));
 	}
 
 	if (m_pColliderCom->Intersect(pWeaponCollider))
@@ -182,7 +182,7 @@ CNode::NODE_STATE CBT_Harbinger::Check_Attack_Range() // 원거리인가 근거리인가?
 	if (m_isAttack)
 		return CNode::SUCCESS;
 
-	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, L"Layer_Player", 0));
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_STAGE_BOSS, L"Layer_Player", 0));
 	_float fDistance = Distance(XMLoadFloat4x4(m_pTargetMatrix), XMLoadFloat4x4(m_pTransformCom->Get_WorldFloat4x4()));
 
 	if (fDistance < m_fMeleeAtkRange)
@@ -212,7 +212,7 @@ CNode::NODE_STATE CBT_Harbinger::Check_MeleeAtk()	// 너무 가까우면 근거리 공격을
 	if (iResult < m_iTeleportPer) // 뒤로 이동하는걸로
 		return CNode::FAILURE;
 
-	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, L"Layer_Player", 0));
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_STAGE_BOSS, L"Layer_Player", 0));
 
 	//근거리 공격
 	if (Check_Rear_ToPlayer())
@@ -269,7 +269,7 @@ CNode::NODE_STATE CBT_Harbinger::Check_RangeAtk()	// 가까이 이동하거나 원거리 공
 
 	_uint iResult = Random(100);
 
-	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, L"Layer_Player", 0));
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_STAGE_BOSS, L"Layer_Player", 0));
 
 	if (iResult < m_iTeleportPer) // 걷기로 빠짐
 		return CNode::FAILURE;

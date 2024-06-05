@@ -29,7 +29,7 @@ public:
 
 private:
     CCollider* m_pTriggerCollider = { nullptr };
-
+    CTexture* m_pTextureCom = { nullptr };
 private:
     const _float4x4* m_pTargetMatrix;
     _float m_fDistanceToTarget = { 5.f };
@@ -37,6 +37,7 @@ private:
     _bool m_isCheckPoint = { false };
     _float4x4 m_vCheckPointPlayerPos = {};
 
+    _float m_fCurrentTime = { 0.f };
 private:
     virtual HRESULT Add_Components();
     virtual HRESULT Bind_ResourceData();

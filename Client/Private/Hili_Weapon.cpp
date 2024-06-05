@@ -26,6 +26,7 @@ HRESULT CHili_Weapon::Initialize(void* pArg)
     m_TargetMatrix = pDesc->pTargetCombinedTransformationMatrix;
     m_SocketMatrix = pDesc->pHandCombinedTransformationMatrix;
     m_pState = pDesc->pState;
+    m_fAtk = pDesc->fAtk;
 
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;

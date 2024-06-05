@@ -1,9 +1,10 @@
 #include "Wanderer_Body.h"
 
+#include "MainApp.h"
 #include "GameInstance.h"
 #include "StateManager.h"
 
-#include "Wanderer_Normal.h"
+#include "Effect.h"
 
 CWanderer_Body::CWanderer_Body(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject_Body{ pDevice, pContext } 
@@ -143,10 +144,10 @@ HRESULT CWanderer_Body::Render()
 
 HRESULT CWanderer_Body::Add_Components()
 {
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxAnimMesh", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Shader_VtxAnimMesh", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Wanderer", L"Com_Model", reinterpret_cast<CComponent**>(&m_pModelCom))))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Model_Wanderer", L"Com_Model", reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
 	return S_OK;
@@ -462,6 +463,12 @@ void CWanderer_Body::Change_Animation(const _float& fTimeDelta)
 		// m_IsLinear = false;
 		break;
 	}
+	case PLAYER_HIT:
+	{
+		m_iAnim = 62;
+		m_IsLoop = false;
+		break;
+	}
 	default:
 		break;
 	}
@@ -478,26 +485,37 @@ void CWanderer_Body::Create_Bullet()
 
 	if (m_pStateManager->isAttack())
 	{
-		CWanderer_Normal::WANDERER_NORMAL_DESC Desc{};
-		Desc.fSpeedPecSec = 20.f;
-		Desc.fRotatePecSec = XMConvertToRadians(90.f);
-		Desc.HandCombinedTransformationMatrix = *m_pModelCom->Get_BoneCombinedTransformationMatrix("PRIVATE_RHand");
-		Desc.ParentMatrix = *m_pParentMatrix;
-		Desc.pTargetPos = Targeting();
-		if (*m_pState == PLAYER_ATTACK_2 )
-			Desc.iDir = CWanderer_Normal::DIR_LIFT;
+		CEffect::EFFECT_DESC Desc{};
+		Desc.fDuration = 2.f;
+		Desc.isFollowPlayer = false;
+		Desc.pPlayerMatrix = m_pParentMatrix;
+		Desc.isBullet = true;
+		Desc.fSpeed = 20.f;
+
+		_float4 vTargetPos = _float4();
+		CGameObject* pTarget = Targeting(&vTargetPos);
+		if (nullptr == pTarget)
+			XMStoreFloat4(&vTargetPos, XMLoadFloat4x4(m_pParentMatrix).r[3] + XMVector3Normalize(XMLoadFloat4x4(m_pParentMatrix).r[2]) * 10.f);
+
+		_vector vTargetDir = XMVector3Normalize(XMLoadFloat4(&vTargetPos) - XMLoadFloat4x4(m_pParentMatrix).r[3]);
+
+		Desc.vTargetDir = vTargetDir;
+
+		if (*m_pState == PLAYER_ATTACK_2)
+		{
+			if (FAILED(m_pGameInstance->Add_GameObject(CMainApp::g_iCurrentLevel, L"Prototype_GameObject_Effect_Wanderer_Normal_01", L"Layer_Bullet", &Desc)))
+				return;
+		}
 		else if (*m_pState == PLAYER_ATTACK_1 || *m_pState == PLAYER_ATTACK_3)
-			Desc.iDir = CWanderer_Normal::DIR_RIGHT;
-		
-		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Skill_Wanderer_Normal", L"Layer_Bullet", &Desc)))
-			return;
+		{
+			if (FAILED(m_pGameInstance->Add_GameObject(CMainApp::g_iCurrentLevel, L"Prototype_GameObject_Effect_Wanderer_Normal_00", L"Layer_Bullet", &Desc)))
+				return;
+		}
 
 		// PLAYER_ATTACK_3 일 때 한번 더 생성 
 		if (*m_pState == PLAYER_ATTACK_3)
 		{
-			Desc.iDir = CWanderer_Normal::DIR_LIFT;
-
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Skill_Wanderer_Normal", L"Layer_Bullet", &Desc)))
+			if (FAILED(m_pGameInstance->Add_GameObject(CMainApp::g_iCurrentLevel, L"Prototype_GameObject_Effect_Wanderer_Normal_01", L"Layer_Bullet", &Desc)))
 				return;
 		}
 	}

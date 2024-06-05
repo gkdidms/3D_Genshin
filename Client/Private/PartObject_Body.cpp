@@ -67,6 +67,16 @@ HRESULT CPartObject_Body::Render()
 	return S_OK;
 }
 
+void CPartObject_Body::Set_HP(_float fDamage)
+{
+	m_Info.m_fHp -= fDamage;
+
+	if (m_Info.m_fHp <= 0.f)
+	{
+		m_Info.m_fHp = 0.f;
+	}
+}
+
 void CPartObject_Body::Move_Pos(const _float& fTimeDelta, _matrix* MoveMatrix)
 {
 

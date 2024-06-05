@@ -14,7 +14,7 @@ PLAYER_STATE CStateAttack::Enter(class CStateManager& pStateManager, PLAYER_STAT
 {
 	m_iMaxAttack = pStateManager.Get_Playerble() == CPlayer::PLAYER_TIGHNARI ? 4 : 3;
 
-	m_fDuration = 0.5f;
+	m_fDuration = 0.3f;
 	m_fTime = 0.f;
 	return PLAYER_ATTACK_1;
 }

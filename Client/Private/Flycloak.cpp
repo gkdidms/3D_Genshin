@@ -1,5 +1,6 @@
 #include "Flycloak.h"
 
+#include "MainApp.h"
 #include "StateManager.h"
 
 CFlycloak::CFlycloak(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -90,10 +91,10 @@ HRESULT CFlycloak::Render()
 
 HRESULT CFlycloak::Add_Components()
 {
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxAnimMesh", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Shader_VtxAnimMesh", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Flycloak", L"Com_Model", reinterpret_cast<CComponent**>(&m_pModelCom))))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Model_Flycloak", L"Com_Model", reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
 	return S_OK;

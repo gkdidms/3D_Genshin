@@ -320,6 +320,9 @@ HRESULT CTool_Object_Manager::Save(const _char* pFileName)
 		_uint iNavigationIndex = pObject->Get_NavigationIndex();
 		ofs.write((_char*)&iNavigationIndex, sizeof(_uint));
 
+		_uint iPathIndex = pObject->Get_PathIndex();
+		ofs.write((_char*)&iPathIndex, sizeof(_uint));
+
 		const _float4x4* WorldMatrix = pObject->m_pTransformCom->Get_WorldFloat4x4();
 		ofs.write((_char*)WorldMatrix, sizeof(_float4x4));
 	}
@@ -388,6 +391,9 @@ HRESULT CTool_Object_Manager::Load(const _char* pFileName)
 
 		_uint iNavigationIndex = 0;
 		ifs.read((_char*)&iNavigationIndex, sizeof(_uint));
+
+		_uint iPathIndex = 0;
+		ifs.read((_char*)&iPathIndex, sizeof(_uint));
 		
 		_uint iNumObjectIndex = { 0 };
 
@@ -408,6 +414,7 @@ HRESULT CTool_Object_Manager::Load(const _char* pFileName)
 		ifs.read((_char*)&WorldMatrix, sizeof(_float4x4));
 
 		m_Objects[i]->m_pTransformCom->Set_WorldMatrix(XMLoadFloat4x4(&WorldMatrix));
+		m_Objects[i]->Set_PathIndex(iPathIndex);
 	}
 
 	ifs.close();

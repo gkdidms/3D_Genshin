@@ -104,9 +104,9 @@ HRESULT CHili_Weapon_Crossbow::Create_Arrow()
 		ArrowDesc.fSpeedPecSec = 20.f;
 		ArrowDesc.HandCombinedTransformationMatrix = *m_SocketMatrix;
 		CTransform* pPlayerTransform = dynamic_cast<CTransform*>(m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, TEXT("Layer_Player"), TEXT("Com_Transform"), 0));
-		ArrowDesc.ParentMatrix = *m_TargetMatrix;
+		ArrowDesc.ParentMatrix = m_TargetMatrix;
 		ArrowDesc.pTargetPos = pPlayerTransform->Get_State(CTransform::STATE_POSITION);
-
+		ArrowDesc.fAtk = m_fAtk;
 		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Skill_Hili_Arrow"), TEXT("Layer_MonBullet"), &ArrowDesc)))
 			return E_FAIL;
 	}

@@ -68,6 +68,7 @@ public: // 타이머
 public: // Font_Manager
     HRESULT Add_Font(const wstring& strFontTag, const wstring& strFontFilePath);
     HRESULT Render_Font(const wstring& strFontTag, const wstring& strText, const _float2& vPosition, _fvector vColor);
+    HRESULT Far_Render(const wstring& strFontTag, const wstring& strText, _fvector vPosition, _fvector vColor);
 
 public: // 키보드 & 마우스
     void Get_ProcessMessageKeyboard(UINT message, WPARAM wParam, LPARAM lParam);
@@ -87,7 +88,7 @@ public: //Input_Device
 
 public: // Picking
     _vector Picking(_bool* isSuccess);
-    _vector Get_RayDir();
+    _vector Get_PickDir();
 
 
     /*RenderTarget_Manager*/
@@ -97,6 +98,7 @@ public:
     HRESULT Begin_MRT(const wstring& strMRTTag);
     HRESULT End_MRT();
     HRESULT Bind_RenderTargetSRV(const wstring& strTargetTag, class CShader* pShader, const _char* pConstantName);
+    HRESULT Copy_Resource(const wstring& strTargetTag, ID3D11Texture2D* pDesc);
 
 #ifdef _DEBUG
 public:

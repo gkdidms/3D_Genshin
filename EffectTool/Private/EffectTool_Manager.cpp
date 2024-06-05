@@ -81,7 +81,8 @@ void CEffectTool_Manager::Window_Effect()
     ImGui::RadioButton("Particle", &m_iEffectType, 0);ImGui::SameLine();
     ImGui::RadioButton("Effect_Img", &m_iEffectType, 1); ImGui::SameLine();
     ImGui::RadioButton("Effect_Mesh", &m_iEffectType, 2);ImGui::SameLine();
-    ImGui::RadioButton("Effect_Trail", &m_iEffectType, 3);
+    ImGui::RadioButton("Effect_Trail", &m_iEffectType, 3);ImGui::SameLine();
+    ImGui::RadioButton("Effect_Cell", &m_iEffectType, 4); 
 
     ImGui::NewLine();
 
@@ -262,7 +263,7 @@ void CEffectTool_Manager::Window_Effect()
                 MessageBoxW(g_hWnd, L"¸Þ½¬ »ý¼º ½ÇÆÐ", 0, 0);
             }
         }
-        else if (m_iEffectType == CEffect_Manager::EFFECT_IMG)
+        else if (m_iEffectType == CEffect_Manager::EFFECT_IMG || m_iEffectType == CEffect_Manager::EFFECT_CELL)
         {
             CEffect_Default::EFFECT_DEFAULT_DESC EffectDesc{};
             strcpy_s(EffectDesc.strTextureFilePath, m_strTextureFilePath.c_str());
@@ -386,7 +387,7 @@ void CEffectTool_Manager::Window_EffectPatch()
             pTexture->Set_TextureMoveType(iType);
         else if (ImGui::RadioButton("SHRINK", &iType, 1)) // Ãà¼Ò
             pTexture->Set_TextureMoveType(iType);
-        else if (ImGui::RadioButton("BOUNCE", &iType, 2)) // Äá´ÚÄá´Ú
+        else if (ImGui::RadioButton("SPREAK", &iType, 2)) // Äá´ÚÄá´Ú
             pTexture->Set_TextureMoveType(iType);
         else if (ImGui::RadioButton("TRAIL", &iType, 3)) // Æ®·¹ÀÏ ¹öÆÛ°°Àº ¿ëµµ
             pTexture->Set_TextureMoveType(iType);
@@ -482,6 +483,8 @@ void CEffectTool_Manager::Window_EffectPatch()
             pCurrentEffect->Set_ShaderPass(m_iShaderPass);
         if (ImGui::RadioButton("Nilou_Water", &m_iShaderPass, 2))
             pCurrentEffect->Set_ShaderPass(m_iShaderPass);
+        if (ImGui::RadioButton("Feiyan_Burst", &m_iShaderPass, 3))
+            pCurrentEffect->Set_ShaderPass(m_iShaderPass);
     }
     else if (iEffectType == CEffect_Manager::EFFECT_IMG)
     {
@@ -489,13 +492,21 @@ void CEffectTool_Manager::Window_EffectPatch()
             pCurrentEffect->Set_ShaderPass(m_iShaderPass);
         if (ImGui::RadioButton("Color", &m_iShaderPass, 1))
             pCurrentEffect->Set_ShaderPass(m_iShaderPass);
+        if (ImGui::RadioButton("FeiyanFire", &m_iShaderPass, 2))
+            pCurrentEffect->Set_ShaderPass(m_iShaderPass);
+        if (ImGui::RadioButton("Noise Non Mask", &m_iShaderPass, 3))
+            pCurrentEffect->Set_ShaderPass(m_iShaderPass);
+        if (ImGui::RadioButton("Tighnari_Elemenetal", &m_iShaderPass, 4))
+            pCurrentEffect->Set_ShaderPass(m_iShaderPass);
+        if (ImGui::RadioButton("Tighnari_Normal", &m_iShaderPass, 5))
+            pCurrentEffect->Set_ShaderPass(m_iShaderPass);
     }
     else if (iEffectType == CEffect_Manager::EFFECT_MESH)
     {
         if (ImGui::RadioButton("UV_TEST", &m_iShaderPass, 0))
             pCurrentEffect->Set_ShaderPass(m_iShaderPass);
     }
-    else if (m_iEffectType == CEffect_Manager::EFFECT_TRAIL)
+    else if (iEffectType == CEffect_Manager::EFFECT_TRAIL)
     {
         if (ImGui::RadioButton("Default_Trail", &m_iShaderPass, 0))
             pCurrentEffect->Set_ShaderPass(m_iShaderPass);
@@ -504,6 +515,10 @@ void CEffectTool_Manager::Window_EffectPatch()
         if (ImGui::RadioButton("Water_Ring_Trail", &m_iShaderPass, 2))
             pCurrentEffect->Set_ShaderPass(m_iShaderPass);
         if (ImGui::RadioButton("Non_Mask", &m_iShaderPass, 3))
+            pCurrentEffect->Set_ShaderPass(m_iShaderPass);
+        if (ImGui::RadioButton("Tighnari_Elemenetal", &m_iShaderPass, 4))
+            pCurrentEffect->Set_ShaderPass(m_iShaderPass);
+        if (ImGui::RadioButton("Water_Bullet", &m_iShaderPass, 5))
             pCurrentEffect->Set_ShaderPass(m_iShaderPass);
     }
 

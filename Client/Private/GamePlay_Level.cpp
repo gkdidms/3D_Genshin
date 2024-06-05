@@ -1,5 +1,7 @@
 #include "GamePlay_Level.h"
 
+#include "MainApp.h"
+
 #include "GameInstance.h"
 #include "DefaultCamera.h"
 #include "CutCamera.h"
@@ -13,6 +15,7 @@
 #include "FireCore.h"
 #include "CheckPoint.h"
 #include "Plane.h"
+#include <Loading_Level.h>
 
 CGamePlay_Level::CGamePlay_Level(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel{ pDevice, pContext }
@@ -21,6 +24,8 @@ CGamePlay_Level::CGamePlay_Level(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 
 HRESULT CGamePlay_Level::Initialize()
 {
+	CMainApp::g_iCurrentLevel = LEVEL_GAMEPLAY;
+
 	if (FAILED(Ready_Lights()))
 		return E_FAIL;
 
@@ -40,6 +45,11 @@ HRESULT CGamePlay_Level::Initialize()
 void CGamePlay_Level::Tick(const _float& fTimeDelta)
 {
 	SetWindowText(g_hWnd, TEXT("GamePlay ÀÔ´Ï´Ù."));
+
+	if (GetAsyncKeyState(VK_RETURN))
+	{
+		m_pGameInstance->Open_Level(LEVEL_LOADING, CLoading_Level::Create(LEVEL_STAGE_BOSS, m_pDevice, m_pContext));
+	}
 }
 
 void CGamePlay_Level::Render()
@@ -58,26 +68,6 @@ HRESULT CGamePlay_Level::Ready_Lights()
 
 	m_pGameInstance->Add_Light(LightDesc);
 
-
-	//ZeroMemory(&LightDesc, sizeof(LIGHT_DESC));
-	//LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-	//LightDesc.vPosition = _float4(20.f, 5.f, 20.f, 1.f);
-	//LightDesc.fRange = 20.f;
-	//LightDesc.vDiffuse = _float4(1.f, 0.0f, 0.f, 1.f);
-	//LightDesc.vAmbient = _float4(0.4f, 0.1f, 0.1f, 1.f);
-	//LightDesc.vSpecular = LightDesc.vDiffuse;
-
-	//m_pGameInstance->Add_Light(LightDesc);
-
-	//ZeroMemory(&LightDesc, sizeof(LIGHT_DESC));
-	//LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-	//LightDesc.vPosition = _float4(40.f, 5.f, 20.f, 1.f);
-	//LightDesc.fRange = 20.f;
-	//LightDesc.vDiffuse = _float4(0.0f, 1.f, 0.f, 1.f);
-	//LightDesc.vAmbient = _float4(0.1f, 0.4f, 0.1f, 1.f);
-	//LightDesc.vSpecular = LightDesc.vDiffuse;
-
-	//m_pGameInstance->Add_Light(LightDesc);
 	return S_OK;
 }
 
@@ -167,7 +157,7 @@ HRESULT CGamePlay_Level::Ready_Layer_UI(const wstring& strLayerTag)
 	return S_OK;
 }
 
-HRESULT CGamePlay_Level::Ready_Object(const char* strName, _matrix WorldMatrix, _uint iNavigationIndex)
+HRESULT CGamePlay_Level::Ready_Object(const char* strName, _matrix WorldMatrix, _uint iNavigationIndex, _uint iPathIndex)
 {
 	if (string(strName).find("Slime_Fire_Large") != string::npos)
 	{
@@ -176,7 +166,7 @@ HRESULT CGamePlay_Level::Ready_Object(const char* strName, _matrix WorldMatrix, 
 		XMStoreFloat4x4(&Desc.WorldMatrix, WorldMatrix);
 		Desc.iMonsterNavigationIndex = iNavigationIndex;
 		Desc.TargetMatrix = dynamic_cast<CTransform*>(m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, L"Layer_Player", L"Com_Transform"))->Get_WorldFloat4x4();
-
+		Desc.iPathIndex = iPathIndex;
 		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Monster_Slime_Fire_Large", L"Layer_Monster", &Desc)))
 			return E_FAIL;
 	}
@@ -187,7 +177,7 @@ HRESULT CGamePlay_Level::Ready_Object(const char* strName, _matrix WorldMatrix, 
 		XMStoreFloat4x4(&Desc.WorldMatrix, WorldMatrix);
 		Desc.iMonsterNavigationIndex = iNavigationIndex;
 		Desc.TargetMatrix = dynamic_cast<CTransform*>(m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, L"Layer_Player", L"Com_Transform"))->Get_WorldFloat4x4();
-
+		Desc.iPathIndex = iPathIndex;
 		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Monster_Slime_Fire_Mid", L"Layer_Monster", &Desc)))
 			return E_FAIL;
 	}
@@ -198,7 +188,7 @@ HRESULT CGamePlay_Level::Ready_Object(const char* strName, _matrix WorldMatrix, 
 		XMStoreFloat4x4(&Desc.WorldMatrix, WorldMatrix);
 		Desc.iMonsterNavigationIndex = iNavigationIndex;
 		Desc.TargetMatrix = dynamic_cast<CTransform*>(m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, L"Layer_Player", L"Com_Transform"))->Get_WorldFloat4x4();
-		
+		Desc.iPathIndex = iPathIndex;
 		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Monster_Slime_Water_Large", L"Layer_Monster", &Desc)))
 			return E_FAIL;
 	}
@@ -209,7 +199,7 @@ HRESULT CGamePlay_Level::Ready_Object(const char* strName, _matrix WorldMatrix, 
 		XMStoreFloat4x4(&Desc.WorldMatrix, WorldMatrix);
 		Desc.iMonsterNavigationIndex = iNavigationIndex;
 		Desc.TargetMatrix = dynamic_cast<CTransform*>(m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, L"Layer_Player", L"Com_Transform"))->Get_WorldFloat4x4();
-
+		Desc.iPathIndex = iPathIndex;
 		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Monster_Slime_Water_Mid", L"Layer_Monster", &Desc)))
 			return E_FAIL;
 	}
@@ -218,7 +208,7 @@ HRESULT CGamePlay_Level::Ready_Object(const char* strName, _matrix WorldMatrix, 
 		CSceneObj::SCENEOBJ_DESC Desc{};
 
 		XMStoreFloat4x4(&Desc.WorldMatrix, WorldMatrix);
-
+		Desc.iPathIndex = iPathIndex;
 		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_SceneObj_TreasureBox", L"Layer_SceneObj", &Desc)))
 			return E_FAIL;
 
@@ -228,7 +218,7 @@ HRESULT CGamePlay_Level::Ready_Object(const char* strName, _matrix WorldMatrix, 
 		CFireCore::FIRECORE_DESC Desc{};
 		Desc.pTargetMatrix = dynamic_cast<CTransform*>(m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, L"Layer_Player", L"Com_Transform"))->Get_WorldFloat4x4();
 		XMStoreFloat4x4(&Desc.WorldMatrix, WorldMatrix);
-
+		Desc.iPathIndex = iPathIndex;
 		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_SceneObj_FireCore", L"Layer_SceneObj", &Desc)))
 			return E_FAIL;
 	}
@@ -237,7 +227,7 @@ HRESULT CGamePlay_Level::Ready_Object(const char* strName, _matrix WorldMatrix, 
 		CSceneObj::SCENEOBJ_DESC Desc{};
 
 		XMStoreFloat4x4(&Desc.WorldMatrix, WorldMatrix);
-
+		Desc.iPathIndex = iPathIndex;
 		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_SceneObj_DungeonGate", L"Layer_SceneObj", &Desc)))
 			return E_FAIL;
 	}
@@ -247,7 +237,7 @@ HRESULT CGamePlay_Level::Ready_Object(const char* strName, _matrix WorldMatrix, 
 
 		Desc.pTargetMatrix = dynamic_cast<CTransform*>(m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, L"Layer_Player", L"Com_Transform"))->Get_WorldFloat4x4();
 		XMStoreFloat4x4(&Desc.WorldMatrix, WorldMatrix);
-
+		Desc.iPathIndex = iPathIndex;
 		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_SceneObj_CheckPoint", L"Layer_SceneObj", &Desc)))
 			return E_FAIL;
 	}
@@ -256,7 +246,7 @@ HRESULT CGamePlay_Level::Ready_Object(const char* strName, _matrix WorldMatrix, 
 		CSceneObj::SCENEOBJ_DESC Desc{};
 
 		XMStoreFloat4x4(&Desc.WorldMatrix, WorldMatrix);
-
+		Desc.iPathIndex = iPathIndex;
 		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_SceneObj_Operator", L"Layer_SceneObj", &Desc)))
 			return E_FAIL;
 	}
@@ -265,7 +255,7 @@ HRESULT CGamePlay_Level::Ready_Object(const char* strName, _matrix WorldMatrix, 
 		CSceneObj::SCENEOBJ_DESC Desc{};
 
 		XMStoreFloat4x4(&Desc.WorldMatrix, WorldMatrix);
-
+		Desc.iPathIndex = iPathIndex;
 		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_SceneObj_WindField", L"Layer_SceneObj", &Desc)))
 			return E_FAIL;
 	}
@@ -274,7 +264,7 @@ HRESULT CGamePlay_Level::Ready_Object(const char* strName, _matrix WorldMatrix, 
 		CSceneObj::SCENEOBJ_DESC Desc{};
 
 		XMStoreFloat4x4(&Desc.WorldMatrix, WorldMatrix);
-
+		Desc.iPathIndex = iPathIndex;
 		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_SceneObj_ThornWall", L"Layer_SceneObj", &Desc)))
 			return E_FAIL;
 	}
@@ -285,7 +275,7 @@ HRESULT CGamePlay_Level::Ready_Object(const char* strName, _matrix WorldMatrix, 
 		XMStoreFloat4x4(&Desc.WorldMatrix, WorldMatrix);
 		Desc.isMove = true;
 		Desc.iNavigationIndex = iNavigationIndex;
-
+		Desc.iPathIndex = iPathIndex;
 		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_SceneObj_Plane", L"Layer_SceneObj", &Desc)))
 			return E_FAIL;
 	}
@@ -295,7 +285,7 @@ HRESULT CGamePlay_Level::Ready_Object(const char* strName, _matrix WorldMatrix, 
 
 		XMStoreFloat4x4(&Desc.WorldMatrix, WorldMatrix);
 		Desc.isMove = false;
-
+		Desc.iPathIndex = iPathIndex;
 		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_SceneObj_Plane", L"Layer_SceneObj", &Desc)))
 			return E_FAIL;
 	}
@@ -306,11 +296,11 @@ HRESULT CGamePlay_Level::Ready_Object(const char* strName, _matrix WorldMatrix, 
 		XMStoreFloat4x4(&Desc.WorldMatrix, WorldMatrix);
 		Desc.iMonsterNavigationIndex = iNavigationIndex;
 		Desc.TargetMatrix = dynamic_cast<CTransform*>(m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, L"Layer_Player", L"Com_Transform"))->Get_WorldFloat4x4();
-
+		Desc.iPathIndex = iPathIndex;
 		if (string(strName).find("Bow") != string::npos)
 			Desc.eWeapon = CHili::HILI_WEAPON_CROSSBOW;
-		else if (string(strName).find("Club") != string::npos) return S_OK;
-			//Desc.eWeapon = CHili::HILI_WEAPON_CLUB;
+		else if (string(strName).find("Club") != string::npos)
+			Desc.eWeapon = CHili::HILI_WEAPON_CLUB;
 
 		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Monster_Hili_Fire", L"Layer_Monster", &Desc)))
 			return E_FAIL;
@@ -322,7 +312,7 @@ HRESULT CGamePlay_Level::Ready_Object(const char* strName, _matrix WorldMatrix, 
 		XMStoreFloat4x4(&Desc.WorldMatrix, WorldMatrix);
 		Desc.iMonsterNavigationIndex = iNavigationIndex;
 		Desc.TargetMatrix = dynamic_cast<CTransform*>(m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, L"Layer_Player", L"Com_Transform"))->Get_WorldFloat4x4();
-
+		Desc.iPathIndex = iPathIndex;
 		if (string(strName).find("Bow") != string::npos)
 			Desc.eWeapon = CHili::HILI_WEAPON_CROSSBOW;
 		else if (string(strName).find("Club") != string::npos)
@@ -397,10 +387,13 @@ HRESULT CGamePlay_Level::Load_File(LEVEL_STATE eNextLevel)
 		_uint iNavigationIndex = 0;
 		ifs.read((_char*)&iNavigationIndex, sizeof(_uint));
 
+		_uint iPathIndex = 0;
+		ifs.read((_char*)&iPathIndex, sizeof(_uint));
+
 		_float4x4 WorldMatrix = {};
 		ifs.read((_char*)&WorldMatrix, sizeof(_float4x4));
 
-		Ready_Object(strObjectName, XMLoadFloat4x4(&WorldMatrix), iNavigationIndex);
+		Ready_Object(strObjectName, XMLoadFloat4x4(&WorldMatrix), iNavigationIndex, iPathIndex);
 	}
 
 	ifs.close();

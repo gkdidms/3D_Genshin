@@ -16,8 +16,9 @@ public:
     void Late_Tick(const _float& fTimeDelta) override;
     HRESULT Render() override;
 
-protected:
+private:
     virtual HRESULT Add_Components();
+    void Coll_Player();
 
 public:
     static CHili_Weapon_Club* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

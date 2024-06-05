@@ -40,21 +40,6 @@
     <Filter Include="02. GameObject\01. Camera">
       <UniqueIdentifier>{9fd1f990-2fe6-47de-8e7d-8d39923717de}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\02. Terrain">
-      <UniqueIdentifier>{9fa5781c-d7c3-42c1-9723-b39fc13fc4a4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\03. Map">
-      <UniqueIdentifier>{ff2d225b-e574-4af4-8cce-e28051baf40d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\03. Map\Stage_Dungeon_2">
-      <UniqueIdentifier>{70c3ff82-cda4-4aae-9b41-e107143f54f7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\03. Map\Stage_Dungeon_1">
-      <UniqueIdentifier>{4a914a1e-563b-43d4-983c-acb042bc7c96}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\03. Map\Stage_Boss">
-      <UniqueIdentifier>{71f10910-c581-4c22-a4e5-c5a24a6ab31f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\04. Player">
       <UniqueIdentifier>{b93a464a-26e8-432f-b573-292967d9fe5c}</UniqueIdentifier>
     </Filter>
@@ -81,9 +66,6 @@
     </Filter>
     <Filter Include="02. GameObject\04. Player\PartObject\Weapon\Tighnari">
       <UniqueIdentifier>{30002d29-86aa-47c1-af7f-681522ec39ba}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\04. Player\PartObject\Weapon\Yae">
-      <UniqueIdentifier>{27ccd271-970a-44d8-903d-683b7d41bb19}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\04. Player\PartObject\Weapon\Wanderer">
       <UniqueIdentifier>{8114c022-cae7-4320-bac2-6a3c2ecf64f6}</UniqueIdentifier>
@@ -240,21 +222,6 @@
     </Filter>
     <Filter Include="02. GameObject\04. Player\PartObject\Flycloak">
       <UniqueIdentifier>{2068690a-8952-4dd9-bcd2-ed8eccacc189}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\04. Player\PartObject\SkillObj\Yae">
-      <UniqueIdentifier>{5a3479be-b974-462a-bb0a-f637abf0be92}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\04. Player\PartObject\SkillObj\Yae\Gohei">
-      <UniqueIdentifier>{78f8c0b6-1739-4aa4-b702-8b702dfd36ba}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\04. Player\PartObject\SkillObj\Yae\BlackFox">
-      <UniqueIdentifier>{dc61bc54-0b11-4730-b447-07e731b5145a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\04. Player\PartObject\SkillObj\Yae\FoxTail_Burst">
-      <UniqueIdentifier>{3a1d7ffc-01d0-482e-a959-4fd95d53a128}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\04. Player\PartObject\SkillObj\Yae\FoxTower">
-      <UniqueIdentifier>{85f840c4-931e-4203-9c18-ca22c2e65247}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\04. Player\State">
       <UniqueIdentifier>{3d7b9044-ab80-4d47-852e-f5c2259b19d6}</UniqueIdentifier>
@@ -442,6 +409,30 @@
     <Filter Include="96. Utility\00. AI\Node\Action">
       <UniqueIdentifier>{01196d42-b3db-49a6-bbba-4a700f1d1aca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\08. UI\Atk">
+      <UniqueIdentifier>{943a4d47-0884-4605-abd1-c230009de531}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. UI\HP\Boss">
+      <UniqueIdentifier>{518bd91c-6560-4966-876c-5fd2687fa01b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. UI\HP\Boss\HPBar">
+      <UniqueIdentifier>{379f662e-a4f3-466e-bc4c-17d4767605e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Map">
+      <UniqueIdentifier>{ff2d225b-e574-4af4-8cce-e28051baf40d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Map\Stage_Dungeon_1">
+      <UniqueIdentifier>{4a914a1e-563b-43d4-983c-acb042bc7c96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Map\Stage_Boss">
+      <UniqueIdentifier>{71f10910-c581-4c22-a4e5-c5a24a6ab31f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\PartObject\Weapon\Feiyan">
+      <UniqueIdentifier>{27ccd271-970a-44d8-903d-683b7d41bb19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Player\State\State\Hit">
+      <UniqueIdentifier>{55265e43-69f3-4537-8f07-b707e85b45d4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">
@@ -477,9 +468,6 @@
     <ClInclude Include="..\public\Background.h">
       <Filter>02. GameObject\00. Background</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Terrain.h">
-      <Filter>02. GameObject\02. Terrain</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Monster.h">
       <Filter>02. GameObject\05. Monster</Filter>
     </ClInclude>
@@ -493,13 +481,10 @@
       <Filter>02. GameObject\04. Player\PartObject\Body</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Map.h">
-      <Filter>02. GameObject\03. Map</Filter>
+      <Filter>02. GameObject\02. Map</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Dungeon_1.h">
-      <Filter>02. GameObject\03. Map\Stage_Dungeon_1</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Dungeon_2.h">
-      <Filter>02. GameObject\03. Map\Stage_Dungeon_2</Filter>
+      <Filter>02. GameObject\02. Map\Stage_Dungeon_1</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Tighnari_Body.h">
       <Filter>02. GameObject\04. Player\PartObject\Body\Tighnari</Filter>
@@ -561,9 +546,6 @@
     <ClInclude Include="..\public\SkillObj.h">
       <Filter>02. GameObject\04. Player\PartObject\SkillObj</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Gohei.h">
-      <Filter>02. GameObject\04. Player\PartObject\SkillObj\Yae\Gohei</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\StateFly.h">
       <Filter>02. GameObject\04. Player\State\State\Fly</Filter>
     </ClInclude>
@@ -577,7 +559,7 @@
       <Filter>02. GameObject\04. Player\PartObject\Weapon\Wanderer</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Weapon_Narukami.h">
-      <Filter>02. GameObject\04. Player\PartObject\Weapon\Yae</Filter>
+      <Filter>02. GameObject\04. Player\PartObject\Weapon\Feiyan</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Slime.h">
       <Filter>02. GameObject\05. Monster\Slime</Filter>
@@ -652,7 +634,7 @@
       <Filter>01.Level\02. Stage_Boss</Filter>
     </ClInclude>
     <ClInclude Include="..\public\GoldenHouse.h">
-      <Filter>02. GameObject\03. Map\Stage_Boss</Filter>
+      <Filter>02. GameObject\02. Map\Stage_Boss</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Boss.h">
       <Filter>02. GameObject\06. Boss</Filter>
@@ -734,15 +716,6 @@
     </ClInclude>
     <ClInclude Include="..\public\Flycloak.h">
       <Filter>02. GameObject\04. Player\PartObject\Flycloak</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\BlackFox.h">
-      <Filter>02. GameObject\04. Player\PartObject\SkillObj\Yae\BlackFox</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\FoxTail_Burst.h">
-      <Filter>02. GameObject\04. Player\PartObject\SkillObj\Yae\FoxTail_Burst</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\FoxTower.h">
-      <Filter>02. GameObject\04. Player\PartObject\SkillObj\Yae\FoxTower</Filter>
     </ClInclude>
     <ClInclude Include="..\public\FlowerArrow.h">
       <Filter>02. GameObject\04. Player\PartObject\SkillObj\Tighnari</Filter>
@@ -849,6 +822,18 @@
     <ClInclude Include="..\Public\Tighnari_Burst.h">
       <Filter>02. GameObject\11. Bullet\Player\Tighnari\Burst</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\UI_Atk.h">
+      <Filter>02. GameObject\08. UI\Atk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BossHP_Outline.h">
+      <Filter>02. GameObject\08. UI\HP\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BossHP.h">
+      <Filter>02. GameObject\08. UI\HP\Boss\HPBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\StateHit.h">
+      <Filter>02. GameObject\04. Player\State\State\Hit</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -872,9 +857,6 @@
     <ClCompile Include="..\private\Background.cpp">
       <Filter>02. GameObject\00. Background</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Terrain.cpp">
-      <Filter>02. GameObject\02. Terrain</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Monster.cpp">
       <Filter>02. GameObject\05. Monster</Filter>
     </ClCompile>
@@ -888,13 +870,10 @@
       <Filter>02. GameObject\04. Player\PartObject\Body</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Map.cpp">
-      <Filter>02. GameObject\03. Map</Filter>
+      <Filter>02. GameObject\02. Map</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Dungeon_1.cpp">
-      <Filter>02. GameObject\03. Map\Stage_Dungeon_1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Dungeon_2.cpp">
-      <Filter>02. GameObject\03. Map\Stage_Dungeon_2</Filter>
+      <Filter>02. GameObject\02. Map\Stage_Dungeon_1</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Tighnari_Body.cpp">
       <Filter>02. GameObject\04. Player\PartObject\Body\Tighnari</Filter>
@@ -956,9 +935,6 @@
     <ClCompile Include="..\private\SkillObj.cpp">
       <Filter>02. GameObject\04. Player\PartObject\SkillObj</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Gohei.cpp">
-      <Filter>02. GameObject\04. Player\PartObject\SkillObj\Yae\Gohei</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\StateFly.cpp">
       <Filter>02. GameObject\04. Player\State\State\Fly</Filter>
     </ClCompile>
@@ -972,7 +948,7 @@
       <Filter>02. GameObject\04. Player\PartObject\Weapon\Wanderer</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Weapon_Narukami.cpp">
-      <Filter>02. GameObject\04. Player\PartObject\Weapon\Yae</Filter>
+      <Filter>02. GameObject\04. Player\PartObject\Weapon\Feiyan</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Slime.cpp">
       <Filter>02. GameObject\05. Monster\Slime</Filter>
@@ -1044,7 +1020,7 @@
       <Filter>01.Level\02. Stage_Boss</Filter>
     </ClCompile>
     <ClCompile Include="..\private\GoldenHouse.cpp">
-      <Filter>02. GameObject\03. Map\Stage_Boss</Filter>
+      <Filter>02. GameObject\02. Map\Stage_Boss</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Boss.cpp">
       <Filter>02. GameObject\06. Boss</Filter>
@@ -1129,15 +1105,6 @@
     </ClCompile>
     <ClCompile Include="..\private\Flycloak.cpp">
       <Filter>02. GameObject\04. Player\PartObject\Flycloak</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\BlackFox.cpp">
-      <Filter>02. GameObject\04. Player\PartObject\SkillObj\Yae\BlackFox</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\FoxTail_Burst.cpp">
-      <Filter>02. GameObject\04. Player\PartObject\SkillObj\Yae\FoxTail_Burst</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\FoxTower.cpp">
-      <Filter>02. GameObject\04. Player\PartObject\SkillObj\Yae\FoxTower</Filter>
     </ClCompile>
     <ClCompile Include="..\private\FlowerArrow.cpp">
       <Filter>02. GameObject\04. Player\PartObject\SkillObj\Tighnari</Filter>
@@ -1243,6 +1210,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\Tighnari_Burst.cpp">
       <Filter>02. GameObject\11. Bullet\Player\Tighnari\Burst</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UI_Atk.cpp">
+      <Filter>02. GameObject\08. UI\Atk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BossHP_Outline.cpp">
+      <Filter>02. GameObject\08. UI\HP\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BossHP.cpp">
+      <Filter>02. GameObject\08. UI\HP\Boss\HPBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StateHit.cpp">
+      <Filter>02. GameObject\04. Player\State\State\Hit</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

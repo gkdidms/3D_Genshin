@@ -30,6 +30,8 @@ public:
         _float fStartTime = { 0.f };
         _float fDurationTime = { 0.f };
         _matrix WorldMatrix = { XMMatrixIdentity()};
+
+        _bool isFileLoad = { false };
     }TOOL_EFFECT_DESC;
 
 protected:
@@ -54,13 +56,13 @@ public:
     _bool isNoise() { return m_isNoise; }
     _bool isFrameLoop() { return m_isFrameLoop; }
 
-    void Reset() { m_fCurrentTime == 0.f; }
+    void Reset() { m_fCurrentTime = 0.f; }
     
 public:
     void Set_ShaderPass(_uint iShaderPass) { m_iShaderPass = iShaderPass; Reset(); }
     void Set_Color(_float4 vColor) { m_vColor = vColor; }
     void Set_RendererType(_int iRendererType) { m_iRendererType = iRendererType; }
-    void Set_FrameLoop(_bool isLoop) { m_isFrameLoop = isLoop;}
+    void Set_FrameLoop(_bool isLoop) { m_isFrameLoop = isLoop; m_isFrameStop = false; }
     void Set_StartTime(_float fStartTime) { m_fStartTime = fStartTime; Reset(); }
     void Set_DurationTime(_float fDurationTime) { m_fDurationTime = fDurationTime; Reset(); }
 

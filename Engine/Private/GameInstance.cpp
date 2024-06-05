@@ -140,6 +140,7 @@ CGameObject* CGameInstance::Clone_Object(const wstring strGameObjectTag, void* p
 
 void CGameInstance::Clear_Object(_uint iLevelIndex)
 {
+	m_pRenderer->Clear();
 	m_pGameObject_Manager->Clear(iLevelIndex);
 	m_pComponent_Manager->Clear(iLevelIndex);
 }
@@ -254,6 +255,11 @@ HRESULT CGameInstance::Render_Font(const wstring& strFontTag, const wstring& str
 	return m_pFont_Manager->Render_Font(strFontTag, strText, vPosition, vColor);
 }
 
+HRESULT CGameInstance::Far_Render(const wstring& strFontTag, const wstring& strText, _fvector vPosition, _fvector vColor)
+{
+	return m_pFont_Manager->Far_Render(strFontTag, strText, vPosition, vColor);
+}
+
 void CGameInstance::Get_ProcessMessageKeyboard(UINT message, WPARAM wParam, LPARAM lParam)
 {
 	m_pInput_Manager->Get_ProcessMessageKeyboard(message, wParam, lParam);
@@ -314,9 +320,9 @@ _vector CGameInstance::Picking(_bool* isSuccess)
 	return m_pPicking->Picking(isSuccess);
 }
 
-_vector CGameInstance::Get_RayDir()
+_vector CGameInstance::Get_PickDir()
 {
-	return m_pPicking->Get_RayDir();
+	return m_pPicking->Get_PickDir();
 }
 
 HRESULT CGameInstance::Add_RenderTarget(const wstring& strRenderTargetTag, _uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixelFormat, const _float4& vClearColor)
@@ -342,6 +348,11 @@ HRESULT CGameInstance::End_MRT()
 HRESULT CGameInstance::Bind_RenderTargetSRV(const wstring& strTargetTag, CShader* pShader, const _char* pConstantName)
 {
 	return m_pRenderTarget_Manager->Bind_RenderTargetSRV(strTargetTag, pShader, pConstantName);
+}
+
+HRESULT CGameInstance::Copy_Resource(const wstring& strTargetTag, ID3D11Texture2D* pDesc)
+{
+	return m_pRenderTarget_Manager->Copy_Resource(strTargetTag, pDesc);
 }
 
 #ifdef _DEBUG

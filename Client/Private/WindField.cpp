@@ -37,7 +37,7 @@ void CWindField::Priority_Tick(const _float& fTimeDelta)
 
 void CWindField::Tick(const _float& fTimeDelta)
 {
-	CCollider* pTargetCollider =  dynamic_cast<CCollider*>(m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, TEXT("Layer_Player"), TEXT("Com_Collider", 0)));
+	CCollider* pTargetCollider =  dynamic_cast<CCollider*>(m_pGameInstance->Get_GameObject_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_Collider", 0)));
 
 	m_pStateManager->Set_CollWindField(m_pColliderCom->Intersect(pTargetCollider));
 
@@ -77,7 +77,7 @@ HRESULT CWindField::Render()
 
 HRESULT CWindField::Add_Components()
 {
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxMesh", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, L"Prototype_Component_Shader_VtxMesh", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Model_WindField", L"Com_Model", reinterpret_cast<CComponent**>(&m_pModelCom))))
@@ -89,7 +89,7 @@ HRESULT CWindField::Add_Components()
 	Desc.vExtents = _float3(3.f, 100.f, 3.f);
 	Desc.vCenter = _float3(0.f, Desc.vExtents.y, 0.f);
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Collider", L"Com_Collider", reinterpret_cast<CComponent**>(&m_pColliderCom), &Desc)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, L"Prototype_Component_Collider", L"Com_Collider", reinterpret_cast<CComponent**>(&m_pColliderCom), &Desc)))
 		return E_FAIL;
 
 	return S_OK;

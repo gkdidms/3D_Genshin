@@ -208,10 +208,11 @@ HRESULT CHili::Ready_Object()
 	HiliDesc.pWeaponType = &m_Weapon;
 	HiliDesc.pInfo = &m_Info;
 
-	CHili_Weapon::HILI_WEAPON_DESC Desc{};
+	CHili_Weapon::HILI_WEAPON_DESC Desc = {};
 	Desc.pTargetCombinedTransformationMatrix = m_pTransformCom->Get_WorldFloat4x4();
 	Desc.pHandCombinedTransformationMatrix = m_pModelCom->Get_BoneCombinedTransformationMatrix("Multi_Right");
 	Desc.pState = &m_CurrentState;
+	Desc.fAtk = m_Info.fAtk;
 
 	if (m_Weapon == CHili::HILI_WEAPON_CLUB)
 	{

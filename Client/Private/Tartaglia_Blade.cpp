@@ -76,17 +76,17 @@ HRESULT CTartaglia_Blade::Render()
 
 HRESULT CTartaglia_Blade::Add_Components()
 {
-    if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxMesh", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
+    if (FAILED(__super::Add_Component(LEVEL_STAGE_BOSS, L"Prototype_Component_Shader_VtxMesh", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
         return E_FAIL;
 
     if (m_ElementalType == ELECTRIC)
     {
-        if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Tartaglia_Blade_Electric", L"Com_Model", reinterpret_cast<CComponent**>(&m_pModelCom))))
+        if (FAILED(__super::Add_Component(LEVEL_STAGE_BOSS, L"Prototype_Component_Model_Tartaglia_Blade_Electric", L"Com_Model", reinterpret_cast<CComponent**>(&m_pModelCom))))
             return E_FAIL;
     }
     else if (m_ElementalType == WATER)
     {
-        if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Tartaglia_Blade_Water", L"Com_Model", reinterpret_cast<CComponent**>(&m_pModelCom))))
+        if (FAILED(__super::Add_Component(LEVEL_STAGE_BOSS, L"Prototype_Component_Model_Tartaglia_Blade_Water", L"Com_Model", reinterpret_cast<CComponent**>(&m_pModelCom))))
             return E_FAIL;
     }
 

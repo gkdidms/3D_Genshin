@@ -2,7 +2,7 @@
 #include "SkillObj.h"
 
 BEGIN(Client)
-class CFlowerArrow :
+class CFlowerArrow final :
     public CSkillObj
 {
 private:
@@ -18,7 +18,10 @@ public:
     virtual void Late_Tick(const _float& fTimeDelta);
     virtual HRESULT Render();
 
-protected:
+private:
+    CTexture* m_pTextureCom = { nullptr };
+
+private:
     virtual HRESULT Add_Components();
     virtual HRESULT Bind_ResourceData();
     virtual void Change_Animation(const _float& fTimeDelta);

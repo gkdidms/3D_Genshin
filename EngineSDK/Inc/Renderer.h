@@ -7,7 +7,7 @@ class CRenderer :
 {
 
 public:
-    enum RENDERER_STATE { RENDER_PRIORITY, RENDER_NONBLENDER, RENDER_NONLIGHT, RENDER_BLENDER, RENDER_UI, RENDER_END };
+    enum RENDERER_STATE { RENDER_PRIORITY, RENDER_SHADOWOBJ, RENDER_NONBLENDER, RENDER_NONLIGHT, RENDER_BLENDER, RENDER_UI, RENDER_END };
 
 private:
     CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -17,6 +17,7 @@ public:
     HRESULT Initialize();
     void Add_Renderer(RENDERER_STATE eRenderState, class CGameObject* pGameObject);
     void Draw();
+    void Clear();
 
 #ifdef _DEBUG
 public:
@@ -29,9 +30,11 @@ private:
     void Render_LightAcc();
     void Render_CopyBackBuffer();
     void Render_DeferredResult();
+    
     void Render_NonLight();
     void Render_Gaussian();
     void Render_GlowDeferred();
+    void Render_FinalResult();
     void Render_Blender();
     void Render_UI();
 

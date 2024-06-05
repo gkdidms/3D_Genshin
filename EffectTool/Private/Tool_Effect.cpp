@@ -46,7 +46,7 @@ HRESULT CTool_Effect::Initialize(void* pArg)
     // 텍스쳐 갯수
     m_iNumTexture = pDesc->iTextureNum == 0 ? 1 : pDesc->iTextureNum;
 
-    if (m_iNumTexture > 1)
+    if (m_iNumTexture > 1 && !pDesc->isFileLoad)
     {
         //포맷 지정자 추가하기
         string strFilePath = pDesc->strTextureFilePath;
@@ -62,8 +62,6 @@ HRESULT CTool_Effect::Initialize(void* pArg)
     m_isFrameLoop = pDesc->isFrameLoop;
     m_vColor = pDesc->vColor;
     m_pTransformCom->Set_WorldMatrix(pDesc->WorldMatrix);
-
-
 
     return S_OK;
 }

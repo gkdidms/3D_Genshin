@@ -35,9 +35,13 @@ public:
     _bool Get_BossSign() { return m_isBossSign; }
     _bool isAttack();
     
+public:
+    void Set_Hit(_float fDamage);
+    
 public:// 플레이어 정보 가져오기
     _float Get_PlayerbleHP();
     _float Get_PlayerbleMaxHP();
+    _float Get_PlayerbleAtk();
 
 public:
     void Set_PlayerMove(_vector vMoveSpeed);
@@ -82,6 +86,11 @@ private:
     _float m_fHeight = { 0.f };
     _float m_fJumpDurationTime = { 0.2f };
     _float m_fJumpCurrentTime = { 0.f };
+
+    //hit 시간
+    _float m_fHitDuration = { 0.3f };
+    _float m_fHitCurrentTime = { 0.f };
+    _bool m_isAttackPossible = { true };
 
 private:
     const _float4x4* m_pCameraLook = {};

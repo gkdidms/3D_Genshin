@@ -54,7 +54,7 @@ void CTool_Terrain::Tick(const _float& fTimeDelta)
 
 void CTool_Terrain::Late_Tick(const _float& fTimeDelta)
 {
-	m_pGameInstance->Add_Renderer(CRenderer::RENDER_PRIORITY, this);
+	m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONBLENDER, this);
 }
 
 HRESULT CTool_Terrain::Render()
@@ -99,7 +99,7 @@ HRESULT CTool_Terrain::Bind_ResouceData()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(CPipeLine::D3DTS_PROJ))))
 		return E_FAIL;
 	//m_pTextureCom->Bind_ShaderResource
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
+	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", 0)))
 		return E_FAIL;
 
 	return S_OK;

@@ -67,10 +67,10 @@ HRESULT CAlertCircle::Render()
 
 HRESULT CAlertCircle::Add_Components()
 {
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxAnimMesh", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
+	if (FAILED(__super::Add_Component(LEVEL_STAGE_BOSS, L"Prototype_Component_Shader_VtxAnimMesh", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_VIBuffer_Rect", L"Com_VIBuffer_Rect", reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
+	if (FAILED(__super::Add_Component(LEVEL_STAGE_BOSS, L"Prototype_Component_VIBuffer_Rect", L"Com_VIBuffer_Rect", reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
 		return E_FAIL;
 
 	m_pTextureCom = dynamic_cast<CTexture*>(m_pGameInstance->Add_Component_Clone(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_AlertCircle", nullptr));

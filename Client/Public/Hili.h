@@ -33,6 +33,7 @@ public:
     typedef struct tHiliInfo {
         _float fMaxHp = { 24354.f };
         _float fHP = { 24354.f };
+        _float fAtk = { 231.f };
         ELEMENTAL_TYPE eElementalType = { ELEMENTAL_END };
     }HILI_INFO;
 

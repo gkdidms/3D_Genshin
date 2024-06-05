@@ -6,6 +6,8 @@
 #include "Background.h"
 #include "LoadingBar.h"
 
+_uint CMainApp::g_iCurrentLevel = 0;
+
 CMainApp::CMainApp()
 	: m_pGameInstance{ CGameInstance::GetInstance()}
 {

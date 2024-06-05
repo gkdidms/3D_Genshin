@@ -1,5 +1,6 @@
 #include "Weapon_Ayus.h"
 
+#include "MainApp.h"
 #include "GameInstance.h"
 
 CWeapon_Ayus::CWeapon_Ayus(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -34,6 +35,9 @@ void CWeapon_Ayus::Priority_Tick(const _float& fTimeDelta)
 
 void CWeapon_Ayus::Tick(const _float& fTimeDelta)
 {
+	if (!m_isHide)
+		m_fCurrentTime += fTimeDelta;
+	else m_fCurrentTime = 0.f;
 }
 
 void CWeapon_Ayus::Late_Tick(const _float& fTimeDelta)
@@ -76,10 +80,13 @@ HRESULT CWeapon_Ayus::Render()
 
 HRESULT CWeapon_Ayus::Add_Components()
 {
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxMesh", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Shader_VtxMesh", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Ayus", L"Com_Model", reinterpret_cast<CComponent**>(&m_pModelCom))))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Model_Ayus", L"Com_Model", reinterpret_cast<CComponent**>(&m_pModelCom))))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Components()))
 		return E_FAIL;
 
 	return S_OK;
@@ -87,19 +94,8 @@ HRESULT CWeapon_Ayus::Add_Components()
 
 HRESULT CWeapon_Ayus::Bind_ResourceData()
 {
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_pWorldMatrix)))
+	if (FAILED(__super::Bind_ResourceData()))
 		return E_FAIL;
-
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(CPipeLine::D3DTS_VIEW))))
-		return E_FAIL;
-
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(CPipeLine::D3DTS_PROJ))))
-		return E_FAIL;
-
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CamFar(), sizeof(_float))))
-		return E_FAIL;
-
-	return S_OK;
 }
 
 void CWeapon_Ayus::Change_Animation(const _float& fTimeDelta)

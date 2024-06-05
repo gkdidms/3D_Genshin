@@ -1,5 +1,6 @@
 #include "Tighnari_Normal.h"
 
+#include "MainApp.h"
 #include "GameInstance.h"
 #include "Effect.h"
 #include "Effect_Image.h"
@@ -35,13 +36,13 @@ HRESULT CTighnari_Normal::Initialize(void* pArg)
 	_matrix WorldMatrix;
 	_matrix HandMatrix = XMMatrixIdentity();
 	HandMatrix.r[3] = XMLoadFloat4x4(&pDesc->HandCombinedTransformationMatrix).r[3];
-	WorldMatrix = m_pTransformCom->Get_WorldMatrix() * HandMatrix * XMLoadFloat4x4(&pDesc->ParentMatrix);
+	WorldMatrix = m_pTransformCom->Get_WorldMatrix() * HandMatrix * XMLoadFloat4x4(pDesc->ParentMatrix);
 
 	m_pTransformCom->Set_WorldMatrix(WorldMatrix);
 	m_vTargetPos.y = m_vTargetPos.y + 1.f;
 	m_pTransformCom->Set_Scale(0.3f, 1.f, 0.3f);
 
-	m_fHeight = pDesc->ParentMatrix.m[3][1]; // y 값 저장
+	m_fHeight = pDesc->ParentMatrix->m[3][1]; // y 값 저장
 
 	XMStoreFloat4(&m_vTargetLook, XMVector3Normalize(XMLoadFloat4(&m_vTargetPos) - m_pTransformCom->Get_State(CTransform::STATE_POSITION)));
 
@@ -90,16 +91,16 @@ HRESULT CTighnari_Normal::Render()
 
 HRESULT CTighnari_Normal::Add_Components()
 {
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxPosTex_Skill", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Shader_VtxPosTex_Skill", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_Skill_Tighnari_Normal_Trail", L"Com_Texture", reinterpret_cast<CComponent**>(&m_pTextureCom[0]))))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Texture_Skill_Tighnari_Normal_Trail", L"Com_Texture", reinterpret_cast<CComponent**>(&m_pTextureCom[0]))))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_Skill_Tighnari_Normal_Trail", L"Com_TrailTexture", reinterpret_cast<CComponent**>(&m_pTextureCom[1]))))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Texture_Skill_Tighnari_Normal_Trail", L"Com_TrailTexture", reinterpret_cast<CComponent**>(&m_pTextureCom[1]))))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_VIBuffer_RectZ", L"Com_VIBuffer", reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_VIBuffer_RectZ", L"Com_VIBuffer", reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
 		return E_FAIL;
 
 
@@ -108,14 +109,14 @@ HRESULT CTighnari_Normal::Add_Components()
 	BoundingBoxDesc.vExtents = _float3(0.3f, 0.3f, 0.3f);
 	BoundingBoxDesc.vCenter = _float3(0.f, 0.f, 0.f);
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Collider", L"Com_Collider", reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingBoxDesc)))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Collider", L"Com_Collider", reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingBoxDesc)))
 		return E_FAIL;
 
 	CVIBuffer_Trail::VIBUFFER_TRAIL_DESC TrailDesc{};
 	TrailDesc.iMaxTrail = 30;
 	TrailDesc.vInitPosA = _float3(-0.3f, 0.3f, 0.f);
 	TrailDesc.vInitPosB = _float3(-0.3f, -0.3f, 0.f);
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_VIBuffer_Trail", L"Com_TrailBuffer", reinterpret_cast<CComponent**>(&m_pTrailVIBufferCom), &TrailDesc)))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_VIBuffer_Trail", L"Com_TrailBuffer", reinterpret_cast<CComponent**>(&m_pTrailVIBufferCom), &TrailDesc)))
 		return E_FAIL;
 
 	return S_OK;
@@ -160,13 +161,9 @@ _bool CTighnari_Normal::Move_Arrow(const _float& fTimeDelta)
 		CEffect::EFFECT_DESC EffectDesc{};
 
 		EffectDesc.pPlayerMatrix = m_pTransformCom->Get_WorldFloat4x4();
-		XMStoreFloat4x4(&EffectDesc.RotationMatrix, XMMatrixIdentity());
-		EffectDesc.vPos = _float4(0.f, 0.5f, 0.f, 1.f);
-		EffectDesc.vScale = _float3(1.f, 1.f, 1.f);
 		EffectDesc.fDuration = 0.2f;
-		EffectDesc.iMoveType = CEffect_Image::SHRINK;
 
-		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_Tighnari_Effect_Arrow_Start"), TEXT("Layer_Trail"), &EffectDesc)))
+		if (FAILED(m_pGameInstance->Add_GameObject(CMainApp::g_iCurrentLevel, TEXT("Prototype_GameObject_Effect_Tighnari_Effect_Arrow_Start"), TEXT("Layer_Trail"), &EffectDesc)))
 			return E_FAIL;
 
 		// 충돌했을때 이펙트 출력

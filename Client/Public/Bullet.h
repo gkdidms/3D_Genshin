@@ -15,9 +15,10 @@ class CBullet abstract:
 public:
     typedef struct tBulletDesc : public CGameObject::GAMEOBJECT_DESC
     {
-        _float4x4 ParentMatrix;
+        const _float4x4* ParentMatrix;
         _vector pTargetPos;
         _float4x4 HandCombinedTransformationMatrix;
+        _float fAtk;
     } BULLET_DESC;
 protected:
     CBullet(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -38,7 +39,7 @@ protected:
     _float4 m_vTargetPos = {};
     const _float4x4* m_pTargetMatrix = { nullptr };
     _float4 m_vTargetLook = {};
-
+    _float m_fAtk = { 0.f };
 protected:
     //지속시간
     _float m_fDuration = { 5.f };

@@ -35,12 +35,12 @@ HRESULT CHili_Arrow::Initialize(void* pArg)
     _matrix HandMatrix = XMMatrixIdentity();
     HandMatrix.r[3] = XMLoadFloat4x4(&pDesc->HandCombinedTransformationMatrix).r[3];
     m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(45.f));
-    WorldMatrix = m_pTransformCom->Get_WorldMatrix() * HandMatrix * XMLoadFloat4x4(&pDesc->ParentMatrix);
+    WorldMatrix = m_pTransformCom->Get_WorldMatrix() * HandMatrix * XMLoadFloat4x4(pDesc->ParentMatrix);
 
     m_pTransformCom->Set_WorldMatrix(WorldMatrix);
     m_vTargetPos.y = m_vTargetPos.y + 1.f;
 
-    m_fHeight = pDesc->ParentMatrix.m[3][1]; // y 값 저장
+    m_fHeight = pDesc->ParentMatrix->m[3][1]; // y 값 저장
 
     XMStoreFloat4(&m_vTargetLook, XMVector3Normalize(XMLoadFloat4(&m_vTargetPos) - m_pTransformCom->Get_State(CTransform::STATE_POSITION)));
 

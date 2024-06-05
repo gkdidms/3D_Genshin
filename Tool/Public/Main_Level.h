@@ -20,6 +20,7 @@ private:
     class CTool_Object_Manager* m_pObjectManager = { nullptr };
 
 private:
+    HRESULT Ready_Lights();
     HRESULT Ready_Layer_Camera(const wstring strName);
     HRESULT Ready_Layer_Terrain(const wstring strName);
 

@@ -38,6 +38,7 @@ void CEffect_Default::Priority_Tick(const _float& fTimeDelta)
 void CEffect_Default::Tick(const _float& fTimeDelta)
 {
 	m_fCurrentTime += fTimeDelta;
+		
 
 	if (m_fStartTime >= m_fCurrentTime)
 		return;
@@ -59,7 +60,7 @@ void CEffect_Default::Tick(const _float& fTimeDelta)
 		}
 	}
 
-	if (m_iTextureMoveType == SHRINK)
+	/*if (m_iTextureMoveType == SHRINK)
 	{
 		_float fTime = fTimeDelta * m_fTextureMoveSpeed;
 
@@ -72,7 +73,7 @@ void CEffect_Default::Tick(const _float& fTimeDelta)
 
 		_float3 vScale = m_pTransformCom->Get_Scaled();
 		m_pTransformCom->Set_Scale(vScale.x + fTime, vScale.y + fTime, vScale.z + fTime);
-	}
+	}*/
 }
 
 void CEffect_Default::Late_Tick(const _float& fTimeDelta)

@@ -28,7 +28,15 @@ HRESULT CCustomFont::Render(const wstring& strText, const _float2& vPosition, _f
 	m_pBatch->Begin();
 
 	m_pFont->DrawString(m_pBatch, strText.c_str(), vPosition, vColor, 0.f, _float2(0.f, 0.f), _float2(0.5f, 0.5f), SpriteEffects_None, 0.5f);
+	m_pBatch->End();
 
+	return S_OK;
+}
+
+HRESULT CCustomFont::Far_Render(const wstring& strText, _fvector vPosition, _fvector vColor)
+{
+	m_pBatch->Begin();
+	m_pFont->DrawString(m_pBatch, strText.c_str(), vPosition, vColor, 0.f, g_XMZero, 0.5f, SpriteEffects_None, 0.f);
 	m_pBatch->End();
 
 	return S_OK;

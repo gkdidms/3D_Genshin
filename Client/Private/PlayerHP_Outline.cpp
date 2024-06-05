@@ -1,5 +1,6 @@
 #include "PlayerHp_Outline.h"
 
+#include "MainApp.h"
 #include "GameInstance.h"
 
 #include "Player.h"
@@ -73,7 +74,7 @@ HRESULT CPlayerHP_Outline::Render()
 	if (FAILED(m_pPlayerHP->Render()))
 		return E_FAIL;
 
-	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, TEXT("Layer_Player"), 0));
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(CMainApp::g_iCurrentLevel, TEXT("Layer_Player"), 0));
 	_tchar strText[MAX_PATH]/* = to_wstring(_int(pPlayer->Get_PlayerbleMaxHP())) + L" \ " + to_wstring(_int(pPlayer->Get_PlayerbleHP()))*/;
 	wsprintf(strText, TEXT("%d / %d"), _int(pPlayer->Get_PlayerbleMaxHP()), _int(pPlayer->Get_PlayerbleHP()));
 	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
@@ -90,10 +91,10 @@ HRESULT CPlayerHP_Outline::Add_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, L"Prototype_Component_VIBuffer_Rect", L"Com_VIBuffer", reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxPosTex_UI", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Shader_VtxPosTex_UI", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_UI_Avatar_HP_Outline", L"Com_Texture", reinterpret_cast<CComponent**>(&m_pTextureCom))))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Texture_UI_Avatar_HP_Outline", L"Com_Texture", reinterpret_cast<CComponent**>(&m_pTextureCom))))
 		return E_FAIL;
 
 	return S_OK;

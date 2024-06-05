@@ -1,5 +1,6 @@
 #include "Weapon_Regalis.h"
 
+#include "MainApp.h"
 #include "StateManager.h"
 #include "Effect.h"
 
@@ -38,6 +39,10 @@ void CWeapon_Regalis::Priority_Tick(const _float& fTimeDelta)
 
 void CWeapon_Regalis::Tick(const _float& fTimeDelta)
 {
+	if (!m_isHide)
+		m_fCurrentTime += fTimeDelta;
+	else m_fCurrentTime = 0.f;
+
 	_matrix		SocketMatrix = XMMatrixIdentity();
 
 	if (*m_pState == PLAYER_ATTACK_1
@@ -82,8 +87,6 @@ void CWeapon_Regalis::Late_Tick(const _float& fTimeDelta)
 		m_fCurrentTime = 0.f;
 	}
 
-
-
 	//m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONBLENDER, this);
 }
 
@@ -102,10 +105,10 @@ HRESULT CWeapon_Regalis::Render()
 
 HRESULT CWeapon_Regalis::Add_Components()
 {
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxMesh", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Shader_VtxMesh", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Regalis", L"Com_Model", reinterpret_cast<CComponent**>(&m_pModelCom))))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Model_Regalis", L"Com_Model", reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
 	CBounding_OBB::BOUNDING_OBB_DESC Desc{};
@@ -114,7 +117,10 @@ HRESULT CWeapon_Regalis::Add_Components()
 	Desc.vCenter = _float3(0.f, 0.f, Desc.vExtents.z * -1.f);
 	Desc.vRotation = _float3(0.f, 0.f, 0.f);
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Collider", L"Com_Collider", reinterpret_cast<CComponent**>(&m_pColliderCom), &Desc)))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Collider", L"Com_Collider", reinterpret_cast<CComponent**>(&m_pColliderCom), &Desc)))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Components()))
 		return E_FAIL;
 
 	return S_OK;
@@ -122,19 +128,8 @@ HRESULT CWeapon_Regalis::Add_Components()
 
 HRESULT CWeapon_Regalis::Bind_ResourceData()
 {
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_pWorldMatrix)))
+	if (FAILED(__super::Bind_ResourceData()))
 		return E_FAIL;
-
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(CPipeLine::D3DTS_VIEW))))
-		return E_FAIL;
-
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(CPipeLine::D3DTS_PROJ))))
-		return E_FAIL;
-
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CamFar(), sizeof(_float))))
-		return E_FAIL;
-
-	return S_OK;
 }
 
 void CWeapon_Regalis::Change_Animation(const _float& fTimeDelta)
@@ -158,12 +153,9 @@ HRESULT CWeapon_Regalis::Create_TrailBuffer(const _float& fTimeDelta)
 			m_isCreated = true;
 			CEffect::EFFECT_DESC Desc{};
 			Desc.pPlayerMatrix = m_pParentMatrix;
-			XMStoreFloat4x4(&Desc.RotationMatrix, XMMatrixRotationZ(XMConvertToRadians(-90.f)) * XMMatrixRotationY(XMConvertToRadians(30.f)) * XMMatrixRotationX(XMConvertToRadians(45.f)));
-			Desc.vPos = _float4(0.f, 1.f, 0.f, 1.f);
-			Desc.vScale = _float3(3.f, 3.f, 3.f);
-			Desc.fDuration = 2.f;
+			Desc.fDuration = 0.5f;
 
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_Nilou_Normal_01"), TEXT("Layer_Trail"), &Desc)))
+			if (FAILED(m_pGameInstance->Add_GameObject(CMainApp::g_iCurrentLevel, TEXT("Prototype_GameObject_Effect_Nilou_Normal_00"), TEXT("Layer_Trail"), &Desc)))
 				return E_FAIL;
 		}
 		else if (*m_pState == PLAYER_ATTACK_2)
@@ -173,12 +165,9 @@ HRESULT CWeapon_Regalis::Create_TrailBuffer(const _float& fTimeDelta)
 			CEffect::EFFECT_DESC Desc{};
 
 			Desc.pPlayerMatrix = m_pParentMatrix;
-			XMStoreFloat4x4(&Desc.RotationMatrix, XMMatrixRotationY(XMConvertToRadians(-90.f)) * XMMatrixRotationX(XMConvertToRadians(180.f)));
-			Desc.vPos = _float4(0.f, 1.f, 0.f, 1.f);
-			Desc.vScale = _float3(3.f, 3.f, 3.f);
-			Desc.fDuration = 2.f;
+			Desc.fDuration = 0.5f;
 
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_Nilou_Normal_02"), TEXT("Layer_Trail"), &Desc)))
+			if (FAILED(m_pGameInstance->Add_GameObject(CMainApp::g_iCurrentLevel, TEXT("Prototype_GameObject_Effect_Nilou_Normal_01"), TEXT("Layer_Trail"), &Desc)))
 				return E_FAIL;
 		}
 		else if (*m_pState == PLAYER_ATTACK_3)
@@ -191,24 +180,17 @@ HRESULT CWeapon_Regalis::Create_TrailBuffer(const _float& fTimeDelta)
 			CEffect::EFFECT_DESC Desc{};
 
 			Desc.pPlayerMatrix = m_pParentMatrix;
-			XMStoreFloat4x4(&Desc.RotationMatrix, XMMatrixRotationY(XMConvertToRadians(-90.f)) * XMMatrixRotationX(XMConvertToRadians(180.f)));
-			Desc.vPos = _float4(0.f, 1.f, 1.f, 1.f);
-			Desc.vScale = _float3(4.f, 4.f, 4.f);
-			Desc.fDuration = 2.f;
+			Desc.fDuration = 0.5f;
 
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_Nilou_Normal_03"), TEXT("Layer_Trail"), &Desc)))
+			if (FAILED(m_pGameInstance->Add_GameObject(CMainApp::g_iCurrentLevel, TEXT("Prototype_GameObject_Effect_Nilou_Normal_02"), TEXT("Layer_Trail"), &Desc)))
 				return E_FAIL;
 
-			CEffect::EFFECT_DESC ParticleDesc{};
+			Desc.pPlayerMatrix = m_pParentMatrix;
+			Desc.fDuration = 0.5f;
 
-			ParticleDesc.pPlayerMatrix = m_pParentMatrix;
-			XMStoreFloat4x4(&ParticleDesc.RotationMatrix, XMMatrixIdentity());
-			ParticleDesc.vPos = _float4(0.f, 0.f, 0.f, 1.f);
-			ParticleDesc.vScale = _float3(1.f, 1.f, 1.f);
-			ParticleDesc.fDuration = 0.8f;
-
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_Nilou_Blade_Particle"), TEXT("Layer_Trail"), &ParticleDesc)))
+			if (FAILED(m_pGameInstance->Add_GameObject(CMainApp::g_iCurrentLevel, TEXT("Prototype_GameObject_Effect_Nilou_Elemental_Art_Normal_02_Particle"), TEXT("Layer_Particle"), &Desc)))
 				return E_FAIL;
+
 		}
 	}
 	else if (m_pStateManager->isElementalArt())
@@ -220,47 +202,9 @@ HRESULT CWeapon_Regalis::Create_TrailBuffer(const _float& fTimeDelta)
 			CEffect::EFFECT_DESC Desc{};
 
 			Desc.pPlayerMatrix = m_pParentMatrix;
-			XMStoreFloat4x4(&Desc.RotationMatrix, XMMatrixRotationX(XMConvertToRadians(90.f)));
-			Desc.vPos = _float4(0.f, -1.5f, 0.f, 1.f);
-			Desc.vScale = _float3(2.f, 2.f, 2.f);
 			Desc.fDuration = 0.6f;
 
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_Nilou_Elemental_Start"), TEXT("Layer_Trail"), &Desc)))
-				return E_FAIL;
-
-			CEffect::EFFECT_DESC ParticleDesc{};
-
-			ParticleDesc.pPlayerMatrix = m_pParentMatrix;
-			XMStoreFloat4x4(&ParticleDesc.RotationMatrix, XMMatrixIdentity());
-			ParticleDesc.vPos = _float4(0.f, 0.f, 0.f, 1.f);
-			ParticleDesc.vScale = _float3(1.f, 1.f, 1.f);
-			ParticleDesc.fDuration = 0.6f;
-
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_ParticleTwinkle_1"), TEXT("Layer_Trail"), &ParticleDesc)))
-				return E_FAIL;
-
-			//물방울
-			CEffect::EFFECT_DESC WaterParticleDesc{};
-
-			WaterParticleDesc.pPlayerMatrix = m_pParentMatrix;
-			XMStoreFloat4x4(&WaterParticleDesc.RotationMatrix, XMMatrixIdentity());
-			WaterParticleDesc.vPos = _float4(0.f, 0.f, 0.f, 1.f);
-			WaterParticleDesc.vScale = _float3(1.f, 1.f, 1.f);
-			WaterParticleDesc.fDuration = 0.6f;
-
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_ParticleWater_1"), TEXT("Layer_Particle"), &WaterParticleDesc)))
-				return E_FAIL;
-
-			//버블
-			CEffect::EFFECT_DESC BubleParticleDesc{};
-
-			BubleParticleDesc.pPlayerMatrix = m_pParentMatrix;
-			XMStoreFloat4x4(&BubleParticleDesc.RotationMatrix, XMMatrixIdentity());
-			BubleParticleDesc.vPos = _float4(0.f, 0.f, 0.f, 1.f);
-			BubleParticleDesc.vScale = _float3(1.f, 1.f, 1.f);
-			BubleParticleDesc.fDuration = 0.6f;
-
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_ParticleBuble_1"), TEXT("Layer_Particle"), &BubleParticleDesc)))
+			if (FAILED(m_pGameInstance->Add_GameObject(CMainApp::g_iCurrentLevel, TEXT("Prototype_GameObject_Effect_Nilou_Elemental_Art_Water_00"), TEXT("Layer_Trail"), &Desc)))
 				return E_FAIL;
 
 			
@@ -275,49 +219,10 @@ HRESULT CWeapon_Regalis::Create_TrailBuffer(const _float& fTimeDelta)
 			CEffect::EFFECT_DESC Desc{};
 
 			Desc.pPlayerMatrix = m_pParentMatrix;
-			XMStoreFloat4x4(&Desc.RotationMatrix, XMMatrixRotationX(XMConvertToRadians(120.f)));
-			Desc.vPos = _float4(0.f, 1.f, 1.f, 1.f);
-			Desc.vScale = _float3(2.f, 2.f, 2.f);
 			Desc.fDuration = 0.6f;
 
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_Nilou_Elemental_Normal_1"), TEXT("Layer_Trail"), &Desc)))
+			if (FAILED(m_pGameInstance->Add_GameObject(CMainApp::g_iCurrentLevel, TEXT("Prototype_GameObject_Effect_Nilou_Elemental_Art_Normal_00"), TEXT("Layer_Trail"), &Desc)))
 				return E_FAIL;
-
-			CEffect::EFFECT_DESC ParticleDesc{};
-
-			ParticleDesc.pPlayerMatrix = m_pParentMatrix;
-			XMStoreFloat4x4(&ParticleDesc.RotationMatrix, XMMatrixIdentity());
-			ParticleDesc.vPos = _float4(0.f, 0.f, 0.f, 1.f);
-			ParticleDesc.vScale = _float3(1.f, 1.f, 1.f);
-			ParticleDesc.fDuration = 0.6f;
-
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_ParticleTwinkle_1"), TEXT("Layer_Trail"), &ParticleDesc)))
-				return E_FAIL;
-
-			//물방울
-			CEffect::EFFECT_DESC WaterParticleDesc{};
-
-			WaterParticleDesc.pPlayerMatrix = m_pParentMatrix;
-			XMStoreFloat4x4(&WaterParticleDesc.RotationMatrix, XMMatrixIdentity());
-			WaterParticleDesc.vPos = _float4(0.f, 0.f, 0.f, 1.f);
-			WaterParticleDesc.vScale = _float3(1.f, 1.f, 1.f);
-			WaterParticleDesc.fDuration = 0.8f;
-
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_ParticleWater_1"), TEXT("Layer_Particle"), &WaterParticleDesc)))
-				return E_FAIL;
-
-			//버블
-			CEffect::EFFECT_DESC BubleParticleDesc{};
-
-			BubleParticleDesc.pPlayerMatrix = m_pParentMatrix;
-			XMStoreFloat4x4(&BubleParticleDesc.RotationMatrix, XMMatrixIdentity());
-			BubleParticleDesc.vPos = _float4(0.f, 0.f, 0.f, 1.f);
-			BubleParticleDesc.vScale = _float3(1.f, 1.f, 1.f);
-			BubleParticleDesc.fDuration = 0.8f;
-
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_ParticleBuble_1"), TEXT("Layer_Particle"), &BubleParticleDesc)))
-				return E_FAIL;
-
 		}
 		else if (*m_pState == PLAYER_ATTACK_2)
 		{
@@ -329,49 +234,10 @@ HRESULT CWeapon_Regalis::Create_TrailBuffer(const _float& fTimeDelta)
 			CEffect::EFFECT_DESC Desc{};
 
 			Desc.pPlayerMatrix = m_pParentMatrix;
-			XMStoreFloat4x4(&Desc.RotationMatrix, XMMatrixRotationX(XMConvertToRadians(100.f)) * XMMatrixRotationY(XMConvertToRadians(90.f)));
-			Desc.vPos = _float4(0.f, 1.f, 1.f, 1.f);
-			Desc.vScale = _float3(2.f, 2.f, 2.f);
 			Desc.fDuration = 0.6f;
 
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_Nilou_Elemental_Normal_2"), TEXT("Layer_Trail"), &Desc)))
+			if (FAILED(m_pGameInstance->Add_GameObject(CMainApp::g_iCurrentLevel, TEXT("Prototype_GameObject_Effect_Nilou_Elemental_Art_Normal_01"), TEXT("Layer_Trail"), &Desc)))
 				return E_FAIL;
-
-			CEffect::EFFECT_DESC ParticleDesc{};
-
-			ParticleDesc.pPlayerMatrix = m_pParentMatrix;
-			XMStoreFloat4x4(&ParticleDesc.RotationMatrix, XMMatrixIdentity());
-			ParticleDesc.vPos = _float4(0.f, 0.f, 0.f, 1.f);
-			ParticleDesc.vScale = _float3(1.f, 1.f, 1.f);
-			ParticleDesc.fDuration = 0.4f;
-
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_ParticleTwinkle_1"), TEXT("Layer_Trail"), &ParticleDesc)))
-				return E_FAIL;
-
-			//물방울
-			CEffect::EFFECT_DESC WaterParticleDesc{};
-
-			WaterParticleDesc.pPlayerMatrix = m_pParentMatrix;
-			XMStoreFloat4x4(&WaterParticleDesc.RotationMatrix, XMMatrixIdentity());
-			WaterParticleDesc.vPos = _float4(0.f, 0.f, 0.f, 1.f);
-			WaterParticleDesc.vScale = _float3(1.f, 1.f, 1.f);
-			WaterParticleDesc.fDuration = 0.8f;
-
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_ParticleWater_1"), TEXT("Layer_Particle"), &WaterParticleDesc)))
-				return E_FAIL;
-
-			//버블
-			CEffect::EFFECT_DESC BubleParticleDesc{};
-
-			BubleParticleDesc.pPlayerMatrix = m_pParentMatrix;
-			XMStoreFloat4x4(&BubleParticleDesc.RotationMatrix, XMMatrixIdentity());
-			BubleParticleDesc.vPos = _float4(0.f, 0.f, 0.f, 1.f);
-			BubleParticleDesc.vScale = _float3(1.f, 1.f, 1.f);
-			BubleParticleDesc.fDuration = 0.8f;
-
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_ParticleBuble_1"), TEXT("Layer_Particle"), &BubleParticleDesc)))
-				return E_FAIL;
-
 		}
 		else if (*m_pState == PALYER_ATTACK_SPEC) // 수정하기
 		{
@@ -383,40 +249,20 @@ HRESULT CWeapon_Regalis::Create_TrailBuffer(const _float& fTimeDelta)
 			CEffect::EFFECT_DESC Desc{};
 
 			Desc.pPlayerMatrix = m_pParentMatrix;
-			XMStoreFloat4x4(&Desc.RotationMatrix, XMMatrixRotationX(XMConvertToRadians(90.f)));
-			Desc.vPos = _float4(0.f, 1.f, 1.f, 1.f);
-			Desc.vScale = _float3(1.f, 1.f, 1.f);
+			Desc.isBullet = true;
 			Desc.fDuration = 3.f;
-			Desc.isTrailMove = true;
 			Desc.fSpeed = 10.f;
+			Desc.vTargetDir = XMLoadFloat4x4(m_pParentMatrix).r[2];
 
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_Nilou_Elemental_Normal_spec"), TEXT("Layer_Trail"), &Desc)))
+			if (FAILED(m_pGameInstance->Add_GameObject(CMainApp::g_iCurrentLevel, TEXT("Prototype_GameObject_Effect_Nilou_Elemental_Art_Normal_02"), TEXT("Layer_Trail"), &Desc)))
 				return E_FAIL;
 
-			//물방울
-			CEffect::EFFECT_DESC WaterParticleDesc{};
+			Desc.pPlayerMatrix = m_pParentMatrix;
+			Desc.isBullet = false;
+			Desc.fDuration = 0.4f;
 
-			WaterParticleDesc.pPlayerMatrix = m_pParentMatrix;
-			XMStoreFloat4x4(&WaterParticleDesc.RotationMatrix, XMMatrixIdentity());
-			WaterParticleDesc.vPos = _float4(0.f, 0.f, 0.f, 1.f);
-			WaterParticleDesc.vScale = _float3(1.f, 1.f, 1.f);
-			WaterParticleDesc.fDuration = 0.8f;
-
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_ParticleWater_1"), TEXT("Layer_Particle"), &WaterParticleDesc)))
+			if (FAILED(m_pGameInstance->Add_GameObject(CMainApp::g_iCurrentLevel, TEXT("Prototype_GameObject_Effect_Nilou_Elemental_Art_Normal_02_Particle"), TEXT("Layer_Particle"), &Desc)))
 				return E_FAIL;
-
-			//버블
-			CEffect::EFFECT_DESC BubleParticleDesc{};
-
-			BubleParticleDesc.pPlayerMatrix = m_pParentMatrix;
-			XMStoreFloat4x4(&BubleParticleDesc.RotationMatrix, XMMatrixIdentity());
-			BubleParticleDesc.vPos = _float4(0.f, 0.f, 0.f, 1.f);
-			BubleParticleDesc.vScale = _float3(1.f, 1.f, 1.f);
-			BubleParticleDesc.fDuration = 0.8f;
-
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_ParticleBuble_1"), TEXT("Layer_Particle"), &BubleParticleDesc)))
-				return E_FAIL;
-
 		}
 		else if (*m_pState == PLAYER_ELEMENTAL_2)
 		{
@@ -425,39 +271,11 @@ HRESULT CWeapon_Regalis::Create_TrailBuffer(const _float& fTimeDelta)
 			CEffect::EFFECT_DESC Desc{};
 
 			Desc.pPlayerMatrix = m_pParentMatrix;
-			XMStoreFloat4x4(&Desc.RotationMatrix, XMMatrixRotationX(XMConvertToRadians(90.f)) * XMMatrixRotationZ(XMConvertToRadians(15.f)));
-			Desc.vPos = _float4(0.f, 1.f, 0.f, 1.f);
-			Desc.vScale = _float3(2.f, 2.f, 2.f);
-			Desc.fDuration = 3.f;
+			Desc.fDuration = 0.4f;
 			Desc.isFollowPlayer = true;
 
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_Nilou_Elemental_Ring"), TEXT("Layer_Trail"), &Desc)))
+			if (FAILED(m_pGameInstance->Add_GameObject(CMainApp::g_iCurrentLevel, TEXT("Prototype_GameObject_Effect_Nilou_Elemental_Art_Water_01"), TEXT("Layer_Trail"), &Desc)))
 				return E_FAIL;
-
-			//물방울
-			CEffect::EFFECT_DESC WaterParticleDesc{};
-
-			WaterParticleDesc.pPlayerMatrix = m_pParentMatrix;
-			XMStoreFloat4x4(&WaterParticleDesc.RotationMatrix, XMMatrixIdentity());
-			WaterParticleDesc.vPos = _float4(0.f, 0.f, 0.f, 1.f);
-			WaterParticleDesc.vScale = _float3(1.f, 1.f, 1.f);
-			WaterParticleDesc.fDuration = 0.8f;
-
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_ParticleWater_1"), TEXT("Layer_Particle"), &WaterParticleDesc)))
-				return E_FAIL;
-
-			//버블
-			CEffect::EFFECT_DESC BubleParticleDesc{};
-
-			BubleParticleDesc.pPlayerMatrix = m_pParentMatrix;
-			XMStoreFloat4x4(&BubleParticleDesc.RotationMatrix, XMMatrixIdentity());
-			BubleParticleDesc.vPos = _float4(0.f, 0.f, 0.f, 1.f);
-			BubleParticleDesc.vScale = _float3(1.f, 1.f, 1.f);
-			BubleParticleDesc.fDuration = 0.8f;
-
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_ParticleBuble_1"), TEXT("Layer_Particle"), &BubleParticleDesc)))
-				return E_FAIL;
-
 		}
 		else if (*m_pState == PLAYER_ELEMENTAL_3)
 		{
@@ -466,39 +284,11 @@ HRESULT CWeapon_Regalis::Create_TrailBuffer(const _float& fTimeDelta)
 			CEffect::EFFECT_DESC Desc{};
 
 			Desc.pPlayerMatrix = m_pParentMatrix;
-			XMStoreFloat4x4(&Desc.RotationMatrix, XMMatrixRotationX(XMConvertToRadians(90.f)) * XMMatrixRotationZ(XMConvertToRadians(30.f)));
-			Desc.vPos = _float4(0.f, 1.f, 0.f, 1.f);
-			Desc.vScale = _float3(3.f, 3.f, 3.f);
-			Desc.fDuration = 3.f;
+			Desc.fDuration = 0.4f;
 			Desc.isFollowPlayer = true;
 
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_Nilou_Elemental_Ring"), TEXT("Layer_Trail"), &Desc)))
+			if (FAILED(m_pGameInstance->Add_GameObject(CMainApp::g_iCurrentLevel, TEXT("Prototype_GameObject_Effect_Nilou_Elemental_Art_Water_02"), TEXT("Layer_Trail"), &Desc)))
 				return E_FAIL;
-
-			//물방울
-			CEffect::EFFECT_DESC WaterParticleDesc{};
-
-			WaterParticleDesc.pPlayerMatrix = m_pParentMatrix;
-			XMStoreFloat4x4(&WaterParticleDesc.RotationMatrix, XMMatrixIdentity());
-			WaterParticleDesc.vPos = _float4(0.f, 0.f, 0.f, 1.f);
-			WaterParticleDesc.vScale = _float3(1.f, 1.f, 1.f);
-			WaterParticleDesc.fDuration = 0.8f;
-
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_ParticleWater_1"), TEXT("Layer_Particle"), &WaterParticleDesc)))
-				return E_FAIL;
-
-			//버블
-			CEffect::EFFECT_DESC BubleParticleDesc{};
-
-			BubleParticleDesc.pPlayerMatrix = m_pParentMatrix;
-			XMStoreFloat4x4(&BubleParticleDesc.RotationMatrix, XMMatrixIdentity());
-			BubleParticleDesc.vPos = _float4(0.f, 0.f, 0.f, 1.f);
-			BubleParticleDesc.vScale = _float3(1.f, 1.f, 1.f);
-			BubleParticleDesc.fDuration = 0.8f;
-
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_ParticleBuble_1"), TEXT("Layer_Particle"), &BubleParticleDesc)))
-				return E_FAIL;
-
 		}
 		else if (*m_pState == PLAYER_ELEMENTAL_SPEC)
 		{
@@ -507,78 +297,10 @@ HRESULT CWeapon_Regalis::Create_TrailBuffer(const _float& fTimeDelta)
 			CEffect::EFFECT_DESC Desc{};
 
 			Desc.pPlayerMatrix = m_pParentMatrix;
-			XMStoreFloat4x4(&Desc.RotationMatrix, XMMatrixRotationX(XMConvertToRadians(90.f)) * XMMatrixRotationZ(XMConvertToRadians(60.f)));
-			Desc.vPos = _float4(0.f, 1.f, 0.f, 1.f);
-			Desc.vScale = _float3(3.f, 3.f, 3.f);
-			Desc.fDuration = 3.f;
+			Desc.fDuration = 0.4f;
 			Desc.isFollowPlayer = true;
 
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_Nilou_Elemental_Ring"), TEXT("Layer_Trail"), &Desc)))
-				return E_FAIL;
-
-			//물방울
-			CEffect::EFFECT_DESC WaterParticleDesc{};
-
-			WaterParticleDesc.pPlayerMatrix = m_pParentMatrix;
-			XMStoreFloat4x4(&WaterParticleDesc.RotationMatrix, XMMatrixIdentity());
-			WaterParticleDesc.vPos = _float4(0.f, 0.f, 0.f, 1.f);
-			WaterParticleDesc.vScale = _float3(1.f, 1.f, 1.f);
-			WaterParticleDesc.fDuration = 0.8f;
-
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_ParticleWater_1"), TEXT("Layer_Particle"), &WaterParticleDesc)))
-				return E_FAIL;
-
-			//버블
-			CEffect::EFFECT_DESC BubleParticleDesc{};
-
-			BubleParticleDesc.pPlayerMatrix = m_pParentMatrix;
-			XMStoreFloat4x4(&BubleParticleDesc.RotationMatrix, XMMatrixIdentity());
-			BubleParticleDesc.vPos = _float4(0.f, 0.f, 0.f, 1.f);
-			BubleParticleDesc.vScale = _float3(1.f, 1.f, 1.f);
-			BubleParticleDesc.fDuration = 0.8f;
-
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_ParticleBuble_1"), TEXT("Layer_Particle"), &BubleParticleDesc)))
-				return E_FAIL;
-
-		}
-		else if (*m_pState == PLAYER_ELEMENTAL_SPEC_END)
-		{
-			m_isCreated = true;
-
-			CEffect::EFFECT_DESC Desc{};
-
-			Desc.pPlayerMatrix = m_pParentMatrix;
-			XMStoreFloat4x4(&Desc.RotationMatrix, XMMatrixRotationX(XMConvertToRadians(90.f)));
-			Desc.vPos = _float4(0.f, 1.f, 0.f, 1.f);
-			Desc.vScale = _float3(3.f, 3.f, 3.f);
-			Desc.fDuration = 3.f;
-			Desc.isFollowPlayer = true;
-
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_Nilou_Elemental_Ring"), TEXT("Layer_Trail"), &Desc)))
-				return E_FAIL;
-
-			//물방울
-			CEffect::EFFECT_DESC WaterParticleDesc{};
-
-			WaterParticleDesc.pPlayerMatrix = m_pParentMatrix;
-			XMStoreFloat4x4(&WaterParticleDesc.RotationMatrix, XMMatrixIdentity());
-			WaterParticleDesc.vPos = _float4(0.f, 0.f, 0.f, 1.f);
-			WaterParticleDesc.vScale = _float3(1.f, 1.f, 1.f);
-			WaterParticleDesc.fDuration = 0.8f;
-
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_ParticleWater_1"), TEXT("Layer_Particle"), &WaterParticleDesc)))
-				return E_FAIL;
-
-			//버블
-			CEffect::EFFECT_DESC BubleParticleDesc{};
-
-			BubleParticleDesc.pPlayerMatrix = m_pParentMatrix;
-			XMStoreFloat4x4(&BubleParticleDesc.RotationMatrix, XMMatrixIdentity());
-			BubleParticleDesc.vPos = _float4(0.f, 0.f, 0.f, 1.f);
-			BubleParticleDesc.vScale = _float3(1.f, 1.f, 1.f);
-			BubleParticleDesc.fDuration = 0.8f;
-
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_ParticleBuble_1"), TEXT("Layer_Particle"), &BubleParticleDesc)))
+			if (FAILED(m_pGameInstance->Add_GameObject(CMainApp::g_iCurrentLevel, TEXT("Prototype_GameObject_Effect_Nilou_Elemental_Art_Water_03"), TEXT("Layer_Trail"), &Desc)))
 				return E_FAIL;
 		}
 	}

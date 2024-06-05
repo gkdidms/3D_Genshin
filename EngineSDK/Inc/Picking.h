@@ -12,7 +12,7 @@ private:
     virtual ~CPicking() = default;
 
 public:
-    _vector Get_RayDir() { return XMLoadFloat3(&m_vRayDir); }
+    _vector Get_PickDir() { return XMLoadFloat4(&m_vPickDir); }
 
 public:
     HRESULT Initialize(HWND hWnd);
@@ -21,14 +21,19 @@ public:
 private:
     ID3D11Device* m_pDevice = { nullptr };
     ID3D11DeviceContext* m_pContext = { nullptr };
+    _uint							m_iWinSizeX, m_iWinSizeY;
+
     class CGameInstance* m_pGameInstance = { nullptr };
+    HWND							m_hWnd = {};
 
-    HWND m_hWnd;
+    ID3D11Texture2D* m_pTexture2D = { nullptr };
 
-    _float m_fWinSizeX = { 0.f };
-    _float m_fWinSizeY = { 0.f };
+    _bool							m_isSuccess = { false };
+    _float4							m_vPickPos = {};
+    _float4 m_vPickDir = {};
 
-    _float3 m_vRayDir = {};
+private:
+    _float Compute_ProjZ(_float fX, _float fY);
 
 public:
     static CPicking* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, HWND hWnd);

@@ -67,7 +67,7 @@ protected:
     _float4x4 m_PlayerMovePos;
 
 protected:
-    virtual _vector Targeting();
+    virtual CGameObject* Targeting(_float4* pTargetPos = nullptr);
 
 private:
     virtual void Change_Animation(const _float& fTimeDelta) {};

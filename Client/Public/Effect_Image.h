@@ -14,11 +14,9 @@ class CEffect_Image :
     public CEffectObject
 {
 public:
-    enum MOVE_TYPE { INCREASE, SHRINK, MOVE_END };
+    enum TEXTURE_MOVE_TYPE { INCREASE, SHRINK, SPREAT, TRAIL, MOVE_END };
     typedef struct tEffectImage : public CEffectObject::EFFECT_OBJECT_DESC {
-        _char szFileName[MAX_PATH];
-        _char szFilePath[MAX_PATH];
-
+        _uint iTextureMoveType = { MOVE_END };
     } EFFECT_IMAGE_DESC;
 
 private:
@@ -35,13 +33,11 @@ public:
     virtual HRESULT Render() override;
 
 private:
-    CShader* m_pShaderCom = { nullptr };
-    CTexture* m_pTextureCom = { nullptr };
     CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
-    wstring m_strFilePath = { L"" };
+    _uint m_iMoveType = { MOVE_END };
 
-    _uint m_MoveType = { MOVE_END };
+    _float4 m_vSpreatDir = {};
 
 private:
     virtual HRESULT Add_Components();

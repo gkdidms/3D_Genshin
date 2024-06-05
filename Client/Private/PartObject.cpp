@@ -1,5 +1,6 @@
 #include "PartObject.h"
 
+#include "MainApp.h"
 #include "GameInstance.h"
 #include "StateManager.h"
 
@@ -55,14 +56,14 @@ HRESULT CPartObject::Render()
 	return S_OK;
 }
 
-_vector CPartObject::Targeting()
+CGameObject* CPartObject::Targeting(_float4* pTargetPos)
 {
 	// 플레이어 시야에 있는 몬스터만 공격하도록 수정하기
 
-	_vector TargetPos = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+	CGameObject* pTargetObject = { nullptr };
 	_float fPreDistance = { 0.f };
 
-	vector<CGameObject*> pMonsters = m_pGameInstance->Get_GameObjects(LEVEL_GAMEPLAY, TEXT("Layer_Monster"));
+	vector<CGameObject*> pMonsters = CMainApp::g_iCurrentLevel == LEVEL_GAMEPLAY ? m_pGameInstance->Get_GameObjects(LEVEL_GAMEPLAY, TEXT("Layer_Monster")) : m_pGameInstance->Get_GameObjects(LEVEL_STAGE_BOSS, TEXT("Layer_Boss"));
 
 	for (auto& pMonster : pMonsters)
 	{
@@ -81,12 +82,14 @@ _vector CPartObject::Targeting()
 			if (fPreDistance == 0.f || fPreDistance > fDistance)
 			{
 				fPreDistance = fDistance;
-				TargetPos = pMonsterTransform->Get_State(CTransform::STATE_POSITION);
+				pTargetObject = pMonster;
+				if (nullptr != pTargetPos)
+					XMStoreFloat4(pTargetPos, pMonsterTransform->Get_State(CTransform::STATE_POSITION));
 			}
 		}
 	}
 
-	return TargetPos;
+	return pTargetObject;
 }
 
 void CPartObject::Free()

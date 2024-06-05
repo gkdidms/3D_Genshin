@@ -38,6 +38,9 @@ void CCheckPoint::Priority_Tick(const _float& fTimeDelta)
 
 void CCheckPoint::Tick(const _float& fTimeDelta)
 {
+	if (m_isCheckPoint)
+		m_fCurrentTime += fTimeDelta;
+
 	Change_Animation(fTimeDelta);
 
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
@@ -69,7 +72,8 @@ HRESULT CCheckPoint::Render()
 
 		m_pModelCom->Bind_Material(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS);
 
-		m_pShaderCom->Begin(1);
+		m_pShaderCom->Begin(m_pModelCom->IsFindMesh(i, "Stages_Gear_CheckPoint_Leaves_Vo_effect") ? 2 : 1);
+
 		m_pModelCom->Render(i);
 	}
 
@@ -87,6 +91,9 @@ HRESULT CCheckPoint::Add_Components()
 		return E_FAIL;
 
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Model_CheckPoint", L"Com_Model", reinterpret_cast<CComponent**>(&m_pModelCom))))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_Dissolve", L"Com_Texture", reinterpret_cast<CComponent**>(&m_pTextureCom))))
 		return E_FAIL;
 
 	CBounding_AABB::BOUNDING_AABB_DESC Desc{};
@@ -122,6 +129,12 @@ HRESULT CCheckPoint::Bind_ResourceData()
 		return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CamFar(), sizeof(_float))))
+		return E_FAIL;
+
+	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", 0)))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fTimeDelta", &m_fCurrentTime, sizeof(_float))))
 		return E_FAIL;
 
 	return S_OK;
@@ -172,4 +185,5 @@ void CCheckPoint::Free()
 	__super::Free();
 
 	Safe_Release(m_pTriggerCollider);
+	Safe_Release(m_pTextureCom);
 }

@@ -99,6 +99,17 @@ HRESULT CRenderTarget_Manager::Bind_RenderTargetSRV(const wstring& strTargetTag,
 	return pRenderTarget->Bind_SVR(pShader, pConstantName);
 }
 
+HRESULT CRenderTarget_Manager::Copy_Resource(const wstring& strTargetTag, ID3D11Texture2D* pDesc)
+{
+	CRenderTarget* pRenderTarget = Find_RenderTarget(strTargetTag);
+
+	if (nullptr == pRenderTarget)
+		return E_FAIL;
+
+
+	return pRenderTarget->Copy_Resource(pDesc);
+}
+
 #ifdef _DEBUG
 HRESULT CRenderTarget_Manager::Ready_Debug(const wstring strRenderTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY)
 {

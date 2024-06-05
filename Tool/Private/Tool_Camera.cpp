@@ -46,7 +46,7 @@ void CTool_Camera::Tick(const _float& fTimeDelta)
 	if (m_pGameInstance->Get_DIKeyState(DIK_D) & 0x80)
 		m_pTransformCom->Go_Right(fTimeDelta);
 
-	if (m_pGameInstance->Get_DIKeyState(DIK_TAB) & 0x80)
+	if (m_pGameInstance->GetKeyState(DIK_TAB) == CInput_Device::TAP)
 		m_bCameraMove = !m_bCameraMove;
 
 	if (m_bCameraMove)

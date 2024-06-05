@@ -34,6 +34,8 @@ private:
 
     CGameObject* m_pTrailBuffer = { nullptr };
     CGameObject* m_FireParticle = { nullptr };
+    
+    const _float4x4* m_pParentMatrix = { };
 
 private:
     HRESULT Add_Components();

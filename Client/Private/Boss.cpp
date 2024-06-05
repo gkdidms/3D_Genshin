@@ -134,12 +134,6 @@ void CBoss::Late_Tick(const _float& fTimeDelta)
 
 HRESULT CBoss::Render()
 {
-    for (auto PartObject : m_PartObject[m_CurrentPage])
-    {
-        if (FAILED(PartObject->Render()))
-            return E_FAIL;
-    }
-
 #ifdef _DEBUG
     m_pColliderCom->Render();
 #endif // _DEBUG
@@ -152,7 +146,7 @@ HRESULT CBoss::Add_Components()
     CNavigation::NAVIGATION_DESC NavigationDesc = {};
     NavigationDesc.iIndex = m_iBossNavigationIndex;
 
-    if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Navigation", L"Com_Navigation", reinterpret_cast<CComponent**>(&m_pNavigationCom), &NavigationDesc)))
+    if (FAILED(__super::Add_Component(LEVEL_STAGE_BOSS, L"Prototype_Component_Navigation", L"Com_Navigation", reinterpret_cast<CComponent**>(&m_pNavigationCom), &NavigationDesc)))
         return E_FAIL;
 
     CBounding_AABB::BOUNDING_AABB_DESC ColliderDesc = {};
@@ -160,7 +154,7 @@ HRESULT CBoss::Add_Components()
     ColliderDesc.vExtents = _float3{ 0.5f, 0.8f, 0.5f };
     ColliderDesc.vCenter = _float3{ 0.f, ColliderDesc.vExtents.y, 0.f };
 
-    if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Collider", L"Com_Collider", reinterpret_cast<CComponent**>(&m_pColliderCom), &ColliderDesc)))
+    if (FAILED(__super::Add_Component(LEVEL_STAGE_BOSS, L"Prototype_Component_Collider", L"Com_Collider", reinterpret_cast<CComponent**>(&m_pColliderCom), &ColliderDesc)))
         return E_FAIL;
 
     return S_OK;
@@ -577,7 +571,7 @@ void CBoss::Change_StateRank()
 
 void CBoss::Check_Coll(const _float& fTimeDelta)
 {
-    CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, TEXT("Layer_Player"), 0));
+    CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_STAGE_BOSS, TEXT("Layer_Player"), 0));
     m_isColl = m_pColliderCom->Intersect(dynamic_cast<CCollider*>(pPlayer->Get_Component(TEXT("Com_Collider"))));
 
     if (m_isColl)

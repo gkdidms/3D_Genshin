@@ -14,7 +14,7 @@ class CEffect_Particle :
     public CEffectObject
 {
 public:
-    enum PARTICLE_TYPE { PARTICLE_DROP, PARTICLE_SPREAT, PARTICLE_HELIX, PARTICLE_END };
+    enum PARTICLE_TYPE { PARTICLE_DROP, PARTICLE_SPREAT, PARTICLE_FOUNTAIN, PARTICLE_END };
     typedef struct tEffectParticleDesc : public CEffectObject::EFFECT_OBJECT_DESC {
         _uint iNumInstance;
         _uint iParticleType;
@@ -26,9 +26,6 @@ public:
         _float2 vPower;
         _float2 vLifeTime;
         _bool isLoop;
-
-        _char szFileName[MAX_PATH];
-        _char szFilePath[MAX_PATH];
     } EFFECT_PARTICLE_DESC;
 
 private:
@@ -45,15 +42,12 @@ public:
     virtual HRESULT Render() override;
 
 private:
-    class CShader* m_pShaderCom = { nullptr };
     class CVIBuffer_Instance_Point* m_pVIBufferCom = { nullptr };
     class CTexture* m_pTextureCom = { nullptr };
 
     _uint m_iParticleType = { PARTICLE_END };
 
     EFFECT_PARTICLE_DESC m_Desc{};
-
-    wstring m_strFilePath = { L"" };
 
 private:
     virtual HRESULT Add_Components();

@@ -1,10 +1,12 @@
 #include "Feiyan_Body.h"
 
+#include "MainApp.h"
 #include "StateManager.h"
 
 #include "Feiyan_Normal.h"
 #include <Effect.h>
 #include <Effect_Image.h>
+#include <Monster.h>
 
 CFeiyan_Body::CFeiyan_Body(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject_Body{ pDevice, pContext }
@@ -94,10 +96,10 @@ HRESULT CFeiyan_Body::Render()
 
 HRESULT CFeiyan_Body::Add_Components()
 {
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxAnimMesh", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Shader_VtxAnimMesh", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Feiyan", L"Com_Model", reinterpret_cast<CComponent**>(&m_pModelCom))))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Model_Feiyan", L"Com_Model", reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
 	return S_OK;
@@ -346,6 +348,12 @@ void CFeiyan_Body::Change_Animation(const _float& fTimeDelta)
 		m_IsLinear = false;
 		break;
 	}
+	case PLAYER_HIT:
+	{
+		m_iAnim = 31;
+		m_IsLoop = false;
+		break;
+	}
 	default:
 		break;
 	}
@@ -387,13 +395,64 @@ HRESULT CFeiyan_Body::Create_Bullet(const wstring& strLayerTag, const _float& fT
 		}
 
 		m_isCreated = true;
-		Desc.ParentMatrix = *m_pParentMatrix;
+		Desc.ParentMatrix = m_pParentMatrix;
 		Desc.fSpeedPecSec = 10.f;
-		Desc.pTargetPos = Targeting();
+		_float4 vTargetPos = _float4();
+		CGameObject* pMonster = Targeting(&vTargetPos);
+		if (nullptr == pMonster)
+			XMStoreFloat4(&vTargetPos, XMLoadFloat4x4(m_pParentMatrix).r[3] + XMVector3Normalize(XMLoadFloat4x4(m_pParentMatrix).r[2]) * 10.f);
+
+		Desc.pTargetPos = XMLoadFloat4(&vTargetPos);
 
 		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Skill_Feiyan_Normal"), strLayerTag, &Desc)))
 			return E_FAIL;
 
+	}
+
+	if (m_pStateManager->isElementalArt())
+	{
+		if (*m_pState == PLAYER_ELEMENTAL_END)
+		{
+			m_isCreated = true;
+
+			CEffect::EFFECT_DESC Desc{};
+			Desc.fDuration = 1.f;
+			CGameObject* pMonster = Targeting();
+			if (nullptr == pMonster)
+				return S_OK;
+
+			Desc.pPlayerMatrix = dynamic_cast<CTransform*>(pMonster->Get_Component(L"Com_Transform"))->Get_WorldFloat4x4();
+
+			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_Feiyan_Elemenetal_Art"), strLayerTag, &Desc)))
+				return E_FAIL;
+		}
+	}
+
+	if (m_pStateManager->isElementalBurst())
+	{
+		if (*m_pState == PLAYER_ELEMENTAL_BURST)
+		{
+			m_isCreated = true;
+
+			CEffect::EFFECT_DESC Desc{};
+			Desc.fDuration = 0.3f;
+			Desc.pPlayerMatrix = m_pParentMatrix;
+
+			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_Feiyan_Burst_Start"), strLayerTag, &Desc)))
+				return E_FAIL;
+		}
+
+		if (*m_pState == PLAYER_ELEMENTAL_BURST_END)
+		{
+			m_isCreated = true;
+
+			CEffect::EFFECT_DESC Desc{};
+			Desc.fDuration = 1.f;
+			Desc.pPlayerMatrix = m_pParentMatrix;
+
+			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_Feiyan_Burst_End"), strLayerTag, &Desc)))
+				return E_FAIL;
+		}
 	}
 
 	return S_OK;

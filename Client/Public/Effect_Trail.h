@@ -14,14 +14,11 @@ class CEffect_Trail :
     public CEffectObject
 {
 public:
+    enum TRAIL_TYPE { NON_TYPE, NILOU_FlOWER, NOLOU_RING, TRAIL_TYPE_END };
     typedef struct tEffectTrailDesc : public CEffectObject::EFFECT_OBJECT_DESC
     {
-        _char strFileName[MAX_PATH];
-        _char strFilePath[MAX_PATH];
-        _char strMeshName[MAX_PATH];
         _char strMeshFilePath[MAX_PATH];
-        _bool isMask;
-        _char strMaskFilePath[MAX_PATH];
+        _uint iTrailType;
     }EFFECT_TRAIL_DESC;
 
 private:
@@ -38,22 +35,14 @@ public:
     virtual HRESULT Render() override;
 
 private:
-    virtual HRESULT Add_Components();
-    virtual HRESULT Bind_ResourceData();
+    _char m_szMeshTextureFilePath[MAX_PATH] = "";
+    CModel* m_pModelCom = { nullptr };
+
+    _uint m_iTrailType = { TRAIL_TYPE_END };
 
 private:
-    CShader* m_pShaderCom = { nullptr };
-    CModel* m_pModelCom = { nullptr };
-    CTexture* m_pTextureCom = { nullptr };
-    CTexture* m_pMaskTextureCom = { nullptr };
-
-    wstring m_strFilePath;
-    _char m_szMeshFilePath[MAX_PATH] = {""};
-    wstring m_strMaskFilePath;
-
-    _bool m_isMask = { false };
-    _float m_fTimeDelta = { 0.f };
-    _vector m_vPlayerLook = {};
+    virtual HRESULT Add_Components();
+    virtual HRESULT Bind_ResourceData();
 
 public:
     static CEffect_Trail* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);

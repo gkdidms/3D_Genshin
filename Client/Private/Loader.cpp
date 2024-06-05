@@ -17,17 +17,11 @@
 #include "Weapon_Regalis.h"
 #include "Weapon_Narukami.h"
 
-#include "Gohei.h"
-#include "BlackFox.h"
-#include "FoxTail_Burst.h"
-#include "FoxTower.h"
-
 #include "FlowerArrow.h"
 
 #include "KasaRing.h"
 
 #include "Dungeon_1.h"
-#include "Dungeon_2.h"
 #include "GoldenHouse.h"
 
 #include "Slime_Large_Fire.h"
@@ -72,6 +66,8 @@
 #include "PlayerHP_Outline.h"
 #include "MonsterHP.h"
 #include "MonsterHP_Outline.h"
+#include "BossHP.h"
+#include "BossHP_Outline.h"
 
 #include "SkillBtn_Icon.h"
 #include "SkillBtn_E.h"
@@ -83,6 +79,7 @@
 #include "Avatar_Side_Select.h"
 
 #include "Btn_Frame.h"
+#include "UI_Atk.h"
 #pragma endregion
 
 #pragma region Skill
@@ -193,13 +190,14 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_Skill_Hili_Arrow", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Monster/Eff_Trail_48.png"), 1))))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_Particle_Water", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Eff_Smoke/Eff_Smoke_%d.png"), 31))))
+	
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_Dissolve", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Eff_DissolveNoise.png"), 1))))
 		return E_FAIL;
 	
 #pragma endregion
 
-	//if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_Terrain", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Tile0.dds"), 1))))
-	//	return E_FAIL;
+#pragma region UI
+
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_UI_Avatar_HP_Outline", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Avatar/HP/UI_HPBar_2_Outline.png"), 1))))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_UI_Avatar_HP", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Avatar/HP/UI_HPBar_2.png"), 1))))
@@ -214,6 +212,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_UI_Btn_Frame", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Btn/ps_common_frame.dds"), 1))))
 		return E_FAIL;
+#pragma endregion
 
 	m_fProgress = 5.f;
 #pragma region E_SKILL_TEXTURE
@@ -226,7 +225,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_UI_SkillBtn_Icon_E_Feiyan", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Avatar/Btn/Feiyan/Skill_S_Feiyan_01.png"), 1))))
 		return E_FAIL;
 #pragma endregion
+
 	m_fProgress = 10.f;
+
 #pragma region Q_SKILL_TEXTURE
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_UI_SkillBtn_Icon_Q_Tighnari", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Avatar/Btn/Tighnari/Skill_E_Tighnari_01_HD.png"), 1))))
 		return E_FAIL;
@@ -237,7 +238,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_UI_SkillBtn_Icon_Q_Feiyan", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Avatar/Btn/Feiyan/Skill_E_Feiyan_01_HD.png"), 1))))
 		return E_FAIL;
 #pragma endregion
+
 	m_fProgress = 15.f;
+
 #pragma region Avatar_Side
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_UI_Avatar_Side_Frame", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Avatar/Side/UI_Main_AvatarSideBg_Normal_FullRect.dds"), 1))))
 		return E_FAIL;
@@ -257,14 +260,15 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	lstrcpy(m_szLoadingText, TEXT("플레이어 모델를(을) 로딩 중 입니다."));
 
-	_matrix PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) *  XMMatrixRotationY(XMConvertToRadians(180.0f));
+#pragma region Player
+	_matrix PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Tighnari", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Player/Tighnari/Tighnari.fbx", PreTransformMatrix, "../../Data/Tighnari.dat"))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Nilou", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Player/Nilou/Nilou.fbx", PreTransformMatrix, "../../Data/Nilou.dat"))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Wanderer", CModel::Create(m_pDevice, m_pContext,  "../Bin/Resources/Models/Player/Wanderer/Wanderer.fbx", PreTransformMatrix, "../../Data/Wanderer.dat"))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Wanderer", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Player/Wanderer/Wanderer.fbx", PreTransformMatrix, "../../Data/Wanderer.dat"))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Yae", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Player/Yae/Yae.fbx", PreTransformMatrix, "../../Data/Yae.dat"))))
@@ -272,6 +276,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Feiyan", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Player/Feiyan/Feiyan.fbx", PreTransformMatrix, "../../Data/Feiyan.dat"))))
 		return E_FAIL;
+#pragma endregion
 
 	m_fProgress = 30.f;
 
@@ -329,17 +334,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	m_fProgress = 50.f;
 
 	lstrcpy(m_szLoadingText, TEXT("스킬 오브젝트 모델를(을) 로딩 중 입니다."));
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_BlackFox", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SkillObj/Yae/BlackFox/BlackFox.fbx", PreTransformMatrix, "../../Data/SkillObj_BlackFox.dat"))))
-		return E_FAIL;
 	PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Gohei", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SkillObj/Yae/Gohei/Gohei.fbx", PreTransformMatrix, "../../Data/SkillObj_Gohei.dat"))))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_FoxTail_Burst", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SkillObj/Yae/FoxTail_Burst/FoxTail_Burst.fbx", PreTransformMatrix, "../../Data/SkillObj_FoxTail_Burst.dat"))))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_FoxTower_1", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SkillObj/Yae/FoxTower_1/FoxTower_1.fbx", PreTransformMatrix, "../../Data/SkillObj_FoxTower_1.dat"))))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_FoxTower_2", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SkillObj/Yae/FoxTower_2/FoxTower_2.fbx", PreTransformMatrix, "../../Data/SkillObj_FoxTower_2.dat"))))
-		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_FlowerArrow", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SkillObj/Tighnari/Arrow/Arrow.fbx", PreTransformMatrix, "../../Data/SkillObj_FlowerArrow.dat"))))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_KasaRing", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SkillObj/Wanderer/KasaRing.fbx", PreTransformMatrix, "../../Data/SkillObj_KasaRing.dat"))))
@@ -371,8 +366,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Dungeon_1", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Map/Dungeon_1/Dungeon_1.fbx", PreTransformMatrix, "../../Data/Dungeon_1.dat"))))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Dungeon_2", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Map/Dungeon_2/Dungeon_2.fbx", PreTransformMatrix, "../../Data/Dungeon_2.dat"))))
-		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("셰이더를(을) 로딩 중 입니다."));
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxNorTex", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxNorTex.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements))))
@@ -396,21 +389,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_Instance_Point", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxInstance_Point.hlsl"), VTXINSTANCE_POINT::Elements, VTXINSTANCE_POINT::iNumElements))))
 		return E_FAIL;
 
-	lstrcpy(m_szLoadingText, TEXT("파티클를(을) 로딩 중 입니다."));
-	CVIBuffer_Instance_Point::INSTANCE_DESC EffectDesc{};
-	EffectDesc.vOffsetPos = _float3(0.f, 1.5f, 1.f);
-	EffectDesc.vPivotPos = _float3(0.f, 1.5f, 0.f);
-	EffectDesc.vRange = _float3(0.5f, 1.f, 0.6f);
-	EffectDesc.iNumInstance = 20.f;
-	EffectDesc.vSize = _float2(0.06f, 0.07f);
-	EffectDesc.vSpeed = _float2(0.2f, 0.5f);
-	EffectDesc.vLifeTime = _float2(1.f, 2.f);
-	EffectDesc.isLoop = false;
-
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Particle_Water", CVIBuffer_Instance_Point::Create(m_pDevice, m_pContext, EffectDesc))))
-		return E_FAIL;
-	
-
 	m_fProgress = 80.f;
 
 	lstrcpy(m_szLoadingText, TEXT("컴포넌트 로딩 중 입니다."));
@@ -429,6 +407,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 	/*객체 원형 로딩*/
+#pragma region 객체 원형
+
 	lstrcpy(m_szLoadingText, TEXT("객체원형을 로딩 중 입니다."));
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Camera", CDefaultCamera::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -469,21 +449,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Map_Dungeon_1", CDungeon_1::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Map_Dungeon_2", CDungeon_2::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_SkillObj_Gohei", CGohei::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_SkillObj_BlackFox", CBlackFox::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_SkillObj_FoxTail_Burst", CFoxTail_Burst::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_SkillObj_FoxTower", CFoxTower::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_SkillObj_FlowerArrow", CFlowerArrow::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
@@ -501,6 +466,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Monster_Slime_Water_Mid", CSlime_Mid_Water::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+#pragma endregion
 
 #pragma region SceneObj
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_SceneObj_TreasureBox", CTreasureBox::Create(m_pDevice, m_pContext))))
@@ -547,48 +513,67 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 #pragma region Effect
-
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Normal_01", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Normal_1.dat"))))
+	//닐루 Normal
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Normal_00", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Normal_Atk_0.dat"))))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Normal_02", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Normal_2.dat"))))
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Normal_01", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Normal_Atk_1.dat"))))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Normal_03", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Normal_3.dat"))))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Elemental_Start", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Water_Helix.dat"))))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Elemental_Normal_1", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Water_Atk_1.dat"))))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Elemental_Normal_2", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Water_Atk_3.dat"))))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Elemental_Normal_spec", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Water_Normal_5.dat"))))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Elemental_Ring", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Water_Ring.dat"))))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Hit", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Hit_Effect.dat"))))
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Normal_02", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Normal_Atk_2.dat"))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_ParticleTwinkle_1", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Particle_Twinkle_1.dat"))))
+	//닐루 Elemenetal Art Normal
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Elemental_Art_Normal_00", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Elemental_Art_Atk_0.dat"))))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_ParticleWater_1", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Particle_Water_1.dat"))))
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Elemental_Art_Normal_01", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Elemental_Art_Atk_1.dat"))))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_ParticleWater_2", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Particle_Water_2.dat"))))
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Elemental_Art_Normal_02", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Elemental_Art_Atk_2.dat"))))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_ParticleBuble_1", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Particle_Buble.dat"))))
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Elemental_Art_Normal_02_Particle", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Elemental_Art_Atk_2_Particle.dat"))))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Blade_Particle", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Blade_Particle.dat"))))
+
+	//닐루 Elemenetal Art Water
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Elemental_Art_Water_00", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Elemental_Art_Water_0.dat"))))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Feiyan_Normal_Particle", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Feiyan_Normal_Particle.dat"))))
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Elemental_Art_Water_01", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Elemental_Art_Water_1.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Elemental_Art_Water_02", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Elemental_Art_Water_2.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Elemental_Art_Water_03", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Elemental_Art_Water_3.dat"))))
+		return E_FAIL;
+
+	//타이나리 Normal
+	 if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Tighnari_Normal_Texture", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Tighnar_Normal_Texture.dat"))))
+		return E_FAIL;
+	//타이나리 Elemenetal Art
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Tighnari_Elemental_Art", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Tighnari_Elemental_Art.dat"))))
 		return E_FAIL;
 	
-
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Tighnari_Effect_Arrow_Start", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Tighnari_Effect_Bullet_Start.dat"))))
+	//방랑자 Normal
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Wanderer_Normal_00", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Wanderer_Normal_Atk_0.dat"))))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Tighnari_Effect_Arrow_End", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Tighnari_Effect_Bullet_End.dat"))))
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Wanderer_Normal_01", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Wanderer_Normal_Atk_1.dat"))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Feiyan_Normal_Start", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Feiyan_Normal_Start.dat"))))
+	//연비 Normal
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Feiyan_Normal_Particle", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Feiyan_Normal_Particle.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Feiyan_Normal_Start_Texture", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Feiyan_Normal_Start.dat"))))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Feiyan_Normal_Start_Particle", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Feiyan_Normal_Start_Particle.dat"))))
+		return E_FAIL;
+
+	//연비 Elemenetal Art
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Feiyan_Elemenetal_Art", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Feiyan_Art.dat"))))
+		return E_FAIL;
+
+	//연비 Elemenetal Burst
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Feiyan_Burst_Start", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Feiyan_Burst_Start.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Feiyan_Burst_End", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Feiyan_Busrt_End.dat"))))
+		return E_FAIL;
+
+	//몬스터 Hit
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Hit_Texture", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Hit_Texture.dat"))))
 		return E_FAIL;
 #pragma endregion
 
@@ -617,6 +602,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_UI_Avatar_Face", CAvatar_Face::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_UI_Btn_Frame", CBtn_Frame::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_UI_Atk_Font", CUI_Atk::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 #pragma endregion
 
@@ -654,104 +642,222 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 HRESULT CLoader::Loading_For_Stage_Boss()
 {
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STATIC, L"Prototype_Component_Texture_AlertCircle", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/AlertCircle/AlertCircle.png"), 1))))
+#pragma region Skill
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_Skill_Feiyan_Normal_Fire", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Feiyan/Eff_Trail_Scratch_02.png"), 1))))
 		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_Skill_Feiyan_Normal_Trail", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Feiyan/Feiyan_Normal_Trail.png"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_Skill_Tighnari_Normal", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Tighnari/Eff_Glow_09_Clamp.png"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_Skill_Tighnari_Normal_Trail", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Feiyan/Eff_Trail_Scratch_02.png"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_Skill_Tighnari_Burst", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Tighnari/Eff_Glow_09_Clamp.png"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_Skill_Tighnari_Burst_Trail", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Tighnari/Eff_Trail_69_Clamp.png"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_Skill_Wanderer_Normal", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Eff_Trail_61_01.png"), 1))))
+		return E_FAIL;
+#pragma endregion
 
+#pragma region UI
+
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_UI_Avatar_HP_Outline", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Avatar/HP/UI_HPBar_2_Outline.png"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_UI_Avatar_HP", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Avatar/HP/UI_HPBar_2.png"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_UI_Monster_HP_Outline", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Monster/HP/UI_HPBar_0s_Outline.png"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_UI_Monster_HP", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Monster/HP/UI_HPBar_0s.png"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_UI_Btn_Frame_38", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Avatar/Btn/UI_Frame_38.dds"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_UI_Btn_Frame_26", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Avatar/Btn/UI_Frame_38.dds"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_UI_Btn_Frame", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Btn/ps_common_frame.dds"), 1))))
+		return E_FAIL;
+#pragma endregion
+
+	m_fProgress = 5.f;
+#pragma region E_SKILL_TEXTURE
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_UI_SkillBtn_Icon_E_Tighnari", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Avatar/Btn/Tighnari/Skill_S_Tighnari_01.png"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_UI_SkillBtn_Icon_E_Nilou", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Avatar/Btn/Nilou/Skill_S_Nilou_01.png"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_UI_SkillBtn_Icon_E_Wanderer", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Avatar/Btn/Wanderer/Skill_S_Wanderer_01.png"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_UI_SkillBtn_Icon_E_Feiyan", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Avatar/Btn/Feiyan/Skill_S_Feiyan_01.png"), 1))))
+		return E_FAIL;
+#pragma endregion
+
+	m_fProgress = 10.f;
+
+#pragma region Q_SKILL_TEXTURE
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_UI_SkillBtn_Icon_Q_Tighnari", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Avatar/Btn/Tighnari/Skill_E_Tighnari_01_HD.png"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_UI_SkillBtn_Icon_Q_Nilou", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Avatar/Btn/Nilou/Skill_E_Nilou_01_HD.png"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_UI_SkillBtn_Icon_Q_Wanderer", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Avatar/Btn/Wanderer/Skill_E_Wanderer_01_HD.png"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_UI_SkillBtn_Icon_Q_Feiyan", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Avatar/Btn/Feiyan/Skill_E_Feiyan_01_HD.png"), 1))))
+		return E_FAIL;
+#pragma endregion
+
+	m_fProgress = 15.f;
+
+#pragma region Avatar_Side
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_UI_Avatar_Side_Frame", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Avatar/Side/UI_Main_AvatarSideBg_Normal_FullRect.dds"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_UI_Avatar_Side_Select_Frame", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Avatar/Side/UI_Frame_Gradient_HB_Long.png"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_UI_Avatar_Side_Tighnari", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Avatar/Face/UI_AvatarIcon_Side_Tighnari.dds"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_UI_Avatar_Side_Nilou", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Avatar/Face/UI_AvatarIcon_Side_Nilou.dds"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_UI_Avatar_Side_Wanderer", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Avatar/Face/UI_AvatarIcon_Side_Wanderer.dds"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_UI_Avatar_Side_Feiyan", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Avatar/Face/UI_AvatarIcon_Side_Feiyan.dds"), 1))))
+		return E_FAIL;
+#pragma endregion
+
+	m_fProgress = 20.f;
+
+	lstrcpy(m_szLoadingText, TEXT("플레이어 모델를(을) 로딩 중 입니다."));
+
+#pragma region Player
 	_matrix PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Tighnari", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Player/Tighnari/Tighnari.fbx", PreTransformMatrix, "../../Data/Tighnari.dat"))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Model_Tighnari", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Player/Tighnari/Tighnari.fbx", PreTransformMatrix, "../../Data/Tighnari.dat"))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Nilou", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Player/Nilou/Nilou.fbx", PreTransformMatrix, "../../Data/Nilou.dat"))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Model_Nilou", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Player/Nilou/Nilou.fbx", PreTransformMatrix, "../../Data/Nilou.dat"))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Wanderer", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Player/Wanderer/Wanderer.fbx", PreTransformMatrix, "../../Data/Wanderer.dat"))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Model_Wanderer", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Player/Wanderer/Wanderer.fbx", PreTransformMatrix, "../../Data/Wanderer.dat"))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Yae", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Player/Yae/Yae.fbx", PreTransformMatrix, "../../Data/Yae.dat"))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Model_Yae", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Player/Yae/Yae.fbx", PreTransformMatrix, "../../Data/Yae.dat"))))
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Model_Feiyan", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Player/Feiyan/Feiyan.fbx", PreTransformMatrix, "../../Data/Feiyan.dat"))))
+		return E_FAIL;
+#pragma endregion
+
+	m_fProgress = 30.f;
+
+#pragma region SkillMesh
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Model_Wanderer_Normal", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/", PreTransformMatrix, "../../Data/EffectMesh/Wanderer_Blade.dat"))))
+		return E_FAIL;
+	//화살에 안들어간 텍스쳐
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_Monster_Arrow", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Models/Effect/Arrow/Bullet_Arrow_01_Tex_Diffuse.png"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Model_Monster_Arrow", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Effect/Arrow/Arrow.fbx", PreTransformMatrix, "../../Data/SkillObj_Arrow.dat"))))
+		return E_FAIL;
+#pragma endregion
 
 	lstrcpy(m_szLoadingText, TEXT("몬스터를(을) 로딩 중 입니다."));
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Boss_Tartaglia", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Boss/Tarta/Tartaglia.fbx", PreTransformMatrix, "../../Data/Boss_Tartaglia.dat"))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Model_Boss_Tartaglia", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Boss/Tarta/Tartaglia.fbx", PreTransformMatrix, "../../Data/Boss_Tartaglia.dat"))))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Boss_EvilEye", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Boss/Eye/EvilEye.fbx", PreTransformMatrix, "../../Data/Boss_EvilEye.dat"))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Model_Boss_EvilEye", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Boss/Eye/EvilEye.fbx", PreTransformMatrix, "../../Data/Boss_EvilEye.dat"))))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Boss_Harbinger", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Boss/Harbinger/Harbinger.fbx", PreTransformMatrix, "../../Data/Boss_Harbinger.dat"))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Model_Boss_Harbinger", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Boss/Harbinger/Harbinger.fbx", PreTransformMatrix, "../../Data/Boss_Harbinger.dat"))))
 		return E_FAIL;
 
+	m_fProgress = 20.f;
+
 	lstrcpy(m_szLoadingText, TEXT("스킬 오브젝트 모델를(을) 로딩 중 입니다."));
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_BlackFox", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SkillObj/Yae/BlackFox/BlackFox.fbx", PreTransformMatrix, "../../Data/SkillObj_BlackFox.dat"))))
-		return E_FAIL;
 	PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Gohei", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SkillObj/Yae/Gohei/Gohei.fbx", PreTransformMatrix, "../../Data/SkillObj_Gohei.dat"))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Model_FlowerArrow", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SkillObj/Tighnari/Arrow/Arrow.fbx", PreTransformMatrix, "../../Data/SkillObj_FlowerArrow.dat"))))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_FoxTail_Burst", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SkillObj/Yae/FoxTail_Burst/FoxTail_Burst.fbx", PreTransformMatrix, "../../Data/SkillObj_FoxTail_Burst.dat"))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Model_KasaRing", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SkillObj/Wanderer/KasaRing.fbx", PreTransformMatrix, "../../Data/SkillObj_KasaRing.dat"))))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_FoxTower_1", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SkillObj/Yae/FoxTower_1/FoxTower_1.fbx", PreTransformMatrix, "../../Data/SkillObj_FoxTower_1.dat"))))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_FoxTower_2", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SkillObj/Yae/FoxTower_2/FoxTower_2.fbx", PreTransformMatrix, "../../Data/SkillObj_FoxTower_2.dat"))))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_FlowerArrow", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SkillObj/Tighnari/Arrow/Arrow.fbx", PreTransformMatrix, "../../Data/SkillObj_FlowerArrow.dat"))))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_KasaRing", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SkillObj/Wanderer/KasaRing.fbx", PreTransformMatrix, "../../Data/SkillObj_KasaRing.dat"))))
-		return E_FAIL;
+
+	m_fProgress = 30.f;
 
 	lstrcpy(m_szLoadingText, TEXT("무기 모델를(을) 로딩 중 입니다."));
 	PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Harbinger_Blade", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Harbinger_Blade/Blade.fbx", PreTransformMatrix, "../../Data/Harbinger_Blade.dat"))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Model_Harbinger_Blade", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Harbinger_Blade/Blade.fbx", PreTransformMatrix, "../../Data/Harbinger_Blade.dat"))))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Harbinger_Bow", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Harbinger_Bow/Bow.fbx", PreTransformMatrix, "../../Data/Harbinger_Bow.dat"))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Model_Harbinger_Bow", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Harbinger_Bow/Bow.fbx", PreTransformMatrix, "../../Data/Harbinger_Bow.dat"))))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Harbinger_DualBlade", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Harbinger_DualBlade/DualBlade.fbx", PreTransformMatrix, "../../Data/Harbinger_DualBlade.dat"))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Model_Harbinger_DualBlade", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Harbinger_DualBlade/DualBlade.fbx", PreTransformMatrix, "../../Data/Harbinger_DualBlade.dat"))))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Tartaglia_Blade_Water", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Tartaglia_Blade_Water/Water_Blade.fbx", PreTransformMatrix, "../../Data/Tartaglia_Water_Blade.dat"))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Model_Tartaglia_Blade_Water", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Tartaglia_Blade_Water/Water_Blade.fbx", PreTransformMatrix, "../../Data/Tartaglia_Water_Blade.dat"))))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Tartaglia_Blade_Electric", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Tartaglia_Blade_Electric/Electric_Blade.fbx", PreTransformMatrix, "../../Data/Tartaglia_Electric_Blade.dat"))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Model_Tartaglia_Blade_Electric", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Tartaglia_Blade_Electric/Electric_Blade.fbx", PreTransformMatrix, "../../Data/Tartaglia_Electric_Blade.dat"))))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Tartaglia_Bow", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Tartaglia_Bow/Bow.fbx", PreTransformMatrix, "../../Data/Tartaglia_Bow.dat"))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Model_Tartaglia_Bow", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Tartaglia_Bow/Bow.fbx", PreTransformMatrix, "../../Data/Tartaglia_Bow.dat"))))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Tartaglia_DualBlade", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Tartaglia_DualBlade/DualBlade.fbx", PreTransformMatrix, "../../Data/Tartaglia_DualBlade.dat"))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Model_Tartaglia_DualBlade", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Tartaglia_DualBlade/DualBlade.fbx", PreTransformMatrix, "../../Data/Tartaglia_DualBlade.dat"))))
 		return E_FAIL;
 
 	PreTransformMatrix = XMMatrixIdentity();
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Ayus", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Ayus/Ayus.fbx", PreTransformMatrix, "../../Data/Weapon_Ayus.dat"))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Model_Ayus", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Ayus/Ayus.fbx", PreTransformMatrix, "../../Data/Weapon_Ayus.dat"))))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Alaya", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Alaya/Alaya.fbx", PreTransformMatrix, "../../Data/Weapon_Alaya.dat"))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Model_Alaya", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Alaya/Alaya.fbx", PreTransformMatrix, "../../Data/Weapon_Alaya.dat"))))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Narukami", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Narukami/Narukami.fbx", PreTransformMatrix, "../../Data/Weapon_Narukami.dat"))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Model_Narukami", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Narukami/Narukami.fbx", PreTransformMatrix, "../../Data/Weapon_Narukami.dat"))))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Regalis", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Regalis/Regalis.fbx", PreTransformMatrix, "../../Data/Weapon_Regalis.dat"))))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Flycloak", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Flycloak/Flycloak.fbx", PreTransformMatrix, "../../Data/Flycloak.dat"))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Model_Regalis", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Weapon/Regalis/Regalis.fbx", PreTransformMatrix, "../../Data/Weapon_Regalis.dat"))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Model_Flycloak", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Flycloak/Flycloak.fbx", PreTransformMatrix, "../../Data/Flycloak.dat"))))
+		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Model_Hili_Weapon_Club", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Monster/Weapon/Club/Club.fbx", PreTransformMatrix, "../../Data/Hili_Club.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Model_Hili_Weapon_CrossBow", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Monster/Weapon/CrossBow/CrossBow.fbx", PreTransformMatrix, "../../Data/Hili_CrossBow.dat"))))
+		return E_FAIL;
+
+	m_fProgress = 40.f;
 
 	lstrcpy(m_szLoadingText, TEXT("맵 모델를(을) 로딩 중 입니다."));
 	PreTransformMatrix = XMMatrixIdentity();
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_GoldenHouse", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Map/GoldenHouse/GoldenHouse.fbx", PreTransformMatrix, "../../Data/GoldenHouse.dat"))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Model_GoldenHouse", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Map/GoldenHouse/GoldenHouse.fbx", PreTransformMatrix, "../../Data/GoldenHouse.dat"))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("씬 오브젝트를(을) 로딩 중 입니다."));
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Model_TreasureBox_Big", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SceneObj/TreasureBox_Big/TreasureBox_Big.fbx", PreTransformMatrix, "../../Data/TreasureBox_Big.dat"))))
-		return E_FAIL;
-
-	lstrcpy(m_szLoadingText, TEXT("컴포넌트 로딩 중 입니다."));
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_VIBuffer_Terrain", CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Height1.bmp")))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Navigation", CNavigation::Create(m_pDevice, m_pContext, TEXT("../../Data/Navigation/Navigation_State_Boss.dat")))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Collider", CCollider::Create(m_pDevice, m_pContext))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Model_TreasureBox_Big", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/SceneObj/TreasureBox_Big/TreasureBox_Big.fbx", PreTransformMatrix, "../../Data/TreasureBox_Big.dat"))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("셰이더를(을) 로딩 중 입니다."));
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxNorTex", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxNorTex.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Shader_VtxNorTex", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxNorTex.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements))))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxMesh", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxMesh.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Shader_VtxMesh", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxMesh.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements))))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxAnimMesh", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxAnimMesh.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements))))
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Shader_VtxAnimMesh", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxAnimMesh.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements))))
 		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Shader_VtxPosTex_UI", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxPosTex_UI.hlsl"), VXTPOSTEX::Elements, VXTPOSTEX::iNumElements))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Shader_VtxPosTex_Skill", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxPosTex_Skill.hlsl"), VXTPOSTEX::Elements, VXTPOSTEX::iNumElements))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Shader_VtxNorTex_Skill", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxNorTex_Skill.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Shader_VtxAnimMesh_Skill", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxAnimMesh_Skill.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Shader_VtxPosTex_Effect", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxPosTex_Effect.hlsl"), VXTPOSTEX::Elements, VXTPOSTEX::iNumElements))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Shader_VtxMesh_Effect", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxMesh_Effect.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Shader_Instance_Point", CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxInstance_Point.hlsl"), VTXINSTANCE_POINT::Elements, VTXINSTANCE_POINT::iNumElements))))
+		return E_FAIL;
+
+	m_fProgress = 50.f;
+
+	lstrcpy(m_szLoadingText, TEXT("컴포넌트 로딩 중 입니다."));
+	//if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_GAMEPLAY, L"Prototype_Component_VIBuffer_Terrain", CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Height1.bmp")))))
+	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_VIBuffer_Trail", CVIBuffer_Trail::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_VIBuffer_RectZ", CVIBuffer_RectZ::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Navigation", CNavigation::Create(m_pDevice, m_pContext, TEXT("../../Data/Navigation/Navigation_State_Boss.dat")))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Collider", CCollider::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	m_fProgress = 55.f;
 
 	/*객체 원형 로딩*/
 	lstrcpy(m_szLoadingText, TEXT("객체원형을 로딩 중 입니다."));
@@ -759,11 +865,11 @@ HRESULT CLoader::Loading_For_Stage_Boss()
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Map_GoldenHouse", CGoldenHouse::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Camera", CDefaultCamera::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Camera", CDefaultCamera::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_CutCamera", CCutCamera::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_CutCamera", CCutCamera::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
 #pragma endregion
 
 #pragma region Tartiglia
@@ -798,8 +904,10 @@ HRESULT CLoader::Loading_For_Stage_Boss()
 		return E_FAIL;
 #pragma endregion
 
+	m_fProgress = 77.f;
+
 #pragma region Player
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Player", CPlayer::Create(m_pDevice, m_pContext))))
+	/*if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Player", CPlayer::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Player_Tighnari", CTighnari_Body::Create(m_pDevice, m_pContext))))
@@ -826,18 +934,6 @@ HRESULT CLoader::Loading_For_Stage_Boss()
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Weapon_Regalis", CWeapon_Regalis::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_SkillObj_Gohei", CGohei::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_SkillObj_BlackFox", CBlackFox::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_SkillObj_FoxTail_Burst", CFoxTail_Burst::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_SkillObj_FoxTower", CFoxTower::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_SkillObj_FlowerArrow", CFlowerArrow::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
@@ -845,8 +941,132 @@ HRESULT CLoader::Loading_For_Stage_Boss()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Flycloak", CFlycloak::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
+		return E_FAIL;*/
 #pragma endregion
+
+	m_fProgress = 87.f;
+
+#pragma region Effect
+	////닐루 Normal
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Normal_00", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Normal_Atk_0.dat"))))
+	//	return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Normal_01", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Normal_Atk_1.dat"))))
+	//	return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Normal_02", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Normal_Atk_2.dat"))))
+	//	return E_FAIL;
+
+	////닐루 Elemenetal Art Normal
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Elemental_Art_Normal_00", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Elemental_Art_Atk_0.dat"))))
+	//	return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Elemental_Art_Normal_01", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Elemental_Art_Atk_1.dat"))))
+	//	return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Elemental_Art_Normal_02", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Elemental_Art_Atk_2.dat"))))
+	//	return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Elemental_Art_Normal_02_Particle", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Elemental_Art_Atk_2_Particle.dat"))))
+	//	return E_FAIL;
+
+	////닐루 Elemenetal Art Water
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Elemental_Art_Water_00", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Elemental_Art_Water_0.dat"))))
+	//	return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Elemental_Art_Water_01", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Elemental_Art_Water_1.dat"))))
+	//	return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Elemental_Art_Water_02", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Elemental_Art_Water_2.dat"))))
+	//	return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Elemental_Art_Water_03", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Elemental_Art_Water_3.dat"))))
+	//	return E_FAIL;
+
+	////타이나리 Normal
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Tighnari_Normal_Texture", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Tighnar_Normal_Texture.dat"))))
+	//	return E_FAIL;
+	////타이나리 Elemenetal Art
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Tighnari_Elemental_Art", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Tighnari_Elemental_Art.dat"))))
+	//	return E_FAIL;
+
+	////방랑자 Normal
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Wanderer_Normal_00", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Wanderer_Normal_Atk_0.dat"))))
+	//	return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Wanderer_Normal_01", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Wanderer_Normal_Atk_1.dat"))))
+	//	return E_FAIL;
+
+	////연비 Normal
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Feiyan_Normal_Particle", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Feiyan_Normal_Particle.dat"))))
+	//	return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Feiyan_Normal_Start_Texture", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Feiyan_Normal_Start.dat"))))
+	//	return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Feiyan_Normal_Start_Particle", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Feiyan_Normal_Start_Particle.dat"))))
+	//	return E_FAIL;
+
+	////연비 Elemenetal Art
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Feiyan_Elemenetal_Art", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Feiyan_Art.dat"))))
+	//	return E_FAIL;
+
+	////연비 Elemenetal Burst
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Feiyan_Burst_Start", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Feiyan_Burst_Start.dat"))))
+	//	return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Feiyan_Burst_End", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Feiyan_Busrt_End.dat"))))
+	//	return E_FAIL;
+
+	////몬스터 Hit
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Hit_Texture", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Hit_Texture.dat"))))
+	//	return E_FAIL;
+#pragma endregion
+
+#pragma region UI
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_UI_BossHP_Outline", CBossHP_Outline::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_UI_BossHP", CBossHP::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_UI_PlayerHP_Outline", CPlayerHP_Outline::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_UI_PlayerHP", CPlayerHP::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_UI_MonsterHP_Outline", CMonsterHP_Outline::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_UI_MonsterHP", CMonsterHP::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_UI_SkillBtn_Icon", CSkillBtn_Icon::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_UI_SkillBtn_E", CSkillBtn_E::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_UI_SkillBtn_Q", CSkillBtn_Q::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_UI_Avatar", CAvatar_UI::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_UI_Avatar_Side", CAvatar_Side::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_UI_Avatar_Select", CAvatar_Side_Select::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_UI_Avatar_Face", CAvatar_Face::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_UI_Btn_Frame", CBtn_Frame::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_UI_Atk_Font", CUI_Atk::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+#pragma endregion
+
+#pragma region Skill
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Skill_Hili_Arrow", CHili_Arrow::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Skill_Boss_Arrow", CBoss_Normal::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Skill_Feiyan_Normal", CFeiyan_Normal::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Skill_Feiyan_Normal_Trail", CFeiyan_Normal_Trail::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Skill_Tighnari_Normal", CTighnari_Normal::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Skill_Tighnari_Busrt", CTighnari_Burst::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+
+	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Skill_Wanderer_Normal", CWanderer_Normal::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+#pragma endregion
+
+	m_fProgress = 100.f;
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
 	m_isDrop = true;

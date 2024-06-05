@@ -35,12 +35,12 @@ HRESULT CBoss_Normal::Initialize(void* pArg)
 	_matrix HandMatrix = XMMatrixIdentity();
 	HandMatrix.r[3] = XMLoadFloat4x4(&pDesc->HandCombinedTransformationMatrix).r[3];
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(45.f));
-	WorldMatrix = m_pTransformCom->Get_WorldMatrix() * HandMatrix * XMLoadFloat4x4(&pDesc->ParentMatrix);
+	WorldMatrix = m_pTransformCom->Get_WorldMatrix() * HandMatrix * XMLoadFloat4x4(pDesc->ParentMatrix);
 
 	m_pTransformCom->Set_WorldMatrix(WorldMatrix);
 	m_vTargetPos.y = m_vTargetPos.y + 1.f;
 
-	m_fHeight = pDesc->ParentMatrix.m[3][1]; // y 값 저장
+	m_fHeight = pDesc->ParentMatrix->m[3][1]; // y 값 저장
 
 	XMStoreFloat4(&m_vTargetLook, XMVector3Normalize(XMLoadFloat4(&m_vTargetPos) - m_pTransformCom->Get_State(CTransform::STATE_POSITION)));
 
@@ -97,19 +97,19 @@ HRESULT CBoss_Normal::Render()
 
 HRESULT CBoss_Normal::Add_Components()
 {
-    if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxNorTex_Skill", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
+    if (FAILED(__super::Add_Component(LEVEL_STAGE_BOSS, L"Prototype_Component_Shader_VtxNorTex_Skill", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
         return E_FAIL;
 
-    if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxPosTex_Skill", L"Com_TrailShader", reinterpret_cast<CComponent**>(&m_pTrailShaderCom))))
+    if (FAILED(__super::Add_Component(LEVEL_STAGE_BOSS, L"Prototype_Component_Shader_VtxPosTex_Skill", L"Com_TrailShader", reinterpret_cast<CComponent**>(&m_pTrailShaderCom))))
         return E_FAIL;
 
-    if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_Monster_Arrow", L"Com_Texture", reinterpret_cast<CComponent**>(&m_pTextureCom[0]))))
+    if (FAILED(__super::Add_Component(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_Monster_Arrow", L"Com_Texture", reinterpret_cast<CComponent**>(&m_pTextureCom[0]))))
         return E_FAIL;
 
-    if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_Skill_Tighnari_Normal_Trail", L"Com_TrailTexture", reinterpret_cast<CComponent**>(&m_pTextureCom[1]))))
+    if (FAILED(__super::Add_Component(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_Skill_Tighnari_Normal_Trail", L"Com_TrailTexture", reinterpret_cast<CComponent**>(&m_pTextureCom[1]))))
         return E_FAIL;
 
-    if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Monster_Arrow", L"Com_Model", reinterpret_cast<CComponent**>(&m_pModelCom))))
+    if (FAILED(__super::Add_Component(LEVEL_STAGE_BOSS, L"Prototype_Component_Model_Monster_Arrow", L"Com_Model", reinterpret_cast<CComponent**>(&m_pModelCom))))
         return E_FAIL;
 
     CBounding_AABB::BOUNDING_AABB_DESC BoundingBoxDesc{};
@@ -117,14 +117,14 @@ HRESULT CBoss_Normal::Add_Components()
     BoundingBoxDesc.vExtents = _float3(0.1f, 0.1f, 0.1f);
     BoundingBoxDesc.vCenter = _float3(0.f, BoundingBoxDesc.vExtents.y, 0.f);
 
-    if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Collider", L"Com_Collider", reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingBoxDesc)))
+    if (FAILED(__super::Add_Component(LEVEL_STAGE_BOSS, L"Prototype_Component_Collider", L"Com_Collider", reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingBoxDesc)))
         return E_FAIL;
 
     CVIBuffer_Trail::VIBUFFER_TRAIL_DESC TrailDesc{};
     TrailDesc.iMaxTrail = 70;
 	TrailDesc.vInitPosA = _float3(-0.3f, 0.f, 0.3f);
 	TrailDesc.vInitPosB = _float3(-0.3f, 0.f, -0.3f);
-    if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_VIBuffer_Trail", L"Com_TrailBuffer", reinterpret_cast<CComponent**>(&m_pTrailVIBufferCom), &TrailDesc)))
+    if (FAILED(__super::Add_Component(LEVEL_STAGE_BOSS, L"Prototype_Component_VIBuffer_Trail", L"Com_TrailBuffer", reinterpret_cast<CComponent**>(&m_pTrailVIBufferCom), &TrailDesc)))
         return E_FAIL;
 
     return S_OK;

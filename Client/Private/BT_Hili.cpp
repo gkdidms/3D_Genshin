@@ -11,6 +11,8 @@
 #include "Effect.h"
 #include "Effect_Image.h"
 
+#include "UI_Atk.h"
+
 CBT_Hili::CBT_Hili()
 	: CNode{},
 	m_pGameInstance { CGameInstance::GetInstance() }
@@ -118,13 +120,16 @@ CNode::NODE_STATE CBT_Hili::Hit()
 			CEffect::EFFECT_DESC HitDesc{};
 
 			HitDesc.pPlayerMatrix = m_pTransformCom->Get_WorldFloat4x4();
-			XMStoreFloat4x4(&HitDesc.RotationMatrix, XMMatrixIdentity());
-			HitDesc.vPos = _float4(0.f, 1.f, 0.f, 1.f);
-			HitDesc.vScale = _float3(1.f, 1.f, 1.f);
 			HitDesc.fDuration = 0.3f;
-			HitDesc.iMoveType = CEffect_Image::INCREASE;
 
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_Nilou_Hit"), TEXT("Layer_Trail"), &HitDesc)))
+			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_Hit_Texture"), TEXT("Layer_Texture"), &HitDesc)))
+				return CNode::SUCCESS;
+
+			CUI_Atk::UI_ATK_DESC FontDest{};
+			FontDest.pParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
+			FontDest.fAtk = pPlayer->Get_PlayerbleAtk();
+			FontDest.vColor = XMVectorSet(0.f, 0.75f, 1.f, 1.f);
+			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_UI_Atk_Font"), TEXT("Layer_UI"), &FontDest)))
 				return CNode::SUCCESS;
 
 			return CNode::SUCCESS;
@@ -147,16 +152,30 @@ CNode::NODE_STATE CBT_Hili::Hit()
 				CEffect::EFFECT_DESC HitDesc{};
 
 				HitDesc.pPlayerMatrix = m_pTransformCom->Get_WorldFloat4x4();
-				XMStoreFloat4x4(&HitDesc.RotationMatrix, XMMatrixIdentity());
-				HitDesc.vPos = _float4(0.f, 1.f, 0.f, 1.f);
-				HitDesc.vScale = _float3(1.f, 1.f, 1.f);
 				HitDesc.fDuration = 0.3f;
-				HitDesc.iMoveType = CEffect_Image::INCREASE;
 
-				if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_Nilou_Hit"), TEXT("Layer_Trail"), &HitDesc)))
+				if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_Hit_Texture"), TEXT("Layer_Texture"), &HitDesc)))
 					return CNode::SUCCESS;
 				
 				pBullet->Set_Dead();
+
+				//데미지 폰트
+				CUI_Atk::UI_ATK_DESC FontDest{};
+				FontDest.pParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
+				FontDest.fAtk = pPlayer->Get_PlayerbleAtk();
+				_uint iPlayerbleElemental = pPlayer->Get_CurrentPlayerbleElemental();
+
+				if (iPlayerbleElemental == FIRE)
+					FontDest.vColor = XMVectorSet(0.f, 0.75f, 1.f, 1.f);
+				else if (iPlayerbleElemental == DENDRO)
+					FontDest.vColor = XMVectorSet(0.3f, 0.87f, 0.38f, 1.f);
+				else if (iPlayerbleElemental == ANEMO)
+					FontDest.vColor = XMVectorSet(0.35f, 0.86f, 0.7f, 1.f);
+
+				if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_UI_Atk_Font"), TEXT("Layer_UI"), &FontDest)))
+					return CNode::SUCCESS;
+
+				return CNode::SUCCESS;
 				return CNode::SUCCESS;
 				
 			}

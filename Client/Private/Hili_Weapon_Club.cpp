@@ -1,6 +1,8 @@
 #include "Hili_Weapon_Club.h"
 
+#include "Hili.h"
 #include "GameInstance.h"
+#include <Player.h>
 
 CHili_Weapon_Club::CHili_Weapon_Club(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CHili_Weapon{ pDevice, pContext}
@@ -34,6 +36,8 @@ void CHili_Weapon_Club::Priority_Tick(const _float& fTimeDelta)
 
 void CHili_Weapon_Club::Tick(const _float& fTimeDelta)
 {
+	Coll_Player();
+
 	_matrix SocketMatrix = XMLoadFloat4x4(m_SocketMatrix);
 
 	SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
@@ -43,6 +47,7 @@ void CHili_Weapon_Club::Tick(const _float& fTimeDelta)
 	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * SocketMatrix * XMLoadFloat4x4(m_TargetMatrix));
 	
 	_matrix CollMatrix = m_pTransformCom->Get_WorldMatrix() * XMMatrixRotationX(XMConvertToRadians(-90.f)) * SocketMatrix * XMLoadFloat4x4(m_TargetMatrix);
+
 	m_pColliderCom->Tick(CollMatrix);
 }
 
@@ -82,6 +87,25 @@ HRESULT CHili_Weapon_Club::Add_Components()
 
 	return S_OK;
 }
+
+void CHili_Weapon_Club::Coll_Player()
+{
+	if (*m_pState == CHili::HILI_NORMAL_ATK || *m_pState == CHili::HILI_THUMP_ATK || *m_pState == CHili::HILI_TRIPLE_ATK)
+	{
+		//공격 충돌처리
+		CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, TEXT("Layer_Player"), 0));
+		if (nullptr == pPlayer)
+			return;
+
+		CCollider* pPlayerColl = dynamic_cast<CCollider*>(pPlayer->Get_Component(TEXT("Com_Collider")));
+		if (m_pColliderCom->Intersect(pPlayerColl))
+		{
+			//충돌되었다면?
+			pPlayer->Set_Hit(m_fAtk);
+		}
+	}
+}
+
 
 CHili_Weapon_Club* CHili_Weapon_Club::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

@@ -1,5 +1,7 @@
 #include "FlowerArrow.h"
 
+#include "MainApp.h"
+
 CFlowerArrow::CFlowerArrow(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CSkillObj{ pDevice, pContext }
 {
@@ -24,6 +26,7 @@ HRESULT CFlowerArrow::Initialize(void* pArg)
 		return E_FAIL;
 	
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-90.f));
+	m_pTransformCom->WorldRotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), XMConvertToRadians(45.f));
 	m_pModelCom->Set_Animation(CModel::ANIM_DESC{ 0, false, false, false });
 
 	return S_OK;
@@ -60,7 +63,7 @@ void CFlowerArrow::Late_Tick(const _float& fTimeDelta)
 
 		XMStoreFloat4x4(&m_pWorldMatrix, m_pTransformCom->Get_WorldMatrix() * SocketMatrix * XMLoadFloat4x4(m_pParentMatrix));
 
-		m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONBLENDER, this);
+		m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONLIGHT, this);
 	}
 }
 
@@ -69,20 +72,41 @@ HRESULT CFlowerArrow::Render()
 	if (m_isHide)
 		return S_OK;
 
-	if (FAILED(__super::Render()))
+	if (FAILED(Bind_ResourceData()))
 		return E_FAIL;
+
+	_uint iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (int i = 0; i < iNumMeshes; ++i)
+	{
+		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
+			return E_FAIL;
+
+		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
+		{
+			if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", 0)))
+				return E_FAIL;
+		}
+
+		m_pShaderCom->Begin(0);
+		m_pModelCom->Render(i);
+	}
+
+	return S_OK;
 
 	return S_OK;
 }
 
 HRESULT CFlowerArrow::Add_Components()
 {
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxAnimMesh", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Shader_VtxAnimMesh", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Model_FlowerArrow", L"Com_Model", reinterpret_cast<CComponent**>(&m_pModelCom))))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Model_FlowerArrow", L"Com_Model", reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Texture_Skill_Tighnari_Burst", L"Com_Texture", reinterpret_cast<CComponent**>(&m_pTextureCom))))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -131,4 +155,6 @@ CGameObject* CFlowerArrow::Clone(void* pArg)
 void CFlowerArrow::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pTextureCom);
 }

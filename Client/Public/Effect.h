@@ -5,18 +5,24 @@
 
 #include "EffectObject.h"
 
+BEGIN(Engine)
+class CCollider;
+END
+
 BEGIN(Client)
 class CEffect:
     public CBlendObject
 {
 public:
-    enum EFFECT_TYPE { EFFECT_PARTICLE, EFFECT_IMG, EFFECT_MESH, EFFECT_TRAIL, EFFECT_END };
-
-    typedef struct tEffectDesc : public CEffectObject::EFFECT_OBJECT_DESC
+    typedef struct tEffectDesc
     {
-        const _float4x4* pPlayerMatrix;
-        _bool isFollowPlayer = { false };
+        const _float4x4* pPlayerMatrix; // 생성한 플레이어의 월드행렬
+        _bool isFollowPlayer = { false }; // 플레이어를 따라오는가?
+        _bool isBullet = { false }; // 총알인가?
+        _float fDuration = { 0.f }; // 지속시간
+        _float fSpeed = { 0.f };
 
+        _vector vTargetDir = {};// 타겟이 있다면 타겟의 방향
     } EFFECT_DESC;
 
 private:
@@ -33,6 +39,9 @@ public:
     virtual HRESULT Render() override;
 
 private:
+    CCollider* m_pColliderCom = { nullptr };
+
+private:
     const _float4x4* m_pParentMatrix;
     vector<CGameObject*> m_EffectObjects;
     vector<CGameObject*> m_CloneEffectObject;
@@ -42,8 +51,13 @@ private:
     _float m_fCurrentTime = { 0.f };
 
     _bool m_isFollowPlayer = { false };
+    _bool m_isBullet = { false };
+    _vector m_vTargetDir = {};
+
+    _float m_fSpeed = {0.f};
 
 private:
+    HRESULT Add_Components();
     HRESULT File_Open(const _char* szFileName);
 
 public:

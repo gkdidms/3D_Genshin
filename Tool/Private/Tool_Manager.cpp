@@ -246,6 +246,20 @@ void CTool_Manager::Window_Object()
         Objects[m_iCurrentPickingObjectIndex]->m_pTransformCom->Set_State(CTransform::STATE_POSITION, ObjectMatrix.r[3]);
     }
 
+    if (m_iCurrentPickingObjectIndex == -1)
+    {
+        ImGui::End();
+        return;
+    }
+        
+
+    //¼öÁ¤
+    vector<CTool_Object*> Objects = m_pObject_Manager->Get_Objects();
+    _int iPathIndex = Objects[m_iCurrentPickingObjectIndex]->Get_PathIndex();
+
+    if (ImGui::InputInt("Path Index", &iPathIndex))
+        Objects[m_iCurrentPickingObjectIndex]->Set_PathIndex(iPathIndex);
+
     ImGui::End();
 }
 

@@ -140,7 +140,7 @@ CNode::NODE_STATE CBT_EvilEye::Check_Hit()
 
 CNode::NODE_STATE CBT_EvilEye::Check_Intersect()
 {
-	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, L"Layer_Player", 0));
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_STAGE_BOSS, L"Layer_Player", 0));
 
 	CCollider* pWeaponCollider = { nullptr };
 
@@ -151,7 +151,7 @@ CNode::NODE_STATE CBT_EvilEye::Check_Intersect()
 	else
 	{
 		// 화살 + 마법 이펙트들은 따로 사용 (임시용)
-		pWeaponCollider = dynamic_cast<CCollider*>(m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, L"Layer_Player", L"Com_Collider"));
+		pWeaponCollider = dynamic_cast<CCollider*>(m_pGameInstance->Get_GameObject_Component(LEVEL_STAGE_BOSS, L"Layer_Player", L"Com_Collider"));
 	}
 
 	if (m_pColliderCom->Intersect(pWeaponCollider))
@@ -180,7 +180,7 @@ CNode::NODE_STATE CBT_EvilEye::Check_Defend()
 		return CNode::FAILURE;
 
 	// 플레이어가 일반공격을 햇는지 체크
-	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, L"Layer_Player", 0));
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_STAGE_BOSS, L"Layer_Player", 0));
 	_uint eWeaponType = pPlayer->Get_CurrentWeapon();
 
 	if ((pPlayer->Get_PlayerState() == PLAYER_ATTACK_1
@@ -235,7 +235,7 @@ CNode::NODE_STATE CBT_EvilEye::Check_Attack_Deley()
 		{
 			if (m_fDelayTime < m_fCurrentTime)
 			{
-				CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, L"Layer_Player", 0));
+				CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_STAGE_BOSS, L"Layer_Player", 0));
 
 				if (Check_Rear_ToPlayer())
 				{
@@ -271,7 +271,7 @@ CNode::NODE_STATE CBT_EvilEye::Check_Attack_Range()
 	if (m_isAttack)
 		return CNode::SUCCESS;
 
-	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, L"Layer_Player", 0));
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_STAGE_BOSS, L"Layer_Player", 0));
 	_float fDistance = Distance(XMLoadFloat4x4(m_pTargetMatrix), XMLoadFloat4x4(m_pTransformCom->Get_WorldFloat4x4()));
 
 	if (fDistance < m_fMeleeAtkRange)
@@ -295,7 +295,7 @@ CNode::NODE_STATE CBT_EvilEye::Check_Melee_Attack()
 	if (m_RangeType == RANGE)
 		return CNode::SUCCESS;
 
-	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, L"Layer_Player", 0));
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_STAGE_BOSS, L"Layer_Player", 0));
 
 	//근거리 공격
 	if (Check_Rear_ToPlayer())
@@ -323,7 +323,7 @@ CNode::NODE_STATE CBT_EvilEye::Check_Range_Attack()
 	if (m_RangeType == MELEE)
 		return CNode::SUCCESS;
 
-	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, L"Layer_Player", 0));
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_STAGE_BOSS, L"Layer_Player", 0));
 
 	if (pPlayer->Get_BossSign())
 	{

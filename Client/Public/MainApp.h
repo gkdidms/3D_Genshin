@@ -15,6 +15,9 @@ private:
 	virtual ~CMainApp() = default;
 
 public:
+	static _uint g_iCurrentLevel;
+
+public:
 	HRESULT Initialize();
 	void Tick(const _float& fTimeDelta);
 	void Render();

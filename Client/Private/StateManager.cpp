@@ -18,6 +18,7 @@
 #include "StateFly.h"
 #include "StateFallAttack.h"
 #include "StateFallGround.h"
+#include "StateHit.h"
 
 
 IMPLEMENT_SINGLETON(CStateManager);
@@ -79,6 +80,9 @@ PLAYER_STATE CStateManager::Set_CurrentState(STATE_TYPE Type, PLAYER_STATE Curre
 	case Client::CStateManager::STATE_TYPE_FALL_GROUND:
 		m_pCurrentState = CStateFallGround::Create();
 		break;
+	case STATE_TYPE_HIT:
+		m_pCurrentState = CStateHit::Create();
+		break;
 	case Client::CStateManager::STATE_TYPE_END:
 		break;
 	default:
@@ -98,22 +102,6 @@ HRESULT CStateManager::Initialize(void* pArg)
 	PLAYER_STATE_DESC* pDesc = static_cast<PLAYER_STATE_DESC*>(pArg);
 	m_CurrentPlayerble = pDesc->pPlayerbleType;
 	m_CurrentDir = pDesc->pPlayerDir;
-
-	return S_OK;
-}
-
-HRESULT CStateManager::Ready_State()
-{/*
-	m_PlayerStates.emplace_back(CStateIdle::Create());
-	m_PlayerStates.emplace_back(CStateAttack::Create());
-	m_PlayerStates.emplace_back(CStateElementalArt::Create());
-	m_PlayerStates.emplace_back(CStateElementalBurst::Create());
-	m_PlayerStates.emplace_back(CStateRun::Create());
-	m_PlayerStates.emplace_back(CStateSprint::Create());
-	m_PlayerStates.emplace_back(CStateJump::Create());
-	m_PlayerStates.emplace_back(CStateFly::Create());
-	m_PlayerStates.emplace_back(CStateFallAttack::Create());
-	m_PlayerStates.emplace_back(CStateFallGround::Create());*/
 
 	return S_OK;
 }

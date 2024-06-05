@@ -49,7 +49,7 @@ HRESULT CEffect_Manager::Add_Effect(EFFECT_TYPE eType, void* pArg, _uint iShader
 		pParticle->Set_ShaderPass(iShaderPass);
 		m_Effects.emplace_back(pParticle);
 	}
-	else if (eType == EFFECT_IMG)
+	else if (eType == EFFECT_IMG || eType == EFFECT_CELL)
 	{
 		// 텍스쳐들은 저장하고 있어야 함.
 		CTool_Effect* pEffect = dynamic_cast<CTool_Effect*>(m_pGameInstance->Clone_Object(TEXT("Prototype_GameObject_Effect_Default"), pArg));
@@ -151,6 +151,13 @@ HRESULT CEffect_Manager::Save(const _char* szFileName)
 			ofs.write((_char*)&Desc.vSize, sizeof(_float2));
 			ofs.write((_char*)&Desc.vSpeed, sizeof(_float2));
 			ofs.write((_char*)&Desc.vPower, sizeof(_float2));
+		}
+		else if (iEffectType == EFFECT_IMG)
+		{
+			CEffect_Default* pTexture = dynamic_cast<CEffect_Default*>(pEffect);
+			
+			_uint iTextureMoveType = pTexture->Get_TextureMoveType();
+			ofs.write((_char*)&iTextureMoveType, sizeof(_uint));
 		}
 		else if (iEffectType == EFFECT_MESH)
 		{
@@ -352,12 +359,18 @@ HRESULT CEffect_Manager::Load(const _char* szFileName)
 
 			Desc.iEffectType = iEffectType;
 
+			Desc.isFileLoad = true;
+
 			Add_Effect(EFFECT_TYPE(iEffectType), &Desc, iShaderPass);
 
 		}
-		else if (iEffectType == EFFECT_IMG)
+		else if (iEffectType == EFFECT_IMG || iEffectType == EFFECT_CELL)
 		{
-			CTool_Effect::TOOL_EFFECT_DESC Desc{};
+			CEffect_Default::EFFECT_DEFAULT_DESC Desc{};
+
+			_uint iTextureMoveType = 0;
+			ifs.read((_char*)&iTextureMoveType, sizeof(_uint));
+			Desc.iTextureMoveType = iTextureMoveType;
 
 			//파일 경로
 			_char strFilePath[MAX_PATH] = "";
@@ -428,6 +441,8 @@ HRESULT CEffect_Manager::Load(const _char* szFileName)
 			ifs.read((_char*)&iShaderPass, sizeof(_uint));
 
 			Desc.iEffectType = iEffectType;
+
+			Desc.isFileLoad = true;
 
 			Add_Effect(EFFECT_TYPE(iEffectType), &Desc, iShaderPass);
 		}
@@ -516,6 +531,8 @@ HRESULT CEffect_Manager::Load(const _char* szFileName)
 			ifs.read((_char*)&iShaderPass, sizeof(_uint));
 
 			Desc.iEffectType = iEffectType;
+
+			Desc.isFileLoad = true;
 
 			Add_Effect(EFFECT_TYPE(iEffectType), &Desc, iShaderPass);
 		}

@@ -1,7 +1,9 @@
 #include "Effect.h"
 
+#include "MainApp.h"
 #include "GameInstance.h"
 
+#include "EffectObject.h"
 #include "Effect_Particle.h"
 #include "Effect_Image.h"
 #include "Effect_Trail.h"
@@ -38,25 +40,21 @@ HRESULT CEffect::Initialize(void* pArg)
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
 
-	m_fDutation = pDesc->fDuration;
+	if (FAILED(Add_Components()))
+		return E_FAIL;
+
 	m_pTransformCom->Set_WorldMatrix(XMLoadFloat4x4(pDesc->pPlayerMatrix));
 	m_pParentMatrix = pDesc->pPlayerMatrix;
 	m_isFollowPlayer = pDesc->isFollowPlayer;
+	m_fDutation = pDesc->fDuration;
+	m_isBullet = pDesc->isBullet;
+	m_vTargetDir = pDesc->vTargetDir;
+	m_fSpeed = pDesc->fSpeed;
 
 	for (auto& pEffect : m_EffectObjects)
 	{
 		CEffectObject::EFFECT_OBJECT_DESC EffectDesc{};
 		EffectDesc.pParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
-		EffectDesc.vPos = pDesc->vPos;
-		EffectDesc.vScale = pDesc->vScale;
-		EffectDesc.RotationMatrix = pDesc->RotationMatrix;
-		
-		EffectDesc.iShaderPass = pDesc->iShaderPass;
-		EffectDesc.isTrailMove = pDesc->isTrailMove;
-		EffectDesc.fSpeed = pDesc->fSpeed;
-		EffectDesc.iMoveType = pDesc->iMoveType;
-		EffectDesc.fDuration = pDesc->fDuration;
-
 		CGameObject* pEffectObject = pEffect->Clone(&EffectDesc);
 		if (nullptr == pEffectObject)
 			return E_FAIL;
@@ -80,8 +78,20 @@ void CEffect::Tick(const _float& fTimeDelta)
 	if (m_fCurrentTime > m_fDutation)
 		m_isDead = true;
 
+	if (m_isBullet)
+	{
+		// 총알이라면 타겟의 방향으로 이동하기.
+
+		_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		vPos += m_vTargetDir * m_fSpeed * fTimeDelta;
+
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+	}
+
 	for (auto& pEffect : m_CloneEffectObject)
 		pEffect->Tick(fTimeDelta);
+
+	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 }
 
 void CEffect::Late_Tick(const _float& fTimeDelta)
@@ -93,11 +103,32 @@ void CEffect::Late_Tick(const _float& fTimeDelta)
 
 	for (auto& pEffect : m_CloneEffectObject)
 		pEffect->Late_Tick(fTimeDelta);
+
+#ifdef _DEBUG
+	m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONLIGHT, this);
+#endif // _DEBUG
 }
 
 HRESULT CEffect::Render()
 {
+#ifdef _DEBUG
+	m_pColliderCom->Render();
+#endif // _DEBUG
+
     return S_OK;
+}
+
+HRESULT CEffect::Add_Components()
+{
+	CBounding_AABB::BOUNDING_AABB_DESC BoundingBoxDesc{};
+	BoundingBoxDesc.eType = CCollider::COLLIDER_AABB;
+	BoundingBoxDesc.vExtents = _float3(0.5f, 0.5f, 0.5f);
+	BoundingBoxDesc.vCenter = _float3(0.f, BoundingBoxDesc.vExtents.y, 0.f);
+
+	if (FAILED(Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Collider", L"Com_Collider", reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingBoxDesc)))
+		return E_FAIL;
+
+	return S_OK;
 }
 
 HRESULT CEffect::File_Open(const _char* szFileName)
@@ -116,8 +147,9 @@ HRESULT CEffect::File_Open(const _char* szFileName)
 		_uint iEffectType = 0;
 		ifs.read((_char*)&iEffectType, sizeof(_uint));
 
-		if (iEffectType == EFFECT_PARTICLE)
+		if (iEffectType == CEffectObject::EFFECT_PARTICLE)
 		{
+			// 파티클 옵션
 			CEffect_Particle::EFFECT_PARTICLE_DESC Desc{};
 			ifs.read((_char*)&Desc.iNumInstance, sizeof(_uint));
 			ifs.read((_char*)&Desc.iParticleType, sizeof(_int));
@@ -128,31 +160,80 @@ HRESULT CEffect::File_Open(const _char* szFileName)
 			ifs.read((_char*)&Desc.vRange, sizeof(_float3));
 			ifs.read((_char*)&Desc.vSize, sizeof(_float2));
 			ifs.read((_char*)&Desc.vSpeed, sizeof(_float2));
-			if (Desc.iParticleType == CEffect_Particle::PARTICLE_HELIX) ifs.read((_char*)&Desc.vPower, sizeof(_float2));
+			ifs.read((_char*)&Desc.vPower, sizeof(_float2));
+			Desc.iEffectType = iEffectType;
 
-			//파티클 파일 이름
-			_char strName[MAX_PATH] = "";
-			_uint iFileNameSize = 0;
-			ifs.read((_char*)&iFileNameSize, sizeof(_uint));
-			ifs.read(strName, iFileNameSize);
-			strcpy_s(Desc.szFileName, strName);
-
-			//파티클 파일 경로
+			//파일 경로
 			_char strFilePath[MAX_PATH] = "";
 			_uint iFilePathSize = 0;
 			ifs.read((_char*)&iFilePathSize, sizeof(_uint));
 			ifs.read(strFilePath, iFilePathSize);
-			strcpy_s(Desc.szFilePath, strFilePath);
+			strcpy_s(Desc.strTextureFilePath, strFilePath);
+
+			//마스크 경로
+			_bool isMask = false;
+			ifs.read((_char*)&isMask, sizeof(_bool));
+			Desc.isMask = isMask;
+
+			_char szMaskFilePath[MAX_PATH] = "";
+			_uint iMaskFilePathSize = 0;
+			ifs.read((_char*)&iMaskFilePathSize, sizeof(_uint));
+			ifs.read(szMaskFilePath, iMaskFilePathSize);
+			Desc.strMaskFilePath = szMaskFilePath;
+
+			//노이즈 경로
+			_bool isNoise = false;
+			ifs.read((_char*)&isNoise, sizeof(_bool));
+			Desc.isNoise = isNoise;
+
+			_char szNoiseFilePath[MAX_PATH] = "";
+			_uint iNoiseFilePathSize = 0;
+			ifs.read((_char*)&iNoiseFilePathSize, sizeof(_uint));
+			ifs.read(szNoiseFilePath, iNoiseFilePathSize);
+			Desc.strNoiseFilePath = szNoiseFilePath;
+
+			//이미지 갯수
+			_uint iTextureNum = 0.f;
+			ifs.read((_char*)&iTextureNum, sizeof(_uint));
+			Desc.iTextureNum = iTextureNum;
+
+			//색상
+			_float4 vColor = {};
+			ifs.read((_char*)&vColor, sizeof(_float4));
+			Desc.vColor = vColor;
+
+			//렌더러 타입
+			_uint iRendererType = 0;
+			ifs.read((_char*)&iRendererType, sizeof(_uint));
+			Desc.iRendererType = iRendererType;
+
+			//프레임 루프
+			_bool isFrameLoop = false;
+			ifs.read((_char*)&isFrameLoop, sizeof(_bool));
+			Desc.isFrameLoop = isFrameLoop;
+
+			//시작 시간
+			_float fStartTime = 0.f;
+			ifs.read((_char*)&fStartTime, sizeof(_float));
+			Desc.fStartTime = fStartTime;
+
+			//끝 시간
+			_float fDrationTime = 0.f;
+			ifs.read((_char*)&fDrationTime, sizeof(_float));
+			Desc.fDurationTime = fDrationTime;
 
 			//월드행렬
 			_float4x4 WorldMatrix = {};
 			ifs.read((_char*)&WorldMatrix, sizeof(_float4x4));
-			Desc.WorldMatrix = WorldMatrix;
+			Desc.WorldMatrix = XMLoadFloat4x4(&WorldMatrix);
 
 			//쉐이더 패스
 			_uint iShaderPass = 0;
 			ifs.read((_char*)&iShaderPass, sizeof(_uint));
 			Desc.iShaderPass = iShaderPass;
+
+			Desc.iEffectType = iEffectType;
+
 
 			//파일 이름 저장 
 			CGameObject* pParticle = CEffect_Particle::Create(m_pDevice, m_pContext, &Desc);
@@ -161,35 +242,84 @@ HRESULT CEffect::File_Open(const _char* szFileName)
 
 			m_EffectObjects.emplace_back(pParticle);
 		}
-		else if (iEffectType == EFFECT_IMG)
+		else if (iEffectType == CEffectObject::EFFECT_IMG)
 		{
-			CEffect_Image::EFFECT_IMAGE_DESC Desc;
+			CEffect_Image::EFFECT_IMAGE_DESC Desc{};
 
-			//텍스쳐 파일 이름
-			_char szName[MAX_PATH] = "";
-			_uint iFileNameSize = 0;
-			ifs.read((_char*)&iFileNameSize, sizeof(_uint));
-			ifs.read(szName, iFileNameSize);
-			strcpy_s(Desc.szFileName, szFileName);
+			_uint iTextureMoveType = 0;
+			ifs.read((_char*)&iTextureMoveType, sizeof(_uint));
+			Desc.iTextureMoveType = iTextureMoveType;
+
 			//파일 경로
-			_char szFilePath[MAX_PATH] = "";
+			_char strFilePath[MAX_PATH] = "";
 			_uint iFilePathSize = 0;
 			ifs.read((_char*)&iFilePathSize, sizeof(_uint));
-			ifs.read(szFilePath, iFilePathSize);
-			strcpy_s(Desc.szFilePath, szFilePath);
-			//월드행렬
-			_float4x4 WorldMatrix;
-			ifs.read((_char*)&WorldMatrix, sizeof(_float4x4));
-			Desc.WorldMatrix = WorldMatrix;
+			ifs.read(strFilePath, iFilePathSize);
+			strcpy_s(Desc.strTextureFilePath, strFilePath);
+
+			//마스크 경로
+			_bool isMask = false;
+			ifs.read((_char*)&isMask, sizeof(_bool));
+			Desc.isMask = isMask;
+
+			_char szMaskFilePath[MAX_PATH] = "";
+			_uint iMaskFilePathSize = 0;
+			ifs.read((_char*)&iMaskFilePathSize, sizeof(_uint));
+			ifs.read(szMaskFilePath, iMaskFilePathSize);
+			Desc.strMaskFilePath = szMaskFilePath;
+
+			//노이즈 경로
+			_bool isNoise = false;
+			ifs.read((_char*)&isNoise, sizeof(_bool));
+			Desc.isNoise = isNoise;
+
+			_char szNoiseFilePath[MAX_PATH] = "";
+			_uint iNoiseFilePathSize = 0;
+			ifs.read((_char*)&iNoiseFilePathSize, sizeof(_uint));
+			ifs.read(szNoiseFilePath, iNoiseFilePathSize);
+			Desc.strNoiseFilePath = szNoiseFilePath;
 
 			//이미지 갯수
-			const _uint iTextureNum = 0;
+			_uint iTextureNum = 0.f;
 			ifs.read((_char*)&iTextureNum, sizeof(_uint));
+			Desc.iTextureNum = iTextureNum;
+
+			//색상
+			_float4 vColor = {};
+			ifs.read((_char*)&vColor, sizeof(_float4));
+			Desc.vColor = vColor;
+
+			//렌더러 타입
+			_uint iRendererType = 0;
+			ifs.read((_char*)&iRendererType, sizeof(_uint));
+			Desc.iRendererType = iRendererType;
+
+			//프레임 루프
+			_bool isFrameLoop = false;
+			ifs.read((_char*)&isFrameLoop, sizeof(_bool));
+			Desc.isFrameLoop = isFrameLoop;
+
+			//시작 시간
+			_float fStartTime = 0.f;
+			ifs.read((_char*)&fStartTime, sizeof(_float));
+			Desc.fStartTime = fStartTime;
+
+			//끝 시간
+			_float fDrationTime = 0.f;
+			ifs.read((_char*)&fDrationTime, sizeof(_float));
+			Desc.fDurationTime = fDrationTime;
+
+			//월드행렬
+			_float4x4 WorldMatrix = {};
+			ifs.read((_char*)&WorldMatrix, sizeof(_float4x4));
+			Desc.WorldMatrix = XMLoadFloat4x4(&WorldMatrix);
 
 			//쉐이더 패스
 			_uint iShaderPass = 0;
 			ifs.read((_char*)&iShaderPass, sizeof(_uint));
 			Desc.iShaderPass = iShaderPass;
+
+			Desc.iEffectType = iEffectType;
 
 			CGameObject* pEffect = CEffect_Image::Create(m_pDevice, m_pContext, &Desc);
 			if (nullptr == pEffect)
@@ -198,111 +328,92 @@ HRESULT CEffect::File_Open(const _char* szFileName)
 			m_EffectObjects.emplace_back(pEffect);
 
 		}
-		else if (iEffectType == EFFECT_MESH)
+		else if (iEffectType == CEffectObject::EFFECT_TRAIL)
 		{
-			////파일 이름
-			//_char strName[MAX_PATH] = "";
-			//_uint iFileNameSize = 0;
-			//ifs.read((_char*)&iFileNameSize, sizeof(_uint));
-			//ifs.read(strName, iFileNameSize);
+			CEffect_Trail::EFFECT_TRAIL_DESC Desc{};
 
-			////파일 경로
-			//_char strFilePath[MAX_PATH] = "";
-			//_uint iFilePathSize = 0;
-			//ifs.read((_char*)&iFilePathSize, sizeof(_uint));
-			//ifs.read(strFilePath, iFilePathSize);
+			//메쉬 파일 경로
+			_char szMeshFilePath[MAX_PATH] = "";
+			_uint iMeshFilePathSize = 0;
+			ifs.read((_char*)&iMeshFilePathSize, sizeof(_uint));
+			ifs.read(szMeshFilePath, iMeshFilePathSize);
+			strcpy_s(Desc.strMeshFilePath, szMeshFilePath);
 
-			////메쉬 이름
-			//_char strMeshFileName[MAX_PATH] = "";
-			//_uint iMeshFileNameSize = 0;
-			//ifs.read((_char*)&iMeshFileNameSize, sizeof(_uint));
-			//ifs.read(strMeshFileName, iMeshFileNameSize);
-
-			////메쉬 파일 경로
-			//_char strMeshFilePath[MAX_PATH] = "";
-			//_uint iMeshFilePathSize = 0;
-			//ifs.read((_char*)&iMeshFilePathSize, sizeof(_uint));
-			//ifs.read(strMeshFilePath, iMeshFilePathSize);
-
-			////월드행렬
-			//_float4x4 WorldMatrix;
-			//ifs.read((_char*)&WorldMatrix, sizeof(_float4x4));
-
-			//CEffect_Mesh::EFFECT_MESH_DESC Desc{};
-			//strcpy_s(Desc.szModelFilePath, strMeshFilePath); // 메쉬 경로
-			//strcpy_s(Desc.strTextureFilePath, strFilePath); // 텍스쳐 경로
-
-			////텍스쳐 이름
-			//string stringFileName = strName;
-			//wstring wstrFileName = L"";
-			//wstrFileName.assign(stringFileName.begin(), stringFileName.end());
-			//Desc.strTextureFileName = wstrFileName;
-
-			////메쉬 이름
-			//string stringMeshFileName = strMeshFileName;
-			//Desc.strModelFileName = stringMeshFileName;
-
-			//Desc.iEffectType = iEffectType;
-
-			//Add_Effect(EFFECT_TYPE(iEffectType), &Desc);
-		}
-		else if (iEffectType == EFFECT_TRAIL)
-		{
-			//파일 이름
-			_char strName[MAX_PATH] = "";
-			_uint iFileNameSize = 0;
-			ifs.read((_char*)&iFileNameSize, sizeof(_uint));
-			ifs.read(strName, iFileNameSize);
+			//메쉬 타입
+			_uint iTrailMoveType = 0;
+			ifs.read((_char*)&iTrailMoveType, sizeof(_uint));
+			Desc.iTrailType = iTrailMoveType;
 
 			//파일 경로
 			_char strFilePath[MAX_PATH] = "";
 			_uint iFilePathSize = 0;
 			ifs.read((_char*)&iFilePathSize, sizeof(_uint));
 			ifs.read(strFilePath, iFilePathSize);
+			strcpy_s(Desc.strTextureFilePath, strFilePath);
 
-			//메쉬 이름
-			_char strMeshFileName[MAX_PATH] = "";
-			_uint iMeshFileNameSize = 0;
-			ifs.read((_char*)&iMeshFileNameSize, sizeof(_uint));
-			ifs.read(strMeshFileName, iMeshFileNameSize);
-
-			//메쉬 파일 경로
-			_char strMeshFilePath[MAX_PATH] = "";
-			_uint iMeshFilePathSize = 0;
-			ifs.read((_char*)&iMeshFilePathSize, sizeof(_uint));
-			ifs.read(strMeshFilePath, iMeshFilePathSize);
-
-			//마스크
+			//마스크 경로
 			_bool isMask = false;
 			ifs.read((_char*)&isMask, sizeof(_bool));
+			Desc.isMask = isMask;
 
 			_char szMaskFilePath[MAX_PATH] = "";
+			_uint iMaskFilePathSize = 0;
+			ifs.read((_char*)&iMaskFilePathSize, sizeof(_uint));
+			ifs.read(szMaskFilePath, iMaskFilePathSize);
+			Desc.strMaskFilePath = szMaskFilePath;
 
-			if (isMask)
-			{
-				//마스크 파일 경로
-				_uint iMaskFilePathSize = 0;
-				ifs.read((_char*)&iMaskFilePathSize, sizeof(_uint));
-				ifs.read(szMaskFilePath, iMaskFilePathSize);
-			}
+			//노이즈 경로
+			_bool isNoise = false;
+			ifs.read((_char*)&isNoise, sizeof(_bool));
+			Desc.isNoise = isNoise;
+
+			_char szNoiseFilePath[MAX_PATH] = "";
+			_uint iNoiseFilePathSize = 0;
+			ifs.read((_char*)&iNoiseFilePathSize, sizeof(_uint));
+			ifs.read(szNoiseFilePath, iNoiseFilePathSize);
+			Desc.strNoiseFilePath = szNoiseFilePath;
+
+			//이미지 갯수
+			_uint iTextureNum = 0.f;
+			ifs.read((_char*)&iTextureNum, sizeof(_uint));
+			Desc.iTextureNum = iTextureNum;
+
+			//색상
+			_float4 vColor = {};
+			ifs.read((_char*)&vColor, sizeof(_float4));
+			Desc.vColor = vColor;
+
+			//렌더러 타입
+			_uint iRendererType = 0;
+			ifs.read((_char*)&iRendererType, sizeof(_uint));
+			Desc.iRendererType = iRendererType;
+
+			//프레임 루프
+			_bool isFrameLoop = false;
+			ifs.read((_char*)&isFrameLoop, sizeof(_bool));
+			Desc.isFrameLoop = isFrameLoop;
+
+			//시작 시간
+			_float fStartTime = 0.f;
+			ifs.read((_char*)&fStartTime, sizeof(_float));
+			Desc.fStartTime = fStartTime;
+
+			//끝 시간
+			_float fDrationTime = 0.f;
+			ifs.read((_char*)&fDrationTime, sizeof(_float));
+			Desc.fDurationTime = fDrationTime;
 
 			//월드행렬
 			_float4x4 WorldMatrix = {};
 			ifs.read((_char*)&WorldMatrix, sizeof(_float4x4));
+			Desc.WorldMatrix = XMLoadFloat4x4(&WorldMatrix);
 
 			//쉐이더 패스
 			_uint iShaderPass = 0;
 			ifs.read((_char*)&iShaderPass, sizeof(_uint));
-
-			CEffect_Trail::EFFECT_TRAIL_DESC Desc{};
-			strcpy_s(Desc.strFileName, strName); // 텍스쳐 이름
-			strcpy_s(Desc.strMeshName, strMeshFileName); // 메쉬 이름
-			strcpy_s(Desc.strMeshFilePath, strMeshFilePath); // 메쉬 경로
-			strcpy_s(Desc.strFilePath, strFilePath); // 텍스쳐 경로
-			strcpy_s(Desc.strMaskFilePath, szMaskFilePath); // 마스크 경로
-			Desc.WorldMatrix = WorldMatrix;
 			Desc.iShaderPass = iShaderPass;
-			Desc.isMask = isMask;
+
+			Desc.iEffectType = iEffectType;
 
 			CGameObject* pEffect = CEffect_Trail::Create(m_pDevice, m_pContext, &Desc);
 			if (nullptr == pEffect)
@@ -344,6 +455,8 @@ CGameObject* CEffect::Clone(void* pArg)
 void CEffect::Free()
 {
     __super::Free();
+
+	Safe_Release(m_pColliderCom);
 
 	for (auto& pEffect : m_EffectObjects)
 		Safe_Release(pEffect);

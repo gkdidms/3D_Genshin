@@ -1,5 +1,6 @@
 #include "Effect_Image.h"
 
+#include "MainApp.h"
 #include "GameInstance.h"
 
 CEffect_Image::CEffect_Image(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -9,7 +10,7 @@ CEffect_Image::CEffect_Image(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 
 CEffect_Image::CEffect_Image(const CEffect_Image& rhs)
 	: CEffectObject{ rhs },
-	m_strFilePath{ rhs.m_strFilePath }
+	m_iMoveType{ rhs.m_iMoveType }
 {
 }
 
@@ -22,8 +23,7 @@ HRESULT CEffect_Image::Initialize_Prototype(void* pArg)
 		return E_FAIL;
 
 	EFFECT_IMAGE_DESC* pDesc = static_cast<EFFECT_IMAGE_DESC*>(pArg);
-	string strFilePath = pDesc->szFilePath;
-	m_strFilePath.assign(strFilePath.begin(), strFilePath.end());
+	m_iMoveType = pDesc->iTextureMoveType;
 
 	return S_OK;
 }
@@ -36,11 +36,14 @@ HRESULT CEffect_Image::Initialize(void* pArg)
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
-	EFFECT_IMAGE_DESC* pDesc = static_cast<EFFECT_IMAGE_DESC*>(pArg);
-	m_MoveType = pDesc->iMoveType;
-
-	if (m_MoveType == INCREASE)
-		m_pTransformCom->Set_Scale(0.5f, 0.5f, 0.5f);
+	if (m_iMoveType == SPREAT)
+	{
+		_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		
+		_vector vWorldPos = XMVector3TransformCoord(vPos, XMLoadFloat4x4(m_ParentMatrix));
+		XMStoreFloat4(&m_vSpreatDir, XMVector3Normalize(vWorldPos - XMLoadFloat4x4(m_ParentMatrix).r[3]));
+		m_vSpreatDir.y = 0.f;
+	}
 
 	return S_OK;
 }
@@ -51,20 +54,38 @@ void CEffect_Image::Priority_Tick(const _float& fTimeDelta)
 
 void CEffect_Image::Tick(const _float& fTimeDelta)
 {
+	m_fCurrentTime += fTimeDelta;
 
-	if (m_MoveType == SHRINK)
+	if (m_iTextureNum > 1)
+	{
+		m_fFrame += m_iTextureNum * fTimeDelta;
+
+		if (m_fFrame >= m_iTextureNum)
+		{
+			m_isDead = true;
+			m_fFrame = 0.f;
+		}
+	}
+
+	if (m_iMoveType == SHRINK)
 	{
 		_float fTime = fTimeDelta;
 
 		_float3 vScale = m_pTransformCom->Get_Scaled();
 		m_pTransformCom->Set_Scale(vScale.x - fTime, vScale.y - fTime, vScale.z - fTime);
 	}
-	else if (m_MoveType == INCREASE)
+	else if (m_iMoveType == INCREASE)
 	{
 		_float fTime = fTimeDelta * 2.f;
 
 		_float3 vScale = m_pTransformCom->Get_Scaled();
 		m_pTransformCom->Set_Scale(vScale.x + fTime, vScale.y + fTime, vScale.z + fTime);
+	}
+	else if (m_iMoveType == SPREAT)
+	{
+		_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		vPos += XMLoadFloat4(&m_vSpreatDir) * 5.f * fTimeDelta;
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	}
 
 }
@@ -73,7 +94,7 @@ void CEffect_Image::Late_Tick(const _float& fTimeDelta)
 {
 	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * XMLoadFloat4x4(m_ParentMatrix));
 
-	m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONLIGHT, this);
+	m_pGameInstance->Add_Renderer(CRenderer::RENDERER_STATE(m_iRendererType), this);
 }
 
 HRESULT CEffect_Image::Render()
@@ -89,30 +110,20 @@ HRESULT CEffect_Image::Render()
 
 HRESULT CEffect_Image::Add_Components()
 {
-	if (FAILED(Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxPosTex_Effect", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
+	if (FAILED(Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Shader_VtxPosTex_Effect", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 	if (FAILED(Add_Component(LEVEL_STATIC, L"Prototype_Component_VIBuffer_Rect", L"Com_VIBuffer", reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
 		return E_FAIL;
 
-	m_pTextureCom = CTexture::Create(m_pDevice, m_pContext, m_strFilePath, 1);
-	if (nullptr == m_pTextureCom)
+	if (FAILED(__super::Add_Components()))
 		return E_FAIL;
-
-	
 
 	return S_OK;
 }
 
 HRESULT CEffect_Image::Bind_ResourceData()
 {
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(CPipeLine::D3DTS_VIEW))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(CPipeLine::D3DTS_PROJ))))
-		return E_FAIL;
-
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", 0)))
+	if (FAILED(__super::Bind_ResourceData()))
 		return E_FAIL;
 
 	return S_OK;
@@ -142,7 +153,5 @@ void CEffect_Image::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pShaderCom);
-	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pVIBufferCom);
 }

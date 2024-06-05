@@ -1,5 +1,6 @@
 #include "Wanderer_Normal.h"
 
+#include "MainApp.h"
 #include "GameInstance.h"
 
 CWanderer_Normal::CWanderer_Normal(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -38,7 +39,7 @@ HRESULT CWanderer_Normal::Initialize(void* pArg)
 
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), pDesc->iDir == DIR_RIGHT ? XMConvertToRadians(-45.f) : XMConvertToRadians(45.f));
 
-	WorldMatrix = m_pTransformCom->Get_WorldMatrix() * HandMatrix * XMLoadFloat4x4(&pDesc->ParentMatrix);
+	WorldMatrix = m_pTransformCom->Get_WorldMatrix() * HandMatrix * XMLoadFloat4x4(pDesc->ParentMatrix);
 
 	m_pTransformCom->Set_WorldMatrix(WorldMatrix);
 	m_vTargetPos.y = m_vTargetPos.y + 1.f;
@@ -103,13 +104,13 @@ HRESULT CWanderer_Normal::Render()
 
 HRESULT CWanderer_Normal::Add_Components()
 {
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxNorTex_Skill", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Shader_VtxNorTex_Skill", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_Skill_Wanderer_Normal", L"Com_Texture", reinterpret_cast<CComponent**>(&m_pTextureCom))))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Texture_Skill_Wanderer_Normal", L"Com_Texture", reinterpret_cast<CComponent**>(&m_pTextureCom))))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Wanderer_Normal", L"Com_Model", reinterpret_cast<CComponent**>(&m_pModelCom))))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Model_Wanderer_Normal", L"Com_Model", reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
 	CBounding_AABB::BOUNDING_AABB_DESC BoundingBoxDesc{};
@@ -117,7 +118,7 @@ HRESULT CWanderer_Normal::Add_Components()
 	BoundingBoxDesc.vExtents = _float3(0.5f, 0.3f, 0.5f);
 	BoundingBoxDesc.vCenter = _float3(0.f, -BoundingBoxDesc.vExtents.y, 0.f);
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Collider", L"Com_Collider", reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingBoxDesc)))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Collider", L"Com_Collider", reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingBoxDesc)))
 		return E_FAIL;
 
 	return S_OK;

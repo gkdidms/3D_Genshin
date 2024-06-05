@@ -1,5 +1,6 @@
 #include "Tighnari_Body.h"
 
+#include "MainApp.h"
 #include "GameInstance.h"
 #include "StateManager.h"
 
@@ -99,10 +100,10 @@ HRESULT CTighnari_Body::Render()
 
 HRESULT CTighnari_Body::Add_Components()
 {
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxAnimMesh", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Shader_VtxAnimMesh", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Model_Tighnari", L"Com_Model", reinterpret_cast<CComponent**>(&m_pModelCom))))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Model_Tighnari", L"Com_Model", reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
 	return S_OK;
@@ -340,6 +341,12 @@ void CTighnari_Body::Change_Animation(const _float& fTimeDelta)
 		m_IsLinear = false;
 		break;
 	}
+	case PLAYER_HIT:
+	{
+		m_iAnim = 28;
+		m_IsLoop = false;
+		break;
+	}
 	default:
 		break;
 	}
@@ -351,6 +358,8 @@ HRESULT CTighnari_Body::Create_Object(const _float& fTimeDetla)
 {
 	if (m_isCreated)
 		return S_OK;
+
+
 
 	//Equip_Bow_Ayus_Model bullet »ý¼º   Prototype_GameObject_Skill_Tighnari_Normal
 	if (m_pStateManager->isNormalAttack())
@@ -371,27 +380,27 @@ HRESULT CTighnari_Body::Create_Object(const _float& fTimeDetla)
 				m_isCreated = true;
 			else return S_OK;
 		}
-		
 
 		CEffect::EFFECT_DESC EffectDesc{};
 
 		EffectDesc.pPlayerMatrix = m_pParentMatrix;
-		XMStoreFloat4x4(&EffectDesc.RotationMatrix, XMMatrixIdentity());
-		EffectDesc.vPos = _float4(0.f, 1.2f, 0.5f, 1.f);
-		EffectDesc.vScale = _float3(1.f, 1.f, 1.f);
 		EffectDesc.fDuration = 0.1f;
-		EffectDesc.iMoveType = CEffect_Image::INCREASE;
 
-		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect_Tighnari_Effect_Arrow_Start"), TEXT("Layer_Trail"), &EffectDesc)))
+		if (FAILED(m_pGameInstance->Add_GameObject(CMainApp::g_iCurrentLevel, TEXT("Prototype_GameObject_Effect_Tighnari_Normal_Texture"), TEXT("Layer_Texture"), &EffectDesc)))
 			return E_FAIL;
 
 		CBullet::BULLET_DESC Desc{};
 		Desc.HandCombinedTransformationMatrix = *m_pModelCom->Get_BoneCombinedTransformationMatrix("PRIVATE_RHand");
-		Desc.ParentMatrix = m_pWorldMatrix;
-		Desc.pTargetPos = Targeting();
+		Desc.ParentMatrix = m_pParentMatrix;
+
+		_float4 vTargetPos = _float4();
+		CGameObject* pTarget = Targeting(&vTargetPos);
+		if (nullptr == pTarget)
+			XMStoreFloat4(&vTargetPos, XMLoadFloat4x4(m_pParentMatrix).r[3] + XMVector3Normalize(XMLoadFloat4x4(m_pParentMatrix).r[2]) * 10.f);
+		Desc.pTargetPos = XMLoadFloat4(&vTargetPos);
 		Desc.fSpeedPecSec = 30.f;
 
-		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Skill_Tighnari_Normal"), TEXT("Layer_Bullet"), &Desc)))
+		if (FAILED(m_pGameInstance->Add_GameObject(CMainApp::g_iCurrentLevel, TEXT("Prototype_GameObject_Skill_Tighnari_Normal"), TEXT("Layer_Bullet"), &Desc)))
 			return E_FAIL;
 		
 	}
@@ -404,11 +413,32 @@ HRESULT CTighnari_Body::Create_Object(const _float& fTimeDetla)
 
 			CBullet::BULLET_DESC Desc{};
 			Desc.HandCombinedTransformationMatrix = *m_pModelCom->Get_BoneCombinedTransformationMatrix("PRIVATE_RHand");
-			Desc.ParentMatrix = m_pWorldMatrix;
-			Desc.pTargetPos = Targeting();
+			Desc.ParentMatrix = m_pParentMatrix;
+
+			_float4 vTargetPos = _float4();
+			CGameObject* pTarget = Targeting(&vTargetPos);
+			if (nullptr == pTarget)
+				XMStoreFloat4(&vTargetPos, XMLoadFloat4x4(m_pParentMatrix).r[3] + XMVector3Normalize(XMLoadFloat4x4(m_pParentMatrix).r[2]) * 10.f);
+
+			Desc.pTargetPos = XMLoadFloat4(&vTargetPos);
 			Desc.fSpeedPecSec = 30.f;
 
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Skill_Tighnari_Busrt"), TEXT("Layer_Bullet"), &Desc)))
+			if (FAILED(m_pGameInstance->Add_GameObject(CMainApp::g_iCurrentLevel, TEXT("Prototype_GameObject_Skill_Tighnari_Busrt"), TEXT("Layer_Bullet"), &Desc)))
+				return E_FAIL;
+		}
+	}
+	else if (m_pStateManager->isElementalArt())
+	{
+		if (*m_pState == PLAYER_ELEMENTAL_1)
+		{
+			m_isCreated = true;
+
+			CEffect::EFFECT_DESC Desc{};
+			Desc.pPlayerMatrix = m_pParentMatrix;
+			Desc.isFollowPlayer = false;
+			Desc.fDuration = 20.f;
+
+			if (FAILED(m_pGameInstance->Add_GameObject(CMainApp::g_iCurrentLevel, TEXT("Prototype_GameObject_Effect_Tighnari_Elemental_Art"), TEXT("Layer_Pad"), &Desc)))
 				return E_FAIL;
 		}
 	}
@@ -424,7 +454,7 @@ HRESULT CTighnari_Body::Create_Object(const _float& fTimeDetla)
 		if (nullptr == SkillObjDesc.pHandCombinedTransformationMatrix)
 			return E_FAIL;
 
-		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_SkillObj_FlowerArrow", L"Layer_SkillObj", &SkillObjDesc)))
+		if (FAILED(m_pGameInstance->Add_GameObject(CMainApp::g_iCurrentLevel, L"Prototype_GameObject_SkillObj_FlowerArrow", L"Layer_SkillObj", &SkillObjDesc)))
 			return E_FAIL;
 	}
 

@@ -19,6 +19,7 @@ public:
 		const _float4x4* pTargetCombinedTransformationMatrix;
 		const _float4x4* pHandCombinedTransformationMatrix;
 		const _uint* pState;
+		_float fAtk;
 	}HILI_WEAPON_DESC;
 
 protected:
@@ -43,6 +44,8 @@ protected:
 	const _float4x4* m_TargetMatrix;
 	const _float4x4* m_SocketMatrix;
 	_float4x4 m_WorldMatrix = {};
+
+	_float m_fAtk;
 
 private:
 	HRESULT Bind_ResourceData();

@@ -143,7 +143,7 @@ CNode::NODE_STATE CBT_Tartaglia::Check_Hit() // hit/defend ¸ð¼Ç ÁßÀÎÁö?
 
 CNode::NODE_STATE CBT_Tartaglia::Check_Intersect()
 {
-	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, L"Layer_Player", 0));
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_STAGE_BOSS, L"Layer_Player", 0));
 
 	CCollider* pWeaponCollider = { nullptr };
 
@@ -154,7 +154,7 @@ CNode::NODE_STATE CBT_Tartaglia::Check_Intersect()
 	else
 	{
 		// È­»ì + ¸¶¹ý ÀÌÆåÆ®µéÀº µû·Î »ç¿ë (ÀÓ½Ã¿ë)
-		pWeaponCollider = dynamic_cast<CCollider*>(m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, L"Layer_Player", L"Com_Collider"));
+		pWeaponCollider = dynamic_cast<CCollider*>(m_pGameInstance->Get_GameObject_Component(LEVEL_STAGE_BOSS, L"Layer_Player", L"Com_Collider"));
 	}
 
 	if (m_pColliderCom->Intersect(pWeaponCollider))
@@ -186,7 +186,7 @@ CNode::NODE_STATE CBT_Tartaglia::Check_Defend() // ±ÙÁ¢¹«±â ÀÏ¹Ý°ø°Ý ½Ã ¹æ¾î¸¦ Ç
 		return CNode::FAILURE;
 
 	// ÇÃ·¹ÀÌ¾î°¡ ÀÏ¹Ý°ø°ÝÀ» ÇÞ´ÂÁö Ã¼Å©
-	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, L"Layer_Player", 0));
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_STAGE_BOSS, L"Layer_Player", 0));
 	_uint eWeaponType = pPlayer->Get_CurrentWeapon();
 
 	if ((pPlayer->Get_PlayerState() == PLAYER_ATTACK_1
@@ -225,7 +225,7 @@ CNode::NODE_STATE CBT_Tartaglia::Defend()
 
 CNode::NODE_STATE CBT_Tartaglia::Attack_Defend()
 {
-	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, L"Layer_Player", 0));
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_STAGE_BOSS, L"Layer_Player", 0));
 	// ¹æ¾î¸·ÀÌ ³ª¿ÔÀ»¶§ ÇÃ·¹ÀÌ¾î°¡ ÇÑ °ø°ÝÀÌ ¹°¿ø¼Ò °ø°ÝÀÌ¶ó¸é ...
 	// È®·üÀûÀ¸·Î Ä«¿îÅÍ
 	// ÀÏ¹Ý °ø°ÝÀÏ ½Ã 1

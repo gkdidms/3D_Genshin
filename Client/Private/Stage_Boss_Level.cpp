@@ -1,5 +1,6 @@
 #include "Stage_Boss_Level.h"
 
+#include "MainApp.h"
 #include "Loading_Level.h"
 
 #include "GameInstance.h"
@@ -23,10 +24,15 @@ CStage_Boss_Level::CStage_Boss_Level(const CStage_Boss_Level& rhs)
 
 HRESULT CStage_Boss_Level::Initialize()
 {
+	CMainApp::g_iCurrentLevel = LEVEL_STAGE_BOSS;
+
+	if (FAILED(Ready_Lights()))
+		return E_FAIL;
 	if (FAILED(Load_File()))
 		return E_FAIL;
-
 	if (FAILED(Ready_Layer_Camera(L"Layer_Camera")))
+		return E_FAIL;
+	if (FAILED(Ready_UI(L"Layer_UI")))
 		return E_FAIL;
 
 	return S_OK;
@@ -36,14 +42,25 @@ void CStage_Boss_Level::Tick(const _float& fTimeDelta)
 {
 	SetWindowText(g_hWnd, TEXT("Boss Stage ÀÔ´Ï´Ù."));
 
-	if (GetAsyncKeyState(VK_RETURN))
-	{
-		m_pGameInstance->Open_Level(LEVEL_LOADING, CLoading_Level::Create(LEVEL_GAMEPLAY, m_pDevice, m_pContext));
-	}
 }
 
 void CStage_Boss_Level::Render()
 {
+}
+
+
+HRESULT CStage_Boss_Level::Ready_Lights()
+{
+	LIGHT_DESC			LightDesc{};
+
+	LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
+	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
+	LightDesc.vDiffuse = _float4(0.7f, 0.7f, 0.7f, 1.f);
+	LightDesc.vAmbient = _float4(0.4f, 0.4f, 0.4f, 1.f);
+	LightDesc.vSpecular = _float4(0.1f, 0.1f, 0.1f, 1.f);
+
+	m_pGameInstance->Add_Light(LightDesc);
+	return S_OK;
 }
 
 HRESULT CStage_Boss_Level::Ready_Layer_Camera(const wstring& strLayerTag)
@@ -51,9 +68,9 @@ HRESULT CStage_Boss_Level::Ready_Layer_Camera(const wstring& strLayerTag)
 	CDefaultCamera::DEFAULT_CAMERA_DESC tDefaultCamera = {};
 
 	tDefaultCamera.fSensor = 0.2f;
-	tDefaultCamera.pPlayerMatrix = dynamic_cast<CTransform*>(m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, L"Layer_Player", L"Com_Transform"))->Get_WorldFloat4x4();
+	tDefaultCamera.pPlayerMatrix = dynamic_cast<CTransform*>(m_pGameInstance->Get_GameObject_Component(LEVEL_STAGE_BOSS, L"Layer_Player", L"Com_Transform"))->Get_WorldFloat4x4();
 
-	tDefaultCamera.pCameraLookMatrix = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_GAMEPLAY, L"Layer_Player", 0))->Get_PlayerCameraLook();
+	tDefaultCamera.pCameraLookMatrix = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_STAGE_BOSS, L"Layer_Player", 0))->Get_PlayerCameraLook();
 	tDefaultCamera.vEye = _float4(0.f, 2.f, -2.f, 1.f);
 	tDefaultCamera.vFocus = _float4(0.f, 10.f, 0.f, 1.f);
 
@@ -65,7 +82,7 @@ HRESULT CStage_Boss_Level::Ready_Layer_Camera(const wstring& strLayerTag)
 	tDefaultCamera.fSpeedPecSec = 20.f;
 	tDefaultCamera.fRotatePecSec = XMConvertToRadians(45.f);
 
-	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Camera", strLayerTag, &tDefaultCamera)))
+	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, L"Prototype_GameObject_Camera", strLayerTag, &tDefaultCamera)))
 		return E_FAIL;
 
 	return S_OK;
@@ -75,7 +92,7 @@ HRESULT CStage_Boss_Level::Ready_Layer_BackGround(const wstring& strLayerTag, co
 {
 	if (!strcmp(pObjectName, "GoldenHouse"))
 	{
-		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Map_GoldenHouse", strLayerTag, pArg)))
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, L"Prototype_GameObject_Map_GoldenHouse", strLayerTag, pArg)))
 			return E_FAIL;
 	}
 	return S_OK;
@@ -83,7 +100,24 @@ HRESULT CStage_Boss_Level::Ready_Layer_BackGround(const wstring& strLayerTag, co
 
 HRESULT CStage_Boss_Level::Ready_Layer_Player(const wstring& strLayerTag, void* pArg)
 {
- 	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Player", strLayerTag, pArg)))
+ 	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, L"Prototype_GameObject_Player", strLayerTag, pArg)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CStage_Boss_Level::Ready_UI(const wstring& strLayerTag)
+{
+	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, L"Prototype_GameObject_UI_PlayerHP_Outline", strLayerTag)))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, L"Prototype_GameObject_UI_BossHP_Outline", strLayerTag)))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, L"Prototype_GameObject_UI_SkillBtn_E", strLayerTag)))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, L"Prototype_GameObject_UI_SkillBtn_Q", strLayerTag)))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, L"Prototype_GameObject_UI_Avatar", strLayerTag)))
 		return E_FAIL;
 
 	return S_OK;
@@ -97,9 +131,9 @@ HRESULT CStage_Boss_Level::Ready_Object(const char* strName, _matrix WorldMatrix
 
 		XMStoreFloat4x4(&Desc.WorldMatrix, WorldMatrix);
 		Desc.iBossNavigationIndex = iNavigationIndex;
-		Desc.TargetMatrix= dynamic_cast<CTransform*>(m_pGameInstance->Get_GameObject_Component(LEVEL_GAMEPLAY, L"Layer_Player", L"Com_Transform"))->Get_WorldFloat4x4();
+		Desc.TargetMatrix= dynamic_cast<CTransform*>(m_pGameInstance->Get_GameObject_Component(LEVEL_STAGE_BOSS, L"Layer_Player", L"Com_Transform"))->Get_WorldFloat4x4();
 
-		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_Boss", L"Layer_Boss", &Desc)))
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, L"Prototype_GameObject_Boss", L"Layer_Boss", &Desc)))
 			return E_FAIL;
 	}
 	else if (string(strName).find("TreasureBox") != string::npos)
@@ -108,7 +142,7 @@ HRESULT CStage_Boss_Level::Ready_Object(const char* strName, _matrix WorldMatrix
 
 		XMStoreFloat4x4(&Desc.WorldMatrix, WorldMatrix);
 
-		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, L"Prototype_GameObject_SceneObj_TreasureBox", L"Layer_TreasureBox", &Desc)))
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, L"Prototype_GameObject_SceneObj_TreasureBox", L"Layer_TreasureBox", &Desc)))
 			return E_FAIL;
 	}
 

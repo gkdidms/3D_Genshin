@@ -1,5 +1,6 @@
 #include "Feiyan_Normal_Trail.h"
 
+#include "MainApp.h"
 #include "GameInstance.h"
 
 CFeiyan_Normal_Trail::CFeiyan_Normal_Trail(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -61,17 +62,17 @@ HRESULT CFeiyan_Normal_Trail::Render()
 
 HRESULT CFeiyan_Normal_Trail::Add_Components()
 {
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Shader_VtxPosTex_Skill", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Shader_VtxPosTex_Skill", L"Com_Shader", reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_Texture_Skill_Feiyan_Normal_Trail", L"Com_TrailTexture", reinterpret_cast<CComponent**>(&m_pTextureCom))))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_Texture_Skill_Feiyan_Normal_Trail", L"Com_TrailTexture", reinterpret_cast<CComponent**>(&m_pTextureCom))))
 		return E_FAIL;
 
 	CVIBuffer_Trail::VIBUFFER_TRAIL_DESC TrailDesc{};
 	TrailDesc.iMaxTrail = 20;
 	TrailDesc.vInitPosA = _float3(-0.5f, 0.5f, 0.f);
 	TrailDesc.vInitPosB = _float3(-0.5f, -0.5f, 0.f);
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, L"Prototype_Component_VIBuffer_Trail", L"Com_VIBuffer", reinterpret_cast<CComponent**>(&m_pVIBufferCom), &TrailDesc)))
+	if (FAILED(__super::Add_Component(CMainApp::g_iCurrentLevel, L"Prototype_Component_VIBuffer_Trail", L"Com_VIBuffer", reinterpret_cast<CComponent**>(&m_pVIBufferCom), &TrailDesc)))
 		return E_FAIL;
 
 	return S_OK;

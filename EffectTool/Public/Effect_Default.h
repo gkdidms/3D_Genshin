@@ -12,9 +12,10 @@ class CEffect_Default :
     public CTool_Effect
 {
 public:
-    enum TEXTURE_MOVE_TYPE { INCREASE, SHRINK, BOUNCE, TRAIL, MOVE_END };
+    enum TEXTURE_MOVE_TYPE { INCREASE, SHRINK, SPREAT, TRAIL, MOVE_END };
     typedef struct tEffectDefault : public CTool_Effect::TOOL_EFFECT_DESC
     {
+        _uint iTextureMoveType = { MOVE_END };
     } EFFECT_DEFAULT_DESC;
 private:
     CEffect_Default(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

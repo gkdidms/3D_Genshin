@@ -27,6 +27,7 @@ public:
         STATE_TYPE_FLY,
         STATE_TYPE_FALL_ATTACK,
         STATE_TYPE_FALL_GROUND,
+        STATE_TYPE_HIT,
         STATE_TYPE_END
     };
 
@@ -52,6 +53,7 @@ public:
     _bool isNormalAttack() { return m_StateType == STATE_TYPE_ATTACK; }
     _bool isElementalArt() { return m_StateType == STATE_TYPE_ELEMENTALART; }
     _bool isElementalBurst() { return m_StateType == STATE_TYPE_ELEMNETALBURST; }
+    _bool isHit() { return m_StateType == STATE_TYPE_HIT; }
 
 public:
     void Set_CollWindField(_bool isColl) { m_isCollWindField = isColl; }
@@ -59,7 +61,6 @@ public:
 
 public:
     HRESULT Initialize(void* pArg);
-    HRESULT Ready_State();
 
 public:
     PLAYER_STATE Enter(PLAYER_STATE CurrentState) { return m_pCurrentState->Enter(*this, CurrentState); }

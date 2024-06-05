@@ -32,6 +32,13 @@ HRESULT CGameObject::Initialize_Prototype()
 
 HRESULT CGameObject::Initialize(void* pArg)
 {
+	if (nullptr != pArg)
+	{
+		GAMEOBJECT_DESC* pDesc = static_cast<GAMEOBJECT_DESC*>(pArg);
+
+		m_iPathIndex = pDesc->iPathIndex;
+	}
+
 	m_pTransformCom = CTransform::Create(m_pDevice, m_pContext);
 	if (nullptr == m_pTransformCom)
 		return E_FAIL;
