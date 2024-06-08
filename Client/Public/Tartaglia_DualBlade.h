@@ -19,6 +19,9 @@ public:
     virtual HRESULT Render() override;
 
 private:
+    _uint m_iPreState = { 0 };
+
+private:
     virtual HRESULT Add_Components();
     virtual HRESULT Bind_ResourceData();
     virtual void Change_Animation(const _float& fTimeDelta);

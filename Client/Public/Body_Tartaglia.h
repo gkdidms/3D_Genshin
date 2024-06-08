@@ -25,8 +25,10 @@ public:
     virtual HRESULT Render() override;
 
 private:
-    _float m_fTime = { 1.5f };
+    _float m_fDuration = { 1.5f };
     _float m_fCurrentTime = { 0.f };
+
+
 
 private:
     virtual HRESULT Add_Components() override;

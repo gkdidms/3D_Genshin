@@ -64,9 +64,9 @@ HRESULT CVIBuffer_Trail::Initialize(void* pArg)
 	m_iIndexStride = 4;
 
 	m_Buffer_Desc.ByteWidth = m_iIndexStride * m_iNumIndices;
-	m_Buffer_Desc.Usage = D3D11_USAGE_DEFAULT;
+	m_Buffer_Desc.Usage = D3D11_USAGE_DYNAMIC;
 	m_Buffer_Desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	m_Buffer_Desc.CPUAccessFlags = 0;
+	m_Buffer_Desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	m_Buffer_Desc.MiscFlags = 0;
 	m_Buffer_Desc.StructureByteStride = sizeof(_ulong);
 
@@ -164,7 +164,7 @@ void CVIBuffer_Trail::Add_Trail(const _float& fTimeDelta, const _matrix WorldMat
 
 	m_pContext->Unmap(m_pVB, 0);
 
-	m_iCurrentIndices = m_TrailInfos.size() * 6 - 2;
+	m_iCurrentIndices = (m_TrailInfos.size() - 1) * 2 * 3;
 }
 
 CVIBuffer_Trail* CVIBuffer_Trail::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

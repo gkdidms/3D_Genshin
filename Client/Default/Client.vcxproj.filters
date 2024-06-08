@@ -283,9 +283,6 @@
     <Filter Include="02. GameObject\07. SceneObj\Gate">
       <UniqueIdentifier>{5c76dd34-4d1c-4faa-9f82-50322efdbd9f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\06. Boss\Skill">
-      <UniqueIdentifier>{f9bf051d-66e2-477c-b364-64b628447aec}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\04. Player\PartObject\Body\Feiyan">
       <UniqueIdentifier>{60ea781c-7cf2-46f8-b3c3-ee2141ed39d5}</UniqueIdentifier>
     </Filter>
@@ -391,9 +388,6 @@
     <Filter Include="02. GameObject\11. Bullet\Player\Tighnari\Burst">
       <UniqueIdentifier>{fc2ba0d1-821e-48e4-95e5-c34763c85f1a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\11. Bullet\Monster\Boss">
-      <UniqueIdentifier>{d3ec17ed-27d5-4066-8378-359e5803e4cc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="96. Utility\00. AI">
       <UniqueIdentifier>{c13141d5-5a58-45aa-aa89-2b5777994ec0}</UniqueIdentifier>
     </Filter>
@@ -432,6 +426,51 @@
     </Filter>
     <Filter Include="02. GameObject\04. Player\State\State\Hit">
       <UniqueIdentifier>{55265e43-69f3-4537-8f07-b707e85b45d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\11. Bullet\Boss">
+      <UniqueIdentifier>{37285fc7-07eb-4938-b384-6d8acc5c24cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\11. Bullet\Boss\Normal">
+      <UniqueIdentifier>{1b54a4dc-33e3-41a7-8f6f-7664d9c531e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\10. Effect\Boss">
+      <UniqueIdentifier>{d3ad6351-7f08-4160-99b5-e000c2dd21a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\10. Effect\Boss\Wave">
+      <UniqueIdentifier>{95dc36a7-2d7b-492c-968f-9fca797bf535}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\10. Effect\Boss\AlertCircle">
+      <UniqueIdentifier>{24aa2b47-661e-44a3-bb9e-d6e8398696da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\10. Effect\Boss\Monoceros">
+      <UniqueIdentifier>{bd0056e1-7b77-4e8b-bf17-2ba5a405abb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. Boss\Skill">
+      <UniqueIdentifier>{f9bf051d-66e2-477c-b364-64b628447aec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. Boss\Skill\Mono">
+      <UniqueIdentifier>{17d0be57-042a-4283-8a46-bb3ab3332140}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. Boss\Skill\Trail">
+      <UniqueIdentifier>{f3bbf2c1-aa1e-4c2e-af12-321a63ac8ec2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. Boss\Skill\Harbinger">
+      <UniqueIdentifier>{1e75c2db-80c5-4d61-a8ee-574de046afd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. Boss\Skill\Harbinger\Bow_Range">
+      <UniqueIdentifier>{d3ca78bd-4636-43f4-8237-d16ab89cfa96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\11. Bullet\Boss\Bow_Range">
+      <UniqueIdentifier>{c4a394ca-1ab8-4521-9ad8-9f010a7c4eb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\11. Bullet\Boss\Harbinger_Normal">
+      <UniqueIdentifier>{1427ea9c-ee7b-4cd3-aa5b-7d915b30d2b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\10. Effect\Boss\Harbinger_AlertCircle">
+      <UniqueIdentifier>{51f1a00b-2d4c-48d4-af36-9197140de7e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\11. Bullet\Boss\Harbinger_Cover">
+      <UniqueIdentifier>{5fecd2dc-de54-4726-a6fe-252dc219493b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -723,9 +762,6 @@
     <ClInclude Include="..\public\KasaRing.h">
       <Filter>02. GameObject\04. Player\PartObject\SkillObj\Wanderer</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\AlertCircle.h">
-      <Filter>02. GameObject\06. Boss\Skill</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Feiyan_Body.h">
       <Filter>02. GameObject\04. Player\PartObject\Body\Feiyan</Filter>
     </ClInclude>
@@ -801,9 +837,6 @@
     <ClInclude Include="..\public\Hili_Arrow.h">
       <Filter>02. GameObject\11. Bullet\Monster\Hili</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Boss_Normal.h">
-      <Filter>02. GameObject\11. Bullet\Monster\Boss</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Effect_Trail.h">
       <Filter>02. GameObject\10. Effect\EffectObject\00. Trail</Filter>
     </ClInclude>
@@ -833,6 +866,42 @@
     </ClInclude>
     <ClInclude Include="..\public\StateHit.h">
       <Filter>02. GameObject\04. Player\State\State\Hit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Boss_Normal.h">
+      <Filter>02. GameObject\11. Bullet\Boss\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Effect_Wave.h">
+      <Filter>02. GameObject\10. Effect\Boss\Wave</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Skill_Power.h">
+      <Filter>02. GameObject\06. Boss\Skill\Mono</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect_AlertCircle.h">
+      <Filter>02. GameObject\10. Effect\Boss\AlertCircle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect_Monoceros.h">
+      <Filter>02. GameObject\10. Effect\Boss\Monoceros</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Boss_Trail.h">
+      <Filter>02. GameObject\06. Boss\Skill\Trail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Boss_Skill.h">
+      <Filter>02. GameObject\06. Boss\Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Harbinger_Blade_Range.h">
+      <Filter>02. GameObject\06. Boss\Skill\Harbinger\Bow_Range</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Boss_Range_Bullet.h">
+      <Filter>02. GameObject\11. Bullet\Boss\Bow_Range</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Harbinger_Normal.h">
+      <Filter>02. GameObject\11. Bullet\Boss\Harbinger_Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Harbinger_AlertCircle.h">
+      <Filter>02. GameObject\10. Effect\Boss\Harbinger_AlertCircle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Harbinger_Cover.h">
+      <Filter>02. GameObject\11. Bullet\Boss\Harbinger_Cover</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1112,9 +1181,6 @@
     <ClCompile Include="..\private\KasaRing.cpp">
       <Filter>02. GameObject\04. Player\PartObject\SkillObj\Wanderer</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\AlertCircle.cpp">
-      <Filter>02. GameObject\06. Boss\Skill</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Feiyan_Body.cpp">
       <Filter>02. GameObject\04. Player\PartObject\Body\Feiyan</Filter>
     </ClCompile>
@@ -1190,9 +1256,6 @@
     <ClCompile Include="..\private\Hili_Arrow.cpp">
       <Filter>02. GameObject\11. Bullet\Monster\Hili</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Boss_Normal.cpp">
-      <Filter>02. GameObject\11. Bullet\Monster\Boss</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Effect_Trail.cpp">
       <Filter>02. GameObject\10. Effect\EffectObject\00. Trail</Filter>
     </ClCompile>
@@ -1222,6 +1285,42 @@
     </ClCompile>
     <ClCompile Include="..\private\StateHit.cpp">
       <Filter>02. GameObject\04. Player\State\State\Hit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boss_Normal.cpp">
+      <Filter>02. GameObject\11. Bullet\Boss\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Effect_Wave.cpp">
+      <Filter>02. GameObject\10. Effect\Boss\Wave</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Skill_Power.cpp">
+      <Filter>02. GameObject\06. Boss\Skill\Mono</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect_AlertCircle.cpp">
+      <Filter>02. GameObject\10. Effect\Boss\AlertCircle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect_Monoceros.cpp">
+      <Filter>02. GameObject\10. Effect\Boss\Monoceros</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boss_Trail.cpp">
+      <Filter>02. GameObject\06. Boss\Skill\Trail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boss_Skill.cpp">
+      <Filter>02. GameObject\06. Boss\Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Harbinger_Blade_Range.cpp">
+      <Filter>02. GameObject\06. Boss\Skill\Harbinger\Bow_Range</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boss_Range_Bullet.cpp">
+      <Filter>02. GameObject\11. Bullet\Boss\Bow_Range</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Harbinger_Normal.cpp">
+      <Filter>02. GameObject\11. Bullet\Boss\Harbinger_Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Harbinger_AlertCircle.cpp">
+      <Filter>02. GameObject\10. Effect\Boss\Harbinger_AlertCircle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Harbinger_Cover.cpp">
+      <Filter>02. GameObject\11. Bullet\Boss\Harbinger_Cover</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

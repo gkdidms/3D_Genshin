@@ -354,7 +354,7 @@ void CNilou_Body::Change_Animation(const _float& fTimeDelta)
 	case PLAYER_IDLE_PUT_AWAY:
 	{
 		m_iAnim = 55; // 56
-		m_IsLoop = true;
+		m_IsLoop = false;
 		m_IsLinear = false;
 		break;
 	}

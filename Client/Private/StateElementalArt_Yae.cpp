@@ -9,7 +9,7 @@ CStateElementalArt_Yae::CStateElementalArt_Yae()
 
 PLAYER_STATE CStateElementalArt_Yae::Enter(class CStateManager& pStateManager, PLAYER_STATE CurrentState)
 {
-	m_fTime = { 0.f };
+	m_fDuration = { 0.f };
 
 	m_iSkillCount++;
 
@@ -18,10 +18,10 @@ PLAYER_STATE CStateElementalArt_Yae::Enter(class CStateManager& pStateManager, P
 
 PLAYER_STATE CStateElementalArt_Yae::Update(const _float& fTimeDelta, CStateManager& pStateManager, PLAYER_STATE CurrentState)
 {
-	m_fTime += fTimeDelta;
+	m_fDuration += fTimeDelta;
 
-	if (m_fTime > m_fEndTime)
-		m_fTime = 0;
+	if (m_fDuration > m_fEndTime)
+		m_fDuration = 0;
 	else
 		return CurrentState;
 		

@@ -31,7 +31,8 @@ protected:
 	virtual ~CBT_Boss() = default;
 
 public:
-	virtual _bool isStrikeSkill() { return false; }
+	virtual _bool isRushSkill() = 0;
+	virtual _bool isExtraSkill() = 0;
 
 public:
 	virtual HRESULT Initialize(void* pArg);
@@ -70,6 +71,10 @@ protected:
 	// 공격 딜레이 저장
 	_float m_fDelayTime = { 7.f };
 	_float m_fCurrentTime = { 0.f };
+
+protected:
+	_float m_fAtkCurrentTime = { 0.f }; // 공격 시작 시간 카운트
+	_bool m_isAtk = { true };
 
 public:
 	virtual void Free() override;

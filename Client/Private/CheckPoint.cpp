@@ -72,7 +72,7 @@ HRESULT CCheckPoint::Render()
 
 		m_pModelCom->Bind_Material(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS);
 
-		m_pShaderCom->Begin(m_pModelCom->IsFindMesh(i, "Stages_Gear_CheckPoint_Leaves_Vo_effect") ? 2 : 1);
+		m_pShaderCom->Begin(m_pModelCom->IsFindMesh(i, "Stages_Gear_CheckPoint_Leaves_Vo_effect") ? 4 : 1);
 
 		m_pModelCom->Render(i);
 	}

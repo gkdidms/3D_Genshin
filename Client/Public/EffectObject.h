@@ -28,6 +28,7 @@ public:
         _float fStartTime = { 0.f };
         _float fDurationTime = { 0.f };
         _matrix WorldMatrix = { XMMatrixIdentity() };
+
     } EFFECT_OBJECT_DESC;
 
 protected:
@@ -73,6 +74,7 @@ protected:
 protected:
     _float m_fCurrentTime = { 0.f };
     _float m_fFrame = { 0.f };
+    _float m_isFrameStop = { false };
 
 protected:
     virtual HRESULT Add_Components();

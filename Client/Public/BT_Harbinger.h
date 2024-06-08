@@ -28,7 +28,10 @@ private:
     virtual ~CBT_Harbinger() = default;
 
 public:
-	virtual _bool isStrikeSkill() override { return m_Skill == SKILL_DUALBLADE_CYCLE; }
+	virtual _bool isRushSkill() {
+		return m_Skill == SKILL_DUALBLADE_CYCLE || m_Skill == SKILL_DUALBLADE_STRIKE;
+	}
+	virtual _bool isExtraSkill() { return m_Skill == SKILL_BLADE_EXTRA; }
 
 public:
     virtual HRESULT Initialize(void* pArg);

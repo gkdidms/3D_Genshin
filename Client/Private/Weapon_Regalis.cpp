@@ -39,9 +39,7 @@ void CWeapon_Regalis::Priority_Tick(const _float& fTimeDelta)
 
 void CWeapon_Regalis::Tick(const _float& fTimeDelta)
 {
-	if (!m_isHide)
-		m_fCurrentTime += fTimeDelta;
-	else m_fCurrentTime = 0.f;
+	__super::Tick(fTimeDelta);
 
 	_matrix		SocketMatrix = XMMatrixIdentity();
 
@@ -56,10 +54,14 @@ void CWeapon_Regalis::Tick(const _float& fTimeDelta)
 		|| *m_pState == PLAYER_ELEMENTAL_3
 		|| *m_pState == PLAYER_ELEMENTAL_3_END)
 	{
+		m_isHide = false;
 		SocketMatrix = XMLoadFloat4x4(m_pSocketMatrix);
 	}
 	else
 	{
+		if (m_isHide == false)
+			m_fCurrentTime = 0.f;
+		m_isHide = true;
 		SocketMatrix = XMLoadFloat4x4(m_pBackMatrix);
 	}
 
@@ -92,9 +94,6 @@ void CWeapon_Regalis::Late_Tick(const _float& fTimeDelta)
 
 HRESULT CWeapon_Regalis::Render()
 {
-	if (m_isHide)
-		return S_OK;
-
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 

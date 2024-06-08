@@ -39,8 +39,8 @@ protected:
 
     WEAPON_TYPE m_WeaponType = { WEAPON_END };
 
-    _float m_fCurrentTime = { 0.f };
-    _float m_fOut = { 0.8f };
+    _float m_fCurrentTime = { 20.f };
+    _float m_fOut = { 1.2f };
 
 protected:
     virtual HRESULT Add_Components();

@@ -8,7 +8,7 @@ CStateElementalBurst::CStateElementalBurst()
 
 PLAYER_STATE CStateElementalBurst::Enter(class CStateManager& pStateManager, PLAYER_STATE CurrentState)
 {
-	m_fDuration = { 3.f };
+	m_fTime = { 3.f };
 	return PLAYER_ELEMENTAL_BURST;
 }
 

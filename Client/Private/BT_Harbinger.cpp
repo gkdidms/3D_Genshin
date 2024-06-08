@@ -8,6 +8,12 @@
 #include "Selector.h"
 #include "Action.h"
 
+#pragma region Skill
+#include "Harbinger_Blade_Range.h"
+#include "Harbinger_Normal.h"
+#pragma endregion
+
+
 CBT_Harbinger::CBT_Harbinger()
 {
 }
@@ -31,6 +37,8 @@ void CBT_Harbinger::Tick(const _float& fTimeDelta)
 		m_fCurrentTime += fTimeDelta;
 	else if (m_Skill == SKILL_BOW_NORMAL || m_Skill == SKILL_DUALBLADE_NORMAL_2) // 공격중이고 활 일반 공격 중이면 저장함 
 		m_fCurrentRunTime += fTimeDelta;
+	else
+		m_fAtkCurrentTime += fTimeDelta;
 
 	this->Evaluate();
 }
@@ -64,14 +72,14 @@ HRESULT CBT_Harbinger::Ready_Node()
 	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Harbinger::Bow_Normal_Attack, this)));
 	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Harbinger::Bow_Power_Attack, this)));
 	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Harbinger::Blade_Range_Attack, this)));
-	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Harbinger::Blade_Normal_Attack, this)));
+	//pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Harbinger::Blade_Normal_Attack, this)));
 	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Harbinger::Blade_Extra_Attack, this)));
 	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Harbinger::DualBlade_Cycle_Attack, this)));
 	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Harbinger::DualBlade_Normal_1, this)));
-	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Harbinger::DualBlade_Normal_2, this)));
-	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Harbinger::DualBlade_Strike, this)));
-	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Harbinger::DualBlade_Sweep, this)));
-	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Harbinger::DualBlade_Hiraishin, this)));
+	//pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Harbinger::DualBlade_Normal_2, this)));
+	//pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Harbinger::DualBlade_Strike, this)));
+	//pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Harbinger::DualBlade_Sweep, this)));
+	//pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Harbinger::DualBlade_Hiraishin, this)));
 	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Harbinger::Normal_Attack, this)));
 
 	pAttack->Add_Children(pAttackSelect);
@@ -215,46 +223,32 @@ CNode::NODE_STATE CBT_Harbinger::Check_MeleeAtk()	// 너무 가까우면 근거리 공격을
 	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_STAGE_BOSS, L"Layer_Player", 0));
 
 	//근거리 공격
-	if (Check_Rear_ToPlayer())
-	{
-		//몬스터가 플레이어 뒤에 있다면??
-		m_Skill = SKILL_DUALBLADE_SWEEP;
-	}
-	else if (pPlayer->Get_BossSign())
-	{
-		//단류 표식이 되어있다면 단류가 있어야만 사용 가능한 스킬들 사용
-	}
-	else
-	{
-		_uint iSkillNum = Random(7);
+	m_Skill = SKILL_BOW_NORMAL;
 
-		switch (iSkillNum)
-		{
-		case 0:
-			m_Skill = SKILL_BLADE_EXTRA;
-			break;
-		case 1:
-			m_Skill = SKILL_BLADE_NORMAL;
-			break;
-		case 2:
-			m_Skill = SKILL_BLADE_RANGE;
-			break;
-		case 3:
-			m_Skill = SKILL_DUALBLADE_NORMAL_1;
-			break;
-		case 4:
-			m_Skill = SKILL_DUALBLADE_CYCLE;
-			break;
-		case 5:
-			m_Skill = SKILL_DUALBLADE_STRIKE;
-			break;
-		case 6:
-			m_Skill = SKILL_NORMAL;
-			break;
-		default:
-			break;
-		}
+	/*
+	_uint iSkillNum = Random(5);
+
+	switch (iSkillNum)
+	{
+	case 0:
+		m_Skill = SKILL_BLADE_EXTRA;
+		break;
+	case 1:
+		m_Skill = SKILL_BLADE_RANGE;
+		break;
+	case 2:
+		m_Skill = SKILL_DUALBLADE_NORMAL_1;
+		break;
+	case 3:
+		m_Skill = SKILL_DUALBLADE_CYCLE;
+		break;
+	case 4:
+		m_Skill = SKILL_NORMAL;
+		break;
+	default:
+		break;
 	}
+	*/
 
 	return CNode::SUCCESS;
 }
@@ -274,44 +268,32 @@ CNode::NODE_STATE CBT_Harbinger::Check_RangeAtk()	// 가까이 이동하거나 원거리 공
 	if (iResult < m_iTeleportPer) // 걷기로 빠짐
 		return CNode::FAILURE;
 
-	if (pPlayer->Get_BossSign())
-	{
-		//단류 표식이 되어있다면?
-	}
-	else
-	{
-		_uint iSkillNum = Random(8);
+	m_Skill = SKILL_BOW_NORMAL;
+	//_uint iSkillNum = Random(6);
 
-		switch (iSkillNum)
-		{
-		case 0:
-			m_Skill = SKILL_BOW_COVER;
-			break;
-		case 1:
-			m_Skill = SKILL_BOW_NORMAL;
-			break;
-		case 2:
-			m_Skill = SKILL_BOW_POWER;
-			break;
-		case 3:
-			m_Skill = SKILL_BLADE_RANGE;
-			break;
-		case 4:
-			m_Skill = SKILL_DUALBLADE_NORMAL_1;
-			break;
-		case 5:
-			m_Skill = SKILL_DUALBLADE_NORMAL_2;
-			break;
-		case 6:
-			m_Skill = SKILL_DUALBLADE_CYCLE;
-			break;
-		case 7:
-			m_Skill = SKILL_DUALBLADE_HIRAISHIN;
-			break;
-		default:
-			break;
-		}
-	}
+	//switch (iSkillNum)
+	//{
+	//case 0:
+	//	m_Skill = SKILL_BOW_COVER;
+	//	break;
+	//case 1:
+	//	m_Skill = SKILL_BOW_NORMAL;
+	//	break;
+	//case 2:
+	//	m_Skill = SKILL_BOW_POWER;
+	//	break;
+	//case 3:
+	//	m_Skill = SKILL_BLADE_RANGE;
+	//	break;
+	//case 4:
+	//	m_Skill = SKILL_DUALBLADE_NORMAL_1;
+	//	break;
+	//case 5:
+	//	m_Skill = SKILL_DUALBLADE_CYCLE;
+	//	break;
+	//default:
+	//	break;
+	//}
 
 	return CNode::SUCCESS;
 }
@@ -356,16 +338,29 @@ CNode::NODE_STATE CBT_Harbinger::Bow_Normal_Attack() // 일반공격 / 최대 3번까지 
 {
 	if (m_isAttack && *m_pState == CBoss::BOSS_BOW_NORMAL_ATTACK_BS)
 	{
-		if (m_fBowNormalTime < m_fCurrentRunTime)
+		if (m_fBowNormalTime < m_fCurrentRunTime && m_isAtk)
 		{
 			m_pTransformCom->LookAt(XMLoadFloat4x4(m_pTargetMatrix).r[3]);
 
 			++m_iCurrentAttackCount;
+			m_fCurrentRunTime = 0.f;
+
+			//화살 생성
+			CBullet::BULLET_DESC BulletDesc{};
+			BulletDesc.fAtk = 245;
+			_matrix HandMatrix = XMMatrixIdentity();
+			HandMatrix.r[3] = XMVectorSet(0.f, 2.3f, 0.6f, 1.f);
+			XMStoreFloat4x4(&BulletDesc.HandCombinedTransformationMatrix, HandMatrix);
+			BulletDesc.ParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
+			BulletDesc.pTargetPos = XMLoadFloat4x4(m_pTargetMatrix).r[3];
+			BulletDesc.fSpeedPecSec = 30.f;
+
+			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, TEXT("Prototype_GameObject_Skill_Harbinger_Bow_Normal"), TEXT("Layer_Bullet"), &BulletDesc)))
+				return CNode::RUNNING;
 
 			if (m_iAttackCount > m_iCurrentAttackCount)
-			{
 				m_pModelCom->Anim_Reset();
-			}
+			else m_isAtk = false;
 		}
 		if (m_pModelCom->Get_Animation_Finished())
 		{
@@ -384,6 +379,7 @@ CNode::NODE_STATE CBT_Harbinger::Bow_Normal_Attack() // 일반공격 / 최대 3번까지 
 		m_iAttackCount = Random(3);
 		*m_pState = CBoss::BOSS_BOW_NORMAL_ATTACK_BS;
 		m_isAttack = true;
+		m_isAtk = true;
 
 		return CNode::SUCCESS;
 	}
@@ -420,6 +416,17 @@ CNode::NODE_STATE CBT_Harbinger::Blade_Range_Attack() // 물 분출 (물이 튀어오름)
 {
 	if (m_isAttack && *m_pState == CBoss::BOSS_BLADE_RANGE_ATTACK)
 	{
+		if (1.5f <= m_fAtkCurrentTime && m_isAtk)
+		{
+			m_isAtk = false;
+
+			CHarbinger_Blade_Range::BOSS_SKILL_DESC SkillDesc{};
+			SkillDesc.pParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
+			SkillDesc.pParentLook = XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK));
+			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, TEXT("Prototype_GameObject_Skill_Harbinger_Bow_Range"), TEXT("Layer_Skill"), &SkillDesc)))
+				return CNode::RUNNING;
+		}
+
 		if (m_pModelCom->Get_Animation_Finished())
 		{
 			m_isAttack = false;
@@ -434,6 +441,8 @@ CNode::NODE_STATE CBT_Harbinger::Blade_Range_Attack() // 물 분출 (물이 튀어오름)
 	{
 		*m_pState = CBoss::BOSS_BLADE_RANGE_ATTACK;
 		m_isAttack = true;
+		m_fAtkCurrentTime = 0.f;
+		m_isAtk = true;
 
 		return CNode::SUCCESS;
 	}

@@ -64,7 +64,7 @@ void CUI_Atk::Tick(const _float& fTimeDelta)
 
 void CUI_Atk::Late_Tick(const _float& fTimeDelta)
 {
-	m_pGameInstance->Add_Renderer(CRenderer::RENDER_BLENDER, this);
+	m_pGameInstance->Add_Renderer(CRenderer::RENDER_UI, this);
 }
 
 HRESULT CUI_Atk::Render()

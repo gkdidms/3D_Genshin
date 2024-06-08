@@ -10,6 +10,11 @@ BEGIN(Client)
 class CBoss_Normal :
     public CMonster_Bullet
 {
+public:
+    typedef struct tBossNormalDesc : public CBullet::BULLET_DESC
+    {
+        _bool isUp = { false };
+    } BOSS_NORMAL_DESC;
 private:
     CBoss_Normal(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
     CBoss_Normal(const CBoss_Normal& rhs);
@@ -35,11 +40,15 @@ private:
     _float m_fPower = { 7.f };
     _float m_fHeight = { 0.f }; // 플레이어 y값 저장
 
+    _bool m_isUp = { false };
+
 private:
     HRESULT Add_Components();
     HRESULT Bind_ResourceData();
     HRESULT Bind_TrailResourceData();
     _bool Move_Arrow(const _float& fTimeDelta);
+    void Move_Arrow_Up(const _float& fTimeDelta);
+    void Add_TrailEffect();
 
 public:
     static CBoss_Normal* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

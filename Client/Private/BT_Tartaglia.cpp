@@ -8,6 +8,8 @@
 #include "Action.h"
 
 #include "Weapon.h"
+#include "Boss_Normal.h"
+#include "Effect.h"
 
 CBT_Tartaglia::CBT_Tartaglia()
 	: CBT_Boss{}
@@ -32,6 +34,8 @@ void CBT_Tartaglia::Tick(const _float& fTimeDelta)
 {
 	if (!m_isAttack)
 		m_fCurrentTime += fTimeDelta;
+	else 
+		m_fAtkCurrentTime += fTimeDelta;
 
 	this->Evaluate();
 }
@@ -74,13 +78,13 @@ HRESULT CBT_Tartaglia::Ready_Node()
 
 	CSelector* pAttackSelect = CSelector::Create();
 	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Tartaglia::Rush_Move, this)));
-	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Tartaglia::Bow_ComboAttack, this)));
+	//pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Tartaglia::Bow_ComboAttack, this)));
 	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Tartaglia::Bow_CoverAttack, this)));
 	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Tartaglia::Bow_NormalAttack, this)));
 	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Tartaglia::Bow_PowerAttack, this)));
 	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Tartaglia::Bow_RangeAttack, this)));
 	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Tartaglia::Blade_ExtraAttack, this)));
-	pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Tartaglia::Blade_NormalAttack, this)));
+	//pAttackSelect->Add_Children(CAction::Create(bind(&CBT_Tartaglia::Blade_NormalAttack, this)));
 
 	pAttack->Add_Children(pAttackSelect);
 
@@ -289,8 +293,18 @@ CNode::NODE_STATE CBT_Tartaglia::Rush_Move()
 {
 	if (m_isAttack && m_Skill == SKILL_RUSH)
 	{
+		if (*m_pState == CBoss::BOSS_RUSH_BS)
+		{
+			CEffect::EFFECT_DESC EffectDesc{};
+			EffectDesc.fDuration = 0.5f;
+			EffectDesc.pPlayerMatrix = m_pTransformCom->Get_WorldFloat4x4();
+			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, TEXT("Prototype_GameObject_Effect_Tartaglia_Rush_Effect"), TEXT("Layer_Effect"), &EffectDesc)))
+				return CNode::RUNNING;
+		}
+		
 		if (*m_pState == CBoss::BOSS_RUSH_BS && m_pModelCom->Get_Animation_Finished())
 		{
+			m_pTransformCom->LookAt(XMLoadFloat4x4(m_pTargetMatrix).r[3]);
 			*m_pState = CBoss::BOSS_RUSH_AS;
 		}
 		else if (*m_pState == CBoss::BOSS_RUSH_AS && m_pModelCom->Get_Animation_Finished())
@@ -317,29 +331,29 @@ CNode::NODE_STATE CBT_Tartaglia::Rush_Move()
 	return CNode::FAILURE;
 }
 
-CNode::NODE_STATE CBT_Tartaglia::Bow_ComboAttack() // 단류 표식 
-{
-	if (m_isAttack && m_Skill == SKILL_BOW_COMBO)
-	{
-		if (*m_pState == CBoss::BOSS_BOW_COMBO_ATTACK && m_pModelCom->Get_Animation_Finished(12))
-		{
-			m_Skill = SKILL_END;
-			m_isAttack = false;
-
-			return CNode::SUCCESS;
-		}
-		return CNode::RUNNING;
-	}
-
-	if (m_Skill == SKILL_BOW_COMBO)
-	{
-		*m_pState = CBoss::BOSS_BOW_COMBO_ATTACK;
-		m_isAttack = true;
-		return CNode::SUCCESS;
-	}
-	
-	return CNode::FAILURE;
-}
+//CNode::NODE_STATE CBT_Tartaglia::Bow_ComboAttack() // 단류 표식 
+//{
+//	if (m_isAttack && m_Skill == SKILL_BOW_COMBO)
+//	{
+//		if (*m_pState == CBoss::BOSS_BOW_COMBO_ATTACK && m_pModelCom->Get_Animation_Finished(12))
+//		{
+//			m_Skill = SKILL_END;
+//			m_isAttack = false;
+//
+//			return CNode::SUCCESS;
+//		}
+//		return CNode::RUNNING;
+//	}
+//
+//	if (m_Skill == SKILL_BOW_COMBO)
+//	{
+//		*m_pState = CBoss::BOSS_BOW_COMBO_ATTACK;
+//		m_isAttack = true;
+//		return CNode::SUCCESS;
+//	}
+//	
+//	return CNode::FAILURE;
+//}
 
 CNode::NODE_STATE CBT_Tartaglia::Bow_CoverAttack() // 단류 표식이 있을 경우에만 (장판이 깔림) 4~8
 {
@@ -358,7 +372,43 @@ CNode::NODE_STATE CBT_Tartaglia::Bow_CoverAttack() // 단류 표식이 있을 경우에만 
 				*m_pState = CBoss::BOSS_BOW_COVER_ATTACK_AS;
 			}
 			else
+			{
+				CEffect::EFFECT_DESC EffectDesc{};
+				EffectDesc.fDuration = 0.6f;
+				EffectDesc.pPlayerMatrix = m_pTransformCom->Get_WorldFloat4x4();
+
+				if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, TEXT("Prototype_GameObject_Effect_Tartaglia_Bow_Start"), TEXT("Layer_Effect"), &EffectDesc)))
+					return CNode::RUNNING;
+
+				EffectDesc.fDuration = 0.6f;
+				EffectDesc.pPlayerMatrix = m_pTransformCom->Get_WorldFloat4x4();
+
+				if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, TEXT("Prototype_GameObject_Effect_Tartaglia_Normal_1_Particle"), TEXT("Layer_Particle"), &EffectDesc)))
+					return CNode::RUNNING;
+
+				EffectDesc.fDuration = 1.f;
+				EffectDesc.fRotatePecSec = XMConvertToRadians(45.f);
+				EffectDesc.pPlayerMatrix = m_pTargetMatrix;
+
+				if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, TEXT("Prototype_GameObject_Skill_Tartiglia_AlertCircle"), TEXT("Layer_AlertCircle"), &EffectDesc)))
+					return CNode::RUNNING;
+
+				CBoss_Normal::BOSS_NORMAL_DESC BulletDesc{};
+				BulletDesc.fAtk = 123;
+				_matrix HandMatrix = XMMatrixIdentity();
+				HandMatrix.r[3] = XMVectorSet(0.f, 1.4f, 0.6f, 1.f);
+				XMStoreFloat4x4(&BulletDesc.HandCombinedTransformationMatrix, HandMatrix);
+				BulletDesc.ParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
+				BulletDesc.pTargetPos = XMLoadFloat4x4(m_pTargetMatrix).r[3];
+				BulletDesc.fSpeedPecSec = 40.f;
+				BulletDesc.isUp = true;
+				//불렛 생성
+				if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, TEXT("Prototype_GameObject_Skill_Boss_Arrow"), TEXT("Layer_BossBullet"), &BulletDesc)))
+					return CNode::RUNNING;
+
 				m_iCurrentAttackCount++;
+			}
+				
 		}
 		else if (*m_pState == CBoss::BOSS_BOW_COVER_ATTACK_AS && m_pModelCom->Get_Animation_Finished(13))
 		{
@@ -377,6 +427,13 @@ CNode::NODE_STATE CBT_Tartaglia::Bow_CoverAttack() // 단류 표식이 있을 경우에만 
 		m_iAttackCount = Random(4) + 4;
 		m_isAttack = true;
 
+		CEffect::EFFECT_DESC EffectDesc{};
+		EffectDesc.fDuration = 0.6f;
+		EffectDesc.pPlayerMatrix = m_pTransformCom->Get_WorldFloat4x4();
+
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, TEXT("Prototype_GameObject_Effect_Tartaglia_Rain_Effect"), TEXT("Layer_Effect"), &EffectDesc)))
+			return CNode::RUNNING;
+
 		return CNode::SUCCESS;
 	}
 
@@ -388,10 +445,65 @@ CNode::NODE_STATE CBT_Tartaglia::Bow_NormalAttack() // 단류 일반 공격 (6번 정도)
 	if (m_isAttack && m_Skill == SKILL_BOW_NORMAL)
 	{
 		if (*m_pState == CBoss::BOSS_BOW_NORMAL_ATTACK_BS && m_pModelCom->Get_Animation_Finished(17))
+		{
+			CEffect::EFFECT_DESC EffectDesc{};
+			EffectDesc.fDuration = 0.6f;
+			EffectDesc.pPlayerMatrix = m_pTransformCom->Get_WorldFloat4x4();
+
+			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, TEXT("Prototype_GameObject_Effect_Tartaglia_Bow_Start"), TEXT("Layer_Effect"), &EffectDesc)))
+				return CNode::RUNNING;
+
+			EffectDesc.fDuration = 0.6f;
+			EffectDesc.pPlayerMatrix = m_pTransformCom->Get_WorldFloat4x4();
+
+			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, TEXT("Prototype_GameObject_Effect_Tartaglia_Normal_1_Particle"), TEXT("Layer_Particle"), &EffectDesc)))
+				return CNode::RUNNING;
+
+			CBoss_Normal::BOSS_NORMAL_DESC BulletDesc{};
+			BulletDesc.fAtk = 123;
+			_matrix HandMatrix = XMMatrixIdentity();
+			HandMatrix.r[3] = XMVectorSet(0.f, 1.4f, 0.6f, 1.f);
+			XMStoreFloat4x4(&BulletDesc.HandCombinedTransformationMatrix, HandMatrix);
+			BulletDesc.ParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
+			BulletDesc.pTargetPos = XMLoadFloat4x4(m_pTargetMatrix).r[3];
+			BulletDesc.fSpeedPecSec = 30.f;
+			BulletDesc.isUp = false;
+			//불렛 생성
+			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, TEXT("Prototype_GameObject_Skill_Boss_Arrow"), TEXT("Layer_BossBullet"), &BulletDesc)))
+				return CNode::RUNNING;
+
 			*m_pState = CBoss::BOSS_BOW_NORMAL_ATTACK_LOOP;
+		}
 		else if (*m_pState == CBoss::BOSS_BOW_NORMAL_ATTACK_LOOP && m_pModelCom->Get_LoopAnimation_Finished())
 		{
 			m_pTransformCom->LookAt(XMLoadFloat4x4(m_pTargetMatrix).r[3]);
+
+			CEffect::EFFECT_DESC EffectDesc{};
+			EffectDesc.fDuration = 0.6f;
+			EffectDesc.pPlayerMatrix = m_pTransformCom->Get_WorldFloat4x4();
+
+			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, TEXT("Prototype_GameObject_Effect_Tartaglia_Bow_Start"), TEXT("Layer_Effect"), &EffectDesc)))
+				return CNode::RUNNING;
+
+			EffectDesc.fDuration = 0.6f;
+			EffectDesc.pPlayerMatrix = m_pTransformCom->Get_WorldFloat4x4();
+
+			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, TEXT("Prototype_GameObject_Effect_Tartaglia_Normal_1_Particle"), TEXT("Layer_Particle"), &EffectDesc)))
+				return CNode::RUNNING;
+
+			CBoss_Normal::BOSS_NORMAL_DESC BulletDesc{};
+			BulletDesc.fAtk = 123;
+			_matrix HandMatrix = XMMatrixIdentity();
+			HandMatrix.r[3] = XMVectorSet(0.f, 1.4f, 0.6f, 1.f);
+			XMStoreFloat4x4(&BulletDesc.HandCombinedTransformationMatrix, HandMatrix);
+			BulletDesc.ParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
+			BulletDesc.pTargetPos = XMLoadFloat4x4(m_pTargetMatrix).r[3];
+			BulletDesc.fSpeedPecSec = 30.f;
+			BulletDesc.isUp = false;
+			//불렛 생성
+			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, TEXT("Prototype_GameObject_Skill_Boss_Arrow"), TEXT("Layer_BossBullet"), &BulletDesc)))
+				return CNode::RUNNING;
+
 			if (m_iAttackCount < m_iCurrentAttackCount)
 			{
 				*m_pState = CBoss::BOSS_BOW_NORMAL_ATTACK_AS;
@@ -430,11 +542,32 @@ CNode::NODE_STATE CBT_Tartaglia::Bow_PowerAttack() // 고래 소환, 단류 표식
 	if (m_isAttack && m_Skill == SKILL_BOW_POWER)
 	{
 		if (*m_pState == CBoss::BOSS_BOW_POWER_ATTACK_BS && m_pModelCom->Get_Animation_Finished(20))
+		{
 			*m_pState = CBoss::BOSS_BOW_POWER_ATTACK_LOOP;
+		}
 		else if (*m_pState == CBoss::BOSS_BOW_POWER_ATTACK_LOOP && m_pModelCom->Get_LoopAnimation_Finished())
+		{
+			CEffect::EFFECT_DESC EffectDesc{};
+			EffectDesc.fDuration = 1.5f;
+			EffectDesc.pPlayerMatrix = m_pTransformCom->Get_WorldFloat4x4();
+
+			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, TEXT("Prototype_GameObject_Effect_Tartaglia_Bow_Start"), TEXT("Layer_Effect"), &EffectDesc)))
+				return CNode::RUNNING;
+
 			*m_pState = CBoss::BOSS_BOW_POWER_ATTACK_AS;
+		}
 		else if (*m_pState == CBoss::BOSS_BOW_POWER_ATTACK_AS && m_pModelCom->Get_Animation_Finished(19))
 		{
+			CEffect::EFFECT_DESC EffectDesc{};
+			//EffectDesc.fPower = 5.f;
+			EffectDesc.fDuration = 2.f;
+			EffectDesc.fSpeed = 5.f;
+			EffectDesc.pPlayerMatrix = m_pTransformCom->Get_WorldFloat4x4();
+			EffectDesc.fRotatePecSec = XMConvertToRadians(45.f);
+			EffectDesc.vTargetDir = XMVector3Normalize(XMLoadFloat4x4(m_pTargetMatrix).r[3] - m_pTransformCom->Get_State(CTransform::STATE_POSITION));
+			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, TEXT("Prototype_GameObject_Skill_Tartiglia_Monoceros"), TEXT("Layer_Effect"), &EffectDesc)))
+				return CNode::RUNNING;
+
 			m_isAttack = false;
 			return CNode::SUCCESS;
 		}
@@ -470,6 +603,31 @@ CNode::NODE_STATE CBT_Tartaglia::Bow_RangeAttack() //파도 소환 3~5
 			else if (*m_pState == CBoss::BOSS_BOW_RANGE_ATTACK_LOOP_2)
 			{
 				*m_pState = CBoss::BOSS_BOW_RANGE_ATTACK_LOOP_1;
+
+				CEffect::EFFECT_DESC EffectDesc{};
+				EffectDesc.fDuration = 0.6f;
+				EffectDesc.pPlayerMatrix = m_pTransformCom->Get_WorldFloat4x4();
+
+				if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, TEXT("Prototype_GameObject_Effect_Tartaglia_Bow_Start"), TEXT("Layer_Effect"), &EffectDesc)))
+					return CNode::RUNNING;
+
+				EffectDesc.fDuration = 0.6f;
+				EffectDesc.pPlayerMatrix = m_pTransformCom->Get_WorldFloat4x4();
+
+				if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, TEXT("Prototype_GameObject_Effect_Tartaglia_Normal_1_Particle"), TEXT("Layer_Particle"), &EffectDesc)))
+					return CNode::RUNNING;
+
+				CEffect::EFFECT_DESC BulletDesc{};
+				BulletDesc.pPlayerMatrix = m_pTransformCom->Get_WorldFloat4x4();
+				_vector vTargetDir = XMVector3Normalize(XMLoadFloat4x4(m_pTargetMatrix).r[3] - m_pTransformCom->Get_State(CTransform::STATE_POSITION));
+				BulletDesc.vTargetDir = vTargetDir;
+				BulletDesc.isBullet = true;
+				BulletDesc.fSpeed = 45.f;
+				BulletDesc.fDuration = 0.7f;
+
+				if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, TEXT("Prototype_GameObject_Skill_Tartiglia_Wave_Bullet"), TEXT("Layer_Bullet"), &BulletDesc)))
+					return CNode::RUNNING;
+
 				if (m_iAttackCount < m_iCurrentAttackCount)
 				{
 					m_iAttackCount = 0;
@@ -477,7 +635,9 @@ CNode::NODE_STATE CBT_Tartaglia::Bow_RangeAttack() //파도 소환 3~5
 					*m_pState = CBoss::BOSS_BOW_RANGE_ATTACK_AS;
 				}
 				else
+				{
 					++m_iCurrentAttackCount;
+				}
 			}
 		}
 		else if (*m_pState == CBoss::BOSS_BOW_RANGE_ATTACK_AS && m_pModelCom->Get_Animation_Finished(22))
@@ -496,6 +656,13 @@ CNode::NODE_STATE CBT_Tartaglia::Bow_RangeAttack() //파도 소환 3~5
 		m_iAttackCount = 3 + Random(2);
 		m_isAttack = true;
 
+		CEffect::EFFECT_DESC BulletDesc{};
+		BulletDesc.pPlayerMatrix = m_pTransformCom->Get_WorldFloat4x4();
+		BulletDesc.fDuration = 0.7f;
+
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, TEXT("Prototype_GameObject_Effect_Tartaglia_Wave_Effect"), TEXT("Layer_Effect"), &BulletDesc)))
+			return CNode::RUNNING;
+
 		return CNode::SUCCESS;
 	}
 
@@ -506,6 +673,15 @@ CNode::NODE_STATE CBT_Tartaglia::Blade_ExtraAttack() // 잘 안씀 - 플레이어 앞으�
 {
 	if (m_isAttack && m_Skill == SKILL_BLADE_EXTRA)
 	{
+		//if (*m_pState == CBoss::BOSS_BLADE_EXTRA_ATTACK)
+		//{
+		//	CEffect::EFFECT_DESC EffectDesc{};
+		//	EffectDesc.fDuration = 0.5f;
+		//	EffectDesc.pPlayerMatrix = m_pTransformCom->Get_WorldFloat4x4();
+		//	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, TEXT("Prototype_GameObject_Effect_Tartaglia_Rush_Effect"), TEXT("Layer_Effect"), &EffectDesc)))
+		//		return CNode::RUNNING;
+		//}
+
 		if (*m_pState == CBoss::BOSS_BLADE_EXTRA_ATTACK && m_pModelCom->Get_Animation_Finished(5))
 		{
 			m_isAttack = false;
@@ -527,53 +703,53 @@ CNode::NODE_STATE CBT_Tartaglia::Blade_ExtraAttack() // 잘 안씀 - 플레이어 앞으�
 	return CNode::FAILURE;
 }
 
-CNode::NODE_STATE CBT_Tartaglia::Blade_NormalAttack() // 잘 안씀
-{
-	if (m_isAttack && m_Skill == SKILL_BLADE_NORMAL)
-	{
-		if (m_iBladeNormalAttackMax <= m_iBladeNormalAttackMaxCount)
-		{
-			m_isAttack = false;
-			m_iBladeNormalAttackMax = 0;
-
-			return CNode::SUCCESS;
-		}
-		else {
-			if (*m_pState == CBoss::BOSS_BLADE_NORMAL_ATTACK_1 && m_pModelCom->Get_Animation_Finished(6))
-			{
-				*m_pState = CBoss::BOSS_BLADE_NORMAL_ATTACK_2;
-				m_iBladeNormalAttackMaxCount++;
-			}
-			else if (*m_pState == CBoss::BOSS_BLADE_NORMAL_ATTACK_2 && m_pModelCom->Get_Animation_Finished(7))
-			{
-				*m_pState = CBoss::BOSS_BLADE_NORMAL_ATTACK_3;
-				m_iBladeNormalAttackMaxCount++;
-			}
-			else if (*m_pState == CBoss::BOSS_BLADE_NORMAL_ATTACK_3 && m_pModelCom->Get_Animation_Finished(8))
-			{
-				*m_pState = CBoss::BOSS_BLADE_NORMAL_ATTACK_4;
-				m_iBladeNormalAttackMaxCount++;
-			}
-			else if (*m_pState == CBoss::BOSS_BLADE_NORMAL_ATTACK_4 && m_pModelCom->Get_Animation_Finished(9))
-			{
-				*m_pState = CBoss::BOSS_BLADE_NORMAL_ATTACK_1;
-				m_iBladeNormalAttackMaxCount++;
-			}
-		}
-
-		return CNode::RUNNING;
-	}
-
-	if (m_Skill == SKILL_BLADE_NORMAL)
-	{
-		m_iBladeNormalAttackMax = Random(6);
-		*m_pState = CBoss::BOSS_BLADE_NORMAL_ATTACK_1;
-
-		return CNode::SUCCESS;
-	}
-
-	return CNode::FAILURE;
-}
+//CNode::NODE_STATE CBT_Tartaglia::Blade_NormalAttack() // 잘 안씀
+//{
+//	if (m_isAttack && m_Skill == SKILL_BLADE_NORMAL)
+//	{
+//		if (m_iBladeNormalAttackMax <= m_iBladeNormalAttackMaxCount)
+//		{
+//			m_isAttack = false;
+//			m_iBladeNormalAttackMax = 0;
+//
+//			return CNode::SUCCESS;
+//		}
+//		else {
+//			if (*m_pState == CBoss::BOSS_BLADE_NORMAL_ATTACK_1 && m_pModelCom->Get_Animation_Finished(6))
+//			{
+//				*m_pState = CBoss::BOSS_BLADE_NORMAL_ATTACK_2;
+//				m_iBladeNormalAttackMaxCount++;
+//			}
+//			else if (*m_pState == CBoss::BOSS_BLADE_NORMAL_ATTACK_2 && m_pModelCom->Get_Animation_Finished(7))
+//			{
+//				*m_pState = CBoss::BOSS_BLADE_NORMAL_ATTACK_3;
+//				m_iBladeNormalAttackMaxCount++;
+//			}
+//			else if (*m_pState == CBoss::BOSS_BLADE_NORMAL_ATTACK_3 && m_pModelCom->Get_Animation_Finished(8))
+//			{
+//				*m_pState = CBoss::BOSS_BLADE_NORMAL_ATTACK_4;
+//				m_iBladeNormalAttackMaxCount++;
+//			}
+//			else if (*m_pState == CBoss::BOSS_BLADE_NORMAL_ATTACK_4 && m_pModelCom->Get_Animation_Finished(9))
+//			{
+//				*m_pState = CBoss::BOSS_BLADE_NORMAL_ATTACK_1;
+//				m_iBladeNormalAttackMaxCount++;
+//			}
+//		}
+//
+//		return CNode::RUNNING;
+//	}
+//
+//	if (m_Skill == SKILL_BLADE_NORMAL)
+//	{
+//		m_iBladeNormalAttackMax = Random(6);
+//		*m_pState = CBoss::BOSS_BLADE_NORMAL_ATTACK_1;
+//
+//		return CNode::SUCCESS;
+//	}
+//
+//	return CNode::FAILURE;
+//}
 
 CNode::NODE_STATE CBT_Tartaglia::Check_Walk()
 {

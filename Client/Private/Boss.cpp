@@ -571,14 +571,14 @@ void CBoss::Change_StateRank()
 
 void CBoss::Check_Coll(const _float& fTimeDelta)
 {
+    if (m_pBT[m_CurrentPage]->isRushSkill()) // 보스 돌진스킬 사용 시 충돌처리 무시한다.
+        return;
+
     CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_STAGE_BOSS, TEXT("Layer_Player"), 0));
     m_isColl = m_pColliderCom->Intersect(dynamic_cast<CCollider*>(pPlayer->Get_Component(TEXT("Com_Collider"))));
 
     if (m_isColl)
     {
-        if (m_pBT[m_CurrentPage]->isStrikeSkill()) // 보스 돌진스킬 사용 시 충돌처리 무시한다.
-            return;
-
         pPlayer->Set_Coll(true);
         _char strPlayerRank = pPlayer->Get_StateRank();
         m_pColliderCom->Compute_Rank(m_strStateRank, strPlayerRank, m_pTransformCom, dynamic_cast<CTransform*>(pPlayer->Get_Component(TEXT("Com_Transform"))), m_pNavigationCom, dynamic_cast<CNavigation*>(pPlayer->Get_Component(TEXT("Com_Navigation"))), fTimeDelta);

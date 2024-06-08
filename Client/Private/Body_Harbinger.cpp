@@ -41,7 +41,7 @@ void CBody_Harbinger::Tick(const _float& fTimeDelta)
     m_pModelCom->Play_Animation(fTimeDelta, &m_PlayerMovePos);
 
     //BOSS_DUALBLADE_HIRAISHIN_BS 사용 시 플레이어의 좌표를 저장해서 BOSS_DUALBLADE_HIRAISHIN_AS때 해당 좌표로 넘어감
-    if (*m_pState == CBoss::BOSS_DUALBLADE_HIRAISHIN_BS && *m_pState != m_iPreState)
+    if (*m_pState == CBoss::BOSS_DUALBLADE_HIRAISHIN_AS && *m_pState != m_iPreState)
     {
         XMStoreFloat4x4(&m_MoveToTargetMatrix, XMLoadFloat4x4(m_pTargetMatrix));
     }

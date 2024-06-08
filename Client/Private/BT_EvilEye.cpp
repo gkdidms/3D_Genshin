@@ -8,6 +8,9 @@
 #include "Selector.h"
 #include "Action.h"
 
+#include "Boss_Trail.h"
+#include "Effect.h"
+
 
 CBT_EvilEye::CBT_EvilEye()
 	: CBT_Boss{}
@@ -36,6 +39,8 @@ void CBT_EvilEye::Tick(const _float& fTimeDelta)
 		m_fCurrentTime += fTimeDelta;
 	else if (m_isAttack && m_Skill == SKILL_BLADE_NORMAL)
 		m_fCurrentRunTime += fTimeDelta;
+	else
+		m_fAtkCurrentTime += fTimeDelta;
 
 	this->Evaluate();
 }
@@ -372,6 +377,10 @@ CNode::NODE_STATE CBT_EvilEye::Rush_Move()
 		if (*m_pState == CBoss::BOSS_RUSH_BS && m_pModelCom->Get_Animation_Finished())
 		{
 			*m_pState = CBoss::BOSS_RUSH_AS;
+
+			CGameObject* pTrail = m_pGameInstance->Get_GameObject(LEVEL_STAGE_BOSS, TEXT("Layer_BossTrail"), 0);
+			if (nullptr != pTrail)
+				pTrail->Set_Dead();
 		}
 		else if (*m_pState == CBoss::BOSS_RUSH_AS && m_pModelCom->Get_Animation_Finished())
 		{
@@ -392,6 +401,13 @@ CNode::NODE_STATE CBT_EvilEye::Rush_Move()
 		*m_pState = CBoss::BOSS_RUSH_BS;
 
 		m_isAttack = true;
+
+		CBoss_Trail::BOSS_TRAIL_DESC TrailDesc{};
+		TrailDesc.pParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
+
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, TEXT("Prototype_GameObject_Skill_Tartiglia_Trail"), TEXT("Layer_BossTrail"), &TrailDesc)))
+			return CNode::FAILURE;
+
 		return CNode::SUCCESS;
 	}
 
@@ -405,6 +421,7 @@ CNode::NODE_STATE CBT_EvilEye::Blade_Extra_Attack()
 		if (*m_pState == CBoss::BOSS_BLADE_EXTRA_ATTACK && m_pModelCom->Get_Animation_Finished(5))
 		{
 			m_isAttack = false;
+
 			return CNode::SUCCESS;
 		}
 
@@ -416,6 +433,12 @@ CNode::NODE_STATE CBT_EvilEye::Blade_Extra_Attack()
 	{
 		*m_pState = CBoss::BOSS_BLADE_EXTRA_ATTACK;
 		m_isAttack = true;
+
+		CBoss_Trail::BOSS_TRAIL_DESC TrailDesc{};
+		TrailDesc.pParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
+
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, TEXT("Prototype_GameObject_Skill_Tartiglia_Trail"), TEXT("Layer_BossTrail"), &TrailDesc)))
+			return CNode::FAILURE;
 
 		return CNode::SUCCESS;
 	}
@@ -473,7 +496,15 @@ CNode::NODE_STATE CBT_EvilEye::DualBlade_Strike() // µ¹Áø Âî¸£±â 3~5
 	if (m_isAttack && m_Skill == SKILL_DUALBLADE_STRIKE)
 	{
 		if (*m_pState == CBoss::BOSS_DUALBLADE_STRIKE_ATTACK_BS && m_pModelCom->Get_Animation_Finished())
+		{
+			CBoss_Trail::BOSS_TRAIL_DESC TrailDesc{};
+			TrailDesc.pParentMatrix = m_pTransformCom->Get_WorldFloat4x4();
+
+			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, TEXT("Prototype_GameObject_Skill_Tartiglia_Trail"), TEXT("Layer_BossTrail"), &TrailDesc)))
+				return CNode::FAILURE;
+
 			*m_pState = CBoss::BOSS_DUALBLADE_STRIKE_ATTACK_LOOP;
+		}
 		else if (*m_pState == CBoss::BOSS_DUALBLADE_STRIKE_ATTACK_LOOP && m_pModelCom->Get_LoopAnimation_Finished())
 		{
 			m_pTransformCom->LookAt(XMLoadFloat4x4(m_pTargetMatrix).r[3]);
@@ -482,6 +513,11 @@ CNode::NODE_STATE CBT_EvilEye::DualBlade_Strike() // µ¹Áø Âî¸£±â 3~5
 			if (m_iAttackCount <= m_iCurrentAttackCount)
 			{
 				*m_pState = CBoss::BOSS_DUALBLADE_STRIKE_ATTACK_AS;
+
+				//Æ®·¹ÀÏ Á¦°Å
+				CGameObject* pTrail = m_pGameInstance->Get_GameObject(LEVEL_STAGE_BOSS, TEXT("Layer_BossTrail"), 0);
+				if (nullptr != pTrail)
+					pTrail->Set_Dead();
 			}
 		}
 		else if (*m_pState == CBoss::BOSS_DUALBLADE_STRIKE_ATTACK_AS && m_pModelCom->Get_Animation_Finished())
@@ -510,6 +546,17 @@ CNode::NODE_STATE CBT_EvilEye::DualBlade_Sweep() // ÈÄ¹æ Ä¡±â -> Å¸Å»ÀÌ µÚ¿¡ Á¸À
 {
 	if (m_isAttack && m_Skill == SKILL_DUALBLADE_SWEEP)
 	{
+		if (m_fAtkCurrentTime >= 0.8f && m_isAtk)
+		{
+			m_isAtk = false;
+
+			CEffect::EFFECT_DESC EffectDesc{};
+			EffectDesc.pPlayerMatrix = m_pTransformCom->Get_WorldFloat4x4();
+			EffectDesc.fDuration = 1.f;
+			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, TEXT("Prototype_GameObject_Effect_Tartaglia_Blade_Sweep"), TEXT("Layer_Trail"), &EffectDesc)))
+				return CNode::FAILURE;
+		}
+
 		if ((*m_pState == CBoss::BOSS_DUALBLADE_SWEEP_ATTACK_L || *m_pState == CBoss::BOSS_DUALBLADE_SWEEP_ATTACK_R) && m_pModelCom->Get_Animation_Finished())
 		{
 			m_isAttack = false;
@@ -536,7 +583,10 @@ CNode::NODE_STATE CBT_EvilEye::DualBlade_Sweep() // ÈÄ¹æ Ä¡±â -> Å¸Å»ÀÌ µÚ¿¡ Á¸À
 		else
 			*m_pState = CBoss::BOSS_DUALBLADE_SWEEP_ATTACK_L;
 
+		m_fAtkCurrentTime = 0.f;
+
 		m_isAttack = true;
+		m_isAtk = true;
 
 		return CNode::SUCCESS;
 	}
@@ -549,9 +599,27 @@ CNode::NODE_STATE CBT_EvilEye::DualBlade_Hiraishin() // ´Ü·ù Æ÷½ÄÀÌ ÀÖÀ» °æ¿ì¿¡¸
 	if (m_isAttack && m_Skill == SKILL_DUALBLADE_HIRAISHIN)
 	{
 		if (*m_pState == CBoss::BOSS_DUALBLADE_HIRAISHIN_BS && m_pModelCom->Get_Animation_Finished())
+		{
+			CEffect::EFFECT_DESC EffectDesc{};
+			EffectDesc.isFollowPlayer = true;
+			EffectDesc.pPlayerMatrix = m_pTargetMatrix;
+			EffectDesc.fDuration = 0.6f;
+			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, TEXT("Prototype_GameObject_Effect_Tartaglia_Lightning_Ring_Player"), TEXT("Layer_Effect"), &EffectDesc)))
+				return CNode::RUNNING;
+
 			*m_pState = CBoss::BOSS_DUALBLADE_HIRAISHIN_LOOP;
+		}
+			
 		else if (*m_pState == CBoss::BOSS_DUALBLADE_HIRAISHIN_LOOP && m_pModelCom->Get_LoopAnimation_Finished())
+		{
+			CEffect::EFFECT_DESC EffectDesc{};
+			EffectDesc.pPlayerMatrix = m_pTargetMatrix;
+			EffectDesc.fDuration = 0.4f;
+			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, TEXT("Prototype_GameObject_Effect_Tartaglia_Lightning_Ring"), TEXT("Layer_Effect"), &EffectDesc)))
+				return CNode::RUNNING;
+
 			*m_pState = CBoss::BOSS_DUALBLADE_HIRAISHIN_AS;
+		}
 		else if (*m_pState == CBoss::BOSS_DUALBLADE_HIRAISHIN_AS && m_pModelCom->Get_Animation_Finished())
 		{
 			m_isAttack = false;

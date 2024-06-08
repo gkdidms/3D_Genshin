@@ -1,6 +1,7 @@
 #include "Body_EvilEye.h"
 
 #include "Boss.h"
+#include "Effect.h"
 
 CBody_EvilEye::CBody_EvilEye(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CBoss_Body{ pDevice, pContext }
@@ -28,7 +29,7 @@ HRESULT CBody_EvilEye::Initialize(void* pArg)
     m_Info.fMaxHp = { 146125.f };
     m_Info.fHp = { 146125.f };
 
-    m_fLongDistanceSpeed = { 50.f };
+    m_fLongDistanceSpeed = { 70.f };
 
 	return S_OK;
 }
@@ -39,29 +40,51 @@ void CBody_EvilEye::Priority_Tick(const _float& fTimeDelta)
 
 void CBody_EvilEye::Tick(const _float& fTimeDelta)
 {
-	Change_Animation();
+    Change_Animation();
 
-	m_pModelCom->Play_Animation(fTimeDelta, &m_PlayerMovePos);
+    m_pModelCom->Play_Animation(fTimeDelta, &m_PlayerMovePos);
 
     //BOSS_DUALBLADE_HIRAISHIN_BS 사용 시 플레이어의 좌표를 저장해서 BOSS_DUALBLADE_HIRAISHIN_AS때 해당 좌표로 넘어감
-    if (*m_pState == CBoss::BOSS_DUALBLADE_HIRAISHIN_BS && *m_pState != m_iPreState)
+    if (*m_pState == CBoss::BOSS_DUALBLADE_HIRAISHIN_LOOP && *m_pState != m_iPreState)
     {
         XMStoreFloat4x4(&m_MoveToTargetMatrix, XMLoadFloat4x4(m_pTargetMatrix));
     }
-    else if (*m_pState == CBoss::BOSS_DUALBLADE_HIRAISHIN_LOOP)
+    else if (*m_pState == CBoss::BOSS_DUALBLADE_HIRAISHIN_AS)
     {
         m_isMovePos = true;
         m_PlayerMovePos = m_MoveToTargetMatrix;
+
+        m_fAtkCurrentTime += fTimeDelta;
+            
+        if (m_isAtk && m_fAtkDelayDuration <= m_fAtkCurrentTime)
+        {
+            m_isAtk = false;
+            CEffect::EFFECT_DESC EffectDesc{};
+
+            EffectDesc.pPlayerMatrix = m_pParentMatrix;
+            EffectDesc.fDuration = 0.6f;
+            if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, TEXT("Prototype_GameObject_Effect_Tartaglia_Lightning_Hiraishin"), TEXT("Layer_Effect"), &EffectDesc)))
+                return;
+
+            if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, TEXT("Prototype_GameObject_Effect_Tartaglia_Lightning_Hiraishin_Bullet"), TEXT("Layer_Effect"), &EffectDesc)))
+                return;
+        }
     }
-    else m_isMovePos = false;
+    else
+    {
+        m_isAtk = true;
+        m_isMovePos = false;
+        m_fAtkCurrentTime = 0.f;
+    }
 
     //Extra_Attack일때 이동 값 수정 
     if (*m_pState == CBoss::BOSS_BLADE_EXTRA_ATTACK)
     {
         m_fCurrentTime += fTimeDelta;
 
-        if (m_fTime > m_fCurrentTime)
+        if (m_fDuration > m_fCurrentTime)
         {
+            m_isTrailDelete = true;
             // 플레이어 위치와 보스의 위치가 가깝다면 이동 끝
             _vector vTargetPos = XMLoadFloat4x4(m_pTargetMatrix).r[3];
             _vector vBossPos = XMLoadFloat4x4(m_pParentMatrix).r[3];
@@ -73,9 +96,29 @@ void CBody_EvilEye::Tick(const _float& fTimeDelta)
             _matrix MoveMatrix = XMMatrixIdentity();
 
             if (fDistance > 0.3f)
-                MoveMatrix.r[3] = XMVectorSet(0.f, 0.f, m_fLongDistanceSpeed * fTimeDelta * -1.f, 1.f);
+                MoveMatrix.r[3] = XMVectorSet(0.f, 0.f, m_fLongDistanceSpeed * fTimeDelta * -1.f, 1.f); 
 
             XMStoreFloat4x4(&m_PlayerMovePos, MoveMatrix);
+        }
+        else
+        {
+            if (m_isTrailDelete)
+            {
+                m_isTrailDelete = false;
+
+                //트레일 제거
+                CGameObject* pTrail = m_pGameInstance->Get_GameObject(LEVEL_STAGE_BOSS, TEXT("Layer_BossTrail"), 0);
+                if (nullptr != pTrail)
+                    pTrail->Set_Dead();
+
+                CEffect::EFFECT_DESC EffectDesc{};
+                EffectDesc.pPlayerMatrix = m_pParentMatrix;
+                EffectDesc.fDuration = 0.7f;
+                if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, TEXT("Prototype_GameObject_Effect_Tartaglia_Blade_Extra"), TEXT("Layer_Effect"), &EffectDesc)))
+                    return;
+
+            }
+
         }
     }
     else m_fCurrentTime = 0.f;

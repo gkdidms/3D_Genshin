@@ -156,7 +156,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Action.h" />
-    <ClInclude Include="..\public\AlertCircle.h" />
     <ClInclude Include="..\public\Avatar_Face.h" />
     <ClInclude Include="..\public\Avatar_Side.h" />
     <ClInclude Include="..\public\Avatar_Side_Select.h" />
@@ -165,14 +164,24 @@
     <ClInclude Include="..\Public\BossHP.h" />
     <ClInclude Include="..\Public\BossHP_Outline.h" />
     <ClInclude Include="..\public\Boss_Normal.h" />
+    <ClInclude Include="..\public\Boss_Range_Bullet.h" />
+    <ClInclude Include="..\public\Boss_Skill.h" />
+    <ClInclude Include="..\public\Boss_Trail.h" />
     <ClInclude Include="..\public\Btn_Frame.h" />
     <ClInclude Include="..\public\Bullet.h" />
     <ClInclude Include="..\public\Effect.h" />
     <ClInclude Include="..\public\EffectObject.h" />
+    <ClInclude Include="..\Public\Effect_AlertCircle.h" />
     <ClInclude Include="..\public\Effect_Image.h" />
+    <ClInclude Include="..\Public\Effect_Monoceros.h" />
     <ClInclude Include="..\public\Effect_Particle.h" />
+    <ClInclude Include="..\public\Effect_Wave.h" />
     <ClInclude Include="..\public\Feiyan_Normal.h" />
     <ClInclude Include="..\public\Feiyan_Normal_Trail.h" />
+    <ClInclude Include="..\Public\Harbinger_AlertCircle.h" />
+    <ClInclude Include="..\public\Harbinger_Blade_Range.h" />
+    <ClInclude Include="..\public\Harbinger_Cover.h" />
+    <ClInclude Include="..\Public\Harbinger_Normal.h" />
     <ClInclude Include="..\public\Hili_Arrow.h" />
     <ClInclude Include="..\public\Item.h" />
     <ClInclude Include="..\public\LoadingBar.h" />
@@ -185,6 +194,7 @@
     <ClInclude Include="..\public\SkillBtn_E.h" />
     <ClInclude Include="..\public\SkillBtn_Icon.h" />
     <ClInclude Include="..\Public\SkillBtn_Q.h" />
+    <ClInclude Include="..\public\Skill_Power.h" />
     <ClInclude Include="..\public\StateExtraAttack.h" />
     <ClInclude Include="..\public\Feiyan_Body.h" />
     <ClInclude Include="..\public\Body_EvilEye.h" />
@@ -291,7 +301,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Action.cpp" />
-    <ClCompile Include="..\private\AlertCircle.cpp" />
     <ClCompile Include="..\private\Avatar_Face.cpp" />
     <ClCompile Include="..\private\Avatar_Side.cpp" />
     <ClCompile Include="..\private\Avatar_Side_Select.cpp" />
@@ -300,14 +309,24 @@
     <ClCompile Include="..\Private\BossHP.cpp" />
     <ClCompile Include="..\Private\BossHP_Outline.cpp" />
     <ClCompile Include="..\private\Boss_Normal.cpp" />
+    <ClCompile Include="..\private\Boss_Range_Bullet.cpp" />
+    <ClCompile Include="..\private\Boss_Skill.cpp" />
+    <ClCompile Include="..\private\Boss_Trail.cpp" />
     <ClCompile Include="..\private\Btn_Frame.cpp" />
     <ClCompile Include="..\private\Bullet.cpp" />
     <ClCompile Include="..\private\Effect.cpp" />
     <ClCompile Include="..\private\EffectObject.cpp" />
+    <ClCompile Include="..\Private\Effect_AlertCircle.cpp" />
     <ClCompile Include="..\private\Effect_Image.cpp" />
+    <ClCompile Include="..\Private\Effect_Monoceros.cpp" />
     <ClCompile Include="..\private\Effect_Particle.cpp" />
+    <ClCompile Include="..\private\Effect_Wave.cpp" />
     <ClCompile Include="..\private\Feiyan_Normal.cpp" />
     <ClCompile Include="..\private\Feiyan_Normal_Trail.cpp" />
+    <ClCompile Include="..\Private\Harbinger_AlertCircle.cpp" />
+    <ClCompile Include="..\private\Harbinger_Blade_Range.cpp" />
+    <ClCompile Include="..\private\Harbinger_Cover.cpp" />
+    <ClCompile Include="..\Private\Harbinger_Normal.cpp" />
     <ClCompile Include="..\private\Hili_Arrow.cpp" />
     <ClCompile Include="..\private\Item.cpp" />
     <ClCompile Include="..\private\LoadingBar.cpp" />
@@ -320,6 +339,7 @@
     <ClCompile Include="..\private\SkillBtn_E.cpp" />
     <ClCompile Include="..\private\SkillBtn_Icon.cpp" />
     <ClCompile Include="..\Private\SkillBtn_Q.cpp" />
+    <ClCompile Include="..\private\Skill_Power.cpp" />
     <ClCompile Include="..\private\StateExtraAttack.cpp" />
     <ClCompile Include="..\private\Feiyan_Body.cpp" />
     <ClCompile Include="..\private\Body_EvilEye.cpp" />

@@ -1,6 +1,7 @@
 #include "Tartaglia_DualBlade.h"
 
 #include "Boss.h"
+#include <Effect.h>
 
 CTartaglia_DualBlade::CTartaglia_DualBlade(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CWeapon{pDevice, pContext }
@@ -34,10 +35,27 @@ void CTartaglia_DualBlade::Priority_Tick(const _float& fTimeDelta)
 
 void CTartaglia_DualBlade::Tick(const _float& fTimeDelta)
 {
+	if (m_iPreState != *m_pState)
+	{
+		if (*m_pState == CBoss::BOSS_DUALBLADE_HIRAISHIN_LOOP)
+		{
+			CEffect::EFFECT_DESC EffectDesc{};
+			EffectDesc.fDuration = 0.8f;
+			//_matrix ChangeMatrix = TrailMatrix;
+			//ChangeMatrix.r[3] = XMVectorSetZ(ChangeMatrix.r[3], XMVectorGetZ(ChangeMatrix.r[3]) + -2.f);
+			//XMStoreFloat4x4(&CopyTrailMatrix, ChangeMatrix);
+			EffectDesc.pPlayerMatrix = &m_pWorldMatrix;
+			if (m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, TEXT("Prototype_GameObject_Effect_Tartaglia_Lightning_4"), TEXT("Layer_Effect"), &EffectDesc))
+				return;
+		}
+	}
+
 }
 
 void CTartaglia_DualBlade::Late_Tick(const _float& fTimeDelta)
 {
+	if (m_iPreState != *m_pState)
+		m_iPreState = *m_pState;
 	_matrix		SocketMatrix = XMMatrixIdentity();
 
 	m_isHide = !(*m_pState == CBoss::BOSS_DUALBLADE_HIRAISHIN_BS || *m_pState == CBoss::BOSS_DUALBLADE_HIRAISHIN_AS || *m_pState == CBoss::BOSS_DUALBLADE_HIRAISHIN_LOOP

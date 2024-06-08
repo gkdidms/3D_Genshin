@@ -18,19 +18,26 @@ class CBT_Tartaglia :
 public:
     enum SKILL {
         SKILL_RUSH,
-        SKILL_BOW_COMBO,
+       // SKILL_BOW_COMBO,
         SKILL_BOW_COVER,
         SKILL_BOW_NORMAL,
         SKILL_BOW_RENGE,
         SKILL_BOW_POWER,
         SKILL_BLADE_EXTRA,
-        SKILL_BLADE_NORMAL,
+        //SKILL_BLADE_NORMAL,
         SKILL_END
     };
 
 private:
     CBT_Tartaglia();
     virtual ~CBT_Tartaglia() = default;
+
+public:
+    virtual _bool isRushSkill() {
+        return m_Skill == SKILL_RUSH;
+    }
+
+    virtual _bool isExtraSkill() { return m_Skill == SKILL_BLADE_EXTRA; }
 
 public:
     virtual HRESULT Initialize(void* pArg) override;
@@ -60,13 +67,13 @@ private:
 
     //공격 selector
     CNode::NODE_STATE Rush_Move();
-    CNode::NODE_STATE Bow_ComboAttack(); // 일반공격
+    //CNode::NODE_STATE Bow_ComboAttack(); // 일반공격
     CNode::NODE_STATE Bow_CoverAttack(); // 
     CNode::NODE_STATE Bow_NormalAttack();
     CNode::NODE_STATE Bow_PowerAttack();
     CNode::NODE_STATE Bow_RangeAttack();
     CNode::NODE_STATE Blade_ExtraAttack();
-    CNode::NODE_STATE Blade_NormalAttack();
+    //CNode::NODE_STATE Blade_NormalAttack();
 
     //걷기 Sequence
     CNode::NODE_STATE Check_Walk();

@@ -2,6 +2,7 @@
 
 #include "Boss.h"
 #include "BT_Tartaglia.h"
+#include <Effect.h>
 
 CBody_Tartaglia::CBody_Tartaglia(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CBoss_Body{ pDevice, pContext }
@@ -51,7 +52,7 @@ void CBody_Tartaglia::Tick(const _float& fTimeDelta)
     {
         m_fCurrentTime += fTimeDelta;
 
-        if (m_fTime > m_fCurrentTime)
+        if (m_fDuration > m_fCurrentTime)
         {
             // 플레이어 위치와 보스의 위치가 가깝다면 이동 끝
             _vector vTargetPos = XMLoadFloat4x4(m_pTargetMatrix).r[3];
@@ -67,6 +68,12 @@ void CBody_Tartaglia::Tick(const _float& fTimeDelta)
                 MoveMatrix.r[3] = XMVectorSet(0.f, 0.f, m_fLongDistanceSpeed  * fTimeDelta * -1.f, 1.f);
 
             XMStoreFloat4x4(&m_PlayerMovePos, MoveMatrix);
+
+            CEffect::EFFECT_DESC EffectDesc{};
+            EffectDesc.fDuration = 0.5f;
+            EffectDesc.pPlayerMatrix = m_pParentMatrix;
+            if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, TEXT("Prototype_GameObject_Effect_Tartaglia_Rush_Effect"), TEXT("Layer_Effect"), &EffectDesc)))
+                return;
         }
     }
     else m_fCurrentTime = 0.f;
@@ -78,6 +85,12 @@ void CBody_Tartaglia::Tick(const _float& fTimeDelta)
         MoveMatrix.r[3] = XMVectorSet(0.f, 0.f, m_fLongDistanceSpeed * fTimeDelta, 1.f);
 
         XMStoreFloat4x4(&m_PlayerMovePos, MoveMatrix);
+
+        CEffect::EFFECT_DESC EffectDesc{};
+        EffectDesc.fDuration = 0.5f;
+        EffectDesc.pPlayerMatrix = m_pParentMatrix;
+        if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, TEXT("Prototype_GameObject_Effect_Tartaglia_BackStep"), TEXT("Layer_Effect"), &EffectDesc)))
+            return;
     }
 
     //Rush

@@ -12,7 +12,7 @@ private:
     virtual ~CPicking() = default;
 
 public:
-    _vector Get_PickDir() { return XMLoadFloat4(&m_vPickDir); }
+    _float Get_Z() { return m_fZ; }
 
 public:
     HRESULT Initialize(HWND hWnd);
@@ -30,7 +30,8 @@ private:
 
     _bool							m_isSuccess = { false };
     _float4							m_vPickPos = {};
-    _float4 m_vPickDir = {};
+
+    _float m_fZ = {0.f};
 
 private:
     _float Compute_ProjZ(_float fX, _float fY);

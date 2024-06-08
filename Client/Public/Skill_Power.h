@@ -1,27 +1,23 @@
 #pragma once
 #include "C:\Users\yeeun\dev\std\Genshin_Project\EngineSDK\Inc\GameObject.h"
-
 #include "Client_Defines.h"
 
 BEGIN(Engine)
-class CVIBuffer_Rect;
-class CShader;
-class CTexture;
+class CModel;
 END
 
 BEGIN(Client)
-class CAlertCircle :
+class CSkill_Power :
     public CGameObject
 {
 public:
-    typedef struct tAlertCircleDesc : public CGameObject::GAMEOBJECT_DESC {
-        _vector vCreatePos;
-    } ALERTCIRCLE_DESC;
-
+    typedef struct tSkillPowerDesc {
+        _matrix ParentMatrix;
+    } SKILL_POWER_DESC;
 private:
-    CAlertCircle(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-    CAlertCircle(const CAlertCircle& rhs);
-    virtual ~CAlertCircle() = default;
+    CSkill_Power(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+    CSkill_Power(const CSkill_Power& rhs);
+    virtual ~CSkill_Power() = default;
 
 public:
     virtual HRESULT Initialize_Prototype() override;
@@ -33,21 +29,21 @@ public:
 
 private:
     CShader* m_pShaderCom = { nullptr };
-    CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
-    CTexture* m_pTextureCom = { nullptr };
+    CModel* m_pModelCom = { nullptr };
 
-private:
-    _float m_fMaxSize = { 5.f };
-    _float m_fSpeed = { 5.f };
+    _float m_fAccelTime = { 0.f };
+    _float m_fPower = { 5.f };
+    _float4 m_vTargetLook = {};
+    _float m_fSpeed = { 10.f };
+    _float m_fHeight = { 0.f };
 
 private:
     HRESULT Add_Components();
     HRESULT Bind_ResourceData();
-    void Change_Animation();
 
 public:
-    static CAlertCircle* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-    virtual CGameObject* Clone(void* pArg) override;
+    static CSkill_Power* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+    virtual CGameObject* Clone(void* pArg);
     virtual void Free() override;
 };
 END

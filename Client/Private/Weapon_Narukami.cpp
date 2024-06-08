@@ -35,9 +35,7 @@ void CWeapon_Narukami::Priority_Tick(const _float& fTimeDelta)
 
 void CWeapon_Narukami::Tick(const _float& fTimeDelta)
 {
-	if (!m_isHide)
-		m_fCurrentTime += fTimeDelta;
-	else m_fCurrentTime = 0.f;
+	__super::Tick(fTimeDelta);
 }
 
 void CWeapon_Narukami::Late_Tick(const _float& fTimeDelta)
@@ -49,6 +47,8 @@ void CWeapon_Narukami::Late_Tick(const _float& fTimeDelta)
 		|| *m_pState == PLAYER_ELEMENTAL_BURST
 		|| *m_pState == PLAYER_ELEMENTAL_BURST_END)
 	{
+		if (m_isHide == true)
+			m_fCurrentTime = 0.f;
 		m_isHide = false;
 		_matrix		SocketMatrix = XMLoadFloat4x4(m_pSocketMatrix);
 
@@ -59,18 +59,32 @@ void CWeapon_Narukami::Late_Tick(const _float& fTimeDelta)
 		XMStoreFloat4x4(&m_pWorldMatrix, m_pTransformCom->Get_WorldMatrix() * SocketMatrix * XMLoadFloat4x4(m_pParentMatrix));
 	}
 	else
+	{
+		if (m_isHide == false)
+			m_fCurrentTime = 0.f;
 		m_isHide = true;
-	/*if (false == m_isHide)
-		m_pGameInstance->Add_Renderer(CRenderer::RENDER_NONBLENDER, this);*/
+	}
+		
 }
 
 HRESULT CWeapon_Narukami::Render()
 {
-	if (m_isHide)
-		return S_OK;	
-
-	if (FAILED(__super::Render()))
+	if (FAILED(Bind_ResourceData()))
 		return E_FAIL;
+
+	_uint iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (int i = 0; i < iNumMeshes; ++i)
+	{
+		//if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
+		//	return E_FAIL;
+
+		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
+			continue;
+
+		m_pShaderCom->Begin(m_isHide == false ? 2 : 3);
+		m_pModelCom->Render(i);
+	}
 
 	return S_OK;
 }

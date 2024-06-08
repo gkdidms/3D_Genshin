@@ -2,6 +2,8 @@
 
 #include "GameInstance.h"
 
+#include "Effect.h"
+
 CBoss_Normal::CBoss_Normal(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMonster_Bullet{ pDevice, pContext }
 {
@@ -22,7 +24,7 @@ HRESULT CBoss_Normal::Initialize(void* pArg)
 	if (nullptr == pArg)
 		return E_FAIL;
 
-	BULLET_DESC* pDesc = static_cast<BULLET_DESC*>(pArg);
+	BOSS_NORMAL_DESC* pDesc = static_cast<BOSS_NORMAL_DESC*>(pArg);
 	m_fSpeed = pDesc->fSpeedPecSec;
 
 	if (FAILED(__super::Initialize(pArg)))
@@ -36,14 +38,17 @@ HRESULT CBoss_Normal::Initialize(void* pArg)
 	HandMatrix.r[3] = XMLoadFloat4x4(&pDesc->HandCombinedTransformationMatrix).r[3];
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(45.f));
 	WorldMatrix = m_pTransformCom->Get_WorldMatrix() * HandMatrix * XMLoadFloat4x4(pDesc->ParentMatrix);
+	m_isUp = pDesc->isUp;
 
 	m_pTransformCom->Set_WorldMatrix(WorldMatrix);
-	m_vTargetPos.y = m_vTargetPos.y + 1.f;
+	m_vTargetPos.y = m_isUp ? m_vTargetPos.y + 7.f : m_vTargetPos.y + 1.f;
+
 
 	m_fHeight = pDesc->ParentMatrix->m[3][1]; // y 값 저장
 
 	XMStoreFloat4(&m_vTargetLook, XMVector3Normalize(XMLoadFloat4(&m_vTargetPos) - m_pTransformCom->Get_State(CTransform::STATE_POSITION)));
 
+	m_fDuration = 1.f;
 	return S_OK;
 }
 
@@ -53,15 +58,26 @@ void CBoss_Normal::Priority_Tick(const _float& fTimeDelta)
 
 void CBoss_Normal::Tick(const _float& fTimeDelta)
 {
+	if (m_fDuration > m_fCurrentTime)
+		m_fCurrentTime += fTimeDelta;
+	else m_isDead = true;
+
 	//이동
-	m_isDead = Move_Arrow(fTimeDelta);
+	if (!m_isUp)
+		m_isDead = Move_Arrow(fTimeDelta);
+	else
+		Move_Arrow_Up(fTimeDelta);
 
 	//버퍼 업데이트
+
 	_float4x4 TrailMatrix = *m_pTransformCom->Get_WorldFloat4x4();
 	// m_pTransformCom->Get_Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(90.f), &TrailMatrix);
 	m_pTrailVIBufferCom->Add_Trail(fTimeDelta, XMLoadFloat4x4(&TrailMatrix));
 
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
+
+	if (!m_isUp)
+		Add_TrailEffect();
 }
 
 void CBoss_Normal::Late_Tick(const _float& fTimeDelta)
@@ -186,6 +202,25 @@ _bool CBoss_Normal::Move_Arrow(const _float& fTimeDelta)
 	}
 
 	return false;
+}
+
+void CBoss_Normal::Move_Arrow_Up(const _float& fTimeDelta)
+{
+	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+	vPosition += XMLoadFloat4(&m_vTargetLook) * m_fSpeed * fTimeDelta;
+
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
+}
+
+void CBoss_Normal::Add_TrailEffect()
+{
+	CEffect::EFFECT_DESC Desc{};
+	Desc.fDuration = 0.3;
+	Desc.pPlayerMatrix = m_pTransformCom->Get_WorldFloat4x4();
+
+	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, TEXT("Prototype_GameObject_Effect_Tartaglia_Normal_1"), TEXT("Layer_WaterTrail"), &Desc)))
+		return;
 }
 
 CBoss_Normal* CBoss_Normal::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

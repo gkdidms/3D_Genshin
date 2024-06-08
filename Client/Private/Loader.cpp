@@ -93,10 +93,21 @@
 #include "Tighnari_Burst.h"
 
 #include "Wanderer_Normal.h"
+
+#include "Harbinger_Blade_Range.h"
+#include "Boss_Range_Bullet.h"
+#include "Harbinger_Normal.h"
+#include "Harbinger_Cover.h"
+
 #pragma endregion
 
 #pragma region Effect
 #include "Effect.h"
+#include "Effect_Wave.h"
+#include "Effect_AlertCircle.h"
+#include "Effect_Monoceros.h"
+
+#include "Boss_Trail.h"
 #pragma endregion
 
 
@@ -657,6 +668,21 @@ HRESULT CLoader::Loading_For_Stage_Boss()
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_Skill_Wanderer_Normal", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Eff_Trail_61_01.png"), 1))))
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_Dissolve", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Eff_DissolveNoise.png"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_Boss_Alert_Circle", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/AlertCircle/AlertCircle.png"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_Boss_Trail", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Tartaglia/Boss_Trail.png"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_Boss_Trail_Mask", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Tartaglia/Eff_Mask_116_Clamp.png"), 1))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_Harbinger_Bullet_Trail", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Monster/Boss_Trail.png"), 1))))
+		return E_FAIL;
+
+
+	if (FAILED(m_pGameInstance->Add_Component_Prototype(LEVEL_STAGE_BOSS, L"Prototype_Component_Texture_Harbinger_Cover_AlertCircle_Bullet", CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Tartaglia/Boss_Ring.png"), 1))))
+		return E_FAIL;
 #pragma endregion
 
 #pragma region UI
@@ -947,68 +973,62 @@ HRESULT CLoader::Loading_For_Stage_Boss()
 	m_fProgress = 87.f;
 
 #pragma region Effect
-	////닐루 Normal
-	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Normal_00", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Normal_Atk_0.dat"))))
-	//	return E_FAIL;
-	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Normal_01", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Normal_Atk_1.dat"))))
-	//	return E_FAIL;
-	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Normal_02", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Normal_Atk_2.dat"))))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Tartaglia_Normal_1", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Tartaglia_Normal_1.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Tartaglia_Normal_1_Particle", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Tartaglia_Normal_1_Particle.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Tartaglia_Rush_Effect", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Tartaglia_Rush_Effect.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Tartaglia_Rain_Effect", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Tartaglia_Rain_Effect_1.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Tartaglia_Wave_Trail_Effect", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Tartaglia_Wave_Trail.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Tartaglia_Wave_Effect", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Tartaglia_Wave_Effect_1.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Tartaglia_AiertCircle_Bullet", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Tartaglia_AlertCircle_Bullet.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Tartaglia_AiertCircle_Finish", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Tartaglia_AlertCircle_Finish.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Tartaglia_BackStep", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Tartaglia_Backstep.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Tartaglia_Bow_Start", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Tartaglia_Bullet_Start.dat"))))
+		return E_FAIL;
 
-	////닐루 Elemenetal Art Normal
-	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Elemental_Art_Normal_00", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Elemental_Art_Atk_0.dat"))))
-	//	return E_FAIL;
-	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Elemental_Art_Normal_01", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Elemental_Art_Atk_1.dat"))))
-	//	return E_FAIL;
-	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Elemental_Art_Normal_02", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Elemental_Art_Atk_2.dat"))))
-	//	return E_FAIL;
-	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Elemental_Art_Normal_02_Particle", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Elemental_Art_Atk_2_Particle.dat"))))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Tartaglia_Lightning_1", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Tartaglia_Lightning_1.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Tartaglia_Lightning_2", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Tartaglia_Lightning_2.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Tartaglia_Lightning_3", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Tartaglia_Lightning_3.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Tartaglia_Lightning_4", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Tartaglia_Lightning_4.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Tartaglia_Lightning_Ring", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Tartaglia_Lightning_Ring.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Tartaglia_Lightning_Ring_Player", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Tartaglia_Lightning_Ring_Player.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Tartaglia_Lightning_Hiraishin", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Tartaglia_Lightning_Hiraishin.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Tartaglia_Lightning_Hiraishin_Bullet", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Tartaglia_Lightning_Hiraishin_Bullet.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Tartaglia_Blade", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Tartaglia_Blade_2.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Tartaglia_Blade_Sweep", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Tartaglia_Blade_Sweep.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Tartaglia_Blade_Extra", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Tartaglia_Blade_Extra.dat"))))
+		return E_FAIL;
 
-	////닐루 Elemenetal Art Water
-	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Elemental_Art_Water_00", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Elemental_Art_Water_0.dat"))))
-	//	return E_FAIL;
-	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Elemental_Art_Water_01", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Elemental_Art_Water_1.dat"))))
-	//	return E_FAIL;
-	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Elemental_Art_Water_02", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Elemental_Art_Water_2.dat"))))
-	//	return E_FAIL;
-	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Nilou_Elemental_Art_Water_03", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Nilou_Elemental_Art_Water_3.dat"))))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Tartaglia_Blade_2", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Tartaglia_Blade_1.dat"))))
+		return E_FAIL;
 
-	////타이나리 Normal
-	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Tighnari_Normal_Texture", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Tighnar_Normal_Texture.dat"))))
-	//	return E_FAIL;
-	////타이나리 Elemenetal Art
-	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Tighnari_Elemental_Art", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Tighnari_Elemental_Art.dat"))))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Harbinger_Bow_Range", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Tartaglia_Water_Boom.dat"))))
+		return E_FAIL;
 
-	////방랑자 Normal
-	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Wanderer_Normal_00", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Wanderer_Normal_Atk_0.dat"))))
-	//	return E_FAIL;
-	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Wanderer_Normal_01", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Wanderer_Normal_Atk_1.dat"))))
-	//	return E_FAIL;
-
-	////연비 Normal
-	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Feiyan_Normal_Particle", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Feiyan_Normal_Particle.dat"))))
-	//	return E_FAIL;
-	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Feiyan_Normal_Start_Texture", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Feiyan_Normal_Start.dat"))))
-	//	return E_FAIL;
-	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Feiyan_Normal_Start_Particle", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Feiyan_Normal_Start_Particle.dat"))))
-	//	return E_FAIL;
-
-	////연비 Elemenetal Art
-	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Feiyan_Elemenetal_Art", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Feiyan_Art.dat"))))
-	//	return E_FAIL;
-
-	////연비 Elemenetal Burst
-	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Feiyan_Burst_Start", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Feiyan_Burst_Start.dat"))))
-	//	return E_FAIL;
-	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Feiyan_Burst_End", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Feiyan_Busrt_End.dat"))))
-	//	return E_FAIL;
-
-	////몬스터 Hit
-	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Effect_Hit_Texture", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Hit_Texture.dat"))))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_Component_GameObject_Harbinger_Cover_AlertCircle", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Harbinger_AlertCircle.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_Component_GameObject_Harbinger_Cover_AlertCircle_Start", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Harbinger_AlertCircle_Start.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_Component_GameObject_Harbinger_Cover_AlertCircle_Bullet_End", CEffect::Create(m_pDevice, m_pContext, "../../Data/Effect/Harbinger_AlertCircle_Bullet_End.dat"))))
+		return E_FAIL;
 #pragma endregion
 
 #pragma region UI
@@ -1047,23 +1067,23 @@ HRESULT CLoader::Loading_For_Stage_Boss()
 #pragma endregion
 
 #pragma region Skill
-	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Skill_Hili_Arrow", CHili_Arrow::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
-	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Skill_Boss_Arrow", CBoss_Normal::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Skill_Tartiglia_Wave_Bullet", CEffect_Wave::Create(m_pDevice, m_pContext, "../../Data/Effect/Tartaglia_Wave_Bullet.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Skill_Tartiglia_AlertCircle", CEffect_AlertCircle::Create(m_pDevice, m_pContext, "../../Data/Effect/Tartaglia_AlertCircle.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Skill_Tartiglia_Monoceros", CEffect_Monoceros::Create(m_pDevice, m_pContext, "../../Data/Effect/Tartaglia_Monoceros.dat"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Skill_Tartiglia_Trail", CBoss_Trail::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
-	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Skill_Feiyan_Normal", CFeiyan_Normal::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
-	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Skill_Feiyan_Normal_Trail", CFeiyan_Normal_Trail::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
-
-	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Skill_Tighnari_Normal", CTighnari_Normal::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
-	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Skill_Tighnari_Busrt", CTighnari_Burst::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
-
-	//if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Skill_Wanderer_Normal", CWanderer_Normal::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Skill_Harbinger_Bow_Range", CHarbinger_Blade_Range::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Skill_Harbinger_Bow_Range_Bullet", CBoss_Range_Bullet::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Skill_Harbinger_Bow_Normal", CHarbinger_Normal::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_Prototype(L"Prototype_GameObject_Skill_Harbinger_Bow_Cover", CHarbinger_Cover::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 #pragma endregion
 
 	m_fProgress = 100.f;

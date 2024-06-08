@@ -74,24 +74,17 @@ _vector CPicking::Picking(_bool* isSuccess)
 	/* 투영공간상의 좌표다. = 로컬위치 * 월드행렬 * 뷰행렬 * 투영행렬 / w */
 	vMousePos = XMVectorSetX(vMousePos, ptMouse.x / (m_iWinSizeX * 0.5f) - 1.f);
 	vMousePos = XMVectorSetY(vMousePos, ptMouse.y / -(m_iWinSizeY * 0.5f) + 1.f);
-	vMousePos = XMVectorSetZ(vMousePos, Compute_ProjZ(ptMouse.x - 1, ptMouse.y - 1));
+	m_fZ = Compute_ProjZ(ptMouse.x - 1, ptMouse.y - 1);
+	vMousePos = XMVectorSetZ(vMousePos, m_fZ);
 	vMousePos = XMVectorSetW(vMousePos, 1.f);
 
 	if (XMVectorGetZ(vMousePos) < 0.0f)
 		*isSuccess = false;
 
 	vMousePos = XMVector3TransformCoord(vMousePos, m_pGameInstance->Get_Transform_Inverse_Matrix(CPipeLine::D3DTS_PROJ));
-
-	_vector vPickPos, vPickDir;
-	vPickPos = XMVectorSet(0.f, 0.f, 0.f, 1.f);
-	vPickDir = XMVector3Normalize(vMousePos - vPickPos);
-
-
 	vMousePos = XMVector3TransformCoord(vMousePos, m_pGameInstance->Get_Transform_Inverse_Matrix(CPipeLine::D3DTS_VIEW));
-	vPickDir = XMVector3TransformNormal(vPickDir, m_pGameInstance->Get_Transform_Inverse_Matrix(CPipeLine::D3DTS_VIEW));
 
 	XMStoreFloat4(&m_vPickPos, vMousePos);
-	XMStoreFloat4(&m_vPickDir, vPickDir);
 	
 	return vMousePos;
 }

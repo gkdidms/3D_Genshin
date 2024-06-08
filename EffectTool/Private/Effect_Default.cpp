@@ -50,7 +50,7 @@ void CEffect_Default::Tick(const _float& fTimeDelta)
 	{
 		if (m_isFrameStop == false)
 		{
-			m_fFrame += m_iNumTexture * fTimeDelta;
+			m_fFrame += m_iNumTexture * fTimeDelta * 3.f;
 
 			if (m_fFrame >= m_iNumTexture)
 			{

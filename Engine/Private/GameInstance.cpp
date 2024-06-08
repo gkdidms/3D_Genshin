@@ -12,6 +12,7 @@
 #include "Font_Manager.h"
 #include "Renderer.h"
 #include "Picking.h"
+#include "SoundMgr.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -27,6 +28,10 @@ HRESULT CGameInstance::Initialize_Engine(_uint iMaxLevelIndex, const ENGINE_DESC
 
 	m_pTimer_Manager = CTimer_Manager::Create();
 	if (nullptr == m_pTimer_Manager)
+		return E_FAIL;
+
+	m_pSound_Manager = CSoundMgr::Create();
+	if (nullptr == m_pSound_Manager)
 		return E_FAIL;
 
 	m_pInput_Manager = CInput_Manager::Create(Engine_Desc.hWnd);
@@ -121,6 +126,31 @@ HRESULT CGameInstance::Present()
 HRESULT CGameInstance::Open_Level(_uint iLevelIndex, CLevel* pLevel)
 {
 	return m_pLevel_Manager->Open_Level(iLevelIndex, pLevel);
+}
+
+void CGameInstance::PlaySound_W(TCHAR* pSoundKey, CHANNELID eID, float fVolume)
+{
+	m_pSound_Manager->PlaySound_W(pSoundKey, eID, fVolume);
+}
+
+void CGameInstance::PlayBGM(TCHAR* pSoundKey, float fVolume)
+{
+	m_pSound_Manager->PlayBGM(pSoundKey, fVolume);
+}
+
+void CGameInstance::StopSound(CHANNELID eID)
+{
+	m_pSound_Manager->StopSound(eID);
+}
+
+void CGameInstance::StopAll()
+{
+	m_pSound_Manager->StopAll();
+}
+
+void CGameInstance::SetChannelVolume(CHANNELID eID, float fVolume)
+{
+	m_pSound_Manager->SetChannelVolume(eID, fVolume);
 }
 
 HRESULT CGameInstance::Add_GameObject_Prototype(const wstring strGameObjectTag, CGameObject* pGameObject)
@@ -320,9 +350,9 @@ _vector CGameInstance::Picking(_bool* isSuccess)
 	return m_pPicking->Picking(isSuccess);
 }
 
-_vector CGameInstance::Get_PickDir()
+_float CGameInstance::Get_Z()
 {
-	return m_pPicking->Get_PickDir();
+	return m_pPicking->Get_Z();
 }
 
 HRESULT CGameInstance::Add_RenderTarget(const wstring& strRenderTargetTag, _uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixelFormat, const _float4& vClearColor)

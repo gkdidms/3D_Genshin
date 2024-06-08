@@ -19,8 +19,12 @@ public:
 private:
     _float4x4 m_MoveToTargetMatrix = {};
 
-    _float m_fTime = { 1.5f };
+    _float m_fDuration = { 1.f };
     _float m_fCurrentTime = { 0.f };
+
+    _float m_fAtkDelayDuration = { 0.3f };
+    _float m_fAtkCurrentTime = { 0.f };
+
 
 private:
     virtual HRESULT Add_Components() override;

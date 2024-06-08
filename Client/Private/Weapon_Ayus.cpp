@@ -35,9 +35,7 @@ void CWeapon_Ayus::Priority_Tick(const _float& fTimeDelta)
 
 void CWeapon_Ayus::Tick(const _float& fTimeDelta)
 {
-	if (!m_isHide)
-		m_fCurrentTime += fTimeDelta;
-	else m_fCurrentTime = 0.f;
+	__super::Tick(fTimeDelta);
 }
 
 void CWeapon_Ayus::Late_Tick(const _float& fTimeDelta)
@@ -51,10 +49,16 @@ void CWeapon_Ayus::Late_Tick(const _float& fTimeDelta)
 		|| *m_pState == PLAYER_ELEMENTAL_BURST
 		|| *m_pState == PLAYER_ELEMENTAL_BURST_END)
 	{
+		m_isHide = false;
+		
 		SocketMatrix = XMLoadFloat4x4(m_pSocketMatrix);
 	}
 	else
 	{
+		if (m_isHide == false)
+			m_fCurrentTime = 0.f;
+
+		m_isHide = true;
 		SocketMatrix = XMLoadFloat4x4(m_pBackMatrix);
 	}
 
@@ -69,9 +73,6 @@ void CWeapon_Ayus::Late_Tick(const _float& fTimeDelta)
 
 HRESULT CWeapon_Ayus::Render()
 {
-	if (m_isHide)
-		return S_OK;
-
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 

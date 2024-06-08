@@ -41,6 +41,19 @@ void CEffect_Trail::Priority_Tick(const _float& fTimeDelta)
 
 void CEffect_Trail::Tick(const _float& fTimeDelta)
 {
+	if (m_iNumTexture > 1)
+	{
+		if (m_isFrameStop == false)
+		{
+			m_fFrame += m_iNumTexture * fTimeDelta * 2.f;
+
+			if (m_fFrame >= m_iNumTexture)
+			{
+				if (!m_isFrameLoop) m_isFrameStop = true;
+				m_fFrame = 0.f;
+			}
+		}
+	}
 }
 
 void CEffect_Trail::Late_Tick(const _float& fTimeDelta)

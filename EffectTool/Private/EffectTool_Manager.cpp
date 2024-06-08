@@ -240,6 +240,7 @@ void CEffectTool_Manager::Window_Effect()
             EffectDesc.strMaskFilePath = m_strMaskFilePath;
             EffectDesc.isNoise = m_isNoise;
             EffectDesc.strNoiseFilePath = m_strNoiseFilePath;
+            EffectDesc.iTextureNum = m_iTextureNum;
 
             if (FAILED(m_pEffectManager->Add_Effect(CEffect_Manager::EFFECT_TYPE(m_iEffectType), &EffectDesc)))
             {
@@ -257,6 +258,7 @@ void CEffectTool_Manager::Window_Effect()
             EffectDesc.strMaskFilePath = m_strMaskFilePath;
             EffectDesc.isNoise = m_isNoise;
             EffectDesc.strNoiseFilePath = m_strNoiseFilePath;
+            EffectDesc.iTextureNum = m_iTextureNum;
 
             if (FAILED(m_pEffectManager->Add_Effect(CEffect_Manager::EFFECT_TYPE(m_iEffectType), &EffectDesc)))
             {
@@ -344,11 +346,6 @@ void CEffectTool_Manager::Window_EffectPatch()
         }
     }
 
-    if (m_iPatchIndex != -1)
-    {
-        m_EffectMatrix = *Effects[m_iPatchIndex]->m_pTransformCom->Get_WorldFloat4x4();
-    }
-
     ImGui::Text(ImGuizmo::IsOver(ImGuizmo::TRANSLATE) ? "Over translate gizmo" : "");
 
     if (ImGui::RadioButton("Translate", mCurrentGizmoOperation == ImGuizmo::TRANSLATE))
@@ -367,6 +364,9 @@ void CEffectTool_Manager::Window_EffectPatch()
     ImGui::InputFloat3("Sc", matrixScale);
     ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, (_float*)&m_EffectMatrix);
 
+    if (m_iPatchIndex != -1)
+        Effects[m_iPatchIndex]->m_pTransformCom->Set_WorldMatrix(XMLoadFloat4x4(&m_EffectMatrix));
+    
     if (m_iPatchIndex == -1)
     {
         ImGui::End();
@@ -374,8 +374,6 @@ void CEffectTool_Manager::Window_EffectPatch()
     }
         
     CTool_Effect* pCurrentEffect = Effects[m_iPatchIndex];
-
-    pCurrentEffect->m_pTransformCom->Set_WorldMatrix(XMLoadFloat4x4(&m_EffectMatrix));
 
     if (pCurrentEffect->Get_EffectType() == CEffect_Manager::EFFECT_IMG)
     {
@@ -500,6 +498,22 @@ void CEffectTool_Manager::Window_EffectPatch()
             pCurrentEffect->Set_ShaderPass(m_iShaderPass);
         if (ImGui::RadioButton("Tighnari_Normal", &m_iShaderPass, 5))
             pCurrentEffect->Set_ShaderPass(m_iShaderPass);
+        if (ImGui::RadioButton("Tartaglia_Rush", &m_iShaderPass, 6))
+            pCurrentEffect->Set_ShaderPass(m_iShaderPass);
+        if (ImGui::RadioButton("Tartaglia_AlertCircle", &m_iShaderPass, 7))
+            pCurrentEffect->Set_ShaderPass(m_iShaderPass);
+        if (ImGui::RadioButton("Tartaglia_AlertCircle_Bullet", &m_iShaderPass, 8))
+            pCurrentEffect->Set_ShaderPass(m_iShaderPass);
+        if (ImGui::RadioButton("Tartaglia_Bullet_Ring", &m_iShaderPass, 9))
+            pCurrentEffect->Set_ShaderPass(m_iShaderPass);
+        if (ImGui::RadioButton("Tartaglia_Bullet_Ring_Background", &m_iShaderPass, 10))
+            pCurrentEffect->Set_ShaderPass(m_iShaderPass);
+        if (ImGui::RadioButton("Tartaglia_Lightning_Red", &m_iShaderPass, 11))
+            pCurrentEffect->Set_ShaderPass(m_iShaderPass);
+        if (ImGui::RadioButton("Tartaglia_Lightning_Green", &m_iShaderPass, 12))
+            pCurrentEffect->Set_ShaderPass(m_iShaderPass);
+        if (ImGui::RadioButton("Water_Color", &m_iShaderPass, 13))
+            pCurrentEffect->Set_ShaderPass(m_iShaderPass);
     }
     else if (iEffectType == CEffect_Manager::EFFECT_MESH)
     {
@@ -519,6 +533,14 @@ void CEffectTool_Manager::Window_EffectPatch()
         if (ImGui::RadioButton("Tighnari_Elemenetal", &m_iShaderPass, 4))
             pCurrentEffect->Set_ShaderPass(m_iShaderPass);
         if (ImGui::RadioButton("Water_Bullet", &m_iShaderPass, 5))
+            pCurrentEffect->Set_ShaderPass(m_iShaderPass);
+        if (ImGui::RadioButton("Tartaglia_Wave_Bullet", &m_iShaderPass, 6))
+            pCurrentEffect->Set_ShaderPass(m_iShaderPass);
+        if (ImGui::RadioButton("Tartaglia_Lightning_Ring", &m_iShaderPass, 7))
+            pCurrentEffect->Set_ShaderPass(m_iShaderPass);
+        if (ImGui::RadioButton("Tartaglia_Sweep_Trail", &m_iShaderPass, 8))
+            pCurrentEffect->Set_ShaderPass(m_iShaderPass);
+        if (ImGui::RadioButton("Tartaglia_Extra_Trail", &m_iShaderPass, 9))
             pCurrentEffect->Set_ShaderPass(m_iShaderPass);
     }
 

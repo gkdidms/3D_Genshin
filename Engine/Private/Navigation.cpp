@@ -68,7 +68,7 @@ void CNavigation::Tick()
 {
 }
 
-_int CNavigation::Find_Index(POINT ptMouse, _fvector vTargetPos, _fvector vTargetRayDir, _fmatrix WorldMatirx, _int* pIndex)
+_int CNavigation::Find_Index(POINT ptMouse, _fvector vTargetPos, _float fZ, _fmatrix WorldMatirx, _int* pIndex)
 {
     // ½ºÄÉÀÏ °ª
     // ºäÆ÷Æ® -> Åõ¿µ
@@ -76,25 +76,25 @@ _int CNavigation::Find_Index(POINT ptMouse, _fvector vTargetPos, _fvector vTarge
     _uint iNumViewPorts = 1;
     m_pContext->RSGetViewports(&iNumViewPorts, &ViewPort);
 
-    _float3 vMousePos;
+    _float4 vMousePos;
 
     vMousePos.x = ptMouse.x / (ViewPort.Width * 0.5f) - 1.f;
     vMousePos.y = ptMouse.y / -(ViewPort.Height * 0.5f) + 1.f;
 
-    vMousePos.z = 0.f;
+    vMousePos.z = fZ;
 
     // Åõ¿µ -> ºä
     _matrix	matProj;
     matProj = m_pGameInstance->Get_Transform_Inverse_Matrix(CPipeLine::D3DTS_PROJ);
-    XMStoreFloat3(&vMousePos, XMVector3TransformCoord(XMLoadFloat3(&vMousePos), matProj));
-
-    //ºä -> ¿ùµå
+    XMStoreFloat4(&vMousePos, XMVector3TransformCoord(XMLoadFloat4(&vMousePos), matProj));
+    XMStoreFloat4(&vMousePos, XMVectorSetW(XMLoadFloat4(&vMousePos), 1.f));
+           //ºä -> ¿ùµå
     _matrix	matView = m_pGameInstance->Get_Transform_Inverse_Matrix(CPipeLine::D3DTS_VIEW);
 
     _vector	vRayDir, vRayPos;
 
-    vRayPos = { 0.f, 0.f, 0.f };
-    vRayDir = XMLoadFloat3(&vMousePos) - vRayPos;
+    vRayPos = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+    vRayDir = XMLoadFloat4(&vMousePos) - vRayPos;
 
     vRayPos = XMVector3TransformCoord(vRayPos, matView);
     vRayDir = XMVector3TransformNormal(vRayDir, matView);
@@ -103,7 +103,7 @@ _int CNavigation::Find_Index(POINT ptMouse, _fvector vTargetPos, _fvector vTarge
     _matrix		matWorld = WorldMatirx;
     matWorld = XMMatrixInverse(nullptr, matWorld);
     vRayPos = XMVector3TransformCoord(vRayPos, matWorld);
-    vRayDir = XMVector3Normalize(XMVector3TransformCoord(vRayDir, matWorld));
+    vRayDir = XMVector3Normalize(XMVector3TransformNormal(vRayDir, matWorld));
 
 	_float	fDist(0.f);
     _uint iIndex = 0;

@@ -1,20 +1,25 @@
 
 #include "SoundMgr.h"
 
-IMPLEMENT_SINGLETON(SoundMgr)
-
-SoundMgr::SoundMgr()
+CSoundMgr::CSoundMgr()
 {
 	m_pSystem = nullptr;
 }
 
 
-SoundMgr::~SoundMgr()
+CSoundMgr::~CSoundMgr()
 {
 	Free();
 }
 
-void Engine::SoundMgr::Ready_Sound()
+HRESULT CSoundMgr::Initialize()
+{
+	Ready_Sound();
+
+	return S_OK;
+}
+
+void Engine::CSoundMgr::Ready_Sound()
 {
 	// 사운드를 담당하는 대표객체를 생성하는 함수
 	FMOD_System_Create(&m_pSystem, FMOD_VERSION);
@@ -23,10 +28,9 @@ void Engine::SoundMgr::Ready_Sound()
 
 
 	LoadSoundFile();
-
 }
 
-void SoundMgr::PlaySound_W(TCHAR* pSoundKey, CHANNELID eID, float fVolume)
+void CSoundMgr::PlaySound_W(TCHAR* pSoundKey, CHANNELID eID, float fVolume)
 {
 	map<TCHAR*, FMOD_SOUND*>::iterator iter;
 
@@ -52,33 +56,7 @@ void SoundMgr::PlaySound_W(TCHAR* pSoundKey, CHANNELID eID, float fVolume)
 	FMOD_System_Update(m_pSystem);
 }
 
-void Engine::SoundMgr::PlaySound_NonStop(TCHAR* pSoundKey, CHANNELID eID, float fVolume)
-{
-	map<TCHAR*, FMOD_SOUND*>::iterator iter;
-
-	// iter = find_if(m_mapSound.begin(), m_mapSound.end(), CTag_Finder(pSoundKey));
-	iter = find_if(m_mapSound.begin(), m_mapSound.end(),
-		[&](auto& iter)->bool
-		{
-			return !lstrcmp(pSoundKey, iter.first);
-		});
-
-	if (iter == m_mapSound.end())
-		return;
-
-	FMOD_BOOL bPlay = FALSE;
-
-	if (FMOD_Channel_IsPlaying(m_pChannelArr[eID], &bPlay))
-	{
-		FMOD_System_PlaySound(m_pSystem, iter->second, nullptr, FALSE, &m_pChannelArr[eID]);
-	}
-
-	FMOD_Channel_SetVolume(m_pChannelArr[eID], fVolume);
-
-	FMOD_System_Update(m_pSystem);
-}
-
-void SoundMgr::PlayBGM(TCHAR* pSoundKey, float fVolume)
+void CSoundMgr::PlayBGM(TCHAR* pSoundKey, float fVolume)
 {
 	map<TCHAR*, FMOD_SOUND*>::iterator iter;
 
@@ -97,48 +75,28 @@ void SoundMgr::PlayBGM(TCHAR* pSoundKey, float fVolume)
 	FMOD_System_Update(m_pSystem);
 }
 
-void Engine::SoundMgr::PlayEffectContinue(TCHAR* pSoundKey, float fVolume, CHANNELID eID)
-{
-	map<TCHAR*, FMOD_SOUND*>::iterator iter;
-
-	// iter = find_if(m_mapSound.begin(), m_mapSound.end(), CTag_Finder(pSoundKey));
-	iter = find_if(m_mapSound.begin(), m_mapSound.end(), [&](auto& iter)->bool
-		{
-			return !lstrcmp(pSoundKey, iter.first);
-		});
-
-	if (iter == m_mapSound.end())
-		return;
-
-	FMOD_System_PlaySound(m_pSystem, iter->second, nullptr, FALSE, &m_pChannelArr[eID]);
-	FMOD_Channel_SetMode(m_pChannelArr[eID], FMOD_LOOP_NORMAL);
-	FMOD_Channel_SetVolume(m_pChannelArr[eID], fVolume);
-	FMOD_System_Update(m_pSystem);
-
-}
-
-void SoundMgr::StopSound(CHANNELID eID)
+void CSoundMgr::StopSound(CHANNELID eID)
 {
 	FMOD_Channel_Stop(m_pChannelArr[eID]);
 }
 
-void SoundMgr::StopAll()
+void CSoundMgr::StopAll()
 {
 	for (int i = 0; i < SOUND_END; ++i)
 		FMOD_Channel_Stop(m_pChannelArr[i]);
 }
 
-void SoundMgr::SetChannelVolume(CHANNELID eID, float fVolume)
+void CSoundMgr::SetChannelVolume(CHANNELID eID, float fVolume)
 {
 	FMOD_Channel_SetVolume(m_pChannelArr[eID], fVolume);
 
 	FMOD_System_Update(m_pSystem);
 }
 
-void SoundMgr::LoadSoundFile()
+void CSoundMgr::LoadSoundFile()
 {
 	_wfinddata64_t fd;
-	__int64 handle = _wfindfirst64(L"../../Client/Bin/Resource/Sound/*.*", &fd);
+	__int64 handle = _wfindfirst64(L"../../Client/Bin/Resources/Sound/*.*", &fd);
 	if (handle == -1 || handle == 0)
 		return;
 
@@ -171,7 +129,17 @@ void SoundMgr::LoadSoundFile()
 	_findclose(handle);
 }
 
-void Engine::SoundMgr::Free()
+CSoundMgr* CSoundMgr::Create()
+{
+	CSoundMgr* pInstance = new CSoundMgr();
+
+	if (FAILED(pInstance->Initialize()))
+		Safe_Release(pInstance);
+
+	return pInstance;
+}
+
+void Engine::CSoundMgr::Free()
 {
 	for (auto& Mypair : m_mapSound)
 	{

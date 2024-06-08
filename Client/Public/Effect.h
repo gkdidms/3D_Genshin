@@ -14,7 +14,7 @@ class CEffect:
     public CBlendObject
 {
 public:
-    typedef struct tEffectDesc
+    typedef struct tEffectDesc : public CGameObject::GAMEOBJECT_DESC
     {
         const _float4x4* pPlayerMatrix; // 생성한 플레이어의 월드행렬
         _bool isFollowPlayer = { false }; // 플레이어를 따라오는가?
@@ -25,7 +25,7 @@ public:
         _vector vTargetDir = {};// 타겟이 있다면 타겟의 방향
     } EFFECT_DESC;
 
-private:
+protected:
     CEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
     CEffect(const CEffect& rhs);
     virtual ~CEffect() = default;
@@ -41,7 +41,7 @@ public:
 private:
     CCollider* m_pColliderCom = { nullptr };
 
-private:
+protected:
     const _float4x4* m_pParentMatrix;
     vector<CGameObject*> m_EffectObjects;
     vector<CGameObject*> m_CloneEffectObject;
@@ -56,7 +56,7 @@ private:
 
     _float m_fSpeed = {0.f};
 
-private:
+protected:
     HRESULT Add_Components();
     HRESULT File_Open(const _char* szFileName);
 

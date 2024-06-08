@@ -5,6 +5,7 @@
 
 #include "GameInstance.h"
 #include "DefaultCamera.h"
+#include "CutCamera.h"
 #include "Player.h"
 #include "Map.h"
 
@@ -65,16 +66,18 @@ HRESULT CStage_Boss_Level::Ready_Lights()
 
 HRESULT CStage_Boss_Level::Ready_Layer_Camera(const wstring& strLayerTag)
 {
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_STAGE_BOSS, L"Layer_Player", 0));
+
 	CDefaultCamera::DEFAULT_CAMERA_DESC tDefaultCamera = {};
 
 	tDefaultCamera.fSensor = 0.2f;
 	tDefaultCamera.pPlayerMatrix = dynamic_cast<CTransform*>(m_pGameInstance->Get_GameObject_Component(LEVEL_STAGE_BOSS, L"Layer_Player", L"Com_Transform"))->Get_WorldFloat4x4();
 
-	tDefaultCamera.pCameraLookMatrix = dynamic_cast<CPlayer*>(m_pGameInstance->Get_GameObject(LEVEL_STAGE_BOSS, L"Layer_Player", 0))->Get_PlayerCameraLook();
-	tDefaultCamera.vEye = _float4(0.f, 2.f, -2.f, 1.f);
+	tDefaultCamera.pCameraLookMatrix = pPlayer->Get_PlayerCameraLook();
+	tDefaultCamera.vEye = _float4(0.f, 2.f, -3.f, 1.f);
 	tDefaultCamera.vFocus = _float4(0.f, 10.f, 0.f, 1.f);
 
-	tDefaultCamera.fFovY = XMConvertToRadians(90.f);
+	tDefaultCamera.fFovY = XMConvertToRadians(60.f);
 	tDefaultCamera.fAspect = g_iWinSizeX / (_float)g_iWinSizeY;
 	tDefaultCamera.fNear = 0.1f;
 	tDefaultCamera.fFar = 3000.f;
@@ -83,6 +86,26 @@ HRESULT CStage_Boss_Level::Ready_Layer_Camera(const wstring& strLayerTag)
 	tDefaultCamera.fRotatePecSec = XMConvertToRadians(45.f);
 
 	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, L"Prototype_GameObject_Camera", strLayerTag, &tDefaultCamera)))
+		return E_FAIL;
+
+	CCutCamera::Cut_CAMERA_DESC tCutCamera = {};
+
+	tCutCamera.fSensor = 0.2f;
+	tCutCamera.pPlayerMatrix = dynamic_cast<CTransform*>(m_pGameInstance->Get_GameObject_Component(LEVEL_STAGE_BOSS, L"Layer_Player", L"Com_Transform"))->Get_WorldFloat4x4();
+
+	tCutCamera.pCameraLookMatrix = pPlayer->Get_PlayerCameraLook();
+	tCutCamera.vEye = _float4(0.f, 2.f, -2.f, 1.f);
+	tCutCamera.vFocus = _float4(0.f, 10.f, 0.f, 1.f);
+
+	tCutCamera.fFovY = XMConvertToRadians(90.f);
+	tCutCamera.fAspect = g_iWinSizeX / (_float)g_iWinSizeY;
+	tCutCamera.fNear = 0.1f;
+	tCutCamera.fFar = 3000.f;
+
+	tCutCamera.fSpeedPecSec = 20.f;
+	tCutCamera.fRotatePecSec = XMConvertToRadians(45.f);
+
+	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_STAGE_BOSS, L"Prototype_GameObject_CutCamera", strLayerTag, &tCutCamera)))
 		return E_FAIL;
 
 	return S_OK;

@@ -24,7 +24,10 @@ private:
 	virtual ~CBT_EvilEye() = default;
 
 public:
-	virtual _bool isStrikeSkill() override { return m_Skill == SKILL_DUALBLADE_STRIKE; }
+	virtual _bool isRushSkill() {
+		return m_Skill == SKILL_RUSH || m_Skill == SKILL_DUALBLADE_STRIKE;
+	}
+	virtual _bool isExtraSkill() { return m_Skill == SKILL_BLADE_EXTRA; }
 
 public:
 	virtual HRESULT Initialize(void* pArg);

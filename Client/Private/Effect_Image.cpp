@@ -56,14 +56,26 @@ void CEffect_Image::Tick(const _float& fTimeDelta)
 {
 	m_fCurrentTime += fTimeDelta;
 
+	if (m_fStartTime >= m_fCurrentTime)
+		return;
+
+	if (m_fDurationTime <= m_fCurrentTime && m_fDurationTime > 0.f)
+		return;
+
 	if (m_iTextureNum > 1)
 	{
-		m_fFrame += m_iTextureNum * fTimeDelta;
-
-		if (m_fFrame >= m_iTextureNum)
+		if (m_isFrameStop == false)
 		{
-			m_isDead = true;
-			m_fFrame = 0.f;
+			m_fFrame += m_iTextureNum * fTimeDelta * 3.f;
+
+			if (m_fFrame >= m_iTextureNum)
+			{
+				if (!m_isFrameLoop) {
+					m_isFrameStop = true;
+					m_isDead = true;
+				}
+				m_fFrame = 0.f;
+			}
 		}
 	}
 
@@ -76,7 +88,7 @@ void CEffect_Image::Tick(const _float& fTimeDelta)
 	}
 	else if (m_iMoveType == INCREASE)
 	{
-		_float fTime = fTimeDelta * 2.f;
+		_float fTime = fTimeDelta * 5.f;
 
 		_float3 vScale = m_pTransformCom->Get_Scaled();
 		m_pTransformCom->Set_Scale(vScale.x + fTime, vScale.y + fTime, vScale.z + fTime);
@@ -92,6 +104,12 @@ void CEffect_Image::Tick(const _float& fTimeDelta)
 
 void CEffect_Image::Late_Tick(const _float& fTimeDelta)
 {
+	if (m_fStartTime >= m_fCurrentTime)
+		return;
+
+	if (m_fDurationTime <= m_fCurrentTime && m_fDurationTime > 0.f)
+		return;
+
 	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * XMLoadFloat4x4(m_ParentMatrix));
 
 	m_pGameInstance->Add_Renderer(CRenderer::RENDERER_STATE(m_iRendererType), this);

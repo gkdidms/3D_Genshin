@@ -31,6 +31,13 @@ public:
 public:
     HRESULT Open_Level(_uint iLevelIndex, class CLevel* pLevel);
 
+public: // 사운드
+    void PlaySound_W(TCHAR* pSoundKey, CHANNELID eID, float fVolume);
+    void PlayBGM(TCHAR* pSoundKey, float fVolume);
+    void StopSound(CHANNELID eID);
+    void StopAll();
+    void SetChannelVolume(CHANNELID eID, float fVolume);
+
 public: // 게임오브젝트 매니저
     HRESULT Add_GameObject_Prototype(const wstring strGameObjectTag, class CGameObject* pGameObject);
     HRESULT Add_GameObject(_uint iLevelIndex, const wstring strGameObjectTag, const wstring strLayerTag, void* pArg = nullptr);
@@ -88,9 +95,7 @@ public: //Input_Device
 
 public: // Picking
     _vector Picking(_bool* isSuccess);
-    _vector Get_PickDir();
-
-
+    _float Get_Z();
     /*RenderTarget_Manager*/
 public: 
     HRESULT Add_RenderTarget(const wstring& strRenderTargetTag, _uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixelFormat, const _float4& vClearColor);
@@ -113,6 +118,7 @@ public:
 
 private:
     class CGraphic_Device* m_pGraphic_Device = { nullptr };
+    class CSoundMgr* m_pSound_Manager = { nullptr };
     class CInput_Manager* m_pInput_Manager = { nullptr };
     class CInput_Device* m_pInput_Device = { nullptr };
     class CLevel_Manager* m_pLevel_Manager = { nullptr };
